@@ -1,0 +1,21 @@
+[submodule "converter-src/yasm"]
+	path = converter-src/yasm
+	url = git://github.com/yasm/yasm.git
+[submodule "converter-src/libogg"]
+	path = converter-src/libogg
+	url = git://git.xiph.org/ogg.git
+[submodule "converter-src/libtheora"]
+	path = converter-src/libtheora
+	url = git://git.xiph.org/theora.git
+[submodule "converter-src/libvorbis"]
+	path = converter-src/libvorbis
+	url = git://git.xiph.org/vorbis.git
+[submodule "converter-src/libopus"]
+	path = converter-src/libopus
+	url = git://git.opus-codec.org/opus.git
+[submodule "converter-src/libvpx"]
+	path = converter-src/libvpx
+	url = https://chromium.googlesource.com/webm/libvpx
+[submodule "converter-src/libav"]
+	path = converter-src/libav
+	url = git://git.libav.org/libav.git
