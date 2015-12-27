@@ -27,7 +27,7 @@ class Session(object):
         self.redis = Redis(host="tools-redis")
         self.key = redis_key
         self.cookie = SimpleCookie()
-        self.id = get_id_from_cookie()
+        self.id = self.get_id_from_cookie()
         if not self.id: self.generate_id()
         self.redis.expire(self.get_key(), session_expire*2)
 
