@@ -19,3 +19,9 @@
 [submodule "converter-src/libav"]
 	path = converter-src/libav
 	url = git://git.libav.org/libav.git
+[submodule "cgi-src/flask-mwoauth"]
+	path = cgi-src/flask-mwoauth
+	url = https://github.com/valhallasw/flask-mwoauth.git
+[submodule "cgi-src/python-mwoauth"]
+	path = cgi-src/python-mwoauth
+	url = https://github.com/mediawiki-utilities/python-mwoauth.git
