@@ -28,8 +28,7 @@ class video2commons(object):
     def __init__(self):
         self.session = Session()
         self.consumer_token = ConsumerToken(consumer_key, consumer_secret)
-        self.handshaker = Handshaker("https://en.wikipedia.org/w/index.php", consumer_token)
-        self.session = Session()
+        self.handshaker = Handshaker(api_url, self.consumer_token)
         
     def printheader(self):
         print "HTTP/1.1 200 OK"

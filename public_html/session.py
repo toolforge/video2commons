@@ -44,14 +44,14 @@ class Session(object):
     def generate_id(self):
         for i in range(10): # 10 tries
             self.id = os.urandom(16).encode('hex')
-            if self.redis.exists(self.get_key()): continue
+            if not self.redis.exists(self.get_key()): break
         else:
             raise RuntimeError("Too many retries to generate a session key")
 
     def as_cookie(self):
         self.cookie['session'] = self.id
         self.cookie['session']['expires'] = session_expire
-        self.cookie['session']['domian'] = "tools.wmflabs.org"
+        self.cookie['session']['domain'] = "tools.wmflabs.org"
         self.cookie['session']['path'] = "/video2commons/"
         self.cookie['session']['httponly'] = True
         return self.cookie

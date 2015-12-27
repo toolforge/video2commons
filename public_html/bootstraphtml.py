@@ -23,7 +23,7 @@ bootstraphtml = """<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN
 	<meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
 	<title>video2commons</title>
 <link href="/steinsplitter/bootstrap.css" rel="stylesheet">
-<script src="//tools-static.wmflabs.org/cdnjs/ajax/libs/jquery/2.1.1/jquery.min.j
+<script src="//tools-static.wmflabs.org/cdnjs/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
     <style>
       body {
         padding-top: 60px;
