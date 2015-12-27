@@ -39,7 +39,7 @@ class video2commons(object):
     def webstart(self):
         try:
             self.dologin()
-        except:
+        except NameError:
             return self.displayloginform()
 
         printheader()

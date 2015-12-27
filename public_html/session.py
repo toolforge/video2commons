@@ -71,5 +71,5 @@ class Session(object):
     def __iter__(self):
         return self.redis.hkeys(self.get_key())
 
-    def __contains__(self):
+    def __contains__(self, key):
         return self.redis.hexists(self.get_key(), key)
