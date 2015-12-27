@@ -26,7 +26,7 @@ from bootstraphtml import bootstraphtml
 
 class video2commons(object):
     def __init__(self):
-        self.session = self.get_session()
+        self.session = Session()
         self.consumer_token = ConsumerToken(consumer_key, consumer_secret)
         self.handshaker = Handshaker("https://en.wikipedia.org/w/index.php", consumer_token)
         self.session = Session()
