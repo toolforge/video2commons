@@ -20,7 +20,7 @@
 from mwoauth import AccessToken, ConsumerToken, RequestToken, Handshaker
 import requests
 from requests_oauthlib import OAuth1
-from oauthconfig import consumer_key, consumer_secret, api_url
+from config import consumer_key, consumer_secret, api_url
 from session import Session
 from bootstraphtml import bootstraphtml
 
