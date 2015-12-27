@@ -17,6 +17,8 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>
 #
 
+import os
+import cgitb
 from mwoauth import AccessToken, ConsumerToken, RequestToken, Handshaker
 import requests
 from requests_oauthlib import OAuth1
@@ -26,6 +28,7 @@ from bootstraphtml import bootstraphtml
 
 class video2commons(object):
     def __init__(self):
+        #cgitb.enable()
         self.session = Session()
         self.consumer_token = ConsumerToken(consumer_key, consumer_secret)
         self.handshaker = Handshaker(api_url, self.consumer_token)
@@ -42,7 +45,7 @@ class video2commons(object):
         except NameError:
             return self.displayloginform()
 
-        printheader()
+        self.printheader()
         print 'You are now logged in.'
 
     def dologin(self):
@@ -63,6 +66,7 @@ class video2commons(object):
         self.session['request_token_key'], self.session['request_token_secret'] = request_token.key, request_token.secret
         print "HTTP/1.1 302 Found"
         print "Location: " + redirect
+        print
         return
         
     def logincallback(self):
@@ -72,4 +76,5 @@ class video2commons(object):
         identity = self.handshaker.identify(access_token)
         print "HTTP/1.1 302 Found"
         print "Location: index.py"
+        print
         return

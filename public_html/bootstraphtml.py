@@ -37,7 +37,7 @@ bootstraphtml = """<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN
       <div class="navbar-inner">
         <div class="container">
 
-          <a class="brand" href="#">Download tools</a>
+          <a class="brand" href="#">video2commons</a>
           <div class="nav-collapse collapse">
 		<ul id="toolbar-right" class="nav pull-right">
             </ul>

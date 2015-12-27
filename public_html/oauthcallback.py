@@ -20,4 +20,4 @@
 from video2commons import video2commons
 
 if __name__ == "__main__":
-    video2commons().loginredirect()
+    video2commons().logincallback()

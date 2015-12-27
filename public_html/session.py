@@ -50,7 +50,7 @@ class Session(object):
 
     def as_cookie(self):
         self.cookie['session'] = self.id
-        self.cookie['session']['expires'] = session_expire
+        self.cookie['session']['max-age'] = session_expire
         self.cookie['session']['domain'] = "tools.wmflabs.org"
         self.cookie['session']['path'] = "/video2commons/"
         self.cookie['session']['httponly'] = True
