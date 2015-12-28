@@ -42,7 +42,7 @@ class video2commons(object):
     def webstart(self):
         try:
             self.dologin()
-        except NameError:
+        except:
             return self.displayloginform()
 
         self.printheader()
@@ -52,10 +52,12 @@ class video2commons(object):
         if not ('access_token_key' in self.session and 'access_token_secret' in self.session):
             raise NameError("No access keys")
 
+        access_token = AccessToken(self.session['access_token_key'], self.session['access_token_secret'])
+        self.identity = self.handshaker.identify(access_token)
         self.auth1 = OAuth1(self.consumer_token.key,
                client_secret=self.consumer_token.secret,
-               resource_owner_key=self.session['access_token_key'],
-               resource_owner_secret=self.session['access_token_secret'])
+               resource_owner_key=access_token.key,
+               resource_owner_secret=access_token.secret)
 
     def displayloginform(self):
         self.printheader()
@@ -73,7 +75,6 @@ class video2commons(object):
         request_token = RequestToken(self.session['request_token_key'], self.session['request_token_secret'])
         access_token = self.handshaker.complete(request_token, os.environ.get("QUERY_STRING"))
         self.session['access_token_key'], self.session['access_token_secret'] = access_token.key, access_token.secret
-        identity = self.handshaker.identify(access_token)
         print "HTTP/1.1 302 Found"
         print "Location: index.py"
         print

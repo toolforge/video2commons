@@ -32,7 +32,7 @@ class Session(object):
         self.redis.expire(self.get_key(), session_expire*2)
 
     def get_key(self):
-        return self.key + ":" + self.id
+        return self.key + ":sessions:" + self.id
 
     def get_id_from_cookie(self):
         cookiestr = os.environ.get('HTTP_COOKIE')
