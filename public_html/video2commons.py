@@ -33,11 +33,11 @@ class video2commons(object):
         self.consumer_token = ConsumerToken(consumer_key, consumer_secret)
         self.handshaker = Handshaker(api_url, self.consumer_token)
         
-    def printheader(self):
+    def printheader(self, addscript=False):
         print "HTTP/1.1 200 OK"
         print self.session.as_cookie()
         print
-        print bootstraphtml
+        print bootstraphtml % ('<script src="video2commons.js"></script>' if addscript else '')
 
     def webstart(self):
         try:
@@ -45,8 +45,8 @@ class video2commons(object):
         except:
             return self.displayloginform()
 
-        self.printheader()
-        print 'You are now logged in.'
+        self.printheader(addscript=True)
+        print '<noscript>Javascript is Required to use this tool!</noscript>'
 
     def dologin(self):
         if not ('access_token_key' in self.session and 'access_token_secret' in self.session):
