@@ -4,7 +4,7 @@
 	var video2commons = {};
 
 	video2commons.init = function() {
-		$('#container').text('TODO...');
+		$('#content').text('TODO...');
 	}
 
 	$(document).ready(function() {

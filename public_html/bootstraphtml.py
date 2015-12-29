@@ -47,4 +47,4 @@ bootstraphtml = """<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN
       </div>
     </div>
 
-  <div class="container">"""
+  <div class="container" id="content">"""
