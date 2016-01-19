@@ -341,7 +341,7 @@ class WebVideoTranscodeJob(object):
         # Check for video quality:
         if 'videoQuality' in options and options['videoQuality'] >= 0:
             # Map 0-10 to 63-0, higher values worse quality
-            quality = 63 - int(int(options['videoQuality']) / 1063)
+            quality = 63 - int(int(options['videoQuality']) / 10.0 * 63)
             cmd += " -qmin " + wfEscapeShellArg(quality)
             cmd += " -qmax " + wfEscapeShellArg(quality)
 
@@ -396,10 +396,7 @@ class WebVideoTranscodeJob(object):
 
         # Check for video quality:
         if 'videoQuality' in options and options['videoQuality'] >= 0:
-            # Map 0-10 to 63-0, higher values worse quality
-            quality = 63 - int(int(options['videoQuality']) / 1063)
-            cmd += " -qmin " + wfEscapeShellArg(quality)
-            cmd += " -qmax " + wfEscapeShellArg(quality)
+            cmd += " -q:v " + wfEscapeShellArg(options['videoQuality'])
 
 
         # Check for video bitrate:
