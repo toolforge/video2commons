@@ -234,7 +234,7 @@ class WebVideoTranscodeJob(object):
         # Right before we output remove the old file
         retval, shellOutput = self.runShellExec(cmd)
 
-        if retval != 0:
+        if int(retval) != 0:
             return cmd + \
                 "\n\nExitcode: " + str(retval) + "\nMemory: " + str(wgTranscodeBackgroundMemoryLimit) + "\n\n" + \
                 shellOutput
@@ -632,7 +632,7 @@ class WebVideoTranscodeJob(object):
 
         log = open(encodingLog, 'w')
         process = subprocess.Popen(cmd, stdin=subprocess.PIPE, stdout=log, stderr=None, shell=True)
-        status = TransferStatus(self.getFile(), process.stdin, os.path.getsize(self.getSourceFilePath()))
+        status = TransferStatus(open(self.getSourceFilePath(), 'r'), process.stdin, os.path.getsize(self.getSourceFilePath()))
         status.start()
         percentage = -1
         while process.poll() is None:
