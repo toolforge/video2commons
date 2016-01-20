@@ -32,11 +32,14 @@ from transferstatus import TransferStatus
 from globals import * # all variables and functions starting with "wg" and "wf"
 
 class WebVideoTranscodeJob(object):
-    def __init__(self, source, target, key, statuscallback = None, errorcallback = None):
+    def __init__(self, source, target, key, preserve={'video':False, 'audio':False},
+            statuscallback = None, errorcallback = None):
         #super(WebVideoTranscodeJob, self).__init__('webVideoTranscode', title, key, id)
         self.source = os.path.abspath(source)
         self.target = os.path.abspath(target)
         self.key = key
+        self.preserve = {'video':False, 'audio':False}
+        self.preserve.update(preserve)
         self.statuscallback = statuscallback or (lambda text, percent: None)
         self.errorcallback = errorcallback or (lambda text: None)
         self.removeDuplicates = True
@@ -191,6 +194,8 @@ class WebVideoTranscodeJob(object):
 
         if 'novideo' in options:
             cmd += " -vn "
+        elif self.preserve['video']:
+            cmd += " -vcodec copy"
         elif options['videoCodec'] == 'vp8' or options['videoCodec'] == 'vp9':
             cmd += self.ffmpegAddWebmVideoOptions(options, p)
         elif options['videoCodec'] == 'h264':
@@ -214,6 +219,8 @@ class WebVideoTranscodeJob(object):
 
         if p == 1 or 'noaudio' in options:
             cmd += ' -an'
+        elif self.preserve['audio']:
+            cmd += " -acodec copy"
         else:
             cmd += self.ffmpegAddAudioOptions(options, p)
 

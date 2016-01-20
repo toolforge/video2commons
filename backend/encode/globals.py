@@ -42,6 +42,7 @@ wgFFmpegThreads = 8
 wgFFmpeg2theoraLocation = False # Disabled due to being unable to accept stdin properly
 # Location of the avconv/ffmpeg binary (used to encode WebM and for thumbnails)
 wgFFmpegLocation = '/usr/bin/avconv'
+wgFFprobeLocation = '/usr/bin/avprobe'
 
 def wfEscapeShellArg(*args):
     import pipes
