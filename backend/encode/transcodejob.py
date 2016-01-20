@@ -129,7 +129,7 @@ class WebVideoTranscodeJob(object):
             self.output("Encoding to codec: " + options['videoCodec'])
 
         # Check the codec see which encode method to call
-        if 'novideo' in options:
+        if 'novideo' in options or self.preserve['video']:
             status = self.ffmpegEncode(options)
         elif options['videoCodec'] == 'theora' and wgFFmpeg2theoraLocation != False:
             status = self.ffmpeg2TheoraEncode(options)
