@@ -26,7 +26,7 @@ def encode(source, key, statuscallback = None, errorcallback = None):
     target = source + '.' + key
     preserve = {'video':False, 'audio':False}
 
-    c = Converter(ffmpeg_path=None, ffprobe_path=None)
+    c = Converter(ffmpeg_path=wgFFmpegLocation, ffprobe_path=wgFFprobeLocation)
     info = c.probe(source)
 
     targettype = WebVideoTranscode.derivativeSettings.get(key)

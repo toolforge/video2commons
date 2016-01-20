@@ -239,14 +239,14 @@ class WebVideoTranscodeJob(object):
             cmd += " " + wfEscapeShellArg(self.getTargetEncodePath())
 
 
-        self.output("Running cmd: \n\n" + cmd + "\n")
+        self.output("Running cmd: " + cmd + "\n")
 
         # Right before we output remove the old file
         retval, shellOutput = self.runShellExec(cmd)
 
         if int(retval) != 0:
             return cmd + \
-                "\n\nExitcode: " + str(retval) + "\nMemory: " + str(wgTranscodeBackgroundMemoryLimit) + "\n\n" + \
+                "\nExitcode: " + str(retval) + " Memory: " + str(wgTranscodeBackgroundMemoryLimit) + "\n" + \
                 shellOutput
 
         return True
@@ -520,7 +520,7 @@ class WebVideoTranscodeJob(object):
         outputFile = self.getTargetEncodePath()
         cmd += ' -o ' + wfEscapeShellArg(outputFile)
 
-        self.output("Running cmd: \n\n" + cmd + "\n")
+        self.output("Running cmd: " + cmd + "\n")
 
         retval = 0
         retval, shellOutput = self.runShellExec(cmd)
@@ -528,7 +528,7 @@ class WebVideoTranscodeJob(object):
         # ffmpeg2theora returns 0 status on some errors, so also check for file
         if retval != 0 or not os.path.isfile(outputFile) or os.path.getsize(outputFile) == 0:
             return cmd + \
-                "\n\nExitcode: " + retval + "\nMemory: " + wgTranscodeBackgroundMemoryLimit + "\n\n" + \
+                "\nExitcode: " + str(retval) + " Memory: " + str(wgTranscodeBackgroundMemoryLimit) + "\n" + \
                 shellOutput
 
         return True
