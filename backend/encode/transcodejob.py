@@ -59,6 +59,8 @@ class WebVideoTranscodeJob(object):
         """
         if not hasattr(self, 'file'):
             self.file = open(self.source, 'r')
+            self.file.close()
+
         return self.file
 
     def getTargetEncodePath(self):
@@ -67,6 +69,7 @@ class WebVideoTranscodeJob(object):
         """
         if not hasattr(self, 'targetEncodeFile'):
             self.targetEncodeFile = open(self.target, 'w')
+            self.targetEncodeFile.close()
 
         return self.targetEncodeFile.name
 
@@ -635,8 +638,9 @@ class WebVideoTranscodeJob(object):
             'nice -n ' + wfEscapeShellArg(wgTranscodeBackgroundPriority) + ' ' + cmd + ' 2>&1'
 
         log = open(encodingLog, 'w')
+        source = open(self.getSourceFilePath(), 'r')
         process = subprocess.Popen(cmd, stdin=subprocess.PIPE, stdout=log, stderr=None, shell=True)
-        status = TransferStatus(open(self.getSourceFilePath(), 'r'), process.stdin, os.path.getsize(self.getSourceFilePath()))
+        status = TransferStatus(source, process.stdin, os.path.getsize(self.getSourceFilePath()))
         status.start()
         percentage = -1
         while process.poll() is None:
@@ -649,9 +653,12 @@ class WebVideoTranscodeJob(object):
         # Output the status:
         #wfSuppressWarnings()
         log.close()
+        source.close()
         # Output the retVal to the retvalLog
         retval = process.returncode
-        open(retvalLog, 'w').write(str(retval))
+        rlog = open(retvalLog, 'w')
+        rlog.write(str(retval))
+        rlog.close()
         #wfRestoreWarnings()
 
         return retval
@@ -744,9 +751,12 @@ class WebVideoTranscodeJob(object):
         # return the encoding log contents (will be inserted into error table if an error)
         # (will be ignored and removed if success)
         if errorMsg != '':
-            errorMsg +="\n\n"
+            errorMsg +="\n"
 
-        return retval, errorMsg + open(encodingLog).read(1000)
+        encodeLogFile = open(encodingLog)
+        log = encodeLogFile.read(1000)
+        encodeLogFile.close()
+        return retval, errorMsg + log
 
     @classmethod
     def isProcessRunningKillZombie(cls, pid):
