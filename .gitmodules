@@ -16,9 +16,9 @@
 [submodule "converter-src/libvpx"]
 	path = converter-src/libvpx
 	url = https://chromium.googlesource.com/webm/libvpx
-[submodule "converter-src/libav"]
-	path = converter-src/libav
-	url = git://git.libav.org/libav.git
+[submodule "converter-src/ffmpeg"]
+	path = converter-src/ffmpeg
+	url = git://source.ffmpeg.org/ffmpeg.git
 [submodule "cgi-src/flask-mwoauth"]
 	path = cgi-src/flask-mwoauth
 	url = https://github.com/valhallasw/flask-mwoauth.git

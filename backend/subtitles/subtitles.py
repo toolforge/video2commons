@@ -69,7 +69,7 @@ class SubtitlesUploader(object):
 
     @staticmethod
     def format(filename):
-        c = Converter(ffmpeg_path='/usr/bin/avconv', ffprobe_path='/usr/bin/avprobe')
+        c = Converter(ffmpeg_path='/usr/bin/ffmpeg', ffprobe_path='/usr/bin/ffprobe')
         info = c.probe(filename)
         if not info: return None
         if len(info.streams) != 1: return None
@@ -79,12 +79,16 @@ class SubtitlesUploader(object):
     @staticmethod
     def transcode(filename, format):
         target = filename + '.srt'
-        # https://github.com/JDaren/subtitleConverter
-        cmd = ['/usr/bin/java', '-jar', 'subtitleConvert.jar', format, target, 'srt']
+        cmd = ['/usr/bin/ffmpeg', '-i', filename, '-f', 'srt', '-']
         self.statuscallback("Running cmd: %s" % cmd, None)
-        subprocess.check_output(cmd, stderr=subprocess.STDOUT)
-
-        return target
+        try:
+            return subprocess.check_output(cmd, stderr=None)
+        except:
+            # https://github.com/JDaren/subtitleConverter
+            cmd = ['/usr/bin/java', '-jar', 'subtitleConvert.jar', format, target, 'srt']
+            self.statuscallback("Running cmd: %s" % cmd, None)
+            subprocess.check_output(cmd, stderr=subprocess.STDOUT)
+            return target
 
     def edit(title, text, summary):
         text = text.encode("utf-8")

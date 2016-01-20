@@ -54,8 +54,8 @@ make
 make install
 cd ..
 
-echo "libav"
-cd libav
+echo "ffmpeg"
+cd ffmpeg
 git pull
 autoreconf -vif || true
 ./configure --prefix=$HOME/.local --enable-libtheora --enable-libvorbis --enable-libvpx --enable-libopus
