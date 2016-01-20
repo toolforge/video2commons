@@ -45,12 +45,15 @@ class WebVideoTranscode:
     """
     # Ogg Profiles
     ENC_OGV = 'ogv'
+    ENC_NOAUDIO_OGV = 'an.ogv'
 
     # WebM VP8/Vorbis profiles:
     ENC_WEBM = 'webm'
+    ENC_NOAUDIO_WEBM = 'an.webm'
 
     # WebM VP9/Opus profiles:
     ENC_VP9 = 'vp9.webm'
+    ENC_NOAUDIO_VP9 = 'an.vp9.webm'
 
     # mp4 profiles:
     #ENC_H264 = 'mp4'
@@ -84,6 +87,17 @@ class WebVideoTranscode:
                 'audioCodec':                  'vorbis',
                 'type':                        'video/ogg codecs="theora, vorbis"',
             },
+        ENC_NOAUDIO_OGV:
+            {
+                'videoQuality':                7,
+                'noUpscaling':                 'True',
+                'twopass':                     'False', # will be overridden by wgTmhTheoraTwoPassEncoding
+                'optimize':                    'True',
+                'keyframeInterval':            '128',
+                'videoCodec':                  'theora',
+                'noaudio':                     'True',
+                'type':                        'video/ogg codecs="theora, vorbis"',
+            },
 
         # WebM transcode:
         ENC_WEBM:
@@ -96,6 +110,15 @@ class WebVideoTranscode:
                 'audioCodec':                  'vorbis',
                 'type':                        'video/webm codecs="vp8, vorbis"',
             },
+        ENC_NOAUDIO_WEBM:
+            {
+                'videoQuality':                7,
+                'noUpscaling':                 'True',
+                'twopass':                     'True',
+                'videoCodec':                  'vp8',
+                'noaudio':                     'True',
+                'type':                        'video/webm codecs="vp8, vorbis"',
+            },
 
         # WebM VP9 transcode:
         ENC_VP9:
@@ -106,6 +129,16 @@ class WebVideoTranscode:
                 'twopass':                     'True',
                 'videoCodec':                  'vp9',
                 'audioCodec':                  'opus',
+                'tileColumns':                 '4',
+                'type':                        'video/webm codecs="vp9, opus"',
+            },
+        ENC_NOAUDIO_VP9:
+            {
+                'videoQuality':                7,
+                'noUpscaling':                 'True',
+                'twopass':                     'True',
+                'videoCodec':                  'vp9',
+                'noaudio':                     'True',
                 'tileColumns':                 '4',
                 'type':                        'video/webm codecs="vp9, opus"',
             },
