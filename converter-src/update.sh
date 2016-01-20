@@ -1,7 +1,7 @@
 #!/bin/sh -ex
 echo "YASM"
 cd yasm
-git pull master
+git pull origin master
 autoreconf -vif
 ./configure --prefix=$HOME/.local
 make
@@ -10,7 +10,7 @@ cd ..
 
 echo "OGG"
 cd libogg
-git pull master
+git pull origin master
 autoreconf -vif
 ./configure --prefix=$HOME/.local
 make
@@ -20,7 +20,7 @@ cd ..
 
 echo "Theora"
 cd libtheora
-git pull master
+git pull origin master
 autoreconf -vif
 ./configure --prefix=$HOME/.local
 make
@@ -29,7 +29,7 @@ cd ..
 
 echo "Vorbis"
 cd libvorbis
-git pull master
+git pull origin master
 autoreconf -vif
 ./configure --prefix=$HOME/.local
 make
@@ -38,7 +38,7 @@ cd ..
 
 echo "Opus"
 cd libopus
-git pull master
+git pull origin master
 autoreconf -vif
 ./configure --prefix=$HOME/.local
 make
@@ -47,7 +47,7 @@ cd ..
 
 echo "VPx"
 cd libvpx
-git pull master
+git pull origin master
 autoreconf -vif || true
 ./configure --prefix=$HOME/.local
 make
@@ -56,7 +56,7 @@ cd ..
 
 echo "ffmpeg"
 cd ffmpeg
-git pull master
+git pull origin master
 autoreconf -vif || true
 ./configure --prefix=$HOME/.local --enable-libtheora --enable-libvorbis --enable-libvpx --enable-libopus
 make
