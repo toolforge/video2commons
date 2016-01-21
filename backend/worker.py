@@ -21,6 +21,7 @@ import os
 import celery
 import download, encode, upload
 import subtitles as subtitleuploader
+import shutil
 
 # TODO
 app = Celery('v2cbackend', broker='TODO')
@@ -62,6 +63,7 @@ def main(self, url, ie_key, subtitles, filename, filedesc, convertkey, oauth):
 
     statuscallback('Configuring Pywikibot...', -1)
     import pywikibot
+    reload(pywikibot)
     pywikibot.config.authenticate['commons.wikimedia.org'] = oauth
 
     statuscallback('Uploading...', -1)
@@ -79,6 +81,8 @@ def main(self, url, ie_key, subtitles, filename, filedesc, convertkey, oauth):
     statuscallback('Cleaning up...', -1)
     pywikibot.config.authenticate.clear()
     pywikibot._sites.clear()
+
+    shutil.rmtree(outputdir)
 
     statuscallback('Done!', 100)
 
