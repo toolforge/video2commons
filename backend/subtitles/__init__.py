@@ -23,11 +23,10 @@ from converter import Converter # https://github.com/senko/python-video-converte
 import chardet # https://github.com/chardet/chardet
 
 class SubtitlesUploader(object):
-    def __init__(self, subtitles, wikifilename, auth1,
+    def __init__(self, subtitles, wikifilename,
             statuscallback = None, errorcallback = None):
         self.subtitles = subtitles
         self.wikifilename = wikifilename
-        self.auth1 = auth1
         self.statuscallback = statuscallback or (lambda text, percent: None)
         self.errorcallback = errorcallback or (lambda text: None)
 
@@ -97,6 +96,6 @@ class SubtitlesUploader(object):
         if not page.exists(): page.save(summary=summary, minor=False)
 
 
-def subtitles(subtitles, wikifilename, auth1, statuscallback = None, errorcallback = None):
-    job = SubtitlesUploader(subtitles, wikifilename, auth1, statuscallback, errorcallback)
+def subtitles(subtitles, wikifilename, statuscallback = None, errorcallback = None):
+    job = SubtitlesUploader(subtitles, wikifilename, statuscallback, errorcallback)
     job.run()

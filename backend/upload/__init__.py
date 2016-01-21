@@ -33,9 +33,9 @@ def upload(filename, wikifilename, sourceurl, fileurl, filedesc, statuscallback 
         comment = u'Imported media from ' + sourceurl
         chunked = math.trunc(64 * (1 << 20)) if size >= 100000000 else 0
 
-        statuscallback('Uploading...')
+        statuscallback('Uploading...', -1)
         if site.upload(page, source_filename=filename, comment=comment, text=filedesc, chunk_size=chunked):
-            statuscallback('Upload success!')
+            statuscallback('Upload success!', 100)
             return True
         else:
             errorcallback('Upload failed! You may want to upload the file manually from <a href="%s">%s</s>' % (fileurl, fileurl))

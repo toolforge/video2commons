@@ -696,8 +696,8 @@ class WebVideoTranscodeJob(object):
                 newFileSize = os.path.getsize(self.getTargetEncodePath()) if os.path.isfile(self.getTargetEncodePath()) else 0
                 # Don't start checking for file growth until we have an initial positive file size:
                 if newFileSize > 0:
-                    self.output(wfFormatSize(newFileSize) + ' Total size, encoding ' +
-                        wfFormatSize((newFileSize - oldFileSize) / 5) + ' per second')
+                    #self.output(wfFormatSize(newFileSize) + ' Total size, encoding ' +
+                    #    wfFormatSize((newFileSize - oldFileSize) / 5) + ' per second')
                     if newFileSize == oldFileSize:
                         if fileIsNotGrowing:
                             errorMsg = "Target File is not increasing in size, kill process."
