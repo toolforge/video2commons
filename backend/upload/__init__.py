@@ -31,7 +31,7 @@ def upload(filename, wikifilename, sourceurl, fileurl, filedesc, statuscallback 
         site = pywikibot.Site('commons', 'commons')
         page = pywikibot.FilePage(site, wikifilename)
         comment = u'Imported media from ' + sourceurl
-        chunked = math.trunc(64 * (1 << 20)) if size >= 100000000 else 0
+        chunked = (64 * (1 << 20)) if size >= 100000000 else 0
 
         statuscallback('Uploading...', -1)
         if site.upload(page, source_filename=filename, comment=comment, text=filedesc, chunk_size=chunked):

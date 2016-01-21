@@ -46,7 +46,7 @@ class Downloader(object):
                 'key': 'FFmpegSubtitlesConvertor',
                 'format': 'srt',
             },
-            'max_filesize': '1g',
+            'max_filesize': 5 * (1 << 30),
             'prefer_ffmpeg': True, # avconv do not have srt encoder
         }
 
