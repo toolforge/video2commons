@@ -37,7 +37,6 @@ def encode(source, key, statuscallback = None, errorcallback = None):
             preserve['audio'] = True
 
     job = WebVideoTranscodeJob(source, target, key, preserve, statuscallback, errorcallback)
-    job.run()
 
-    return target
+    return target if job.run() else None
 

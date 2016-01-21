@@ -17,8 +17,7 @@
 
 import os
 import subprocess
-import requests
-import md5
+import pywikibot
 import pycountry # https://bitbucket.org/flyingcircus/pycountry
 from converter import Converter # https://github.com/senko/python-video-converter
 import chardet # https://github.com/chardet/chardet
@@ -59,6 +58,7 @@ class SubtitlesUploader(object):
                     self.statuscallback('Finished processing subtitle in ' + langname, int(percent))
 
             except Exception, e:
+                self.statuscallback(type(e).__name__ + ": " + str(e), None)
                 print e
                 pass
 
@@ -91,31 +91,11 @@ class SubtitlesUploader(object):
             return target
 
     def edit(title, text, summary):
-        text = text.encode("utf-8")
-        md5hash = md5.new(text).digest()
-        response = requests.get(
-            "https://commons.wikimedia.org/w/api.php",
-            params={
-                'action': "query",
-                'meta': "tokens",
-                'format': "json"
-            },
-            auth=auth1
-        )
-        token = response.json()['query']['tokens']['csrftoken']
-        response = requests.get(
-            "https://commons.wikimedia.org/w/api.php",
-            params={
-                'action': "edit",
-                'title': title.encode("utf-8"),
-                'text': text,
-                'md5': md5hash,
-                'createonly': '1',
-                'token': token,
-                'text': "json"
-            },
-            auth=auth1
-        )
+        # ENSURE PYWIKIBOT OAUTH PROPERLY CONFIGURED!
+        site = pywikibot.Site('commons', 'commons')
+        page = pywikibot.Page(site, title)
+        if not page.exists(): page.save(summary=summary, minor=False)
+
 
 def subtitles(subtitles, wikifilename, auth1, statuscallback = None, errorcallback = None):
     job = SubtitlesUploader(subtitles, wikifilename, auth1, statuscallback, errorcallback)
