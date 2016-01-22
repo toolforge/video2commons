@@ -93,6 +93,8 @@ def generate_dir():
     for i in range(10): # 10 tries
         id = os.urandom(8).encode('hex')
         outputdir = '/srv/v2coutput/' + id
-        if not os.path.isdir(outputdir): break
+        if not os.path.isdir(outputdir):
+            os.mkdir(path)
+            break
     else:
         raise TaskError("Too many retries to generate a task id")
