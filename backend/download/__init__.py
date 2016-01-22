@@ -78,7 +78,7 @@ class Downloader(object):
                 if d['total_bytes'] else None
             self.statuscallback('Downloading to ' +\
                 (d['tmpfilename'] or d['filename']), percentage)
-        elif d['status'] == 'downloading':
+        elif d['status'] == 'finished':
             self.statuscallback('Postprocessing...', -1)
         elif d['status'] == 'error':
             self.errorcallback('Error raised by YoutubeDL')
