@@ -24,7 +24,7 @@ import subtitles as subtitleuploader
 import shutil
 
 # TODO
-app = Celery('v2cbackend', broker='TODO')
+app = celery.Celery('v2cbackend', backend='TODO', broker='TODO')
 
 class stats:
     text = ''
@@ -36,7 +36,7 @@ class TaskError(Exception):
         super(TaskError, self).__init__(desc)
         
 
-@app.task(bind=True)
+@app.task(bind=True, track_started=True)
 def main(self, url, ie_key, subtitles, filename, filedesc, convertkey, oauth):
     outputdir = generate_dir()
     s = stats()
