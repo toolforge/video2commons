@@ -37,7 +37,7 @@ class TaskError(Exception):
         
 
 @app.task(bind=True, track_started=True)
-def main(self, url, ie_key, subtitles, filename, filedesc, convertkey, oauth):
+def main(self, url, ie_key, subtitles, filename, filedesc, convertkey, username, oauth):
     outputdir = generate_dir()
     s = stats()
     def statuscallback(text, percent):
@@ -65,22 +65,25 @@ def main(self, url, ie_key, subtitles, filename, filedesc, convertkey, oauth):
     import pywikibot
     reload(pywikibot)
     pywikibot.config.authenticate['commons.wikimedia.org'] = oauth
+    pywikibot.config.usernames['commons']['commons'] = username
+    pywikibot.Site('commons', 'commons', user=username).login()
 
     statuscallback('Uploading...', -1)
     fileurl = 'http://nowhere' # TODO
     filename += '.' + ext
-    uploadsuccess = upload.upload(file, filename, url, fileurl, filedesc, statuscallback, errorcallback)
+    uploadsuccess = upload.upload(file, filename, url, fileurl, filedesc, username, statuscallback, errorcallback)
     if not uploadsuccess: errorcallback('Upload failed!')
 
     if subtitles:
         statuscallback('Uploading subtitles...', -1)
         try:
-            subtitleuploader.subtitles(subtitles, filename, statuscallback, errorcallback)
+            subtitleuploader.subtitles(subtitles, filename, username, statuscallback, errorcallback)
         except:
             pass
 
     statuscallback('Cleaning up...', -1)
     pywikibot.config.authenticate.clear()
+    pywikibot.config.usernames['commons'].clear()
     pywikibot._sites.clear()
 
     shutil.rmtree(outputdir)

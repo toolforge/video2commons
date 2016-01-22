@@ -20,7 +20,8 @@
 import os
 import pywikibot
 
-def upload(filename, wikifilename, sourceurl, fileurl, filedesc, statuscallback = None, errorcallback = None):
+def upload(filename, wikifilename, sourceurl, fileurl, filedesc, username,
+        statuscallback = None, errorcallback = None):
     statuscallback = statuscallback or (lambda text, percent: None)
     errorcallback = errorcallback or (lambda text: None)
 
@@ -28,7 +29,8 @@ def upload(filename, wikifilename, sourceurl, fileurl, filedesc, statuscallback 
     size = os.path.getsize(filename)
     if size < 1000000000:
         # Upload
-        site = pywikibot.Site('commons', 'commons')
+        # ENSURE PYWIKIBOT OAUTH PROPERLY CONFIGURED!
+        site = pywikibot.Site('commons', 'commons', user=username)
         page = pywikibot.FilePage(site, wikifilename)
         comment = u'Imported media from ' + sourceurl
         chunked = (64 * (1 << 20)) if size >= 100000000 else 0

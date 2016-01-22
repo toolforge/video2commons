@@ -23,10 +23,11 @@ from converter import Converter # https://github.com/senko/python-video-converte
 import chardet # https://github.com/chardet/chardet
 
 class SubtitlesUploader(object):
-    def __init__(self, subtitles, wikifilename,
+    def __init__(self, subtitles, wikifilename, username,
             statuscallback = None, errorcallback = None):
         self.subtitles = subtitles
         self.wikifilename = wikifilename
+        self.username = username
         self.statuscallback = statuscallback or (lambda text, percent: None)
         self.errorcallback = errorcallback or (lambda text: None)
 
@@ -91,7 +92,7 @@ class SubtitlesUploader(object):
 
     def edit(title, text, summary):
         # ENSURE PYWIKIBOT OAUTH PROPERLY CONFIGURED!
-        site = pywikibot.Site('commons', 'commons')
+        site = pywikibot.Site('commons', 'commons', user=self.username)
         page = pywikibot.Page(site, title)
         if not page.exists(): page.save(summary=summary, minor=False)
 
