@@ -41,8 +41,8 @@ def main(self, url, ie_key, subtitles, filename, filedesc, convertkey, oauth):
     outputdir = generate_dir()
     s = stats()
     def statuscallback(text, percent):
-        if text: s.text = text
-        if percent: s.percent = percent
+        if text is not None: s.text = text
+        if percent is not None: s.percent = percent
         self.update_state(state='PROGRESS',
             meta={'text': s.text, 'percent': s.percent})
 
@@ -59,6 +59,7 @@ def main(self, url, ie_key, subtitles, filename, filedesc, convertkey, oauth):
     statuscallback('Converting...', -1)
     file = encode.encode(file, key, statuscallback, errorcallback)
     if not file: errorcallback('Convert failed!')
+    ext = file.split('.')[-1]
 
     statuscallback('Configuring Pywikibot...', -1)
     import pywikibot
@@ -67,6 +68,7 @@ def main(self, url, ie_key, subtitles, filename, filedesc, convertkey, oauth):
 
     statuscallback('Uploading...', -1)
     fileurl = 'http://nowhere' # TODO
+    filename += '.' + ext
     uploadsuccess = upload.upload(file, filename, url, fileurl, filedesc, statuscallback, errorcallback)
     if not uploadsuccess: errorcallback('Upload failed!')
 
@@ -84,6 +86,8 @@ def main(self, url, ie_key, subtitles, filename, filedesc, convertkey, oauth):
     shutil.rmtree(outputdir)
 
     statuscallback('Done!', 100)
+
+    return filename
 
 def generate_dir():
     for i in range(10): # 10 tries
