@@ -41,7 +41,6 @@ def upload(filename, wikifilename, sourceurl, fileurl, filedesc, username,
             return page.full_url()
         else:
             errorcallback('Upload failed! You may want to upload the file manually from <a href="%s">%s</s>' % (fileurl, fileurl))
-            return
 
     else:
         # Source: videoconverter tool
@@ -56,5 +55,4 @@ Thank you!""" % (wikifilename, fileurl,
         phaburl = 'https://phabricator.wikimedia.org/maniphest/task/create/?title=Please%20upload%20large%20file%20to%20Wikimedia%20Commons&projects=Wikimedia-Site-requests,commons&description=' + \
             urllib.quote(phabdesc)
         errorcallback('File too large to upload directly! You may want to <a href="%s">request a server-side upload</s>' % (phaburl))
-        return
 
