@@ -38,7 +38,7 @@ def upload(filename, wikifilename, sourceurl, fileurl, filedesc, username,
         statuscallback('Uploading...', -1)
         if site.upload(page, source_filename=filename, comment=comment, text=filedesc, chunk_size=chunked):
             statuscallback('Upload success!', 100)
-            return True
+            return page.full_url()
         else:
             errorcallback('Upload failed! You may want to upload the file manually from <a href="%s">%s</s>' % (fileurl, fileurl))
             return False

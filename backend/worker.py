@@ -75,8 +75,8 @@ def main(self, url, ie_key, subtitles, filename, filedesc, convertkey, username,
     statuscallback('Uploading...', -1)
     fileurl = 'http://v2c.wmflabs.org/' + '/'.join(file.split('/')[3:])
     filename += '.' + ext
-    uploadsuccess = upload.upload(file, filename, url, fileurl, filedesc, username, statuscallback, errorcallback)
-    if not uploadsuccess: errorcallback('Upload failed!')
+    wikifileurl = upload.upload(file, filename, url, fileurl, filedesc, username, statuscallback, errorcallback)
+    if not wikifileurl: errorcallback('Upload failed!')
 
     if subtitles:
         statuscallback('Uploading subtitles...', -1)
@@ -94,7 +94,7 @@ def main(self, url, ie_key, subtitles, filename, filedesc, convertkey, username,
 
     statuscallback('Done!', 100)
 
-    return filename
+    return filename, wikifileurl
 
 def generate_dir():
     for i in range(10): # 10 tries
