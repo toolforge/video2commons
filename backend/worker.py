@@ -19,12 +19,14 @@
 
 import os
 import celery
+import shutil
 import download, encode, upload
 import subtitles as subtitleuploader
-import shutil
+from config import redis_pw
 
 # TODO
-app = celery.Celery('v2cbackend', backend='TODO', broker='TODO')
+redisurl = 'redis://:'+redis_pw+'@encoding01.video.eqiad.wmflabs:6379/'
+app = celery.Celery('v2cbackend', backend=redisurl+'1', broker=redisurl+'2')
 
 class stats:
     text = ''
@@ -71,7 +73,7 @@ def main(self, url, ie_key, subtitles, filename, filedesc, convertkey, username,
     pywikibot.Site('commons', 'commons', user=username).login()
 
     statuscallback('Uploading...', -1)
-    fileurl = 'http://nowhere' # TODO
+    fileurl = 'http://v2c.wmflabs.org/' + '/'.join(file.split('/')[3:])
     filename += '.' + ext
     uploadsuccess = upload.upload(file, filename, url, fileurl, filedesc, username, statuscallback, errorcallback)
     if not uploadsuccess: errorcallback('Upload failed!')
