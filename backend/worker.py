@@ -57,9 +57,8 @@ def main(self, url, ie_key, subtitles, filename, filedesc, convertkey, oauth):
     subtitles = subtitles and d['subtitles']
 
     statuscallback('Converting...', -1)
-    if file.split('.')[-1].lower() not in ['ogg', 'ogv', 'oga', 'webm', 'opus', 'flac', 'mid', 'wav']:
-        file = encode.encode(file, key, statuscallback, errorcallback)
-        if not file: errorcallback('Convert failed!')
+    file = encode.encode(file, key, statuscallback, errorcallback)
+    if not file: errorcallback('Convert failed!')
 
     statuscallback('Configuring Pywikibot...', -1)
     import pywikibot
