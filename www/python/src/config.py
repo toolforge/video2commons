@@ -17,7 +17,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>
 #
 
-from video2commons import video2commons
+import os
 
-if __name__ == "__main__":
-    video2commons().loginredirect()
+for line in open(os.path.expanduser("~/config.py")):
+    exec line
