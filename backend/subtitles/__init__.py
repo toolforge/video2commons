@@ -81,14 +81,7 @@ class SubtitlesUploader(object):
         target = filename + '.srt'
         cmd = ['/usr/bin/ffmpeg', '-i', filename, '-f', 'srt', '-']
         self.statuscallback("Running cmd: %s" % cmd, None)
-        try:
-            return subprocess.check_output(cmd, stderr=None)
-        except:
-            # https://github.com/JDaren/subtitleConverter
-            cmd = ['/usr/bin/java', '-jar', 'subtitleConvert.jar', format, target, 'srt']
-            self.statuscallback("Running cmd: %s" % cmd, None)
-            subprocess.check_output(cmd, stderr=subprocess.STDOUT)
-            return target
+        return subprocess.check_output(cmd, stderr=None)
 
     def edit(title, text, summary):
         # ENSURE PYWIKIBOT OAUTH PROPERLY CONFIGURED!
