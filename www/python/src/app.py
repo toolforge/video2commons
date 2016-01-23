@@ -31,8 +31,6 @@ app = Flask(__name__)
 
 @app.errorhandler(Exception)
 def all_exception_handler(error):
-    import traceback
-    traceback.print_tb(err.__traceback__)
     return 'Please notify [[commons:User:Zhuyifei1999]]: ' + type(error).__name__ + ': ' + str(error), 500
 
 @app.route('/')
