@@ -78,10 +78,7 @@ def logincallback():
 
 @app.route('/logout')
 def logout():
-    session.pop('request_token_key', None)
-    session.pop('request_token_secret', None)
-    session.pop('access_token_key', None)
-    session.pop('access_token_secret', None)
+    session.clear()
 
     return redirect(url_for('main'))
 
