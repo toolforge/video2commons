@@ -19,5 +19,5 @@
 
 import os
 
-for line in open(os.path.expanduser("~/config.py")):
+for line in open(os.path.dirname(os.path.realpath(__file__))+"/../config.py"):
     exec line
