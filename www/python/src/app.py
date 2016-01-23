@@ -22,12 +22,14 @@ from flask import Flask, request, Response, session, render_template, redirect, 
 from mwoauth import AccessToken, ConsumerToken, RequestToken, Handshaker
 import requests
 from requests_oauthlib import OAuth1
-from config import consumer_key, consumer_secret, api_url
+from config import consumer_key, consumer_secret, api_url, session_key
 
 consumer_token = ConsumerToken(consumer_key, consumer_secret)
 handshaker = Handshaker(api_url, consumer_token)
 
 app = Flask(__name__)
+
+app.secret_key = session_key
 
 @app.errorhandler(Exception)
 def all_exception_handler(error):
