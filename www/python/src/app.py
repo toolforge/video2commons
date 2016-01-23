@@ -25,7 +25,7 @@ from requests_oauthlib import OAuth1
 from config import consumer_key, consumer_secret, api_url
 
 consumer_token = ConsumerToken(consumer_key, consumer_secret)
-handshaker = Handshaker(api_url, self.consumer_token)
+handshaker = Handshaker(api_url, consumer_token)
 
 app = Flask(__name__)
 
