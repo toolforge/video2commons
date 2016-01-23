@@ -43,7 +43,7 @@ def main():
             url_for('oauthinit') + \
             '"><center><input class="btn btn-primary btn-success btn-large" value="Login on Wikimedia Commons" type="submit"></center></form>')
 
-    return render_template('bootstraphtml.html', loggedin=True, '<noscript>Javascript is Required to use this tool!</noscript>')
+    return render_template('bootstraphtml.html', loggedin=True, content='<noscript>Javascript is Required to use this tool!</noscript>')
 
 def dologin():
     if not ('access_token_key' in session and 'access_token_secret' in session):
@@ -82,3 +82,6 @@ def logincallback():
     session.pop('access_token_secret', None)
 
     return redirect(url_for('/'))
+
+if __name__ == '__main__':
+    app.run()
