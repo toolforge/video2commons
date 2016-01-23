@@ -25,7 +25,6 @@ def upload(filename, wikifilename, sourceurl, fileurl, filedesc, username,
     statuscallback = statuscallback or (lambda text, percent: None)
     errorcallback = errorcallback or (lambda text: None)
 
-    # ENSURE PYWIKIBOT OAUTH PROPERLY CONFIGURED!
     size = os.path.getsize(filename)
     if size < 1000000000:
         # Upload
