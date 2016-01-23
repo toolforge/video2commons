@@ -17,7 +17,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>
 #
 
-from flask import Flask, request, Response, session, render_template, redirect
+from flask import Flask, request, Response, session, render_template, redirect, url_for
 # https://github.com/mediawiki-utilities/python-mwoauth
 from mwoauth import AccessToken, ConsumerToken, RequestToken, Handshaker
 import requests
@@ -31,7 +31,9 @@ app = Flask(__name__)
 
 @app.errorhandler(Exception)
 def all_exception_handler(error):
-   return 'Something went wrong. Please notify [[commons:User:Zhuyifei1999]]', 500
+    import traceback
+    traceback.print_tb(err.__traceback__)
+    return 'Please notify [[commons:User:Zhuyifei1999]]: ' + type(error).__name__ + ': ' + str(error), 500
 
 @app.route('/')
 def main():
