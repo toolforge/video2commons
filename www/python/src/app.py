@@ -18,6 +18,7 @@
 #
 
 from flask import Flask, request, Response, session, render_template, redirect
+# https://github.com/mediawiki-utilities/python-mwoauth
 from mwoauth import AccessToken, ConsumerToken, RequestToken, Handshaker
 import requests
 from requests_oauthlib import OAuth1
