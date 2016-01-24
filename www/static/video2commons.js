@@ -4,7 +4,7 @@
 	var video2commons = window.video2commons = {};
 
 	video2commons.init = function() {
-		$('#content').html('<center><img alt="File:Ajax-loader.gif" src="https://upload.wikimedia.org/wikipedia/commons/d/de/Ajax-loader.gif" data-file-width="32" data-file-height="32" height="32" width="32">&nbsp;&nbsp;LOADING...</center>');
+		$('#content').html('<center><img alt="File:Ajax-loader.gif" src="//upload.wikimedia.org/wikipedia/commons/d/de/Ajax-loader.gif" data-file-width="32" data-file-height="32" height="32" width="32">&nbsp;&nbsp;LOADING...</center>');
 		this.checkStatus();
 	};
 
@@ -154,9 +154,9 @@
       <div class="modal-body" style="padding:40px 50px;"></div>\n\
       <div class="modal-footer">\n\
         <button type="submit" class="btn btn-danger pull-left" data-dismiss="modal"><span class="glyphicon glyphicon-remove"></span> Cancel</button>\n\
-        <img class="pull-right" alt="File:Ajax-loader.gif" src="https://upload.wikimedia.org/wikipedia/commons/d/de/Ajax-loader.gif" data-file-width="32" data-file-height="32" height="32" width="32" id="dialog-spinner">\n\
         <button type="submit" class="btn btn-success pull-right" id="btn-next">Next <span class="glyphicon glyphicon-chevron-right"></span></button>\n\
         <button type="submit" class="btn btn-warning pull-right disabled" id="btn-prev"><span class="glyphicon glyphicon-chevron-left"></span> Back</button>\n\
+        <img class="pull-right" alt="File:Ajax-loader.gif" src="//upload.wikimedia.org/wikipedia/commons/d/de/Ajax-loader.gif" data-file-width="32" data-file-height="32" height="32" width="32" id="dialog-spinner">\n\
       </div>\n\
     </div>\n\
   </div>\n\
@@ -166,7 +166,7 @@
 
 		window.addTaskDialog.find('#dialog-spinner').hide();
 		window.addTaskDialog.find('.modal-body')
-			.html('<center><img alt="File:Ajax-loader.gif" src="https://upload.wikimedia.org/wikipedia/commons/d/de/Ajax-loader.gif" data-file-width="32" data-file-height="32" height="32" width="32"></center>');
+			.html('<center><img alt="File:Ajax-loader.gif" src="//upload.wikimedia.org/wikipedia/commons/d/de/Ajax-loader.gif" data-file-width="32" data-file-height="32" height="32" width="32"></center>');
 
 		this.newTask();
 		window.addTaskDialog.modal();
@@ -386,7 +386,7 @@
 					window.addTaskDialog.find('#btn-prev').addClass('disabled');
 					window.addTaskDialog.find('#btn-next').addClass('disabled');
 					window.addTaskDialog.modal("hide");
-					$('#tasktable > tbody').append('<tr id="task-new"><td><img class="pull-right" alt="File:Ajax-loader.gif" src="https://upload.wikimedia.org/wikipedia/commons/d/de/Ajax-loader.gif" data-file-width="32" data-file-height="32" height="32" width="32"></td></tr>');
+					$('#tasktable > tbody').append('<tr id="task-new"><td><img class="pull-right" alt="File:Ajax-loader.gif" src="//upload.wikimedia.org/wikipedia/commons/d/de/Ajax-loader.gif" data-file-width="32" data-file-height="32" height="32" width="32"></td></tr>');
 					var postdata = {
 						id: window.newTaskTempID,
 						action: 'next',
