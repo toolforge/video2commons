@@ -34,7 +34,15 @@
   </div>
 
   <div class="container" id="content">
-{{ content|safe }}
+{% if loggedin %}
+    <noscript>Javascript is Required to use this tool!</noscript>
+{% else %}
+    <form method="get" action="{{ url_for('loginredirect')">
+      <center>
+        <input class="btn btn-primary btn-success btn-large" value="Login on Wikimedia Commons" type="submit">
+      </center>
+    </form>
+{% endif %}
   </div>
 </body>
 </html>

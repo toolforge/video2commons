@@ -42,12 +42,9 @@ def main():
     try:
         dologin()
     except:
-        return render_template('bootstraphtml.html', loggedin=False,
-            content='<form method="get" action="' + \
-            url_for('loginredirect') + \
-            '"><center><input class="btn btn-primary btn-success btn-large" value="Login on Wikimedia Commons" type="submit"></center></form>')
+        return render_template('bootstraphtml.html', loggedin=False)
 
-    return render_template('bootstraphtml.html', loggedin=True, content='<noscript>Javascript is Required to use this tool!</noscript>')
+    return render_template('bootstraphtml.html', loggedin=True)
 
 def dologin():
     if not ('access_token_key' in session and 'access_token_secret' in session):
