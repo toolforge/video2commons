@@ -1,0 +1,31 @@
+// Source: https://phabricator.wikimedia.org/diffusion/MW/browse/master/.jshintrc
+{
+  // Enforcing
+  "bitwise": true,
+  "eqeqeq": true,
+  "es3": true,
+  "freeze": true,
+  "latedef": true,
+  "noarg": true,
+  "nonew": true,
+  "undef": true,
+  "unused": true,
+  "strict": false,
+
+  // Relaxing
+  "laxbreak": true,
+  "multistr": true,
+
+  // Environment
+  "browser": true,
+
+  "globals": {
+    "mediaWiki": true,
+    "JSON": true,
+    "OO": true,
+    "mwPerformance": true,
+    "jQuery": false,
+    "QUnit": false,
+    "sinon": false
+  }
+}

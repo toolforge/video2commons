@@ -1,8 +1,7 @@
-/*jshint multistr: true */
-( function ($) {
+(function($) {
 	'use strict';
 
-	video2commons = window.video2commons = {};
+	var video2commons = window.video2commons = {};
 
 	video2commons.init = function() {
 		$('#content').html('<center><img alt="File:Ajax-loader.gif" src="https://upload.wikimedia.org/wikipedia/commons/d/de/Ajax-loader.gif" data-file-width="32" data-file-height="32" height="32" width="32">&nbsp;&nbsp;LOADING...</center>');
@@ -38,7 +37,7 @@
 	};
 
 	video2commons.setProgressBar = function(item, progress) {
-		bar = item.find('.progress-bar');
+		var bar = item.find('.progress-bar');
 		if (progress < 0) {
 			bar.addClass('progress-bar-striped active')
 				.addClass('active')
@@ -89,7 +88,7 @@
 				});
 				table.append(row);
 				setup = true;
-			} else if (row.attr('status') != val.status) {
+			} else if (row.attr('status') !== val.status) {
 				row.html('');
 				setup = true;
 			}
@@ -137,7 +136,7 @@
 			row.find('#' + id + '-title').text(val.title);
 			row.find('#' + id + '-statustext').text(val.text);
 
-			if (val.status == 'progress')
+			if (val.status === 'progress')
 				this.setProgressBar(row.find('#' + id + '-progress'), -1);
 		});
 	};
@@ -387,7 +386,7 @@
 					window.addTaskDialog.find('#btn-prev').addClass('disabled');
 					window.addTaskDialog.find('#btn-next').addClass('disabled');
 					window.addTaskDialog.modal("hide");
-					var table = $('#tasktable > tbody').append('<tr id="task-new"><td><img class="pull-right" alt="File:Ajax-loader.gif" src="https://upload.wikimedia.org/wikipedia/commons/d/de/Ajax-loader.gif" data-file-width="32" data-file-height="32" height="32" width="32"></td></tr>');
+					$('#tasktable > tbody').append('<tr id="task-new"><td><img class="pull-right" alt="File:Ajax-loader.gif" src="https://upload.wikimedia.org/wikipedia/commons/d/de/Ajax-loader.gif" data-file-width="32" data-file-height="32" height="32" width="32"></td></tr>');
 					var postdata = {
 						id: window.newTaskTempID,
 						action: 'next',
@@ -395,7 +394,7 @@
 					};
 					$.post('/video2commons/api/task/submit', postdata).done(function(data) {
 						if (data.error)
-							alert(data.error);
+							window.alert(data.error);
 						video2commons.checkStatus();
 					});
 				});
@@ -406,7 +405,7 @@
 	video2commons.removeTask = function(taskid) {
 		$.post('/video2commons/api/task/remove', {id: taskid}).done(function(data) {
 			if (data.error)
-				alert(data.error);
+				window.alert(data.error);
 			video2commons.checkStatus();
 		});
 	};
@@ -414,4 +413,4 @@
 	$(document).ready(function() {
 		video2commons.init();
 	});
-} (jQuery) );
+}(jQuery));
