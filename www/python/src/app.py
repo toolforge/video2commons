@@ -33,7 +33,9 @@ app.secret_key = session_key
 
 @app.errorhandler(Exception)
 def all_exception_handler(error):
-    return 'Please notify [[commons:User:Zhuyifei1999]]: ' + type(error).__name__ + ': ' + str(error), 500
+    import traceback
+
+    return 'Please notify [[commons:User:Zhuyifei1999]]: ' + traceback.format_exc(), 500
 
 @app.route('/')
 def main():
