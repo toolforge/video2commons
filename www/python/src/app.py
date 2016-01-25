@@ -30,17 +30,21 @@ from redis import Redis
 from celery.result import AsyncResult
 import youtube_dl
 
+from redisession import RedisSessionInterface
+
 sys.path.append(os.path.dirname(os.path.realpath(__file__))+"/../../../backend/")
 import worker
 
 consumer_token = ConsumerToken(consumer_key, consumer_secret)
 handshaker = Handshaker(api_url, consumer_token)
 
+redisconnection = Redis(host='encoding01.video.eqiad.wmflabs', db=3, password=redis_pw)
+
 app = Flask(__name__)
 
-app.secret_key = session_key
+#app.secret_key = session_key
+app.session_interface = RedisSessionInterface(redisconnection)
 
-redisconnection = Redis(host='encoding01.video.eqiad.wmflabs', db=3, password=redis_pw)
 
 @app.errorhandler(Exception)
 def all_exception_handler(error):
