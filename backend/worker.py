@@ -27,6 +27,7 @@ from config import redis_pw
 # TODO
 redisurl = 'redis://:'+redis_pw+'@encoding01.video.eqiad.wmflabs:6379/'
 app = celery.Celery('v2cbackend', backend=redisurl+'1', broker=redisurl+'2')
+app.conf.CELERY_TASK_RESULT_EXPIRES = 30 * 24 * 3600 # 1 month
 
 class stats:
     text = ''
@@ -73,7 +74,7 @@ def main(self, url, ie_key, subtitles, filename, filedesc, convertkey, username,
     statuscallback('Uploading...', -1)
     fileurl = 'http://v2c.wmflabs.org/' + '/'.join(file.split('/')[3:])
     filename += '.' + ext
-    wikifileurl = upload.upload(file, filename, url, fileurl, filedesc, username, statuscallback, errorcallback)
+    filename, wikifileurl = upload.upload(file, filename, url, fileurl, filedesc, username, statuscallback, errorcallback)
     if not wikifileurl: errorcallback('Upload failed!')
 
     if subtitles:

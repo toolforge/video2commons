@@ -17,12 +17,21 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>
 #
 
-from flask import Flask, request, Response, session, render_template, redirect, url_for
+import re
+
+from flask import Flask, request, Response, session, render_template, redirect, url_for, jsonify
 # https://github.com/mediawiki-utilities/python-mwoauth
 from mwoauth import AccessToken, ConsumerToken, RequestToken, Handshaker
 import requests
 from requests_oauthlib import OAuth1
-from config import consumer_key, consumer_secret, api_url, session_key
+from config import consumer_key, consumer_secret, api_url, session_key, redis_pw
+from redis import Redis
+from celery.result import AsyncResult
+import youtube_dl
+
+import sys
+sys.path.append(os.path.dirname(os.path.realpath(__file__))+"/../../../backend/")
+import worker
 
 consumer_token = ConsumerToken(consumer_key, consumer_secret)
 handshaker = Handshaker(api_url, consumer_token)
@@ -30,6 +39,8 @@ handshaker = Handshaker(api_url, consumer_token)
 app = Flask(__name__)
 
 app.secret_key = session_key
+
+redisconnection = Redis(host='encoding01.video.eqiad.wmflabs', db=3)
 
 @app.errorhandler(Exception)
 def all_exception_handler(error):
@@ -52,7 +63,7 @@ def dologin():
 
     access_token = AccessToken(session['access_token_key'], session['access_token_secret'])
     #identity = 
-    handshaker.identify(access_token)
+    session['username'] = handshaker.identify(access_token)['username']
     return OAuth1(consumer_token.key,
             client_secret=consumer_token.secret,
             resource_owner_key=access_token.key,
@@ -65,7 +76,6 @@ def loginredirect():
     session['request_token_key'], session['request_token_secret'] = request_token.key, request_token.secret
 
     return redirect(redirecturl)
-
 
 @app.route('/oauthcallback')
 def logincallback():
@@ -80,6 +90,311 @@ def logout():
     session.clear()
 
     return redirect(url_for('main'))
+
+# APIs
+@app.route('/api/status')
+def status():
+    ids = getTasksFromRedis()
+    values = []
+    for id in ids:
+        title = getTitleFromTask(id)
+        if not title: continue # task has been forgotten -- results should have been expired
+        res = AsyncResult(id)
+        task = {
+            'id': id,
+            'title': title
+        }
+
+        if res.state == 'PENDING':
+            task['state'] = 'progress'
+            task['text'] = 'Your task is pending...'
+            task['progress'] = -1
+        elif res.state == 'STARTED':
+            task['state'] = 'progress'
+            task['text'] = 'Your task has been started; preprocessing...'
+            task['progress'] = -1
+        elif res.state == 'PROGRESS':
+            task['state'] = 'progress'
+            task['text'] = res.result['text']
+            task['progress'] = res.result['percent']
+        elif res.state == 'SUCCESS':
+            task['state'] = 'progress'
+            filename, wikifileurl = res.result
+            task['url'] = wikifileurl
+            task['text'] = filename
+        elif res.state == 'FAILURE':
+            task['state'] = 'fail'
+            e = res.result
+            task['text'] = 'An exception occured: %s: %s' % (type(e).__name__, str(e))
+        else:
+            task['state'] = 'fail'
+            task['text'] = 'Something weird going on. Please notify [[commons:User:Zhuyifei1999]]'
+
+        values.append(task)
+
+    return jsonify(ids=ids, values=values)
+
+def getTasks():
+    username = session['username']
+    if not redis.exists('tasks:' + user): return []
+    return redis.lrange('tasks:' + username, 0, -1)
+
+def getTitleFromTask(id):
+    return redis.get('titles:' + id)
+
+@app.route('/api/task/new', methods=['POST'])
+def newTask():
+    if not 'newtasks' in session:
+        session['newtasks'] = {}
+
+    id = ""
+    for i in range(10): # 10 tries
+        id = os.urandom(8).encode('hex')
+        if not id in session['newtasks']:
+            session['newtasks'][id] = {}
+            break
+    else:
+        raise RuntimeError("Too many retries to generate a task id")
+
+    session['newtasks'][id]['url'] = ""
+    session['newtasks'][id]['extractor'] = ""
+    session['newtasks'][id]['audio'] = True
+    session['newtasks'][id]['video'] = True
+    session['newtasks'][id]['subtitles'] = True
+    session['newtasks'][id]['filename'] = ""
+    session['newtasks'][id]['formats'] = []
+    session['newtasks'][id]['format'] = ""
+    session['newtasks'][id]['filedesc'] = ""
+
+    return jsonify(
+        id = id,
+        step = 'source',
+        url = session['newtasks'][id]['url'],
+        audio = session['newtasks'][id]['audio'],
+        video = session['newtasks'][id]['video'],
+        subtitles = session['newtasks'][id]['subtitles']
+    )
+
+@app.route('/api/task/submit', methods=['POST'])
+def submitTask():
+    try:
+        if not 'newtasks' in session:
+            session['newtasks'] = {}
+
+        # Asserts
+        if not 'id' in request.form:
+            return jsonify(step='error', error='Your submitted data cannot be parsed. Please try again.')
+
+        id = request.form['id']
+        if not id in session['newtasks']:
+            return jsonify(step='error', error='We could not process your data due to loss of session data. Please reload the page and try again.')
+
+        for datas in ['url', 'extractor', 'audio', 'video', 'subtitles', 'filename', 'format', 'formats', 'filedesc']:
+            if not data in session['newtasks'][id]:
+                return jsonify(step='error', error='We could not process your data due to loss of session data. Please reload the page and try again.')
+
+        # Save current data
+        step = request.form['step']
+        if step == 'source':
+            if not request.form['url'].strip():
+                return jsonify(step='error', error='URL cannot be empty!')
+
+            needRextract = request.form['url'].strip() != session['newtasks'][id]['url'] # re-extract url data via youtube-dl
+            needRelist = request.form['audio'].strip() != session['newtasks'][id]['audio'] or request.form['video'] != session['newtasks'][id]['video'] # re-list target formats
+
+            session['newtasks'][id]['url'] = request.form['url'].strip()
+            session['newtasks'][id]['audio'] = request.form['audio']
+            session['newtasks'][id]['video'] = request.form['video']
+            session['newtasks'][id]['subtitles'] = request.form['subtitles']
+
+            if needRextract:
+                rextractURL(id)
+            if needRelist:
+                relistFormats(id)
+
+        elif step == 'target':
+            if not request.form['format'].strip() in session['newtasks'][id]['formats']:
+                return jsonify(step='error', error='An invalid format was requested and could not be processed.')
+            if not (request.form['filename'].strip() and request.form['filedesc'].strip()):
+                return jsonify(step='error', error='Filename and file description cannot be empty!')
+            needRevalidate = request.form['filename'].strip() != session['newtasks'][id]['filename'] # re-validate filename for disallowed characters
+
+            session['newtasks'][id]['filename'] = request.form['filename'].strip()
+            session['newtasks'][id]['format'] = request.form['format'].strip()
+            session['newtasks'][id]['filedesc'] = request.form['filedesc'].strip()
+
+            if needRevalidate:
+                revalidateFilename(id)
+
+        elif step == 'confirm':
+            pass # nothing to do in confirm screen
+
+        else:
+            return jsonify(step='error', error='Something weird going on. Please notify [[commons:User:Zhuyifei1999]]')
+
+        action = request.form['action']
+        if step == 'source' and action == 'prev':
+            return jsonify(step='error', error='You cannot go to the previous step of first step.')
+        elif step == 'confirm' and action == 'next':
+            return runTask(id)
+
+        # Send new data
+        action = {'prev': -1, 'next': 1}[action]
+        steps = ['source', 'target', 'confirm']
+        step = steps[steps.index(steps)+action]
+
+        if step == 'source':
+            return jsonify(
+                id = id,
+                step = step, 
+                url = session['newtasks'][id]['url'],
+                audio = session['newtasks'][id]['audio'],
+                video = session['newtasks'][id]['video'],
+                subtitles = session['newtasks'][id]['subtitles']
+            )
+        elif step == 'target':
+            return jsonify(
+                id = id,
+                step = step, 
+                filename = session['newtasks'][id]['filename'],
+                format = session['newtasks'][id]['format'],
+                filedesc = session['newtasks'][id]['filedesc']
+            )
+        elif step == 'confirm':
+            keep = ", ".join(filter([
+                'video' if session['newtasks'][id]['video'] else False,
+                'audio' if session['newtasks'][id]['audio'] else False,
+                'subtitles' if session['newtasks'][id]['subtitles'] else False,
+            ]))
+            return jsonify(
+                id = id,
+                step = step, 
+                url = session['newtasks'][id]['url'],
+                extractor = session['newtasks'][id]['extractor'],
+                keep = keep,
+                filename = session['newtasks'][id]['filename'],
+                format = session['newtasks'][id]['format'],
+                filedesc = session['newtasks'][id]['filedesc']
+            )
+
+    except Exception, e:
+        return jsonify(step='error', error='An exception occured: %s: %s' % (type(e).__name__, str(e)))
+
+def relistFormats(id):
+    formats = []
+    prefer = ''
+    if not session['newtasks'][id]['video'] and not session['newtasks'][id]['audio']:
+        raise RuntimeError('Eithor video or audio must be kept')
+    elif session['newtasks'][id]['video'] and not session['newtasks'][id]['audio']:
+        formats = ['ogg (Theora)', 'webm (VP8)', 'webm (VP9)']
+        prefer = 'webm (VP8)'
+    elif not session['newtasks'][id]['video'] and session['newtasks'][id]['audio']:
+        formats = ['ogg (Vorbis)', 'opus (Opus)']
+        prefer = 'ogg (Vorbis)'
+    elif session['newtasks'][id]['video'] and session['newtasks'][id]['audio']:
+        formats = ['ogg (Theora/Vorbis)', 'webm (VP8/Vorbis)', 'webm (VP9/Opus)']
+        prefer = 'webm (VP8/Vorbis)'
+
+    session['newtasks'][id]['format'] = prefer
+    session['newtasks'][id]['formats'] = formats
+
+def getConvertKey(format):
+    return {
+        'ogg (Theora)': 'an.ogv',
+        'webm (VP8)': 'an.webm',
+        'webm (VP9)': 'an.vp9.webm',
+        'ogg (Vorbis)': 'ogg',
+        'opus (Opus)': 'opus',
+        'ogg (Theora/Vorbis)': 'ogv',
+        'webm (VP8/Vorbis)': 'webm',
+        'webm (VP9/Opus)': 'vp9.webm',
+    }[format]
+
+def revalidateFilename(id):
+    filename = session['newtasks'][id]['filename']
+    for char in '[]{}|#<>%+?!:/\\.':
+        assert char not in filename, 'Your filename contains an illegal character: ' + char
+
+    illegalords = range(0, 32) + [127]
+    for char in filename:
+        assert ord(char) not in illegalords, 'Your filename contains an illegal character: chr(%d)' % ord(char) # prevent bad renderings
+
+    assert not re.search(r"&[A-Za-z0-9\x80-\xff]+;"), 'Your filename contains XML/HTML character references'
+
+    session['newtasks'][id]['filename'] = filename.replace('_', ' ')
+
+def rextractURL(id):
+    params = {
+        'format': self.formats,
+        'outtmpl': '/dev/null',
+        'writedescription': True,
+        'writeinfojson': True,
+        'writesubtitles': False,
+        'subtitlesformat': 'srt/ass/vtt/best',
+        'cachedir': '/tmp/',
+        'noplaylist': True, # not implemented in video2commons
+    }
+    url = session['newtasks'][id]['url']
+    info = youtube_dl.YoutubeDL(params).extract_info(url, download=False)
+
+    assert 'formats' in info, 'Your url cannot be processed correctly'
+
+    session['newtasks'][id]['extractor'] = info['extractor'],
+    title = info.get('title', '').strip()
+    uploader = self.info.get('uploader', '').strip()
+    date = self.info.get('upload_date', '').strip()
+    desc = self.info.get('description').strip()
+
+    # Process date
+    if re.match(r'^[0-9]{8}$', date):
+        date = '%s-%s-%s' % (date[0:4], date[4:6], date[6:8])
+
+    filedesc = """
+=={{int:filedesc}}==
+{{Information
+|description=%(desc)s
+|date=%(date)s
+|source=%(url)s
+|author=%(uploader)s
+|permission=
+|other_versions=
+|other_fields=
+}}
+
+=={{int:license-header}}==
+{{subst:nld}}
+
+[[Category:Uploaded with video2commons]]
+""" % {
+        'desc': desc or title,
+        'date': date,
+        'url': url,
+        'uploader': uploader
+    }
+    session['newtasks'][id]['filedesc'] = filedesc.strip()
+    session['newtasks'][id]['filename'] = filedesc.strip()
+
+def runTask(id):
+    url = session['newtasks'][id]['url']
+    ie_key = session['newtasks'][id]['extractor']
+    subtitles = session['newtasks'][id]['subtitles']
+    filename = session['newtasks'][id]['filename']
+    filedesc = session['newtasks'][id]['filedesc']
+    convertkey = getConvertKey(session['newtasks'][id]['format'])
+    username = session['username']
+    oauth = (consumer_token.key, consumer_token.secret, session['access_token_key'], session['access_token_secret'])
+
+    res = worker.main.delay(url, ie_key, subtitles, filename, filedesc, convertkey, username, oauth)
+    taskid = res.id
+
+    expire = 2 * 30 * 24 * 3600 # 2 months
+    redis.lpush('tasks:' + username, taskid)
+    redis.expire('tasks:' + username, expire)
+    redis.set('titles:' + taskid, filename)
+    redis.expire('titles:' + taskid, expire)
+
+    return jsonify(id = id, step = "success", taskid = taskid)
+
 
 if __name__ == '__main__':
     app.run()

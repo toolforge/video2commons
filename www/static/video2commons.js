@@ -131,13 +131,20 @@
 							.addClass('danger');
 						break;
 				}
+
+				row.attr('status', val.status);
 			}
 
 			row.find('#' + id + '-title').text(val.title);
-			row.find('#' + id + '-statustext').text(val.text);
+			if  (val.status === 'done') {
+				row.find('#' + id + '-statustext').html('Your task is done. You may find your upload at <a></a>.')
+					.find('a').attr('href', val.url).text(val.url);
+			} else {
+				row.find('#' + id + '-statustext').text(val.text);
+			}
 
 			if (val.status === 'progress')
-				this.setProgressBar(row.find('#' + id + '-progress'), -1);
+				this.setProgressBar(row.find('#' + id + '-progress'), val.progress);
 		});
 	};
 
@@ -187,9 +194,12 @@
 		window.addTaskStep = data.step;
 		switch (data.step) {
 			case 'error':
-				window.addTaskDialog.find('.modal-body').append(
-					$('<div class="alert alert-danger"></div>').text('Error: ' + data.error)
-				);
+				if (!window.addTaskDialog.find('.modal-body #dialog-errorbox').length) {
+					window.addTaskDialog.find('.modal-body').append(
+						$('<div class="alert alert-danger" id="dialog-errorbox"></div>')
+					);
+				}
+				window.addTaskDialog.find('.modal-body #dialog-errorbox').text('Error: ' + data.error).show();
 				break;
 			case 'source':
 				// setup
@@ -227,6 +237,7 @@
 
 				// callback
 				window.addTaskDialog.find('#btn-next').click(function() {
+					window.addTaskDialog.find('.modal-body #dialog-errorbox').hide();
 					window.addTaskDialog.find('#btn-prev').addClass('disabled');
 					window.addTaskDialog.find('#btn-next').addClass('disabled');
 					window.addTaskDialog.find('#dialog-spinner').show();
@@ -279,6 +290,7 @@
 
 				// callback
 				window.addTaskDialog.find('#btn-prev').click(function() {
+					window.addTaskDialog.find('.modal-body #dialog-errorbox').hide();
 					window.addTaskDialog.find('#btn-prev').addClass('disabled');
 					window.addTaskDialog.find('#btn-next').addClass('disabled');
 					window.addTaskDialog.find('#dialog-spinner').show();
@@ -295,6 +307,7 @@
 					});
 				});
 				window.addTaskDialog.find('#btn-next').click(function() {
+					window.addTaskDialog.find('.modal-body #dialog-errorbox').hide();
 					window.addTaskDialog.find('#btn-prev').addClass('disabled');
 					window.addTaskDialog.find('#btn-next').addClass('disabled');
 					window.addTaskDialog.find('#dialog-spinner').show();
@@ -370,6 +383,7 @@
 
 				// callback
 				window.addTaskDialog.find('#btn-prev').click(function() {
+					window.addTaskDialog.find('.modal-body #dialog-errorbox').hide();
 					window.addTaskDialog.find('#btn-prev').addClass('disabled');
 					window.addTaskDialog.find('#btn-next').addClass('disabled');
 					window.addTaskDialog.find('#dialog-spinner').show();
@@ -383,10 +397,11 @@
 					});
 				});
 				window.addTaskDialog.find('#btn-next').click(function() {
+					window.addTaskDialog.find('.modal-body #dialog-errorbox').hide();
 					window.addTaskDialog.find('#btn-prev').addClass('disabled');
 					window.addTaskDialog.find('#btn-next').addClass('disabled');
 					window.addTaskDialog.modal("hide");
-					$('#tasktable > tbody').append('<tr id="task-new"><td><img class="pull-right" alt="File:Ajax-loader.gif" src="//upload.wikimedia.org/wikipedia/commons/d/de/Ajax-loader.gif" data-file-width="32" data-file-height="32" height="32" width="32"></td></tr>');
+					$('#tasktable > tbody').prepend('<tr id="task-new"><td><img class="pull-right" alt="File:Ajax-loader.gif" src="//upload.wikimedia.org/wikipedia/commons/d/de/Ajax-loader.gif" data-file-width="32" data-file-height="32" height="32" width="32"></td></tr>');
 					var postdata = {
 						id: window.newTaskTempID,
 						action: 'next',

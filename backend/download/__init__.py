@@ -48,6 +48,7 @@ class Downloader(object):
             },
             'max_filesize': 5 * (1 << 30),
             'prefer_ffmpeg': True, # avconv do not have srt encoder
+            'prefer_free_formats': True
         }
 
         self.statuscallback('Creating YoutubeDL instance', -1)
@@ -61,7 +62,7 @@ class Downloader(object):
             'extractor': ie_key,
             'title': self.info.get('title'),
             'uploader': self.info.get('uploader'),
-            'date': self.info.get('uploader'),
+            'date': self.info.get('upload_date'),
             'desc': self.info.get('description'),
             'subtitles': {},
             'target': self.outtmpl % {'ext':self.info['ext']},
