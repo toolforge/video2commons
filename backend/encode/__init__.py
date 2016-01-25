@@ -29,8 +29,9 @@ def encode(source, origkey, statuscallback = None, errorcallback = None):
     info = c.probe(source)
 
     targettype = WebVideoTranscode.derivativeSettings.get(origkey)
-
     key = getbestkey(info, targettype) or origkey
+    targettype = WebVideoTranscode.derivativeSettings.get(origkey)
+
     if info and targettype:
         if info.video and info.video.codec == targettype.get('videoCodec'):
             preserve['video'] = True
