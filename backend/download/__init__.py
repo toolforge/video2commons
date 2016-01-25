@@ -56,7 +56,7 @@ class Downloader(object):
         self.dl.add_progress_hook(self.progresshook)
 
         self.statuscallback('Preprocessing...', -1)
-        self.info = self.dl.extract_info(url, download=True, ie_key=self.ie_key)
+        self.info = self.dl.extract_info(self.url, download=True, ie_key=self.ie_key)
 
         ret = {
             'extractor': ie_key,

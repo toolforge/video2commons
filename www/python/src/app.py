@@ -396,6 +396,8 @@ def runTask(id):
     redisconnection.set('titles:' + taskid, filename)
     redisconnection.expire('titles:' + taskid, expire)
 
+    del session['newtasks'][id]
+
     return jsonify(id = id, step = "success", taskid = taskid)
 
 @app.route('/api/task/remove', methods=['POST'])
