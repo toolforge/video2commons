@@ -4,6 +4,7 @@
   <meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
   <title>video2commons</title>
   <link href="//tools-static.wmflabs.org/cdnjs/ajax/libs/twitter-bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
+  <link href="//tools-static.wmflabs.org/cdnjs/ajax/libs/github-fork-ribbon-css/0.1.1/gh-fork-ribbon.min.css" rel="stylesheet">
 {% if loggedin %}
   <script src="//tools-static.wmflabs.org/cdnjs/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
   <script src="//tools-static.wmflabs.org/cdnjs/ajax/libs/twitter-bootstrap/3.3.6/js/bootstrap.min.js"></script>
@@ -14,6 +15,9 @@
   <style>
     body {
       padding-top: 60px;
+    }
+    .right-bottom .github-fork-ribbon {
+      background-color: #333;
     }
   </style>
 </head>
@@ -43,6 +47,11 @@
       </center>
     </form>
 {% endif %}
+  </div>
+  <div class="github-fork-ribbon-wrapper right-bottom">
+    <div class="github-fork-ribbon">
+       <a href="https://github.com/Toollabs/video2commons">Fork me on GitHub</a>
+    </div>
   </div>
 </body>
 </html>
