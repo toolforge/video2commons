@@ -94,7 +94,7 @@ def logout():
 # APIs
 @app.route('/api/status')
 def status():
-    ids = getTasksFromRedis()
+    ids = getTasks()
     values = []
     for id in ids:
         title = getTitleFromTask(id)
