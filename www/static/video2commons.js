@@ -190,10 +190,10 @@
 	};
 
 	video2commons.setupAddTaskDialog = function(data) {
-		this.resetButtons();
 		window.addTaskDialog.find('#dialog-spinner').hide();
 		if (data.step != 'error')
 			window.addTaskStep = data.step;
+		this.resetButtons();
 		switch (data.step) {
 			case 'error':
 				if (!window.addTaskDialog.find('.modal-body #dialog-errorbox').length) {
