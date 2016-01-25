@@ -325,7 +325,7 @@ def revalidateFilename(id):
 
 def rextractURL(id):
     params = {
-        'format': self.formats,
+        'format': 'bestvideo+bestaudio/best',
         'outtmpl': '/dev/null',
         'writedescription': True,
         'writeinfojson': True,
