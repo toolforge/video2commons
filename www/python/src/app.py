@@ -257,6 +257,7 @@ def submitTask():
                 id = id,
                 step = step, 
                 filename = session['newtasks'][id]['filename'],
+                formats = session['newtasks'][id]['formats'],
                 format = session['newtasks'][id]['format'],
                 filedesc = session['newtasks'][id]['filedesc']
             )
