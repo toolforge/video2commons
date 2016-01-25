@@ -560,7 +560,7 @@ class WebVideoTranscodeJob(object):
             #    "memory": wgTranscodeBackgroundMemoryLimit,
             #    "time": wgTranscodeBackgroundTimeLimit
             #}
-            return runChildCmd(self, cmd)
+            return self.runChildCmd(cmd)
 
     def runChildCmd(self, cmd):
         """
