@@ -59,7 +59,7 @@ class Downloader(object):
         self.info = self.dl.extract_info(self.url, download=True, ie_key=self.ie_key)
 
         ret = {
-            'extractor': ie_key,
+            'extractor': self.ie_key,
             'title': self.info.get('title'),
             'uploader': self.info.get('uploader'),
             'date': self.info.get('upload_date'),

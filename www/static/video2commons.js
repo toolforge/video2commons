@@ -98,38 +98,38 @@
 			if (setup) {
 				switch (val.status) {
 					case 'progress':
-						row.append($('<td />').attr('id', id + '-title').attr('width', '%30'))
-							.append($('<td />').attr('id', id + '-status').attr('width', '%40')
+						row.append($('<td />').attr('id', id + '-title').attr('width', '30%'))
+							.append($('<td />').attr('id', id + '-status').attr('width', '40%')
 								.append($('<span />').attr('id', id + '-statustext')))
-							.append($('<td />').attr('id', id + '-progress').attr('width', '%30'));
+							.append($('<td />').attr('id', id + '-progress').attr('width', '30%'));
 						var progressbar = row.find('#' + id + '-progress')
 							.html('<div class="progress"><div class="progress-bar" role="progressbar"></div></div>');
 						video2commons.setProgressBar(progressbar, -1);
 						row.removeClass('success danger');
 						break;
 					case 'done':
-						row.append($('<td />').attr('id', id + '-title').attr('width', '%30'));
+						row.append($('<td />').attr('id', id + '-title').attr('width', '30%'));
 						removebutton = $('<button type="button" class="btn btn-danger btn-xs pull-right"><span class="glyphicon glyphicon-trash"></span> Remove</button>')
 							.attr('id', id + '-removebutton')
 							.click(function() {
 								$(this).addClass('disabled');
 								video2commons.removeTask(video2commons.getTaskIDFromDOMID($(this).attr('id')));
 							});
-						row.append($('<td />').attr('id', id + '-status').attr('width', '%70').attr('colspan', '2')
+						row.append($('<td />').attr('id', id + '-status').attr('width', '70%').attr('colspan', '2')
 								.append($('<span />').attr('id', id + '-statustext'))
 								.append(removebutton))
 							.removeClass('danger')
 							.addClass('success');
 						break;
 					case 'fail':
-						row.append($('<td />').attr('id', id + '-title').attr('width', '%30'));
+						row.append($('<td />').attr('id', id + '-title').attr('width', '30%'));
 						removebutton = $('<button type="button" class="btn btn-danger btn-xs pull-right"><span class="glyphicon glyphicon-trash"></span> Remove</button>')
 							.attr('id', id + '-removebutton')
 							.click(function() {
 								$(this).addClass('disabled');
 								video2commons.removeTask(video2commons.getTaskIDFromDOMID($(this).attr('id')));
 							});
-						row.append($('<td />').attr('id', id + '-status').attr('width', '%70').attr('colspan', '2')
+						row.append($('<td />').attr('id', id + '-status').attr('width', '70%').attr('colspan', '2')
 								.append($('<span />').attr('id', id + '-statustext'))
 								.append(removebutton))
 							.removeClass('success')
