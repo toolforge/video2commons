@@ -597,7 +597,7 @@ class WebVideoTranscodeJob(object):
             'nice -n ' + wfEscapeShellArg(wgTranscodeBackgroundPriority) + ' ' + cmd + ' 2>&1'
 
         source = open(self.getSourceFilePath(), 'r')
-        process = subprocess.Popen(cmd, stdin=subprocess.PIPE, stdout=sys.stdout, stderr=sys.stderr, shell=True)
+        process = subprocess.Popen(cmd, stdin=subprocess.PIPE, stdout=None, stderr=None, shell=True)
         status = TransferStatus(source, process.stdin, os.path.getsize(self.getSourceFilePath()))
         status.start()
         percentage = -1
