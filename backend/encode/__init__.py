@@ -45,10 +45,10 @@ def encode(source, origkey, statuscallback = None, errorcallback = None):
 
 def getbestkey(info, targettype):
     # Asserts
-    assert info and targettype
-    assert info.video or info.audio
-    assert info.video or not targettype.get('videoCodec')
-    assert info.audio or not targettype.get('audioCodec')
+    assert info and targettype, 'The file format could not be recognized or the target format is invalid.'
+    assert info.video or info.audio, 'The file has no video or audio tracks.'
+    assert info.video or not targettype.get('videoCodec'), 'Video is asked to be kept but the file has no video tracks.'
+    assert info.audio or not targettype.get('audioCodec'), 'Addio is asked to be kept but the file has no audio tracks.'
 
     if targettype.get('videoCodec') and targettype.get('audioCodec'):
         # need both video & audio -- no codec change in video & audio
