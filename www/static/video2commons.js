@@ -99,7 +99,8 @@
 				switch (val.status) {
 					case 'progress':
 						row.append($('<td />').attr('id', id + '-title').attr('width', '%30'))
-							.append($('<td />').attr('id', id + '-statustext').attr('width', '%40'))
+							.append($('<td />').attr('id', id + '-status').attr('width', '%40')
+								.append($('<span />').attr('id', id + '-statustext')))
 							.append($('<td />').attr('id', id + '-progress').attr('width', '%30'));
 						var progressbar = row.find('#' + id + '-progress')
 							.html('<div class="progress"><div class="progress-bar" role="progressbar"></div></div>');
@@ -114,7 +115,9 @@
 								$(this).addClass('disabled');
 								video2commons.removeTask(video2commons.getTaskIDFromDOMID($(this).attr('id')));
 							});
-						row.append($('<td />').attr('id', id + '-statustext').attr('width', '%70').attr('colspan', '2').append(removebutton))
+						row.append($('<td />').attr('id', id + '-status').attr('width', '%70').attr('colspan', '2')
+								.append($('<span />').attr('id', id + '-statustext'))
+								.append(removebutton))
 							.removeClass('danger')
 							.addClass('success');
 						break;
@@ -126,7 +129,9 @@
 								$(this).addClass('disabled');
 								video2commons.removeTask(video2commons.getTaskIDFromDOMID($(this).attr('id')));
 							});
-						row.append($('<td />').attr('id', id + '-statustext').attr('width', '%70').attr('colspan', '2').append(removebutton))
+						row.append($('<td />').attr('id', id + '-status').attr('width', '%70').attr('colspan', '2')
+								.append($('<span />').attr('id', id + '-statustext'))
+								.append(removebutton))
 							.removeClass('success')
 							.addClass('danger');
 						break;
