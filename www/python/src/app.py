@@ -241,7 +241,7 @@ def submitTask():
         # Send new data
         action = {'prev': -1, 'next': 1}[action]
         steps = ['source', 'target', 'confirm']
-        step = steps[steps.index(steps)+action]
+        step = steps[steps.index(step)+action]
 
         if step == 'source':
             return jsonify(
