@@ -396,6 +396,13 @@ def runTask(id):
 
     return jsonify(id = id, step = "success", taskid = taskid)
 
+@app.route('/api/task/new', methods=['POST'])
+def removeTask():
+    id = request.form['id']
+    username = session['username']
+    redisconnection.delete('titles:' + id)
+    redisconnection.lrem('tasks:' + username, 0, id)
+
 
 if __name__ == '__main__':
     app.run()
