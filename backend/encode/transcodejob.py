@@ -554,56 +554,15 @@ class WebVideoTranscodeJob(object):
         # Check if background tasks are enabled
         if wgEnableNiceBackgroundTranscodeJobs == False:
             # !!!
-            return 'wgEnableNiceBackgroundTranscodeJobs enforced'
             # Directly execute the shell command:
             #limits = {
             #    "filesize": wgTranscodeBackgroundSizeLimit,
             #    "memory": wgTranscodeBackgroundMemoryLimit,
             #    "time": wgTranscodeBackgroundTimeLimit
             #}
-            #return wfShellExec(cmd + ' 2>&1', retval, [], limits,
-            #    { 'profileMethod': caller })
+            return runChildCmd(self, cmd)
 
-
-        encodingLog = self.getTargetEncodePath() + '.stdout.log'
-        retvalLog = self.getTargetEncodePath() + '.retval.log'
-        # Check that we can actually write to these files
-        # (no point in running the encode if we can't write)
-        #wfSuppressWarnings()
-        try:
-            open(encodingLog, 'a').close()
-            open(retvalLog, 'a').close()
-        except:
-            #wfRestoreWarnings()
-            return 1, "Error could not write to target location"
-
-        #wfRestoreWarnings()
-
-        # Fork out a process for running the transcode
-        try:
-            pid = os.fork()
-        except OSError:
-            errorMsg = 'wgEnableNiceBackgroundTranscodeJobs enabled but failed os.fork'
-            self.output(errorMsg)
-            return 1, errorMsg
-        else:
-            if pid == 0:
-                # we are the child
-                retval = self.runChildCmd(cmd, encodingLog, retvalLog)
-                # dont remove any temp files in the child process, self is done
-                # once the parent is finished
-                #self.targetEncodeFile.preserve()
-                #if self.source instanceof TempFSFile:
-                #    self.source.preserve()
-
-                # exit with the same code as the transcode:
-                exit(retval)
-            else:
-                # we are the parent monitor and return status
-                return self.monitorTranscode(pid, encodingLog, retvalLog)
-
-
-    def runChildCmd(self, cmd, encodingLog, retvalLog):
+    def runChildCmd(self, cmd):
         """
         @param cmd
         @param encodingLog
@@ -637,9 +596,8 @@ class WebVideoTranscodeJob(object):
             'ulimit -t ' + wfEscapeShellArg(wgTranscodeBackgroundTimeLimit) + ';' + \
             'nice -n ' + wfEscapeShellArg(wgTranscodeBackgroundPriority) + ' ' + cmd + ' 2>&1'
 
-        log = open(encodingLog, 'w')
         source = open(self.getSourceFilePath(), 'r')
-        process = subprocess.Popen(cmd, stdin=subprocess.PIPE, stdout=log, stderr=None, shell=True)
+        process = subprocess.Popen(cmd, stdin=subprocess.PIPE, stdout=sys.stdout, stderr=sys.stderr, shell=True)
         status = TransferStatus(source, process.stdin, os.path.getsize(self.getSourceFilePath()))
         status.start()
         percentage = -1
@@ -652,150 +610,10 @@ class WebVideoTranscodeJob(object):
 
         # Output the status:
         #wfSuppressWarnings()
-        log.close()
         source.close()
-        # Output the retVal to the retvalLog
-        retval = process.returncode
-        rlog = open(retvalLog, 'w')
-        rlog.write(str(retval))
-        rlog.close()
         #wfRestoreWarnings()
 
-        return retval
-
-
-    def monitorTranscode(self, pid, encodingLog, retvalLog):
-        """
-        @param pid
-        @param retval
-        @param encodingLog
-        @param retvalLog
-        @return string
-        """
-        #global wgTranscodeBackgroundTimeLimit, wgLang
-        errorMsg = ''
-        loopCount = 0
-        oldFileSize = 0
-        startTime = int(time.time())
-        fileIsNotGrowing = False
-
-        status = os.waitpid( pid, os.WNOHANG or os.WUNTRACED )[1]
-        self.output("Encoding with pid: " + str(pid) + " \nos.waitpid: " + str(status) +
-            "\nisProcessRunning: " + str(self.isProcessRunningKillZombie(pid)) + "\n")
-
-        # Check that the child process is still running
-        # (note this does not work well with  pcntl_waitpid for some reason :()
-        while self.isProcessRunningKillZombie(pid):
-            # self.output("pid is running")
-
-            # Check that the target file is growing (every 5 seconds)
-            if loopCount == 10:
-                # only run check if we are outputing to target file
-                # (two pass encoding does not output to target on first pass)
-                #clearstatcache()
-                newFileSize = os.path.getsize(self.getTargetEncodePath()) if os.path.isfile(self.getTargetEncodePath()) else 0
-                # Don't start checking for file growth until we have an initial positive file size:
-                if newFileSize > 0:
-                    #self.output(wfFormatSize(newFileSize) + ' Total size, encoding ' +
-                    #    wfFormatSize((newFileSize - oldFileSize) / 5) + ' per second')
-                    if newFileSize == oldFileSize:
-                        if fileIsNotGrowing:
-                            errorMsg = "Target File is not increasing in size, kill process."
-                            self.output(errorMsg)
-                            # file is not growing in size, kill proccess
-                            retval = 1
-
-                            # posix_kill(pid, 9)
-                            self.killProcess(pid)
-                            break
-
-                        # Wait an additional 5 seconds of the file not growing to confirm
-                        # the transcode is frozen.
-                        fileIsNotGrowing = True
-                    else:
-                        fileIsNotGrowing = False
-
-                    oldFileSize = newFileSize
-
-                # reset the loop counter
-                loopCount = 0
-
-
-            # Check if we have global job run-time has been exceeded:
-            if wgTranscodeBackgroundTimeLimit and int(time.time()) - startTime  > wgTranscodeBackgroundTimeLimit:
-                errorMsg = "Encoding exceeded max job run time (" \
-                    + wfFormatTimeHMS(wgTranscodeBackgroundTimeLimit) + "), kill process."
-                self.output(errorMsg)
-                # File is not growing in size, kill proccess
-                retval = 1
-                # posix_kill(pid, 9)
-                self.killProcess(pid)
-                break
-
-
-            # Sleep for one second before repeating loop
-            loopCount += 1
-            time.sleep(1)
-
-
-        returnPcntl = os.WEXITSTATUS(status)
-        # check status
-        #wfSuppressWarnings()
-        returnCodeFile = open(retvalLog)
-        #wfRestoreWarnings()
-
-        # File based exit code seems more reliable than pcntl_wexitstatus
-        retval = returnCodeFile.read(20)
-        returnCodeFile.close()
-
-        # return the encoding log contents (will be inserted into error table if an error)
-        # (will be ignored and removed if success)
-        if errorMsg != '':
-            errorMsg +="\n"
-
-        encodeLogFile = open(encodingLog)
-        log = encodeLogFile.read(1000)
-        encodeLogFile.close()
-        return retval, errorMsg + log
-
-    @classmethod
-    def isProcessRunningKillZombie(cls, pid):
-        """
-        check if proccess is running and not a zombie
-        @param pid int
-        @return bool
-        """
-        try:
-            processState = subprocess.check_output(["/bin/ps", str(pid)]).split("\n")
-        except subprocess.CalledProcessError:
-            return False
-        if len(processState) < 2:
-            return False
-
-        if '<defunct>' in processState[1]:
-            # posix_kill(pid, 9)
-            cls.killProcess(pid)
-            return False
-
-        return True
-
-    @staticmethod
-    def killProcess(pid):
-        """
-        Kill Application PID
-
-        @param pid int
-        @return bool
-        """
-        os.system("/bin/kill -9 " + str(pid))
-        try:
-            processState = subprocess.check_output(["/bin/ps", str(pid)]).split("\n")
-        except subprocess.CalledProcessError:
-            return False
-        if len(processState) < 2:
-            return False
-
-        return True
+        return retval, ''
 
     """
     Mapping between firefogg api and ffmpeg2theora command line
