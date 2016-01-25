@@ -101,6 +101,6 @@ def generate_dir():
         outputdir = '/srv/v2coutput/' + id
         if not os.path.isdir(outputdir):
             os.mkdir(outputdir)
-            break
+            return outputdir
     else:
         raise TaskError("Too many retries to generate a task id")
