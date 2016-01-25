@@ -189,7 +189,7 @@ def submitTask():
         if not id in session['newtasks']:
             return jsonify(step='error', error='We could not process your data due to loss of session data. Please reload the page and try again.')
 
-        for datas in ['url', 'extractor', 'audio', 'video', 'subtitles', 'filename', 'format', 'formats', 'filedesc']:
+        for data in ['url', 'extractor', 'audio', 'video', 'subtitles', 'filename', 'format', 'formats', 'filedesc']:
             if not data in session['newtasks'][id]:
                 return jsonify(step='error', error='We could not process your data due to loss of session data. Please reload the page and try again.')
 

@@ -13,13 +13,13 @@
             clearTimeout(window.lastStatusCheck);
 		var url = '/video2commons/api/status';
 		$.get(url).done(function(data) {
-			if (!$('#tasktable').length) this.setupTables();
+			if (!$('#tasktable').length) video2commons.setupTables();
 			if (data.length > 0) {
-				this.populateResults(data);
-				window.lastStatusCheck = setTimeout(this.checkStatus, 2000);
+				video2commons.populateResults(data);
+				window.lastStatusCheck = setTimeout(video2commons.checkStatus, 2000);
 			} else if (data.length === 0) {
 				// TODO: message: You don't have a task yet. Add one?
-				window.lastStatusCheck = setTimeout(this.checkStatus, 60000);
+				window.lastStatusCheck = setTimeout(video2commons.checkStatus, 60000);
 			}
 		}).fail(function() {
 			$('#content').html('<div class="alert alert-danger">Something went terribly wrong. Please refresh this page or contact [[:commons:User:Zhuyifei1999]].</div>');
@@ -144,7 +144,7 @@
 			}
 
 			if (val.status === 'progress')
-				this.setProgressBar(row.find('#' + id + '-progress'), val.progress);
+				video2commons.setProgressBar(row.find('#' + id + '-progress'), val.progress);
 		});
 	};
 
