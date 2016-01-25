@@ -402,7 +402,7 @@ def removeTask():
     username = session['username']
     redisconnection.delete('titles:' + id)
     redisconnection.lrem('tasks:' + username, 0, id)
-
+    return jsonify(remove = "success", id = id)
 
 if __name__ == '__main__':
     app.run()
