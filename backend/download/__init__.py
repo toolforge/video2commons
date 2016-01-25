@@ -42,10 +42,10 @@ class Downloader(object):
             'subtitlesformat': 'srt/ass/vtt/best',
             'cachedir': '/tmp/',
             'noplaylist': True, # not implemented in video2commons
-            'postprocessors': {
+            'postprocessors': [{
                 'key': 'FFmpegSubtitlesConvertor',
                 'format': 'srt',
-            },
+            }],
             'max_filesize': 5 * (1 << 30),
             'prefer_ffmpeg': True, # avconv do not have srt encoder
             'prefer_free_formats': True
