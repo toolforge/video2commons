@@ -106,28 +106,28 @@ def status():
         }
 
         if res.state == 'PENDING':
-            task['state'] = 'progress'
+            task['status'] = 'progress'
             task['text'] = 'Your task is pending...'
             task['progress'] = -1
         elif res.state == 'STARTED':
-            task['state'] = 'progress'
+            task['status'] = 'progress'
             task['text'] = 'Your task has been started; preprocessing...'
             task['progress'] = -1
         elif res.state == 'PROGRESS':
-            task['state'] = 'progress'
+            task['status'] = 'progress'
             task['text'] = res.result['text']
             task['progress'] = res.result['percent']
         elif res.state == 'SUCCESS':
-            task['state'] = 'progress'
+            task['status'] = 'progress'
             filename, wikifileurl = res.result
             task['url'] = wikifileurl
             task['text'] = filename
         elif res.state == 'FAILURE':
-            task['state'] = 'fail'
+            task['status'] = 'fail'
             e = res.result
             task['text'] = 'An exception occured: %s: %s' % (type(e).__name__, str(e))
         else:
-            task['state'] = 'fail'
+            task['status'] = 'fail'
             task['text'] = 'Something weird going on. Please notify [[commons:User:Zhuyifei1999]]'
 
         values.append(task)
