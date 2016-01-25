@@ -136,11 +136,11 @@ def status():
 
 def getTasks():
     username = session['username']
-    if not redis.exists('tasks:' + user): return []
-    return redis.lrange('tasks:' + username, 0, -1)
+    if not redisconnection.exists('tasks:' + user): return []
+    return redisconnection.lrange('tasks:' + username, 0, -1)
 
 def getTitleFromTask(id):
-    return redis.get('titles:' + id)
+    return redisconnection.get('titles:' + id)
 
 @app.route('/api/task/new', methods=['POST'])
 def newTask():
@@ -388,10 +388,10 @@ def runTask(id):
     taskid = res.id
 
     expire = 2 * 30 * 24 * 3600 # 2 months
-    redis.lpush('tasks:' + username, taskid)
-    redis.expire('tasks:' + username, expire)
-    redis.set('titles:' + taskid, filename)
-    redis.expire('titles:' + taskid, expire)
+    redisconnection.lpush('tasks:' + username, taskid)
+    redisconnection.expire('tasks:' + username, expire)
+    redisconnection.set('titles:' + taskid, filename)
+    redisconnection.expire('titles:' + taskid, expire)
 
     return jsonify(id = id, step = "success", taskid = taskid)
 
