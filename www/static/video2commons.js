@@ -29,7 +29,7 @@
 	video2commons.setupTables = function() {
 		$('#content').html('<div class="container" id="content"><h4>Your tasks:</h4>\
 			<table id="tasktable" class="table"><tbody></tbody></table></div>');
-		var button = $('<input class="btn btn-primary btn-success btn-medium" type="button" value="Add task...">');
+		var button = $('<input class="btn btn-primary btn-success btn-md" type="button" value="Add task...">');
 		$('#content').append(button);
 		button.click(function() {
 			video2commons.addTask();
@@ -108,7 +108,7 @@
 						break;
 					case 'done':
 						row.append($('<td />').attr('id', id + '-title').attr('width', '%30'));
-						removebutton = $('<button type="button" class="btn btn-danger btn-small pull-right"><span class="glyphicon glyphicon-trash"></span> Remove</button>')
+						removebutton = $('<button type="button" class="btn btn-danger btn-xs pull-right"><span class="glyphicon glyphicon-trash"></span> Remove</button>')
 							.attr('id', id + '-removebutton')
 							.click(function() {
 								$(this).addClass('disabled');
@@ -120,7 +120,7 @@
 						break;
 					case 'fail':
 						row.append($('<td />').attr('id', id + '-title').attr('width', '%30'));
-						removebutton = $('<button type="button" class="btn btn-danger btn-small pull-right"><span class="glyphicon glyphicon-trash"></span> Remove</button>')
+						removebutton = $('<button type="button" class="btn btn-danger btn-xs pull-right"><span class="glyphicon glyphicon-trash"></span> Remove</button>')
 							.attr('id', id + '-removebutton')
 							.click(function() {
 								$(this).addClass('disabled');

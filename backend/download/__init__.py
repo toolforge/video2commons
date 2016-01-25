@@ -85,5 +85,5 @@ class Downloader(object):
             self.errorcallback('Error raised by YoutubeDL')
 
 def download(url, ie_key, formats, subtitles, outputdir, statuscallback = None, errorcallback = None):
-    job = Downloader(subtitles, wikifilename, auth1, statuscallback, errorcallback)
+    job = Downloader(url, ie_key, formats, subtitles, outputdir, statuscallback, errorcallback)
     return job.run()
