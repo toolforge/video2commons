@@ -373,7 +373,7 @@ def rextractURL(id):
         'uploader': uploader
     }
     session['newtasks'][id]['filedesc'] = filedesc.strip()
-    session['newtasks'][id]['filename'] = filedesc.strip()
+    session['newtasks'][id]['filename'] = title
 
 def runTask(id):
     url = session['newtasks'][id]['url']
