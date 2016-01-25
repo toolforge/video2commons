@@ -60,7 +60,7 @@ def main(self, url, ie_key, subtitles, filename, filedesc, convertkey, username,
     subtitles = subtitles and d['subtitles']
 
     statuscallback('Converting...', -1)
-    file = encode.encode(file, key, statuscallback, errorcallback)
+    file = encode.encode(file, convertkey, statuscallback, errorcallback)
     if not file: errorcallback('Convert failed!')
     ext = file.split('.')[-1]
 

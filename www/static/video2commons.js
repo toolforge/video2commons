@@ -16,7 +16,7 @@
 			if (!$('#tasktable').length) video2commons.setupTables();
 			if (data.ids.length > 0) {
 				video2commons.populateResults(data);
-				window.lastStatusCheck = setTimeout(video2commons.checkStatus, 10000);
+				window.lastStatusCheck = setTimeout(video2commons.checkStatus, 2000);
 			} else if (data.length === 0) {
 				// TODO: message: You don't have a task yet. Add one?
 				window.lastStatusCheck = setTimeout(video2commons.checkStatus, 60000);
