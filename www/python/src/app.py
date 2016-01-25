@@ -262,7 +262,7 @@ def submitTask():
                 filedesc = session['newtasks'][id]['filedesc']
             )
         elif step == 'confirm':
-            keep = ", ".join(filter([
+            keep = ", ".join(filter(None, [
                 'video' if session['newtasks'][id]['video'] else False,
                 'audio' if session['newtasks'][id]['audio'] else False,
                 'subtitles' if session['newtasks'][id]['subtitles'] else False,
