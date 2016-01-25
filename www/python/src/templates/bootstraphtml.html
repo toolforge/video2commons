@@ -22,17 +22,15 @@
   </style>
 </head>
 <body>
-  <div class="navbar navbar-fixed-top">
+  <div class="navbar navbar-default navbar-fixed-top">
    <div class="container-fluid">
       <div class="navbar-header">
         <a class="navbar-brand" href="#">video2commons</a>
       </div>
 {% if loggedin %}
-      <div class="nav-collapse collapse">
         <ul class="nav navbar-nav navbar-right">
           <li><a href="{{ url_for('logout') }}"><span class="glyphicon glyphicon-log-out"></span> Logout</a></li>
         </ul>
-      </div>
 {% endif %}
     </div>
   </div>
