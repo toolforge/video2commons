@@ -136,7 +136,7 @@ def status():
 
 def getTasks():
     username = session['username']
-    if not redisconnection.exists('tasks:' + user): return []
+    if not redisconnection.exists('tasks:' + username): return []
     return redisconnection.lrange('tasks:' + username, 0, -1)
 
 def getTitleFromTask(id):
