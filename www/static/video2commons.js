@@ -14,7 +14,7 @@
 		var url = '/video2commons/api/status';
 		$.get(url).done(function(data) {
 			if (!$('#tasktable').length) video2commons.setupTables();
-			if (data.length > 0) {
+			if (data.ids.length > 0) {
 				video2commons.populateResults(data);
 				window.lastStatusCheck = setTimeout(video2commons.checkStatus, 2000);
 			} else if (data.length === 0) {
