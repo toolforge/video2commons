@@ -3,10 +3,10 @@
 <head>
   <meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
   <title>video2commons</title>
-  <link href="//tools-static.wmflabs.org/cdnjs/ajax/libs/twitter-bootstrap/2.3.2/css/bootstrap.min.css" rel="stylesheet">
+  <link href="//tools-static.wmflabs.org/cdnjs/ajax/libs/twitter-bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
 {% if loggedin %}
   <script src="//tools-static.wmflabs.org/cdnjs/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
-  <script src="//tools-static.wmflabs.org/cdnjs/ajax/libs/twitter-bootstrap/2.3.2/js/bootstrap.min.js"></script>
+  <script src="//tools-static.wmflabs.org/cdnjs/ajax/libs/twitter-bootstrap/3.3.6/js/bootstrap.min.js"></script>
   <!--<link href="//tools-static.wmflabs.org/cdnjs/ajax/libs/jqueryui/1.11.4/jquery-ui.min.css" rel="stylesheet">-->
   <!--<script src="//tools-static.wmflabs.org/cdnjs/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>-->
   <script src="//tools-static.wmflabs.org/video2commons/video2commons.js"></script>
@@ -19,17 +19,17 @@
 </head>
 <body>
   <div class="navbar navbar-fixed-top">
-    <div class="navbar-inner">
-      <div class="container">
-        <a class="brand" href="#">video2commons</a>
-        <div class="nav-collapse collapse">
-{% if loggedin %}
-          <ul id="toolbar-right" class="nav pull-right">
-            <li><a href="{{ url_for('logout') }}">Logout</a></li>
-          </ul>
-{% endif %}
-        </div><!--/.nav-collapse -->
+   <div class="container-fluid">
+      <div class="navbar-header">
+        <a class="navbar-brand" href="#">video2commons</a>
       </div>
+{% if loggedin %}
+      <div class="nav-collapse collapse">
+        <ul class="nav navbar-nav navbar-right">
+          <li><a href="{{ url_for('logout') }}"><span class="glyphicon glyphicon-log-out"></span> Logout</a></li>
+        </ul>
+      </div>
+{% endif %}
     </div>
   </div>
 
