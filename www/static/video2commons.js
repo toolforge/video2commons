@@ -386,7 +386,7 @@
 				break;
 			case 'confirm':
 				window.addTaskDialog.find('#btn-prev').removeClass('disabled').off();
-				window.addTaskDialog.find('#btn-next').removeClass('disabled').html('Confirm <span class="glyphicon glyphicon-chevron-ok"></span>').off();
+				window.addTaskDialog.find('#btn-next').removeClass('disabled').html('Confirm <span class="glyphicon glyphicon-ok"></span>').off();
 				window.addTaskDialog.find('#btn-prev').click(function() {
 					window.addTaskDialog.find('.modal-body #dialog-errorbox').hide();
 					window.addTaskDialog.find('#btn-prev').addClass('disabled');

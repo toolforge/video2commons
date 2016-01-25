@@ -342,7 +342,7 @@ def rextractURL(id):
 
     assert 'formats' in info, 'Your url cannot be processed correctly'
 
-    session['newtasks'][id]['extractor'] = info['extractor'],
+    session['newtasks'][id]['extractor'] = info['extractor_key'],
     title = info.get('title', '').strip()
     uploader = info.get('uploader', '').strip()
     date = info.get('upload_date', '').strip()
