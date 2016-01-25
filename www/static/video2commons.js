@@ -190,8 +190,10 @@
 	};
 
 	video2commons.setupAddTaskDialog = function(data) {
+		this.resetButtons();
 		window.addTaskDialog.find('#dialog-spinner').hide();
-		window.addTaskStep = data.step;
+		if (data.step != 'error')
+			window.addTaskStep = data.step;
 		switch (data.step) {
 			case 'error':
 				if (!window.addTaskDialog.find('.modal-body #dialog-errorbox').length) {
@@ -203,8 +205,6 @@
 				break;
 			case 'source':
 				// setup
-				window.addTaskDialog.find('#btn-prev').addClass('disabled').off();
-				window.addTaskDialog.find('#btn-next').removeClass('disabled').html('Next <span class="glyphicon glyphicon-chevron-right"></span>').off();
 				window.addTaskDialog.find('.modal-body').html('\n\
           <form role="form">\n\
             <div class="form-group">\n\
@@ -257,8 +257,6 @@
 				break;
 			case 'target':
 				// setup
-				window.addTaskDialog.find('#btn-prev').removeClass('disabled').off();
-				window.addTaskDialog.find('#btn-next').removeClass('disabled').html('Next <span class="glyphicon glyphicon-chevron-right"></span>').off();
 				window.addTaskDialog.find('.modal-body').html('\n\
           <form role="form">\n\
             <div class="form-group">\n\
@@ -416,6 +414,22 @@
 				break;
 		}
 	};
+
+	video2commons.resetButtons = function() {
+		switch (window.addTaskStep) {
+			case 'source':
+				window.addTaskDialog.find('#btn-prev').addClass('disabled').off();
+				window.addTaskDialog.find('#btn-next').removeClass('disabled').html('Next <span class="glyphicon glyphicon-chevron-right"></span>').off();
+				break;
+			case 'target':
+				window.addTaskDialog.find('#btn-prev').removeClass('disabled').off();
+				window.addTaskDialog.find('#btn-next').removeClass('disabled').html('Next <span class="glyphicon glyphicon-chevron-right"></span>').off();
+				break;
+			case 'confirm':
+				window.addTaskDialog.find('#btn-prev').removeClass('disabled').off();
+				window.addTaskDialog.find('#btn-next').removeClass('disabled').html('Confirm <span class="glyphicon glyphicon-chevron-ok"></span>').off();
+		}
+	}
 
 	video2commons.removeTask = function(taskid) {
 		$.post('/video2commons/api/task/remove', {id: taskid}).done(function(data) {
