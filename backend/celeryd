@@ -14,7 +14,7 @@ CELERY_BIN="/usr/local/bin/celery"
 
 # App instance to use
 # comment out this line if you don't use an app
-CELERY_APP="v2cbackend"
+CELERY_APP="worker"
 # or fully qualified:
 #CELERY_APP="proj.tasks:app"
 

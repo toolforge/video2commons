@@ -40,7 +40,7 @@ app = Flask(__name__)
 
 app.secret_key = session_key
 
-redisconnection = Redis(host='encoding01.video.eqiad.wmflabs', db=3)
+redisconnection = Redis(host='encoding01.video.eqiad.wmflabs', db=3, password=redis_pw)
 
 @app.errorhandler(Exception)
 def all_exception_handler(error):
