@@ -613,7 +613,7 @@ class WebVideoTranscodeJob(object):
         source.close()
         #wfRestoreWarnings()
 
-        return retval, ''
+        return process.returncode, ''
 
     """
     Mapping between firefogg api and ffmpeg2theora command line
