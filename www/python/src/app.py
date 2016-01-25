@@ -95,10 +95,12 @@ def logout():
 @app.route('/api/status')
 def status():
     ids = getTasks()
+    goodids = []
     values = []
     for id in ids:
         title = getTitleFromTask(id)
         if not title: continue # task has been forgotten -- results should have been expired
+        goodids.append(id)
         res = AsyncResult(id)
         task = {
             'id': id,
@@ -132,7 +134,7 @@ def status():
 
         values.append(task)
 
-    return jsonify(ids=ids, values=values)
+    return jsonify(ids=goodids, values=values)
 
 def getTasks():
     username = session['username']
