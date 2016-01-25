@@ -17,6 +17,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>
 #
 
+import os, sys
 import re
 
 from flask import Flask, request, Response, session, render_template, redirect, url_for, jsonify
@@ -29,7 +30,6 @@ from redis import Redis
 from celery.result import AsyncResult
 import youtube_dl
 
-import sys
 sys.path.append(os.path.dirname(os.path.realpath(__file__))+"/../../../backend/")
 import worker
 
