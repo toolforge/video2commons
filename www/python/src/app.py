@@ -396,7 +396,7 @@ def runTask(id):
 
     return jsonify(id = id, step = "success", taskid = taskid)
 
-@app.route('/api/task/new', methods=['POST'])
+@app.route('/api/task/remove', methods=['POST'])
 def removeTask():
     id = request.form['id']
     username = session['username']
