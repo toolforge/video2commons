@@ -341,9 +341,9 @@ def rextractURL(id):
 
     session['newtasks'][id]['extractor'] = info['extractor'],
     title = info.get('title', '').strip()
-    uploader = self.info.get('uploader', '').strip()
-    date = self.info.get('upload_date', '').strip()
-    desc = self.info.get('description').strip()
+    uploader = info.get('uploader', '').strip()
+    date = info.get('upload_date', '').strip()
+    desc = info.get('description').strip()
 
     # Process date
     if re.match(r'^[0-9]{8}$', date):
