@@ -143,7 +143,7 @@
 			row.find('#' + id + '-title').text(val.title);
 			if  (val.status === 'done') {
 				row.find('#' + id + '-statustext').html('Your task is done. You may find your upload at <a></a>.')
-					.find('a').attr('href', val.url).text(val.url);
+					.find('a').attr('href', val.url).text(val.text);
 			} else {
 				row.find('#' + id + '-statustext').text(val.text);
 			}
