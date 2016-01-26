@@ -101,6 +101,7 @@ def status():
     ids = getTasks()
     goodids = []
     values = []
+    hasrunning = False
     for id in ids:
         title = getTitleFromTask(id)
         if not title: continue # task has been forgotten -- results should have been expired
@@ -115,14 +116,17 @@ def status():
             task['status'] = 'progress'
             task['text'] = 'Your task is pending...'
             task['progress'] = -1
+            hasrunning = True
         elif res.state == 'STARTED':
             task['status'] = 'progress'
             task['text'] = 'Your task has been started; preprocessing...'
             task['progress'] = -1
+            hasrunning = True
         elif res.state == 'PROGRESS':
             task['status'] = 'progress'
             task['text'] = res.result['text']
             task['progress'] = res.result['percent']
+            hasrunning = True
         elif res.state == 'SUCCESS':
             task['status'] = 'done'
             filename, wikifileurl = res.result
@@ -138,7 +142,7 @@ def status():
 
         values.append(task)
 
-    return jsonify(ids=goodids, values=values)
+    return jsonify(ids=goodids, values=values, hasrunning=hasrunning)
 
 def getTasks():
     username = session['username']

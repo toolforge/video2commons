@@ -15,7 +15,7 @@
 		$.get(url).done(function(data) {
 			if (!$('#tasktable').length) video2commons.setupTables();
 			video2commons.populateResults(data);
-			if (data.ids.length > 0) {
+			if (data.hasrunning) {
 				window.lastStatusCheck = setTimeout(video2commons.checkStatus, 2000);
 			} else if (data.length === 0) {
 				// TODO: message: You don't have a task yet. Add one?
