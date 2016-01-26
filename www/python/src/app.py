@@ -124,7 +124,7 @@ def status():
             task['text'] = res.result['text']
             task['progress'] = res.result['percent']
         elif res.state == 'SUCCESS':
-            task['status'] = 'progress'
+            task['status'] = 'done'
             filename, wikifileurl = res.result
             task['url'] = wikifileurl
             task['text'] = filename
