@@ -66,7 +66,6 @@ def main(self, url, ie_key, subtitles, filename, filedesc, convertkey, username,
 
     statuscallback('Configuring Pywikibot...', -1)
     import pywikibot
-    #reload(pywikibot)
     pywikibot.config.authenticate['commons.wikimedia.org'] = oauth
     pywikibot.config.usernames['commons']['commons'] = username
     pywikibot.Site('commons', 'commons', user=username).login()
