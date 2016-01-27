@@ -304,7 +304,7 @@
             <div class="form-group">\n\
               <label class="control-label col-sm-2" for="filedesc">File description page:</label>\n\
               <div class="col-sm-10">\n\
-                <textarea class="form-control readonly" rows="5" id="filedesc"></textarea>\n\
+                <textarea class="form-control" rows="5" id="filedesc" readonly="readonly"></textarea>\n\
               </div>\n\
             </div>\n\
             <div class="alert alert-info">\n\
