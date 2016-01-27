@@ -46,7 +46,7 @@ def main(self, url, ie_key, subtitles, filename, filedesc, convertkey, username,
     def statuscallback(text, percent):
         if text is not None: s.text = text
         if percent is not None: s.percent = percent
-        print '%d: %s' % (s.percent, s.percent)
+        print '%d: %s' % (s.percent, s.text)
         self.update_state(state='PROGRESS',
             meta={'text': s.text, 'percent': s.percent})
 
