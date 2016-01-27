@@ -189,8 +189,7 @@ class WebVideoTranscodeJob(object):
 
 
         # Set up the base command
-        #cmd = wfEscapeShellArg(wgFFmpegLocation) + ' -y -i ' + wfEscapeShellArg(self.getSourceFilePath())
-        cmd = wfEscapeShellArg(wgFFmpegLocation) + ' -y -i -' # Tracking
+        cmd = wfEscapeShellArg(wgFFmpegLocation) + ' -y -i ' + wfEscapeShellArg(self.getSourceFilePath())
 
         if 'vpre' in options:
             cmd += ' -vpre ' + wfEscapeShellArg(options['vpre'])
@@ -242,7 +241,7 @@ class WebVideoTranscodeJob(object):
         self.output("Running cmd: " + cmd + "\n")
 
         # Right before we output remove the old file
-        retval, shellOutput = self.runShellExec(cmd)
+        retval, shellOutput = self.runShellExec(cmd, track = p != 1)
 
         if int(retval) != 0:
             return cmd + \
@@ -476,65 +475,7 @@ class WebVideoTranscodeJob(object):
 
         return cmd
 
-
-    def ffmpeg2TheoraEncode(self, options):
-        """
-        ffmpeg2Theora mapping is much simpler since it is the basis of the the firefogg API
-        @param options array
-        @return bool|string
-        """
-        #global wgFFmpeg2theoraLocation, wgTranscodeBackgroundMemoryLimit
-
-        if not os.path.isfile(self.getSourceFilePath()):
-            return "source file is missing, " + self.getSourceFilePath() + ". Encoding failed."
-
-        # Set up the base command
-        cmd = wfEscapeShellArg(wgFFmpeg2theoraLocation) + ' ' + wfEscapeShellArg(self.getSourceFilePath())
-
-        file = self.getFile()
-
-        if 'maxSize' in options:
-            width, height = WebVideoTranscode.getMaxSizeTransform(file, options['maxSize'])
-            options['width'] = width
-            options['height'] = height
-            options['aspect'] = width + ':' + height
-            del options['maxSize']
-
-
-        # Add in the encode settings
-        for key, val in options.items():
-            if key in self.foggMap:
-                if isinstance(self.foggMap[key], list):
-                    cmd += ' ' + ' '.join(self.foggMap[key])
-                elif val == 'True' or val == True:
-                    cmd += ' ' + self.foggMap[key]
-                elif val == 'False' or val == False:
-                    # ignore "False" flags
-                    pass
-                else:
-                    # normal get/set value
-                    cmd += ' ' + self.foggMap[key] + ' ' + wfEscapeShellArg(val)
-
-
-        # Add the output target:
-        outputFile = self.getTargetEncodePath()
-        cmd += ' -o ' + wfEscapeShellArg(outputFile)
-
-        self.output("Running cmd: " + cmd + "\n")
-
-        retval = 0
-        retval, shellOutput = self.runShellExec(cmd)
-
-        # ffmpeg2theora returns 0 status on some errors, so also check for file
-        if retval != 0 or not os.path.isfile(outputFile) or os.path.getsize(outputFile) == 0:
-            return cmd + \
-                "\nExitcode: " + str(retval) + " Memory: " + str(wgTranscodeBackgroundMemoryLimit) + "\n" + \
-                shellOutput
-
-        return True
-
-
-    def runShellExec(self, cmd):
+    def runShellExec(self, cmd, track=True):
         """
         Runs the shell exec command.
         if wgEnableBackgroundTranscodeJobs is enabled will mannage a background transcode task
@@ -560,9 +501,9 @@ class WebVideoTranscodeJob(object):
             #    "memory": wgTranscodeBackgroundMemoryLimit,
             #    "time": wgTranscodeBackgroundTimeLimit
             #}
-            return self.runChildCmd(cmd)
+            return self.runChildCmd(cmd, track)
 
-    def runChildCmd(self, cmd):
+    def runChildCmd(self, cmd, track=True):
         """
         @param cmd
         @param encodingLog
@@ -596,22 +537,42 @@ class WebVideoTranscodeJob(object):
             'ulimit -t ' + wfEscapeShellArg(wgTranscodeBackgroundTimeLimit) + ';' + \
             'nice -n ' + wfEscapeShellArg(wgTranscodeBackgroundPriority) + ' ' + cmd + ' 2>&1'
 
-        source = open(self.getSourceFilePath(), 'r')
-        process = subprocess.Popen(cmd, stdin=subprocess.PIPE, stdout=None, stderr=None, shell=True)
-        status = TransferStatus(source, process.stdin, os.path.getsize(self.getSourceFilePath()))
-        status.start()
-        percentage = -1
+        # Adapted from https://gist.github.com/marazmiki/3015621
+        process = subprocess.Popen(cmd, stdin=None, stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
+            universal_newlines=True, shell=True)
+
+        re_duration = re.compile(r'Duration: (\d{2}:\d{2}:\d{2})')
+        re_position = re.compile(r'time=(\d{2}:\d{2}:\d{2})', re.I)
+        time2sec = lambda time: sum([a*b for a,b in zip([3600,60,1], map(int,time.split(':')))])
+
+        duration = None
+        position = None
+        newpercentage = percentage = -1
+
         while process.poll() is None:
-            if status.status != percentage:
-                percentage = status.status
+#            for line in process.stdout.readlines(): # http://bugs.python.org/issue3907
+            while True:
+                line = process.stdout.readline()
+                if not line: break
+                print line,
+
+                if track:
+                    if duration is None:
+                        duration_match = re_duration.match(line)
+                        if duration_match:
+                            duration = time2sec(duration_match.group(1))
+                    else:
+                        position_match = re_position.search(line)
+                        if position_match:
+                            position = time2sec(position_match.group(1))
+                            if duration and duration:
+                                newpercentage = min(int(math.floor(100 * position / duration)))
+
+            if newpercentage != percentage:
+                percentage = newpercentage
                 self.statuscallback(None, percentage)
 
-            time.sleep(5)
-
-        # Output the status:
-        #wfSuppressWarnings()
-        source.close()
-        #wfRestoreWarnings()
+            time.sleep(2)
 
         return process.returncode, ''
 
