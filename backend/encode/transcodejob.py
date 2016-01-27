@@ -25,6 +25,7 @@
 # 
 
 import os, sys
+import re
 import time
 import subprocess
 from transcode import WebVideoTranscode
