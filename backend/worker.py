@@ -81,7 +81,9 @@ def main(self, url, ie_key, subtitles, filename, filedesc, convertkey, username,
         statuscallback('Uploading subtitles...', -1)
         try:
             subtitleuploader.subtitles(subtitles, filename, username, statuscallback, errorcallback)
-        except:
+        except Exception, e:
+            statuscallback(type(e).__name__ + ": " + str(e), None)
+            print e
             pass
 
     statuscallback('Cleaning up...', -1)

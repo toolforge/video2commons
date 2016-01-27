@@ -32,8 +32,8 @@ class SubtitlesUploader(object):
         self.errorcallback = errorcallback or (lambda text: None)
 
     def run(self):
-        for lang, filename in subtitles.items():
-            percent = 0
+        percent = 0
+        for lang, filename in self.subtitles.items():
             try:
                 langname = self.lang(lang)
                 if langname:
@@ -48,13 +48,13 @@ class SubtitlesUploader(object):
                     f.close()
                     subtitletext = subtitletext.decode(chardet.detect(subtitletext)['encoding'])
 
-                    percent += 50.0 / len(subtitles)
+                    percent += 50.0 / len(self.subtitles)
                     self.statuscallback('Uploading subtitle in ' + langname, int(percent))
 
-                    self.edit(u'TimedText:' + wikifilename.decode('utf-8') + u'.' + lang.lower() + u'.srt', subtitletext,\
-                        u'Import ' + langname + u' subtitles for [[:File:' + wikifilename.decode('utf-8') + ']]')
+                    self.edit(u'TimedText:' + self.wikifilename.decode('utf-8') + u'.' + lang.lower() + u'.srt', subtitletext,\
+                        u'Import ' + langname + u' subtitles for [[:File:' + self.wikifilename.decode('utf-8') + ']]')
 
-                    percent += 50.0 / len(subtitles)
+                    percent += 50.0 / len(self.subtitles)
                     self.statuscallback('Finished processing subtitle in ' + langname, int(percent))
 
             except Exception, e:
@@ -76,20 +76,20 @@ class SubtitlesUploader(object):
         if info.streams[0].type != 'subtitle': return None
         return info.streams[0].codec
 
-    @staticmethod
-    def transcode(filename, format):
+    def transcode(self, filename, format):
         target = filename + '.srt'
         cmd = ['/usr/bin/ffmpeg', '-i', filename, '-f', 'srt', '-']
         self.statuscallback("Running cmd: %s" % cmd, None)
         return subprocess.check_output(cmd, stderr=None)
 
-    def edit(title, text, summary):
+    def edit(self, title, text, summary):
         # ENSURE PYWIKIBOT OAUTH PROPERLY CONFIGURED!
         site = pywikibot.Site('commons', 'commons', user=self.username)
         page = pywikibot.Page(site, title)
+        page.text = text
         if not page.exists(): page.save(summary=summary, minor=False)
 
 
-def subtitles(subtitles, wikifilename, statuscallback = None, errorcallback = None):
-    job = SubtitlesUploader(subtitles, wikifilename, statuscallback, errorcallback)
+def subtitles(subtitles, wikifilename, username, statuscallback = None, errorcallback = None):
+    job = SubtitlesUploader(subtitles, wikifilename, username, statuscallback, errorcallback)
     job.run()
