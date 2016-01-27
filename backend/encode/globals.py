@@ -30,9 +30,9 @@ wgTranscodeBackgroundPriority = 19;
 wgTranscodeBackgroundTimeLimit = 3600 * 8
 # Maximum amount of virtual memory available to transcoding processes in KB
 # 2GB avconv, ffmpeg2theora mmap resources so virtual memory needs to be high enough
-wgTranscodeBackgroundMemoryLimit = 4 * 1024 * 1024
+wgTranscodeBackgroundMemoryLimit = 8 * 1024 * 1024
 # Maximum file size transcoding processes can create, in KB
-wgTranscodeBackgroundSizeLimit = 3 * 1024 * 1024 # 3GB
+wgTranscodeBackgroundSizeLimit = 10 * 1024 * 1024 # 3GB
 # Number of threads to use in avconv for transcoding
 wgFFmpegThreads = 8
 # The location of ffmpeg2theora (transcoding)
