@@ -406,7 +406,7 @@
 					window.addTaskDialog.find('#btn-prev').addClass('disabled');
 					window.addTaskDialog.find('#btn-next').addClass('disabled');
 					window.addTaskDialog.modal("hide");
-					$('#tasktable > tbody').append('<tr id="task-new"><td><img class="pull-right" alt="File:Ajax-loader.gif" src="//upload.wikimedia.org/wikipedia/commons/d/de/Ajax-loader.gif" data-file-width="32" data-file-height="32" height="32" width="32"></td></tr>');
+					$('#tasktable > tbody').append('<tr id="task-new"><td colspan="3"><img alt="File:Ajax-loader.gif" src="//upload.wikimedia.org/wikipedia/commons/d/de/Ajax-loader.gif" data-file-width="32" data-file-height="32" height="32" width="32"></td></tr>');
 					var postdata = {
 						id: window.newTaskTempID,
 						action: 'next',
