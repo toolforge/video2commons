@@ -125,6 +125,7 @@ class WebVideoTranscode:
             {
                 'videoQuality':                7,
                 'audioQuality':                6,
+                'samplerate':                  '48000',
                 'noUpscaling':                 'True',
                 'twopass':                     'True',
                 'videoCodec':                  'vp9',
@@ -158,7 +159,7 @@ class WebVideoTranscode:
             {
                 'audioCodec':                  'opus',
                 'audioQuality':                '1',
-                'samplerate':                  '44100',
+                'samplerate':                  '48000',
                 'channels':                    '2',
                 'noUpscaling':                 'True',
                 'novideo':                     'True',
