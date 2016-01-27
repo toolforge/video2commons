@@ -218,7 +218,7 @@
               <label><input type="checkbox" value="" checked id="video">Keep video</label>\n\
             </div>\n\
             <div class="checkbox">\n\
-              <label><input type="checkbox" value="" checked id="audio">Keep video</label>\n\
+              <label><input type="checkbox" value="" checked id="audio">Keep audio</label>\n\
             </div>\n\
             <div class="checkbox">\n\
               <label><input type="checkbox" value="" checked id="subtitles">Import subtitles</label>\n\
@@ -226,7 +226,7 @@
             <div class="alert alert-info">\n\
               Note:\n\
               <ul>\n\
-                <li>Playlists will not be processed correctly. Some sites (such as Youku and Comedy Central) make use of multipart videos, interpretated as playlists, will not be processed correctly either.</li>\n\
+                <li>Playlists will not be processed correctly. Some sites (such as Youku and Comedy Central) make use of multipart videos, interpreted as playlists, will not be processed correctly either.</li>\n\
                 <li>If the media does not include video or audio tracks, please uncheck the corresponding checkboxes; otherwise conversion may fail, even if the format is free.</li>\n\
                 <li>If "Import subtitles" is checked, subtitles will be imported, excluding auto-generated ones.</li>\n\
               </ul>\n\
