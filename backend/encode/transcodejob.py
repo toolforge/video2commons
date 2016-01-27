@@ -26,6 +26,7 @@
 
 import os, sys
 import re
+import math
 import time
 import subprocess
 from transcode import WebVideoTranscode
@@ -559,15 +560,15 @@ class WebVideoTranscodeJob(object):
 
                 if track:
                     if duration is None:
-                        duration_match = re_duration.match(line)
+                        duration_match = re_duration.search(line)
                         if duration_match:
                             duration = time2sec(duration_match.group(1))
                     else:
                         position_match = re_position.search(line)
                         if position_match:
                             position = time2sec(position_match.group(1))
-                            if duration and duration:
-                                newpercentage = min(int(math.floor(100 * position / duration)))
+                            if duration and position:
+                                newpercentage = min(int(math.floor(100 * position / duration)), 100)
 
             if newpercentage != percentage:
                 percentage = newpercentage
@@ -576,49 +577,3 @@ class WebVideoTranscodeJob(object):
             time.sleep(2)
 
         return process.returncode, ''
-
-    """
-    Mapping between firefogg api and ffmpeg2theora command line
-    
-    This lets us share a common api between firefogg and WebVideoTranscode
-    also see: http://firefogg.org/dev/index.html
-    """
-    foggMap = {
-        # video
-        'width':          "--width",
-        'height':         "--height",
-        'maxSize':        "--max_size",
-        'noUpscaling':    "--no-upscaling",
-        'videoQuality': "-v",
-        'videoBitrate':   "-V",
-        'twopass':        "--two-pass",
-        'optimize':       "--optimize",
-        'framerate':      "-F",
-        'aspect':         "--aspect",
-        'starttime':      "--starttime",
-        'endtime':        "--endtime",
-        'cropTop':        "--croptop",
-        'cropBottom':     "--cropbottom",
-        'cropLeft':       "--cropleft",
-        'cropRight':      "--cropright",
-        'keyframeInterval': "--keyint",
-        'denoise':        ["--pp", "de"],
-        'deinterlace':    "--deinterlace",
-        'novideo':        ["--novideo", "--no-skeleton"],
-        'bufDelay':       "--buf-delay",
-        # audio
-        'audioQuality':   "-a",
-        'audioBitrate':   "-A",
-        'samplerate':     "-H",
-        'channels':       "-c",
-        'noaudio':        "--noaudio",
-        # metadata
-        'artist':         "--artist",
-        'title':          "--title",
-        'date':           "--date",
-        'location':       "--location",
-        'organization':   "--organization",
-        'copyright':      "--copyright",
-        'license':        "--license",
-        'contact':        "--contact"
-    }
