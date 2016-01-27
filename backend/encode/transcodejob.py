@@ -570,9 +570,9 @@ class WebVideoTranscodeJob(object):
                             if duration and position:
                                 newpercentage = min(int(math.floor(100 * position / duration)), 100)
 
-            if newpercentage != percentage:
-                percentage = newpercentage
-                self.statuscallback(None, percentage)
+                    if newpercentage != percentage:
+                        percentage = newpercentage
+                        self.statuscallback(None, percentage)
 
             time.sleep(2)
 
