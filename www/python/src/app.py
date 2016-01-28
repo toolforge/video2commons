@@ -19,6 +19,7 @@
 
 import os, sys
 import re
+import traceback
 
 from flask import Flask, request, Response, session, render_template, redirect, url_for, jsonify
 # https://github.com/mediawiki-utilities/python-mwoauth
@@ -48,8 +49,6 @@ app.session_interface = RedisSessionInterface(redisconnection)
 
 @app.errorhandler(Exception)
 def all_exception_handler(error):
-    import traceback
-
     return 'Please notify [[commons:User:Zhuyifei1999]]: ' + traceback.format_exc(), 500
 
 @app.route('/')
@@ -112,33 +111,40 @@ def status():
             'title': title
         }
 
-        if res.state == 'PENDING':
-            task['status'] = 'progress'
-            task['text'] = 'Your task is pending...'
-            task['progress'] = -1
-            hasrunning = True
-        elif res.state == 'STARTED':
-            task['status'] = 'progress'
-            task['text'] = 'Your task has been started; preprocessing...'
-            task['progress'] = -1
-            hasrunning = True
-        elif res.state == 'PROGRESS':
-            task['status'] = 'progress'
-            task['text'] = res.result['text']
-            task['progress'] = res.result['percent']
-            hasrunning = True
-        elif res.state == 'SUCCESS':
-            task['status'] = 'done'
-            filename, wikifileurl = res.result
-            task['url'] = wikifileurl
-            task['text'] = filename
-        elif res.state == 'FAILURE':
-            task['status'] = 'fail'
-            e = res.result
-            task['text'] = 'An exception occured: %s: %s' % (type(e).__name__, str(e))
+        try:
+            state = res.state
+        except:
+                task['status'] = 'fail'
+                task['text'] = 'The status of the task could not be retrieved. It is presumably failed due to a failed chunk uploading and T124922.'
+                task['traceback'] = traceback.format_exc()
         else:
-            task['status'] = 'fail'
-            task['text'] = 'Something weird going on. Please notify [[commons:User:Zhuyifei1999]]'
+            if res.state == 'PENDING':
+                task['status'] = 'progress'
+                task['text'] = 'Your task is pending...'
+                task['progress'] = -1
+                hasrunning = True
+            elif res.state == 'STARTED':
+                task['status'] = 'progress'
+                task['text'] = 'Your task has been started; preprocessing...'
+                task['progress'] = -1
+                hasrunning = True
+            elif res.state == 'PROGRESS':
+                task['status'] = 'progress'
+                task['text'] = res.result['text']
+                task['progress'] = res.result['percent']
+                hasrunning = True
+            elif res.state == 'SUCCESS':
+                task['status'] = 'done'
+                filename, wikifileurl = res.result
+                task['url'] = wikifileurl
+                task['text'] = filename
+            elif res.state == 'FAILURE':
+                task['status'] = 'fail'
+                e = res.result
+                task['text'] = 'An exception occured: %s: %s' % (type(e).__name__, str(e))
+            else:
+                task['status'] = 'fail'
+                task['text'] = 'Something weird going on. Please notify [[commons:User:Zhuyifei1999]]'
 
         values.append(task)
 
