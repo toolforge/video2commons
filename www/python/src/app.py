@@ -229,8 +229,7 @@ def submitTask():
 
             if needRextract:
                 rextractURL(id)
-            if needRelist:
-                relistFormats(id)
+            relistFormats(id)
 
         elif step == 'target':
             if not request.form['format'].strip() in session['newtasks'][id]['formats']:
