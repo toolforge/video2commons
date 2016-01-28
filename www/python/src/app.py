@@ -215,13 +215,17 @@ def submitTask():
             if not request.form['url'].strip():
                 return jsonify(step='error', error='URL cannot be empty!')
 
+            formaudio = request.form['audio'] in [True, 'true', 'TRUE', 'True', 1, '1']
+            formvideo = request.form['video'] in [True, 'true', 'TRUE', 'True', 1, '1']
+            formsubtitles = request.form['subtitles'] in [True, 'true', 'TRUE', 'True', 1, '1']
+
             needRextract = request.form['url'].strip() != session['newtasks'][id]['url'] # re-extract url data via youtube-dl
-            needRelist = request.form['audio'].strip() != session['newtasks'][id]['audio'] or request.form['video'] != session['newtasks'][id]['video'] # re-list target formats
+            needRelist = formaudio != session['newtasks'][id]['audio'] or formvideo != session['newtasks'][id]['video'] # re-list target formats
 
             session['newtasks'][id]['url'] = request.form['url'].strip()
-            session['newtasks'][id]['audio'] = request.form['audio']
-            session['newtasks'][id]['video'] = request.form['video']
-            session['newtasks'][id]['subtitles'] = request.form['subtitles']
+            session['newtasks'][id]['audio'] = formaudio
+            session['newtasks'][id]['video'] = formvideo
+            session['newtasks'][id]['subtitles'] = formsubtitles
 
             if needRextract:
                 rextractURL(id)
