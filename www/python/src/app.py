@@ -220,7 +220,6 @@ def submitTask():
             formsubtitles = request.form['subtitles'] in [True, 'true', 'TRUE', 'True', 1, '1']
 
             needRextract = request.form['url'].strip() != session['newtasks'][id]['url'] # re-extract url data via youtube-dl
-            needRelist = formaudio != session['newtasks'][id]['audio'] or formvideo != session['newtasks'][id]['video'] # re-list target formats
 
             session['newtasks'][id]['url'] = request.form['url'].strip()
             session['newtasks'][id]['audio'] = formaudio

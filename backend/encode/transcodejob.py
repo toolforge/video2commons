@@ -537,6 +537,7 @@ class WebVideoTranscodeJob(object):
         cmd = 'ulimit -f ' + wfEscapeShellArg(wgTranscodeBackgroundSizeLimit) + ';' + \
             'ulimit -v ' + wfEscapeShellArg(wgTranscodeBackgroundMemoryLimit) + ';' + \
             'ulimit -t ' + wfEscapeShellArg(wgTranscodeBackgroundTimeLimit) + ';' + \
+            'ulimit -a;' + \
             'nice -n ' + wfEscapeShellArg(wgTranscodeBackgroundPriority) + ' ' + cmd + ' 2>&1'
 
         # Adapted from https://gist.github.com/marazmiki/3015621

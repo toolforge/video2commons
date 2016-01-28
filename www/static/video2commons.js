@@ -226,7 +226,7 @@
             <div class="alert alert-info">\n\
               Note:\n\
               <ul>\n\
-                <li>Playlists will not be processed correctly. Some sites (such as Youku and Comedy Central) make use of multipart videos, interpreted as playlists, will not be processed correctly either.</li>\n\
+                <li>Playlists will not be processed correctly. Some sites (such as Youku and Comedy Central) make use of multipart videos, interpreted as playlists, and will not be processed correctly either.</li>\n\
                 <li>If the media does not include video or audio tracks, please uncheck the corresponding checkboxes; otherwise conversion may fail, even if the format is free.</li>\n\
                 <li>If "Import subtitles" is checked, subtitles will be imported, excluding auto-generated ones.</li>\n\
               </ul>\n\
@@ -256,7 +256,7 @@
             <div class="alert alert-info">\n\
               Note:\n\
               <ul>\n\
-                <li>The file extension set above is used if and only if the video is in a non-free format, which transcoding is required. Videos in free formats will keep its extension.</li>\n\
+                <li>The file extension set above is used if and only if the video is in a non-free format, which transcoding is required. Videos in free formats will keep their extensions.</li>\n\
               </ul>\n\
             </div>\n\
           </form>');
