@@ -357,10 +357,10 @@ def rextractURL(id):
     assert 'formats' in info, 'Your url cannot be processed correctly'
 
     session['newtasks'][id]['extractor'] = info['extractor_key']
-    title = info.get('title', '').strip()
+    title = info.get('title', '').strip() if title else ''
     uploader = info.get('uploader', '').strip()
     date = info.get('upload_date', '').strip()
-    desc = info.get('description').strip()
+    desc = info.get('description', '').strip()
 
     # Process date
     if re.match(r'^[0-9]{8}$', date):
