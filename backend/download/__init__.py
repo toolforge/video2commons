@@ -58,6 +58,11 @@ class Downloader(object):
         self.statuscallback('Preprocessing...', -1)
         self.info = self.dl.extract_info(self.url, download=True, ie_key=self.ie_key)
 
+        filename = self.outtmpl % {'ext':self.info['ext']}
+        if not os.path.isfile(filename):
+            filename = self.outtmpl % {'ext':'mkv'} # https://github.com/rg3/youtube-dl/issues/8349
+            assert os.path.isfile(filename), 'Failed to determine the path of the downloaded video. Is the video too large?'
+
         ret = {
             'extractor': self.ie_key,
             'title': self.info.get('title'),
@@ -65,11 +70,13 @@ class Downloader(object):
             'date': self.info.get('upload_date'),
             'desc': self.info.get('description'),
             'subtitles': {},
-            'target': self.outtmpl % {'ext':self.info['ext']},
+            'target': filename,
         }
 
         for key in self.info['subtitles']:
-            ret['subtitles'][key] = self.outtmpl % {'ext':key+'.srt'} # Postprocess: convert to srt
+            filename = self.outtmpl % {'ext':key+'.srt'} # Postprocesed: converted to srt
+            if os.path.isfile(filename):
+                ret['subtitles'][key] = self.outtmpl % {'ext':key+'.srt'}
 
         return ret
 
