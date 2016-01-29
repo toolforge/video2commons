@@ -232,7 +232,7 @@ def submitTask():
 
         elif step == 'target':
             if not request.form['format'].strip() in session['newtasks'][id]['formats']:
-                return jsonify(step='error', error='An invalid format was requested and could not be processed.')
+                return jsonify(step='error', error='An invalid format was requested and could not be processed. Please try again.')
             if not (request.form['filename'].strip() and request.form['filedesc'].strip()):
                 return jsonify(step='error', error='Filename and file description cannot be empty!')
 
