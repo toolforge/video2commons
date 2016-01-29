@@ -65,15 +65,11 @@ class Downloader(object):
 
         ret = {
             'extractor': self.ie_key,
-            'title': self.info.get('title'),
-            'uploader': self.info.get('uploader'),
-            'date': self.info.get('upload_date'),
-            'desc': self.info.get('description'),
             'subtitles': {},
             'target': filename,
         }
 
-        for key in self.info['subtitles']:
+        for key in self.info.get('subtitles', {}):
             filename = self.outtmpl % {'ext':key+'.srt'} # Postprocesed: converted to srt
             if os.path.isfile(filename):
                 ret['subtitles'][key] = self.outtmpl % {'ext':key+'.srt'}
