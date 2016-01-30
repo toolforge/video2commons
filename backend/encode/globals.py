@@ -34,7 +34,7 @@ wgTranscodeBackgroundMemoryLimit = 8 * 1024 * 1024
 # Maximum file size transcoding processes can create, in KB
 wgTranscodeBackgroundSizeLimit = 10 * 1024 * 1024 # 3GB
 # Number of threads to use in avconv for transcoding
-wgFFmpegThreads = 8
+wgFFmpegThreads = 0 # optimal
 # The location of ffmpeg2theora (transcoding)
 # Set to false to use avconv/ffmpeg to produce Ogg Theora transcodes instead;
 # beware this will disable Ogg skeleton metadata generation.
