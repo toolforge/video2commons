@@ -53,11 +53,13 @@ class RedisSessionInterface(SessionInterface):
 
     def save_session(self, app, session, response):
         domain = self.get_cookie_domain(app)
+        path = '/video2commons/'
+
         if not session:
             self.redis.delete(self.prefix + session.sid)
             if session.modified:
                 response.delete_cookie(app.session_cookie_name,
-                                       domain=domain)
+                                       domain=domain, path=path)
             return
         redis_exp = self.get_redis_expiration_time(app, session)
         cookie_exp = self.get_expiration_time(app, session)
@@ -66,4 +68,4 @@ class RedisSessionInterface(SessionInterface):
                          int(redis_exp.total_seconds()))
         response.set_cookie(app.session_cookie_name, session.sid,
                             expires=cookie_exp, httponly=True,
-                            domain=domain, path='/video2commons/')
+                            domain=domain, path=path)
