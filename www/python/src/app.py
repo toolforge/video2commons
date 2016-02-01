@@ -419,7 +419,7 @@ def removeTask():
     id = request.form['id']
     username = session['username']
     redisconnection.delete('titles:' + id)
-    #redisconnection.lrem('tasks:' + username, 0, id) # Something wrong here
+    redisconnection.lrem('tasks:' + username, id) # not StrictRedis
     return jsonify(remove = "success", id = id)
 
 if __name__ == '__main__':
