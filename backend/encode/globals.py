@@ -27,10 +27,10 @@ wgEnableNiceBackgroundTranscodeJobs = False;
 wgTranscodeBackgroundPriority = 19;
 
 # The total amout of time a transcoding shell command can take:
-wgTranscodeBackgroundTimeLimit = 3600 * 8
+wgTranscodeBackgroundTimeLimit = 3600 * 24 * 2 # 2 days
 # Maximum amount of virtual memory available to transcoding processes in KB
 # 2GB avconv, ffmpeg2theora mmap resources so virtual memory needs to be high enough
-wgTranscodeBackgroundMemoryLimit = 8 * 1024 * 1024
+wgTranscodeBackgroundMemoryLimit = 8 * 1024 * 1024 # 8GB
 # Maximum file size transcoding processes can create, in KB
 wgTranscodeBackgroundSizeLimit = 10 * 1024 * 1024 # 3GB
 # Number of threads to use in avconv for transcoding
