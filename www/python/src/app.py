@@ -156,7 +156,7 @@ def status():
 
 def getTasks():
     username = session['username']
-    sudoers = redisconnection.lrange('sudoers' + username, 0, -1)
+    sudoers = redisconnection.lrange('sudoers', 0, -1)
     if username in sudoers:
         key = 'alltasks'
     else:
