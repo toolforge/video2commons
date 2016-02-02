@@ -155,6 +155,7 @@ def status():
     return jsonify(ids=goodids, values=values, hasrunning=hasrunning)
 
 def getTasks():
+    # sudoer = able to monitor all tasks
     username = session['username']
     sudoers = redisconnection.lrange('sudoers', 0, -1)
     if username in sudoers:
