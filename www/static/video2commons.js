@@ -143,8 +143,7 @@
 								$(this).addClass('disabled');
 								video2commons.removeTask(video2commons.getTaskIDFromDOMID($(this).attr('id')));
 							});
-						var uploadlink = $('File too large to upload directly! You may want to ')
-							.append($('<a>request a server-side upload</a>').attr('href', val.url));
+						var uploadlink = $('<a>request a server-side upload</a>').attr('href', val.url);
 						row.append($('<td />').attr('id', id + '-status').attr('width', '70%').attr('colspan', '2')
 								.append($('<span />').attr('id', id + '-statustext').append(uploadlink))
 								.append(removebutton))
@@ -160,7 +159,10 @@
 			if (val.status === 'done') {
 				row.find('#' + id + '-statustext').html('Your task is done. You may find your upload at <a></a>.')
 					.find('a').attr('href', val.url).text(val.text);
-			} else if (val.status !== 'needssu') {
+			} else if (val.status === 'needssu') {
+				row.find('#' + id + '-statustext').html('File too large to upload directly! You may want to <a>request a server-side upload</a>.')
+					.find('a').attr('href', val.url);
+			} else {
 				row.find('#' + id + '-statustext').text(val.text);
 			}
 
