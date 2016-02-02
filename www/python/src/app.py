@@ -156,8 +156,13 @@ def status():
 
 def getTasks():
     username = session['username']
-    if not redisconnection.exists('tasks:' + username): return []
-    return redisconnection.lrange('tasks:' + username, 0, -1)
+    sudoers = redisconnection.lrange('sudoers' + username, 0, -1)
+    if username in sudoers:
+        key = 'alltasks'
+    else:
+        key = 'tasks:' + username
+
+    return redisconnection.lrange(key, 0, -1)
 
 def getTitleFromTask(id):
     return redisconnection.get('titles:' + id)
@@ -409,6 +414,8 @@ def runTask(id):
     taskid = res.id
 
     expire = 2 * 30 * 24 * 3600 # 2 months
+    redisconnection.lpush('alltasks', taskid)
+    redisconnection.expire('alltasks', expire)
     redisconnection.lpush('tasks:' + username, taskid)
     redisconnection.expire('tasks:' + username, expire)
     redisconnection.set('titles:' + taskid, filename)
@@ -424,6 +431,7 @@ def removeTask():
     username = session['username']
     redisconnection.delete('titles:' + id)
     redisconnection.lrem('tasks:' + username, id) # not StrictRedis
+    redisconnection.lrem('alltasks', id) # not StrictRedis
     return jsonify(remove = "success", id = id)
 
 if __name__ == '__main__':
