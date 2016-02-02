@@ -95,9 +95,9 @@ def main(self, url, ie_key, subtitles, filename, filedesc, convertkey, username,
         statuscallback('Done!', 100)
         return filename, wikifileurl
     finally:
-        cleanup(outputsdir, cleanupdir, statuscallback, errorcallback)
+        cleanup(outputdir, cleanupdir, statuscallback, errorcallback)
 
-def cleanup(outputsdir, cleanupdir, statuscallback, errorcallback):
+def cleanup(outputdir, cleanupdir, statuscallback, errorcallback):
     statuscallback('Cleaning up...', -1)
     pywikibot.config.authenticate.clear()
     pywikibot.config.usernames['commons'].clear()
