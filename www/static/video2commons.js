@@ -212,7 +212,7 @@
 
 	video2commons.setupAddTaskDialog = function(data) {
 		window.addTaskDialog.find('#dialog-spinner').hide();
-		if (data.step != 'error')
+		if (data.step !== 'error')
 			window.addTaskStep = data.step;
 		switch (data.step) {
 			case 'error':
