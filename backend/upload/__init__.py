@@ -23,8 +23,8 @@ import pywikibot
 class NeedServerSideUpload(Exception):
     # So no one should handle it
     def __init__(self, url):
+        super(NeedServerSideUpload, self).__init__(url)
         self.url = url
-        super(TaskError, self).__init__(url)
 
 def upload(filename, wikifilename, sourceurl, fileurl, filedesc, username,
         statuscallback = None, errorcallback = None):
