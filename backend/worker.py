@@ -54,6 +54,7 @@ def main(self, url, ie_key, subtitles, filename, filedesc, convertkey, username,
     def errorcallback(text):
         raise TaskError(text)
 
+    cleanupdir = True
     try:
         statuscallback('Downloading...', -1)
         d = download.download(url, ie_key, 'bestvideo+bestaudio/best', subtitles, outputdir, statuscallback, errorcallback)
@@ -88,22 +89,21 @@ def main(self, url, ie_key, subtitles, filename, filedesc, convertkey, username,
                 pass
 
     except upload.NeedServerSideUpload:
-        raise
-    except:
-        cleanup(outputsdir, statuscallback, errorcallback)
+        cleanupdir = False
         raise
     else:
-        cleanup(outputsdir, statuscallback, errorcallback)
         statuscallback('Done!', 100)
         return filename, wikifileurl
+    finally:
+        cleanup(outputsdir, cleanupdir, statuscallback, errorcallback)
 
-def cleanup(outputsdir, statuscallback, errorcallback):
+def cleanup(outputsdir, cleanupdir, statuscallback, errorcallback):
     statuscallback('Cleaning up...', -1)
     pywikibot.config.authenticate.clear()
     pywikibot.config.usernames['commons'].clear()
     pywikibot._sites.clear()
 
-    shutil.rmtree(outputdir)
+    if cleanupdir: shutil.rmtree(outputdir)
 
 def generate_dir():
     for i in range(10): # 10 tries
