@@ -20,6 +20,7 @@
 import os
 import celery
 import shutil
+import pywikibot
 import download, encode, upload
 import subtitles as subtitleuploader
 from config import redis_pw
@@ -53,49 +54,56 @@ def main(self, url, ie_key, subtitles, filename, filedesc, convertkey, username,
     def errorcallback(text):
         raise TaskError(text)
 
-    statuscallback('Downloading...', -1)
-    d = download.download(url, ie_key, 'bestvideo+bestaudio/best', subtitles, outputdir, statuscallback, errorcallback)
-    if not d: errorcallback('Download failed!')
-    file = d['target']
-    if not file: errorcallback('Download failed!')
-    subtitles = subtitles and d['subtitles']
+    try:
+        statuscallback('Downloading...', -1)
+        d = download.download(url, ie_key, 'bestvideo+bestaudio/best', subtitles, outputdir, statuscallback, errorcallback)
+        if not d: errorcallback('Download failed!')
+        file = d['target']
+        if not file: errorcallback('Download failed!')
+        subtitles = subtitles and d['subtitles']
 
-    statuscallback('Converting...', -1)
-    file = encode.encode(file, convertkey, statuscallback, errorcallback)
-    if not file: errorcallback('Convert failed!')
-    ext = file.split('.')[-1]
+        statuscallback('Converting...', -1)
+        file = encode.encode(file, convertkey, statuscallback, errorcallback)
+        if not file: errorcallback('Convert failed!')
+        ext = file.split('.')[-1]
 
-    statuscallback('Configuring Pywikibot...', -1)
-    import pywikibot
-    pywikibot.config.authenticate['commons.wikimedia.org'] = oauth
-    pywikibot.config.usernames['commons']['commons'] = username
-    pywikibot.Site('commons', 'commons', user=username).login()
+        statuscallback('Configuring Pywikibot...', -1)
+        pywikibot.config.authenticate['commons.wikimedia.org'] = oauth
+        pywikibot.config.usernames['commons']['commons'] = username
+        pywikibot.Site('commons', 'commons', user=username).login()
 
-    statuscallback('Uploading...', -1)
-    fileurl = 'http://v2c.wmflabs.org/' + '/'.join(file.split('/')[3:])
-    filename += '.' + ext
-    filename, wikifileurl = upload.upload(file, filename, url, fileurl, filedesc, username, statuscallback, errorcallback)
-    if not wikifileurl: errorcallback('Upload failed!')
+        statuscallback('Uploading...', -1)
+        fileurl = 'http://v2c.wmflabs.org/' + '/'.join(file.split('/')[3:])
+        filename += '.' + ext
+        filename, wikifileurl = upload.upload(file, filename, url, fileurl, filedesc, username, statuscallback, errorcallback)
+        if not wikifileurl: errorcallback('Upload failed!')
 
-    if subtitles:
-        statuscallback('Uploading subtitles...', -1)
-        try:
-            subtitleuploader.subtitles(subtitles, filename, username, statuscallback, errorcallback)
-        except Exception, e:
-            statuscallback(type(e).__name__ + ": " + str(e), None)
-            print e
-            pass
+        if subtitles:
+            statuscallback('Uploading subtitles...', -1)
+            try:
+                subtitleuploader.subtitles(subtitles, filename, username, statuscallback, errorcallback)
+            except Exception, e:
+                statuscallback(type(e).__name__ + ": " + str(e), None)
+                print e
+                pass
 
+    except upload.NeedServerSideUpload:
+        raise
+    except:
+        cleanup(outputsdir, statuscallback, errorcallback)
+        raise
+    else:
+        cleanup(outputsdir, statuscallback, errorcallback)
+        statuscallback('Done!', 100)
+        return filename, wikifileurl
+
+def cleanup(outputsdir, statuscallback, errorcallback):
     statuscallback('Cleaning up...', -1)
     pywikibot.config.authenticate.clear()
     pywikibot.config.usernames['commons'].clear()
     pywikibot._sites.clear()
 
     shutil.rmtree(outputdir)
-
-    statuscallback('Done!', 100)
-
-    return filename, wikifileurl
 
 def generate_dir():
     for i in range(10): # 10 tries

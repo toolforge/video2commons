@@ -20,6 +20,12 @@
 import os
 import pywikibot
 
+class NeedServerSideUpload(Exception):
+    # So no one should handle it
+    def __init__(self, url):
+        self.url = url
+        super(TaskError, self).__init__(url)
+
 def upload(filename, wikifilename, sourceurl, fileurl, filedesc, username,
         statuscallback = None, errorcallback = None):
     statuscallback = statuscallback or (lambda text, percent: None)
@@ -39,7 +45,7 @@ def upload(filename, wikifilename, sourceurl, fileurl, filedesc, username,
             statuscallback('Upload success!', 100)
             return page.title(withNamespace=False), page.full_url()
         else:
-            errorcallback('Upload failed! You may want to upload the file manually from <a href="%s">%s</s>' % (fileurl, fileurl))
+            errorcallback('Upload failed!')
 
     else:
         # Source: videoconverter tool
@@ -53,5 +59,5 @@ Thank you!""" % (wikifilename, fileurl,
         import urllib
         phaburl = 'https://phabricator.wikimedia.org/maniphest/task/create/?title=Please%20upload%20large%20file%20to%20Wikimedia%20Commons&projects=Wikimedia-Site-requests,commons&description=' + \
             urllib.quote(phabdesc)
-        errorcallback('File too large to upload directly! You may want to <a href="%s">request a server-side upload</s>' % (phaburl))
+        raise NeedServerSideUpload(phaburl)
 

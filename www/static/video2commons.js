@@ -135,16 +135,32 @@
 							.removeClass('success')
 							.addClass('danger');
 						break;
+					case 'needssu':
+						row.append($('<td />').attr('id', id + '-title').attr('width', '30%'));
+						removebutton = $('<button type="button" class="btn btn-danger btn-xs pull-right"><span class="glyphicon glyphicon-trash"></span> Remove</button>')
+							.attr('id', id + '-removebutton')
+							.click(function() {
+								$(this).addClass('disabled');
+								video2commons.removeTask(video2commons.getTaskIDFromDOMID($(this).attr('id')));
+							});
+						var uploadlink = $('File too large to upload directly! You may want to ')
+							.append($('<a>request a server-side upload</a>').attr('href', val.url));
+						row.append($('<td />').attr('id', id + '-status').attr('width', '70%').attr('colspan', '2')
+								.append($('<span />').attr('id', id + '-statustext').append(uploadlink))
+								.append(removebutton))
+							.removeClass('success')
+							.addClass('danger');
+						break;
 				}
 
 				row.attr('status', val.status);
 			}
 
 			row.find('#' + id + '-title').text(val.title);
-			if  (val.status === 'done') {
+			if (val.status === 'done') {
 				row.find('#' + id + '-statustext').html('Your task is done. You may find your upload at <a></a>.')
 					.find('a').attr('href', val.url).text(val.text);
-			} else {
+			} else if (val.status !== 'needssu') {
 				row.find('#' + id + '-statustext').text(val.text);
 			}
 

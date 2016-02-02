@@ -139,9 +139,13 @@ def status():
                 task['url'] = wikifileurl
                 task['text'] = filename
             elif res.state == 'FAILURE':
-                task['status'] = 'fail'
                 e = res.result
-                task['text'] = 'An exception occured: %s: %s' % (type(e).__name__, str(e))
+                if isinstance(e, worker.upload.NeedServerSideUpload):
+                    task['status'] = 'needssu'
+                    task['url'] = e.url
+                else:
+                    task['status'] = 'fail'
+                    task['text'] = 'An exception occured: %s: %s' % (type(e).__name__, str(e))
             else:
                 task['status'] = 'fail'
                 task['text'] = 'Something weird going on. Please notify [[commons:User:Zhuyifei1999]]'
