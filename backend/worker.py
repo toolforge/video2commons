@@ -23,7 +23,7 @@ import shutil
 import pywikibot
 import download, encode, upload
 import subtitles as subtitleuploader
-from config import redis_pw
+from config import redis_pw, consumer_key, consumer_secret
 
 # TODO
 redisurl = 'redis://:'+redis_pw+'@encoding01.video.eqiad.wmflabs:6379/'
@@ -69,7 +69,7 @@ def main(self, url, ie_key, subtitles, filename, filedesc, convertkey, username,
         ext = file.split('.')[-1]
 
         statuscallback('Configuring Pywikibot...', -1)
-        pywikibot.config.authenticate['commons.wikimedia.org'] = oauth
+        pywikibot.config.authenticate['commons.wikimedia.org'] = (consumer_key, consumer_secret) + oauth
         pywikibot.config.usernames['commons']['commons'] = username
         pywikibot.Site('commons', 'commons', user=username).login()
 

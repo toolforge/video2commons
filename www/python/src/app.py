@@ -409,7 +409,7 @@ def runTask(id):
     filedesc = session['newtasks'][id]['filedesc']
     convertkey = getConvertKey(session['newtasks'][id]['format'])
     username = session['username']
-    oauth = (consumer_token.key, consumer_token.secret, session['access_token_key'], session['access_token_secret'])
+    oauth = (session['access_token_key'], session['access_token_secret'])
 
     res = worker.main.delay(url, ie_key, subtitles, filename, filedesc, convertkey, username, oauth)
     taskid = res.id
