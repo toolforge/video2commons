@@ -37,6 +37,10 @@ def upload(filename, wikifilename, sourceurl, fileurl, filedesc, username,
         # ENSURE PYWIKIBOT OAUTH PROPERLY CONFIGURED!
         site = pywikibot.Site('commons', 'commons', user=username)
         page = pywikibot.FilePage(site, wikifilename)
+
+        if page.exists():
+            errorcallback('File already exists. Please choose another name.')
+
         comment = u'Imported media from ' + sourceurl
         chunked = (64 * (1 << 20)) if size >= 100000000 else 0
 
