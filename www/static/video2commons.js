@@ -249,6 +249,7 @@
                 <li>If "Import subtitles" is checked, subtitles will be imported, excluding auto-generated ones.</li>\n\
                 <li>What if I need to convert and upload a file on my computer? Well, while NFS and Grid engine is still here, you can use <a href="//tools.wmflabs.org/videoconvert/">videoconvert</a></li> tool.\n\
               </ul>\n\
+              <b>Important note:</b> Only upload <a href="//commons.wikimedia.org/wiki/Commons:Licensing#Acceptable_licenses" title="Commons:Licensing">freely licensed</a> or <a href="//commons.wikimedia.org/wiki/Commons:Licensing#Material_in_the_public_domain" title="Commons:Licensing">public domain</a> content. <a href="//commons.wikimedia.org/wiki/Commons:FU" title="Commons:FU" class="mw-redirect">Fair use</a> is not allowed on commons.\n\
             </div>\n\
           </form>');
 
