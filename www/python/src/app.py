@@ -163,7 +163,7 @@ def getTasks():
     else:
         key = 'tasks:' + username
 
-    return redisconnection.lrange(key, 0, -1)
+    return redisconnection.lrange(key, 0, -1)[::-1]
 
 def getTitleFromTask(id):
     return redisconnection.get('titles:' + id)
