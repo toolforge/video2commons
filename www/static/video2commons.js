@@ -247,7 +247,7 @@
                 <li>Playlists will not be processed correctly. Some sites (such as Youku and Comedy Central) make use of multipart videos, interpreted as playlists, and will not be processed correctly either.</li>\n\
                 <li>If the media does not include video or audio tracks, please uncheck the corresponding checkboxes; otherwise conversion may fail, even if the format is free.</li>\n\
                 <li>If "Import subtitles" is checked, subtitles will be imported, excluding auto-generated ones.</li>\n\
-                <li>What if I need to convert and upload a file on my computer? Well, while NFS and Grid engine is still here, you can use <a href="//tools.wmflabs.org/videoconvert/">videoconvert</a></li>\n\
+                <li>What if I need to convert and upload a file on my computer? Well, while NFS and Grid engine is still here, you can use <a href="//tools.wmflabs.org/videoconvert/">videoconvert</a></li> tool.\n\
               </ul>\n\
             </div>\n\
           </form>');
