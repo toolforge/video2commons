@@ -17,7 +17,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>
 #
 
-import sys
+import os, sys
 from redis import Redis
 
 sys.path.append(os.path.dirname(os.path.realpath(__file__))+"/../")
