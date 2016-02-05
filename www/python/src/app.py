@@ -92,7 +92,7 @@ def logincallback():
 def logout():
     session.clear()
 
-    return redirect(url_for('main'))
+    return render_template('bootstraphtml.html', loggedin=False, bye=False)
 
 # APIs
 @app.route('/api/status')
