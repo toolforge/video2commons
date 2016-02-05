@@ -23,10 +23,10 @@ import shutil
 import pywikibot
 import download, encode, upload
 import subtitles as subtitleuploader
-from config import redis_pw, consumer_key, consumer_secret
+from config import redis_pw, redis_host, consumer_key, consumer_secret
 
 # TODO
-redisurl = 'redis://:'+redis_pw+'@encoding01.video.eqiad.wmflabs:6379/'
+redisurl = 'redis://:'+redis_pw+'@'+redis_host+':6379/'
 app = celery.Celery('v2cbackend', backend=redisurl+'1', broker=redisurl+'2')
 app.conf.CELERY_TASK_RESULT_EXPIRES = 30 * 24 * 3600 # 1 month
 

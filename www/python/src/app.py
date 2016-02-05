@@ -26,7 +26,7 @@ from flask import Flask, request, Response, session, render_template, redirect, 
 from mwoauth import AccessToken, ConsumerToken, RequestToken, Handshaker
 import requests
 from requests_oauthlib import OAuth1
-from config import consumer_key, consumer_secret, api_url, session_key, redis_pw
+from config import consumer_key, consumer_secret, api_url, session_key, redis_pw, redis_host
 from redis import Redis
 from celery.result import AsyncResult
 import youtube_dl
@@ -39,7 +39,7 @@ import worker
 consumer_token = ConsumerToken(consumer_key, consumer_secret)
 handshaker = Handshaker(api_url, consumer_token)
 
-redisconnection = Redis(host='encoding01.video.eqiad.wmflabs', db=3, password=redis_pw)
+redisconnection = Redis(host=redis_host, db=3, password=redis_pw)
 
 app = Flask(__name__)
 

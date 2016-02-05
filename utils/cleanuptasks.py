@@ -21,9 +21,9 @@ import os, sys
 from redis import Redis
 
 sys.path.append(os.path.dirname(os.path.realpath(__file__))+"/../")
-from config import redis_pw
+from config import redis_pw, redis_host
 
-redisconnection = Redis(host='encoding01.video.eqiad.wmflabs', db=3, password=redis_pw)
+redisconnection = Redis(host=redis_host, db=3, password=redis_pw)
 
 for userkey in redisconnection.keys('tasks:*')+['alltasks']:
     for id in redisconnection.lrange(userkey, 0, -1):
