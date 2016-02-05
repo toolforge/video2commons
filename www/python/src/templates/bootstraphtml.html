@@ -36,6 +36,9 @@
   </div>
 
   <div class="container" id="content">
+{% if bye %}
+<a>You've been logged out successfully. Thanks for using video2commons!</a><br>
+{% endif %}
 {% if loggedin %}
     <noscript>Javascript is Required to use this tool!</noscript>
 {% else %}
