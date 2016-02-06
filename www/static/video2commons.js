@@ -17,8 +17,7 @@
 			video2commons.populateResults(data);
 			if (data.hasrunning) {
 				window.lastStatusCheck = setTimeout(video2commons.checkStatus, 2000);
-			} else if (data.length === 0) {
-				// TODO: message: You don't have a task yet. Add one?
+			} else {
 				window.lastStatusCheck = setTimeout(video2commons.checkStatus, 60000);
 			}
 		}).fail(function() {
