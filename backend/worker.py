@@ -17,7 +17,7 @@
 # along with self program.  If not, see <http://www.gnu.org/licenses/>
 #
 
-import os
+import os, sys
 import celery
 import shutil
 import pywikibot
@@ -91,6 +91,9 @@ def main(self, url, ie_key, subtitles, filename, filedesc, convertkey, username,
     except upload.NeedServerSideUpload:
         cleanupdir = False
         raise
+    except pywikibot.Error: # T124922 workaround
+        exc_info = sys.exc_info()
+        raise TaskError, 'pywikibot.Error: %s: %s' % (type(exc_info[0]).__name__, str(exc_info[1])), exc_info[2]
     else:
         statuscallback('Done!', 100)
         return filename, wikifileurl
