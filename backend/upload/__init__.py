@@ -45,7 +45,7 @@ def upload(filename, wikifilename, sourceurl, fileurl, filedesc, username,
         chunked = (64 * (1 << 20)) if size >= 100000000 else 0
 
         statuscallback('Uploading...', -1)
-        if site.upload(page, source_filename=filename, comment=comment, text=filedesc, chunk_size=chunked):
+        if site.upload(page, source_filename=filename, comment=comment, text=filedesc, chunk_size=chunked, ignore_warnings=['exists-normalized']):
             statuscallback('Upload success!', 100)
             return page.title(withNamespace=False), page.full_url()
         else:
