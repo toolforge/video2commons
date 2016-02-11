@@ -62,6 +62,6 @@ Thank you!""" % (wikifilename, fileurl,
             filedesc.replace('[[Category:Uploaded with video2commons]]', '[[Category:Uploaded with video2commons/Server-side uploads]]'))
         import urllib
         phaburl = 'https://phabricator.wikimedia.org/maniphest/task/create/?title=Please%20upload%20large%20file%20to%20Wikimedia%20Commons&projects=Wikimedia-Site-requests,commons&description=' + \
-            urllib.quote(phabdesc)
+            urllib.quote(phabdesc.encode('utf-8'))
         raise NeedServerSideUpload(phaburl)
 
