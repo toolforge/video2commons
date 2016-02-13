@@ -148,7 +148,7 @@ class WebVideoTranscode:
         ENC_OGG_VORBIS:
             {
                 'audioCodec':                  'vorbis',
-                'audioQuality':                '1',
+                'audioQuality':                '6',
                 'samplerate':                  '44100',
                 'channels':                    '2',
                 'noUpscaling':                 'True',
