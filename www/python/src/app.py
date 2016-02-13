@@ -377,11 +377,11 @@ def rextractURL(id):
         date = '%s-%s-%s' % (date[0:4], date[4:6], date[6:8])
 
     # Source
-    if ie_key = 'Youtube' and info['id']:
+    if ie_key == 'Youtube' and info['id']:
         source = '{{From YouTube|1=%(id)s|2=%(title)s}}' % {'id': info['id'], 'title': title}
-    elif ie_key = 'Vimeo' and info['id']:
+    elif ie_key == 'Vimeo' and info['id']:
         source = '{{From Vimeo|1=%(id)s|2=%(title)s}}' % {'id': info['id'], 'title': title}
-    elif ie_key = 'Generic':
+    elif ie_key == 'Generic':
         source = url
     else:
         source = '[%(url)s %(title)s - %(extractor)s]' % {'url': url, 'title': title, 'extractor': ie_key}
