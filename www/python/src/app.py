@@ -366,7 +366,7 @@ def rextractURL(id):
 
     assert 'formats' in info, 'Your url cannot be processed correctly'
 
-    session['newtasks'][id]['extractor'] = info['extractor_key']
+    ie_key = info['extractor_key']
     title = info.get('title', '').strip()
     uploader = info.get('uploader', '').strip()
     date = info.get('upload_date', '').strip()
@@ -376,12 +376,22 @@ def rextractURL(id):
     if re.match(r'^[0-9]{8}$', date):
         date = '%s-%s-%s' % (date[0:4], date[4:6], date[6:8])
 
+    # Source
+    if ie_key = 'Youtube' and info['id']:
+        source = '{{From YouTube|1=%(id)s|2=%(title)s}}' % {'id': info['id'], 'title': title}
+    elif ie_key = 'Vimeo' and info['id']:
+        source = '{{From Vimeo|1=%(id)s|2=%(title)s}}' % {'id': info['id'], 'title': title}
+    elif ie_key = 'Generic':
+        source = url
+    else:
+        source = '[%(url)s %(title)s - %(extractor)s]' % {'url': url, 'title': title, 'extractor': ie_key}
+
     filedesc = """
 =={{int:filedesc}}==
 {{Information
 |description=%(desc)s
 |date=%(date)s
-|source=%(url)s
+|source=%(source)s
 |author=%(uploader)s
 |permission=
 |other_versions=
@@ -395,9 +405,10 @@ def rextractURL(id):
 """ % {
         'desc': desc or title,
         'date': date,
-        'url': url,
+        'source': source,
         'uploader': uploader
     }
+    session['newtasks'][id]['extractor'] = ie_key
     session['newtasks'][id]['filedesc'] = filedesc.strip()
     session['newtasks'][id]['filename'] = title
 
