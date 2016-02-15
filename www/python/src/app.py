@@ -329,12 +329,12 @@ def getConvertKey(format):
     return {
         'ogv (Theora)': 'an.ogv',
         'webm (VP8)': 'an.webm',
-        'webm (VP9)': 'an.vp9.webm',
+#        'webm (VP9)': 'an.vp9.webm',
         'ogg (Vorbis)': 'ogg',
-        'opus (Opus)': 'opus',
+#        'opus (Opus)': 'opus',
         'ogv (Theora/Vorbis)': 'ogv',
         'webm (VP8/Vorbis)': 'webm',
-        'webm (VP9/Opus)': 'vp9.webm',
+#        'webm (VP9/Opus)': 'vp9.webm',
     }[format]
 
 def revalidateFilename(id):
