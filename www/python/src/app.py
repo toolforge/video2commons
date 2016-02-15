@@ -378,13 +378,13 @@ def rextractURL(id):
 
     # Source
     if ie_key == 'Youtube' and info['id']:
-        source = '{{From YouTube|1=%(id)s|2=%(title)s}}' % {'id': info['id'], 'title': title}
+        source = '{{From YouTube|1=%(id)s|2=%(title)s}}' % {'id': info['id'], 'title': escapeWikitext(title)}
     elif ie_key == 'Vimeo' and info['id']:
-        source = '{{From Vimeo|1=%(id)s|2=%(title)s}}' % {'id': info['id'], 'title': title}
+        source = '{{From Vimeo|1=%(id)s|2=%(title)s}}' % {'id': info['id'], 'title': escapeWikitext(title)}
     elif ie_key == 'Generic':
         source = url
     else:
-        source = '[%(url)s %(title)s - %(extractor)s]' % {'url': url, 'title': title, 'extractor': ie_key}
+        source = '[%(url)s %(title)s - %(extractor)s]' % {'url': url, 'title': escapeWikitext(title), 'extractor': ie_key}
 
     filedesc = """
 =={{int:filedesc}}==
@@ -403,14 +403,31 @@ def rextractURL(id):
 
 [[Category:Uploaded with video2commons]]
 """ % {
-        'desc': desc or title,
+        'desc': escapeWikitext(desc or title),
         'date': date,
         'source': source,
-        'uploader': uploader
+        'uploader': escapeWikitext(uploader)
     }
     session['newtasks'][id]['extractor'] = ie_key
     session['newtasks'][id]['filedesc'] = filedesc.strip()
     session['newtasks'][id]['filename'] = title
+
+def escapeWikitext(wikitext):
+    rep = {
+        '{|': '{{(!}}',
+        '|}': '{{|}}',
+        '||': '{{!!}}',
+        '|': '{{!}}',
+        '[[': '{{!((}}',
+        ']]': '{{))!}',
+        '{{': '{{((}}',
+        '}}': '{{))}}',
+        '{': '{{(}}',
+        '}': '{{)}}',
+    }
+    rep = dict((re.escape(k), v) for k, v in rep.iteritems())
+    pattern = re.compile("|".join(rep.keys()))
+    return pattern.sub(lambda m: rep[re.escape(m.group(0))], wikitext)
 
 def runTask(id):
     url = session['newtasks'][id]['url']
