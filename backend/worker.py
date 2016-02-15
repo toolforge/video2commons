@@ -19,10 +19,6 @@
 
 import os, sys
 import celery
-import shutil
-import pywikibot
-import download, encode, upload
-import subtitles as subtitleuploader
 from config import redis_pw, redis_host, consumer_key, consumer_secret
 
 # TODO
@@ -42,6 +38,10 @@ class TaskError(Exception):
 
 @app.task(bind=True, track_started=True)
 def main(self, url, ie_key, subtitles, filename, filedesc, convertkey, username, oauth):
+    import pywikibot
+    import download, encode, upload
+    import subtitles as subtitleuploader
+
     outputdir = generate_dir()
     s = stats()
     def statuscallback(text, percent):
@@ -106,6 +106,7 @@ def cleanup(outputdir, cleanupdir, statuscallback, errorcallback):
     pywikibot.config.usernames['commons'].clear()
     pywikibot._sites.clear()
 
+    import shutil
     if cleanupdir: shutil.rmtree(outputdir)
 
 def generate_dir():
