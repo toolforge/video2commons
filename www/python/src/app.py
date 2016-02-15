@@ -313,13 +313,13 @@ def relistFormats(id):
     if not session['newtasks'][id]['video'] and not session['newtasks'][id]['audio']:
         raise RuntimeError('Eithor video or audio must be kept')
     elif session['newtasks'][id]['video'] and not session['newtasks'][id]['audio']:
-        formats = ['ogv (Theora)', 'webm (VP8)', 'webm (VP9)']
+        formats = ['ogv (Theora)', 'webm (VP8)', 'webm (VP9, experimental)']
         prefer = 'webm (VP8)'
     elif not session['newtasks'][id]['video'] and session['newtasks'][id]['audio']:
-        formats = ['ogg (Vorbis)', 'opus (Opus)']
+        formats = ['ogg (Vorbis)', 'opus (Opus, experimental)']
         prefer = 'ogg (Vorbis)'
     elif session['newtasks'][id]['video'] and session['newtasks'][id]['audio']:
-        formats = ['ogv (Theora/Vorbis)', 'webm (VP8/Vorbis)', 'webm (VP9/Opus)']
+        formats = ['ogv (Theora/Vorbis)', 'webm (VP8/Vorbis)', 'webm (VP9/Opus, experimental)']
         prefer = 'webm (VP8/Vorbis)'
 
     session['newtasks'][id]['format'] = prefer
@@ -329,12 +329,12 @@ def getConvertKey(format):
     return {
         'ogv (Theora)': 'an.ogv',
         'webm (VP8)': 'an.webm',
-#        'webm (VP9)': 'an.vp9.webm',
+        'webm (VP9, experimental)': 'an.vp9.webm',
         'ogg (Vorbis)': 'ogg',
-#        'opus (Opus)': 'opus',
+        'opus (Opus, experimental)': 'opus',
         'ogv (Theora/Vorbis)': 'ogv',
         'webm (VP8/Vorbis)': 'webm',
-#        'webm (VP9/Opus)': 'vp9.webm',
+        'webm (VP9/Opus, experimental)': 'vp9.webm',
     }[format]
 
 def revalidateFilename(id):
