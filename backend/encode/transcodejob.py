@@ -30,7 +30,6 @@ import math
 import time
 import subprocess
 from transcode import WebVideoTranscode
-from transferstatus import TransferStatus
 from globals import * # all variables and functions starting with "wg" and "wf"
 
 class WebVideoTranscodeJob(object):
