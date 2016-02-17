@@ -23,7 +23,7 @@ import shutil
 import pywikibot
 import download, encode, upload
 import subtitles as subtitleuploader
-from config import redis_pw, redis_host, consumer_key, consumer_secret
+from config import redis_pw, redis_host, consumer_key, consumer_secret, http_host
 
 # TODO
 redisurl = 'redis://:'+redis_pw+'@'+redis_host+':6379/'
@@ -74,7 +74,7 @@ def main(self, url, ie_key, subtitles, filename, filedesc, convertkey, username,
         pywikibot.Site('commons', 'commons', user=username).login()
 
         statuscallback('Uploading...', -1)
-        fileurl = 'http://v2c.wmflabs.org/' + '/'.join(file.split('/')[3:])
+        fileurl = 'http://' + http_host + '/' + '/'.join(file.split('/')[3:])
         filename += '.' + ext
         filename, wikifileurl = upload.upload(file, filename, url, fileurl, filedesc, username, statuscallback, errorcallback)
         if not wikifileurl: errorcallback('Upload failed!')
