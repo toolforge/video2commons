@@ -307,7 +307,7 @@ def submitTask():
             )
 
     except Exception, e:
-        return jsonify(step='error', error='An exception occured: %s: %s' % (type(e).__name__, str(e)))
+        return jsonify(step='error', error='An exception occured: %s: %s' % (type(e).__name__, str(e)), traceback=traceback.format_exc())
 
 def relistFormats(id):
     formats = []
@@ -481,7 +481,7 @@ def restartTask():
 
         return jsonify(restart = 'success', id = newid)
     except Exception, e:
-        return jsonify(restart='error', error='An exception occured: %s: %s' % (type(e).__name__, str(e)))
+        return jsonify(restart='error', error='An exception occured: %s: %s' % (type(e).__name__, str(e)), traceback=traceback.format_exc())
 
 @app.route('/api/task/remove', methods=['POST'])
 def removeTask():
@@ -495,7 +495,7 @@ def removeTask():
         redisconnection.delete('restarted:' + id)
         return jsonify(remove = 'success', id = id)
     except Exception, e:
-        return jsonify(remove='error', error='An exception occured: %s: %s' % (type(e).__name__, str(e)))
+        return jsonify(remove='error', error='An exception occured: %s: %s' % (type(e).__name__, str(e)), traceback=traceback.format_exc())
 
 if __name__ == '__main__':
     app.run()
