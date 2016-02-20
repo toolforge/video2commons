@@ -441,13 +441,13 @@ def runTask(id):
     username = session['username']
     oauth = (session['access_token_key'], session['access_token_secret'])
 
-    taskid = runTaskInternal(url, ie_key, subtitles, filename, filedesc, convertkey, username, oauth)
+    taskid = runTaskInternal(filename, (url, ie_key, subtitles, filename, filedesc, convertkey, username, oauth)
 
     del session['newtasks'][id]
 
     return jsonify(id = id, step = 'success', taskid = taskid)
 
-def runTaskInternal(*params):
+def runTaskInternal(filename, params):
     res = worker.main.delay(*params)
     taskid = res.id
 
@@ -468,7 +468,8 @@ def restartTask():
     try:
         id = request.form['id']
 
-        assert redisconnection.exists('titles:' + id), 'Task does not exist'
+        filename = redisconnection.get('titles:' + id)
+        assert filename, 'Task does not exist'
         assert id in redisconnection.lrange('tasks:' + session['username'], 0, -1), 'Task must belong to you.'
 
         restarted = redisconnection.get('restarted:' + id)
@@ -476,7 +477,7 @@ def restartTask():
         params = redisconnection.get('params:' + id)
         assert params, 'Could not extract the task parameters.'
 
-        newid = runTaskInternal(*pickle.loads(params))
+        newid = runTaskInternal(filename, pickle.loads(params))
         redisconnection.set('restarted:' + id, newid)
 
         return jsonify(restart = 'success', id = newid)
