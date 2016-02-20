@@ -52,6 +52,8 @@ def upload(filename, wikifilename, sourceurl, fileurl, filedesc, username,
             errorcallback('Upload failed!')
 
     else:
+        assert size < (1 << 32), 'Sorry, but files larger than 4GB can not be uploaded even with server-side uploading. This task may need manual intervention.'
+
         # Source: videoconverter tool
         phabdesc = """Please upload this file to Wikimedia Commons using the filename "%s": %s
 Please use the following description:
