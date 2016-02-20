@@ -454,8 +454,8 @@ def runTaskInternal(*params):
     expire = 2 * 30 * 24 * 3600 # 2 months
     redisconnection.lpush('alltasks', taskid)
     redisconnection.expire('alltasks', expire)
-    redisconnection.lpush('tasks:' + username, taskid)
-    redisconnection.expire('tasks:' + username, expire)
+    redisconnection.lpush('tasks:' + session['username'], taskid)
+    redisconnection.expire('tasks:' + session['username'], expire)
     redisconnection.set('titles:' + taskid, filename)
     redisconnection.expire('titles:' + taskid, expire)
     redisconnection.set('params:' + taskid, pickle.dumps(params))
