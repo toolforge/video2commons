@@ -16,7 +16,7 @@
 			if (!$('#tasktable').length) video2commons.setupTables();
 			video2commons.populateResults(data);
 			if (data.hasrunning) {
-				window.lastStatusCheck = setTimeout(video2commons.checkStatus, 2000);
+				window.lastStatusCheck = setTimeout(video2commons.checkStatus, 5000);
 			} else {
 				window.lastStatusCheck = setTimeout(video2commons.checkStatus, 60000);
 			}
@@ -56,7 +56,7 @@
 	};
 
 	video2commons.getTaskIDFromDOMID = function(id) {
-		var result = /^(?:task-)?(.+?)(?:-(?:title|statustext|progress|removebutton))?$/.exec(id);
+		var result = /^(?:task-)?(.+?)(?:-(?:title|statustext|progress|removebutton|restartbutton))?$/.exec(id);
 		return result[1];
 	};
 
@@ -128,9 +128,11 @@
 								$(this).addClass('disabled');
 								video2commons.removeTask(video2commons.getTaskIDFromDOMID($(this).attr('id')));
 							});
+						var restartbutton = $('<button type="button" class="btn btn-warning btn-xs pull-right"><span class="glyphicon glyphicon-repeat"></span> Restart</button>')
+							.attr('id', id + '-restartbutton').hide();
 						row.append($('<td />').attr('id', id + '-status').attr('width', '70%').attr('colspan', '2')
 								.append($('<span />').attr('id', id + '-statustext'))
-								.append(removebutton))
+								.append(removebutton).append(restartbutton))
 							.removeClass('success')
 							.addClass('danger');
 						break;
@@ -161,6 +163,16 @@
 			} else if (val.status === 'needssu') {
 				row.find('#' + id + '-statustext').html('File too large to upload directly! You may want to <a>request a server-side upload</a>.')
 					.find('a').attr('href', val.url);
+			} else if (val.status === 'fail') {
+				row.find('#' + id + '-statustext').text(val.text);
+				if (val.restartable) {
+					row.find('#' + id + '-restartbutton').show().click(function() {
+						$(this).addClass('disabled');
+						video2commons.restartTask(video2commons.getTaskIDFromDOMID($(this).attr('id')));
+					});
+				} else {
+					row.find('#' + id + '-restartbutton').off().hide();
+				}
 			} else {
 				row.find('#' + id + '-statustext').text(val.text);
 			}
@@ -442,6 +454,14 @@
 
 	video2commons.removeTask = function(taskid) {
 		$.post('/video2commons/api/task/remove', {id: taskid}).done(function(data) {
+			if (data.error)
+				window.alert(data.error);
+			video2commons.checkStatus();
+		});
+	};
+
+	video2commons.restartTask = function(taskid) {
+		$.post('/video2commons/api/task/restart', {id: taskid}).done(function(data) {
 			if (data.error)
 				window.alert(data.error);
 			video2commons.checkStatus();

@@ -19,6 +19,7 @@
 
 import os, sys
 import re
+import pickle
 import traceback
 
 from flask import Flask, request, Response, session, render_template, redirect, url_for, jsonify
@@ -146,6 +147,7 @@ def status():
                 else:
                     task['status'] = 'fail'
                     task['text'] = 'An exception occured: %s: %s' % (type(e).__name__, str(e))
+                    task['restartable'] = (not redisconnection.exists('restarted:' + id)) and redisconnection.exists('params:' + id)
             else:
                 task['status'] = 'fail'
                 task['text'] = 'Something weird going on. Please notify [[commons:User:Zhuyifei1999]]'
@@ -439,7 +441,14 @@ def runTask(id):
     username = session['username']
     oauth = (session['access_token_key'], session['access_token_secret'])
 
-    res = worker.main.delay(url, ie_key, subtitles, filename, filedesc, convertkey, username, oauth)
+    taskid = runTaskInternal(url, ie_key, subtitles, filename, filedesc, convertkey, username, oauth)
+
+    del session['newtasks'][id]
+
+    return jsonify(id = id, step = 'success', taskid = taskid)
+
+def runTaskInternal(*params):
+    res = worker.main.delay(*params)
     taskid = res.id
 
     expire = 2 * 30 * 24 * 3600 # 2 months
@@ -449,19 +458,44 @@ def runTask(id):
     redisconnection.expire('tasks:' + username, expire)
     redisconnection.set('titles:' + taskid, filename)
     redisconnection.expire('titles:' + taskid, expire)
+    redisconnection.set('params:' + taskid, pickle.dumps(params))
+    redisconnection.expire('params:' + taskid, expire)
 
-    del session['newtasks'][id]
+    return taskid
 
-    return jsonify(id = id, step = "success", taskid = taskid)
+@app.route('/api/task/restart', methods=['POST'])
+def restartTask():
+    try:
+        id = request.form['id']
+
+        assert redisconnection.exists('titles:' + id), 'Task does not exist'
+        assert id in redisconnection.lrange('tasks:' + session['username'], 0, -1), 'Task must belong to you.'
+
+        restarted = redisconnection.get('restarted:' + id)
+        assert not restarted, 'Task has already been restarted with id ' + restarted
+        params = redisconnection.get('params:' + id)
+        assert params, 'Could not extract the task parameters.'
+
+        newid = runTaskInternal(*pickle.loads(params))
+        redisconnection.set('restarted:' + id, newid)
+
+        return jsonify(restart = 'success', id = newid)
+    except Exception, e:
+        return jsonify(restart='error', error='An exception occured: %s: %s' % (type(e).__name__, str(e)))
 
 @app.route('/api/task/remove', methods=['POST'])
 def removeTask():
-    id = request.form['id']
-    username = session['username']
-    redisconnection.delete('titles:' + id)
-    redisconnection.lrem('tasks:' + username, id) # not StrictRedis
-    redisconnection.lrem('alltasks', id) # not StrictRedis
-    return jsonify(remove = "success", id = id)
+    try:
+        id = request.form['id']
+        username = session['username']
+        redisconnection.lrem('alltasks', id) # not StrictRedis
+        redisconnection.lrem('tasks:' + username, id) # not StrictRedis
+        redisconnection.delete('titles:' + id)
+        redisconnection.delete('params:' + id)
+        redisconnection.delete('restarted:' + id)
+        return jsonify(remove = 'success', id = id)
+    except Exception, e:
+        return jsonify(remove='error', error='An exception occured: %s: %s' % (type(e).__name__, str(e)))
 
 if __name__ == '__main__':
     app.run()
