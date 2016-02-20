@@ -441,7 +441,7 @@ def runTask(id):
     username = session['username']
     oauth = (session['access_token_key'], session['access_token_secret'])
 
-    taskid = runTaskInternal(filename, (url, ie_key, subtitles, filename, filedesc, convertkey, username, oauth)
+    taskid = runTaskInternal(filename, (url, ie_key, subtitles, filename, filedesc, convertkey, username, oauth))
 
     del session['newtasks'][id]
 
