@@ -110,7 +110,7 @@
 						row.append($('<td />').attr('id', id + '-title').attr('width', '30%'));
 						removebutton = $('<button type="button" class="btn btn-danger btn-xs pull-right"><span class="glyphicon glyphicon-trash"></span> Remove</button>')
 							.attr('id', id + '-removebutton')
-							.click(function() {
+							.off().click(function() {
 								$(this).addClass('disabled');
 								video2commons.removeTask(video2commons.getTaskIDFromDOMID($(this).attr('id')));
 							});
@@ -124,7 +124,7 @@
 						row.append($('<td />').attr('id', id + '-title').attr('width', '30%'));
 						removebutton = $('<button type="button" class="btn btn-danger btn-xs pull-right"><span class="glyphicon glyphicon-trash"></span> Remove</button>')
 							.attr('id', id + '-removebutton')
-							.click(function() {
+							.off().click(function() {
 								$(this).addClass('disabled');
 								video2commons.removeTask(video2commons.getTaskIDFromDOMID($(this).attr('id')));
 							});
@@ -140,7 +140,7 @@
 						row.append($('<td />').attr('id', id + '-title').attr('width', '30%'));
 						removebutton = $('<button type="button" class="btn btn-danger btn-xs pull-right"><span class="glyphicon glyphicon-trash"></span> Remove</button>')
 							.attr('id', id + '-removebutton')
-							.click(function() {
+							.off().click(function() {
 								$(this).addClass('disabled');
 								video2commons.removeTask(video2commons.getTaskIDFromDOMID($(this).attr('id')));
 							});
@@ -166,7 +166,7 @@
 			} else if (val.status === 'fail') {
 				row.find('#' + id + '-statustext').text(val.text);
 				if (val.restartable) {
-					row.find('#' + id + '-restartbutton').show().click(function() {
+					row.find('#' + id + '-restartbutton').show().off().click(function() {
 						$(this).addClass('disabled');
 						video2commons.restartTask(video2commons.getTaskIDFromDOMID($(this).attr('id')));
 					});
@@ -360,8 +360,8 @@
 				window.addTaskDialog.find('#btn-next').removeClass('disabled').html('Next <span class="glyphicon glyphicon-chevron-right"></span>').off();
 				window.addTaskDialog.find('#btn-next').click(function() {
 					window.addTaskDialog.find('.modal-body #dialog-errorbox').hide();
-					window.addTaskDialog.find('#btn-prev').addClass('disabled');
-					window.addTaskDialog.find('#btn-next').addClass('disabled');
+					window.addTaskDialog.find('#btn-prev').addClass('disabled').off();
+					window.addTaskDialog.find('#btn-next').addClass('disabled').off();
 					window.addTaskDialog.find('#dialog-spinner').show();
 					var postdata = {
 						id: window.newTaskTempID,
@@ -382,8 +382,8 @@
 				window.addTaskDialog.find('#btn-next').removeClass('disabled').html('Next <span class="glyphicon glyphicon-chevron-right"></span>').off();
 				window.addTaskDialog.find('#btn-prev').click(function() {
 					window.addTaskDialog.find('.modal-body #dialog-errorbox').hide();
-					window.addTaskDialog.find('#btn-prev').addClass('disabled');
-					window.addTaskDialog.find('#btn-next').addClass('disabled');
+					window.addTaskDialog.find('#btn-prev').addClass('disabled').off();
+					window.addTaskDialog.find('#btn-next').addClass('disabled').off();
 					window.addTaskDialog.find('#dialog-spinner').show();
 					var postdata = {
 						id: window.newTaskTempID,
@@ -399,8 +399,8 @@
 				});
 				window.addTaskDialog.find('#btn-next').click(function() {
 					window.addTaskDialog.find('.modal-body #dialog-errorbox').hide();
-					window.addTaskDialog.find('#btn-prev').addClass('disabled');
-					window.addTaskDialog.find('#btn-next').addClass('disabled');
+					window.addTaskDialog.find('#btn-prev').addClass('disabled').off();
+					window.addTaskDialog.find('#btn-next').addClass('disabled').off();
 					window.addTaskDialog.find('#dialog-spinner').show();
 					var postdata = {
 						id: window.newTaskTempID,
@@ -420,8 +420,8 @@
 				window.addTaskDialog.find('#btn-next').removeClass('disabled').html('Confirm <span class="glyphicon glyphicon-ok"></span>').off();
 				window.addTaskDialog.find('#btn-prev').click(function() {
 					window.addTaskDialog.find('.modal-body #dialog-errorbox').hide();
-					window.addTaskDialog.find('#btn-prev').addClass('disabled');
-					window.addTaskDialog.find('#btn-next').addClass('disabled');
+					window.addTaskDialog.find('#btn-prev').addClass('disabled').off();
+					window.addTaskDialog.find('#btn-next').addClass('disabled').off();
 					window.addTaskDialog.find('#dialog-spinner').show();
 					var postdata = {
 						id: window.newTaskTempID,
@@ -434,8 +434,8 @@
 				});
 				window.addTaskDialog.find('#btn-next').click(function() {
 					window.addTaskDialog.find('.modal-body #dialog-errorbox').hide();
-					window.addTaskDialog.find('#btn-prev').addClass('disabled');
-					window.addTaskDialog.find('#btn-next').addClass('disabled');
+					window.addTaskDialog.find('#btn-prev').addClass('disabled').off();
+					window.addTaskDialog.find('#btn-next').addClass('disabled').off();
 					window.addTaskDialog.modal("hide");
 					$('#tasktable > tbody').append('<tr id="task-new"><td colspan="3"><img alt="File:Ajax-loader.gif" src="//upload.wikimedia.org/wikipedia/commons/d/de/Ajax-loader.gif" data-file-width="32" data-file-height="32" height="32" width="32"></td></tr>');
 					var postdata = {
