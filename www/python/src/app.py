@@ -348,6 +348,8 @@ def revalidateFilename(id):
     for char in filename:
         assert ord(char) not in illegalords, 'Your filename contains an illegal character: chr(%d)' % ord(char) # prevent bad renderings
 
+    assert len(filename) < 250, 'Your filename is too long'
+
     assert not re.search(r"&[A-Za-z0-9\x80-\xff]+;", filename), 'Your filename contains XML/HTML character references'
 
     session['newtasks'][id]['filename'] = filename.replace('_', ' ')
