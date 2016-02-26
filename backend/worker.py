@@ -54,7 +54,6 @@ def main(self, url, ie_key, subtitles, filename, filedesc, convertkey, username,
     def errorcallback(text):
         raise TaskError(text)
 
-    cleanupdir = True
     try:
         statuscallback('Downloading...', -1)
         d = download.download(url, ie_key, 'bestvideo+bestaudio/best', subtitles, outputdir, statuscallback, errorcallback)
@@ -74,9 +73,8 @@ def main(self, url, ie_key, subtitles, filename, filedesc, convertkey, username,
         pywikibot.Site('commons', 'commons', user=username).login()
 
         statuscallback('Uploading...', -1)
-        fileurl = 'http://' + http_host + '/' + '/'.join(file.split('/')[3:])
         filename += '.' + ext
-        filename, wikifileurl = upload.upload(file, filename, url, fileurl, filedesc, username, statuscallback, errorcallback)
+        filename, wikifileurl = upload.upload(file, filename, url, http_host, filedesc, username, statuscallback, errorcallback)
         if not wikifileurl: errorcallback('Upload failed!')
 
         if subtitles:
@@ -88,9 +86,6 @@ def main(self, url, ie_key, subtitles, filename, filedesc, convertkey, username,
                 print e
                 pass
 
-    except upload.NeedServerSideUpload:
-        cleanupdir = False
-        raise
     except pywikibot.Error: # T124922 workaround
         exc_info = sys.exc_info()
         raise TaskError, 'pywikibot.Error: %s: %s' % (exc_info[0].__name__, str(exc_info[1])), exc_info[2]
@@ -98,20 +93,20 @@ def main(self, url, ie_key, subtitles, filename, filedesc, convertkey, username,
         statuscallback('Done!', 100)
         return filename, wikifileurl
     finally:
-        cleanup(outputdir, cleanupdir, statuscallback, errorcallback)
+        cleanup(outputdir, statuscallback, errorcallback)
 
-def cleanup(outputdir, cleanupdir, statuscallback, errorcallback):
+def cleanup(outputdir, statuscallback, errorcallback):
     statuscallback('Cleaning up...', -1)
     pywikibot.config.authenticate.clear()
     pywikibot.config.usernames['commons'].clear()
     pywikibot._sites.clear()
 
-    if cleanupdir: shutil.rmtree(outputdir)
+    shutil.rmtree(outputdir)
 
 def generate_dir():
     for i in range(10): # 10 tries
         id = os.urandom(8).encode('hex')
-        outputdir = '/srv/v2coutput/' + id
+        outputdir = '/srv/v2c/output/' + id
         if not os.path.isdir(outputdir):
             os.mkdir(outputdir)
             return outputdir

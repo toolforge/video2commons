@@ -28,11 +28,13 @@
 	video2commons.setupTables = function() {
 		$('#content').html('<div class="container" id="content"><h4>Your tasks:</h4>\
 			<table id="tasktable" class="table"><tbody></tbody></table></div>');
-		var button = $('<input class="btn btn-primary btn-success btn-md" type="button" value="Add task...">');
-		$('#content').append(button);
-		button.click(function() {
+		var addButton = $('<input class="btn btn-primary btn-success btn-md" type="button" value="Add task...">');
+		$('#content').append(addButton);
+		addButton.click(function() {
 			video2commons.addTask();
 		});
+		var ssuButton = $('<a class="btn btn-primary btn-success btn-md pull-right disabled" id="ssubtn">Create server-side upload ticket in one go (recommended)</a>');
+		$('#content').append(ssuButton.hide());
 	};
 
 	video2commons.setProgressBar = function(item, progress) {
@@ -180,6 +182,12 @@
 			if (val.status === 'progress')
 				video2commons.setProgressBar(row.find('#' + id + '-progress'), val.progress);
 		});
+
+		if (data.ssulink) {
+			$('#ssubtn').removeClass('disabled').show().attr('href', data.ssulink);
+		} else {
+			$('#ssubtn').addClass('disabled').hide();
+		}
 	};
 
 	video2commons.addTask = function() {
@@ -194,9 +202,9 @@
       </div>\n\
       <div class="modal-body" style="padding:40px 50px;"></div>\n\
       <div class="modal-footer">\n\
-        <button type="submit" class="btn btn-danger pull-left" data-dismiss="modal"><span class="glyphicon glyphicon-remove"></span> Cancel</button>\n\
+        <button type="button" class="btn btn-danger pull-left" data-dismiss="modal"><span class="glyphicon glyphicon-remove"></span> Cancel</button>\n\
         <button type="submit" class="btn btn-success pull-right" id="btn-next">Next <span class="glyphicon glyphicon-chevron-right"></span></button>\n\
-        <button type="submit" class="btn btn-warning pull-right disabled" id="btn-prev"><span class="glyphicon glyphicon-chevron-left"></span> Back</button>\n\
+        <button type="button" class="btn btn-warning pull-right disabled" id="btn-prev"><span class="glyphicon glyphicon-chevron-left"></span> Back</button>\n\
         <img class="pull-right" alt="File:Ajax-loader.gif" src="//upload.wikimedia.org/wikipedia/commons/d/de/Ajax-loader.gif" data-file-width="32" data-file-height="32" height="32" width="32" id="dialog-spinner">\n\
       </div>\n\
     </div>\n\

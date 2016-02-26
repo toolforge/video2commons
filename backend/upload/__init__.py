@@ -18,6 +18,7 @@
 #
 
 import os
+import shutil
 import pywikibot
 
 class NeedServerSideUpload(Exception):
@@ -26,7 +27,7 @@ class NeedServerSideUpload(Exception):
         super(NeedServerSideUpload, self).__init__(url)
         self.url = url
 
-def upload(filename, wikifilename, sourceurl, fileurl, filedesc, username,
+def upload(filename, wikifilename, sourceurl, http_host, filedesc, username,
         statuscallback = None, errorcallback = None):
     statuscallback = statuscallback or (lambda text, percent: None)
     errorcallback = errorcallback or (lambda text: None)
@@ -54,16 +55,15 @@ def upload(filename, wikifilename, sourceurl, fileurl, filedesc, username,
     else:
         assert size < (1 << 32), 'Sorry, but files larger than 4GB can not be uploaded even with server-side uploading. This task may need manual intervention.'
 
-        # Source: videoconverter tool
-        phabdesc = """Please upload this file to Wikimedia Commons using the filename "%s": %s
-Please use the following description:
-```
-%s
-```
-Thank you!""" % (wikifilename, fileurl, 
-            filedesc.replace('[[Category:Uploaded with video2commons]]', '[[Category:Uploaded with video2commons/Server-side uploads]]'))
-        import urllib
-        phaburl = 'https://phabricator.wikimedia.org/maniphest/task/edit/form/1/?title=Please%20upload%20large%20file%20to%20Wikimedia%20Commons&projects=Wikimedia-Site-requests,commons&description=' + \
-            urllib.quote(phabdesc.encode('utf-8'))
-        raise NeedServerSideUpload(phaburl)
+        # file name check
+        wikifilename = wikifilename.replace('/', '-').replace(' ', '_').replace('\r\n', '_').replace('\r', '_').replace('\n', '_')
+        newfilename = '/srv/v2c/ssu/' + wikifilename
+        shutil.move(filename, newfilename)
 
+        with open(newfilename + '.txt', 'w') as filedescfile:
+            filedesc = filedesc.replace('[[Category:Uploaded with video2commons]]', '[[Category:Uploaded with video2commons/Server-side uploads]]')
+            filedescfile.write(filedesc.encode('utf-8'))
+
+        fileurl = 'http://' + http_host + '/' + wikifilename
+
+        raise NeedServerSideUpload(fileurl)

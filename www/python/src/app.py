@@ -21,6 +21,7 @@ import os, sys
 import re
 import pickle
 import traceback
+import urllib
 
 from flask import Flask, request, Response, session, render_template, redirect, url_for, jsonify
 # https://github.com/mediawiki-utilities/python-mwoauth
@@ -44,7 +45,6 @@ redisconnection = Redis(host=redis_host, db=3, password=redis_pw)
 
 app = Flask(__name__)
 
-#app.secret_key = session_key
 app.session_interface = RedisSessionInterface(redisconnection)
 
 
@@ -101,6 +101,7 @@ def status():
     ids = getTasks()
     goodids = []
     values = []
+    ssus = []
     hasrunning = False
     for id in ids:
         title = getTitleFromTask(id)
@@ -143,7 +144,9 @@ def status():
                 e = res.result
                 if isinstance(e, worker.upload.NeedServerSideUpload):
                     task['status'] = 'needssu'
-                    task['url'] = e.url
+                    url = e.url
+                    ssus.append(url)
+                    task['url'] = createPhabUrl([url])
                 else:
                     task['status'] = 'fail'
                     task['text'] = 'An exception occured: %s: %s' % (type(e).__name__, str(e))
@@ -154,7 +157,9 @@ def status():
 
         values.append(task)
 
-    return jsonify(ids=goodids, values=values, hasrunning=hasrunning)
+    ssulink = createPhabUrl(ssus)
+
+    return jsonify(ids=goodids, values=values, hasrunning=hasrunning, ssulink=ssulink)
 
 def getTasks():
     # sudoer = able to monitor all tasks
@@ -169,6 +174,20 @@ def getTasks():
 
 def getTitleFromTask(id):
     return redisconnection.get('titles:' + id)
+
+
+def createPhabUrl(fileurls):
+    wgetlinks = '\n'.join(['wget ' + url for url in sum([(fileurl, fileurl + '.txt') for fileurl in fileurls])])
+    # Partial Source: videoconverter tool
+    phabdesc = """Please upload these file(s) to Wikimedia Commons:
+```
+%s
+```
+Thank you!""" % (wgetlinks)
+
+    phaburl = 'https://phabricator.wikimedia.org/maniphest/task/edit/form/1/?title=Please%20upload%20large%20file%20to%20Wikimedia%20Commons&projects=Wikimedia-Site-requests,commons&description=' + \
+        urllib.quote(phabdesc.encode('utf-8'))
+    return phaburl
 
 @app.route('/api/task/new', methods=['POST'])
 def newTask():
