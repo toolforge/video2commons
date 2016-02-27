@@ -281,7 +281,7 @@
 				window.addTaskDialog.find('.modal-body').html('\n\
           <form role="form">\n\
             <div class="form-group">\n\
-              <label for="filename"><span class="glyphicon glyphicon-import"></span> Filename</label>\n\
+              <label for="filename"><span class="glyphicon glyphicon-export"></span> Filename</label>\n\
               <div class="form-inline">\n\
                 <input type="text" class="form-control" id="filename" placeholder="Example" size="30">\n\
                 <p class="form-control-static">.</p>\n\
