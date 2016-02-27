@@ -177,7 +177,7 @@ def getTitleFromTask(id):
 
 
 def createPhabUrl(fileurls):
-    wgetlinks = '\n'.join(['wget ' + url for url in sum([(fileurl, fileurl + '.txt') for fileurl in fileurls])])
+    wgetlinks = '\n'.join(['wget ' + url for url in sum([(fileurl, fileurl + '.txt') for fileurl in fileurls], ())])
     # Partial Source: videoconverter tool
     phabdesc = """Please upload these file(s) to Wikimedia Commons:
 ```
