@@ -157,7 +157,7 @@ def status():
 
         values.append(task)
 
-    ssulink = createPhabUrl(ssus)
+    ssulink = createPhabUrl(ssus) if ssus else ''
 
     return jsonify(ids=goodids, values=values, hasrunning=hasrunning, ssulink=ssulink)
 
