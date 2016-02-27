@@ -285,7 +285,7 @@
               <div class="form-inline">\n\
                 <input type="text" class="form-control" id="filename" placeholder="Example" size="30">\n\
                 <p class="form-control-static">.</p>\n\
-                <select class="form-control" id="format"></select>\n\
+                <select class="form-control" id="format" style="max-width:40%;"></select>\n\
               </div>\n\
             </div>\n\
             <div class="form-group">\n\
