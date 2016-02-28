@@ -1,8 +1,6 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 #
-# @adaptedfrom https://github.com/wikimedia/mediawiki-extensions-TimedMediaHandler/blob/master/TimedMediaHandler.php
-#
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
@@ -17,46 +15,53 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>
 #
 
-# If the job runner should run transcode commands in a background thread and monitor the
-# transcoding progress. This enables more fine grain control of the transcoding process, wraps
-# encoding commands in a lower priority 'nice' call, and kills long running transcodes that are
-# not making any progress. If set to false, the job runner will use the more compatible
-# php blocking shell exec command.
-wgEnableNiceBackgroundTranscodeJobs = False;
+"""
+Configurations and helper functions.
+
+@adaptedfrom Extension:TimedMediaHandler: TimedMediaHandler.php
+"""
+
 # The priority to be used with the nice transcode commands.
-wgTranscodeBackgroundPriority = 19;
+background_priority = 19
 
 # The total amout of time a transcoding shell command can take:
-wgTranscodeBackgroundTimeLimit = 3600 * 24 * 2 # 2 days
+background_time_limit = 3600 * 24 * 2  # 2 days
 # Maximum amount of virtual memory available to transcoding processes in KB
-# 2GB avconv, ffmpeg2theora mmap resources so virtual memory needs to be high enough
-wgTranscodeBackgroundMemoryLimit = 8 * 1024 * 1024 # 8GB
+# 2GB avconv
+background_memory_limit = 8 * 1024 * 1024  # 8GB
 # Maximum file size transcoding processes can create, in KB
-wgTranscodeBackgroundSizeLimit = 10 * 1024 * 1024 # 10GB
+background_size_limit = 10 * 1024 * 1024  # 10GB
 # Number of threads to use in avconv for transcoding
-wgFFmpegThreads = 0 # optimal
-# The location of ffmpeg2theora (transcoding)
-# Set to false to use avconv/ffmpeg to produce Ogg Theora transcodes instead;
-# beware this will disable Ogg skeleton metadata generation.
-#wgFFmpeg2theoraLocation = '/usr/bin/ffmpeg2theora'
-wgFFmpeg2theoraLocation = False # Disabled due to being unable to accept stdin properly
+ffmpeg_threads = 0  # optimal
 # Location of the avconv/ffmpeg binary (used to encode WebM and for thumbnails)
-wgFFmpegLocation = '/usr/bin/ffmpeg'
-wgFFprobeLocation = '/usr/bin/ffprobe'
+ffmpeg_location = '/usr/bin/ffmpeg'
+ffprobe_location = '/usr/bin/ffprobe'
 
-def wfEscapeShellArg(*args):
+
+def escape_shellarg(*args):
+    """Escape shell arguments."""
     import pipes
     return " ".join([pipes.quote(str(arg)) for arg in args])
 
-def wfFormatSize(num, suffix='B'):
-    # Source: http://stackoverflow.com/questions/1094841/reusable-library-to-get-human-readable-version-of-file-size
-    for unit in ['','K','M','G','T','P','E','Z']:
+
+def format_size(num, suffix='B'):
+    """Format the size with prefixes."""
+    # Source: StackOverflow
+    for unit in ['', 'K', 'M', 'G', 'T', 'P', 'E', 'Z']:
         if abs(num) < 1024.0:
             return "%3.1f%s%s" % (num, unit, suffix)
         num /= 1024.0
     return "%.1f%s%s" % (num, 'Y', suffix)
 
-def wfFormatTimeHMS(s):
-	m, s = divmod(s, 60)
-	h, m = divmod(m, 60)
-	return "%d:%02d:%02d" % (h, m, s)
+
+def format_time(s):
+    """Format the time from number of seconds."""
+    m, s = divmod(s, 60)
+    h, m = divmod(m, 60)
+    return "%d:%02d:%02d" % (h, m, s)
+
+
+def time_to_seconds(time):
+    """Get the number of seconds from time expression."""
+    return \
+        sum([a * b for a, b in zip([3600, 60, 1], map(int, time.split(':')))])
