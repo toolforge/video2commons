@@ -16,7 +16,7 @@
 #
 
 """
-Uploads a file.
+Upload a file.
 
 Wrapper around pywikibot when the file can be uploaded automatically.
 If not, NeedServerSideUpload with url of file is thrown
