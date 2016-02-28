@@ -17,7 +17,11 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>
 #
 
+"""Load main configs."""
+
 import os
 
-for line in open(os.path.dirname(os.path.realpath(__file__))+"/../config.py"):
+for line in open(
+    os.path.dirname(os.path.realpath(__file__)) + "/../config.py"
+):
     exec line
