@@ -66,6 +66,7 @@ def main(
         outputdir = '/srv/v2c/output/' + id
         if not os.path.isdir(outputdir):
             os.mkdir(outputdir)
+            break
     else:
         raise TaskError("Too many retries to generate a task id")
 
