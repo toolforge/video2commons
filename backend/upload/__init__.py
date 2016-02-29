@@ -46,7 +46,7 @@ def upload(
     errorcallback = errorcallback or (lambda text: None)
 
     size = os.path.getsize(filename)
-    if size < 2000000000:
+    if size < 1000000000:
         # Upload
         # ENSURE PYWIKIBOT OAUTH PROPERLY CONFIGURED!
         site = pywikibot.Site('commons', 'commons', user=username)
