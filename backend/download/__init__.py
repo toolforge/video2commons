@@ -53,8 +53,9 @@ def download(
 
     def progresshook(d):
         if d['status'] == 'downloading':
-            percentage = int(100.0 * d['downloaded_bytes'] / d['total_bytes'])\
-                if d['total_bytes'] else None
+            total = d.get('total_bytes') or d.get('total_bytes_estimate')
+            percentage = int(100.0 * d['downloaded_bytes'] / total)\
+                if total else None
             statuscallback(
                 'Downloading to ' + (d['tmpfilename'] or d['filename']),
                 percentage
