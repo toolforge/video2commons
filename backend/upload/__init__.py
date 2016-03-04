@@ -124,6 +124,7 @@ def upload_ss(
 
     with open(newfilename + '.txt', 'w') as filedescfile:
         filedesc = filedesc.replace(
+            '{{LicenseReview}}'
             '[[Category:Uploaded with video2commons]]',
             '[[Category:Uploaded with video2commons/Server-side uploads]]'
         )
