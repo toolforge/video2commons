@@ -472,7 +472,7 @@ def runTaskInternal(filename, params):
     res = worker.main.delay(*params)
     taskid = res.id
 
-    expire = 2 * 30 * 24 * 3600 # 2 months
+    expire = 14 * 24 * 3600 # 2 weeks
     redisconnection.lpush('alltasks', taskid)
     redisconnection.expire('alltasks', expire)
     redisconnection.lpush('tasks:' + session['username'], taskid)
