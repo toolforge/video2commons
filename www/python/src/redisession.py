@@ -10,41 +10,28 @@ from redis import Redis
 from flask.sessions import SessionInterface, SessionMixin
 
 
-class RedisSession(SessionMixin):
-
+class RedisSession(dict, SessionMixin):
     def __init__(self, initial=None, sid=None, new=False):
         self.sid = sid
         self.new = new
         self.modified = False
-        self.dict = initial or {}
+        if initial:
+            self.update(initial)
 
     def on_update(self):
         self.modified = True
 
-    def __len__(self):
-        return self.dict.__len__()
-
-    def __getitem__(self, key):
-        return self.dict.__getitem__(key)
-
     def __setitem__(self, key, val):
         self.on_update()
-        return self.dict.__getitem__(key, val)
+        return dict.__setitem__(self, key, val)
 
     def __delitem__(self, key):
         self.on_update()
-        return self.dict.__delitem__(key)
-
-    def __iter__(self):
-        return self.dict.__iter__()
-
-    def __contains__(self, key):
-        return self.dict.__contains__(key)
+        return self.dict.__delitem__(self, key)
 
     def clear(self):
         self.on_update()
-        return self.dict.clear()
-
+        return self.dict.clear(self)
 
 
 class RedisSessionInterface(SessionInterface):
