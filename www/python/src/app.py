@@ -423,6 +423,7 @@ def rextractURL(id):
 
 =={{int:license-header}}==
 {{subst:nld}}
+{{LicenseReview}}
 
 [[Category:Uploaded with video2commons]]
 """ % {
