@@ -15,23 +15,15 @@ class RedisSession(dict, SessionMixin):
         self.sid = sid
         self.new = new
         self.modified = False
+        initial = initial or {}
         if initial:
-            self.update(initial)
+            self.update(initial or {})
 
-    def on_update(self):
-        self.modified = True
+        self.initials = pickle.dumps(self)
 
-    def __setitem__(self, key, val):
-        self.on_update()
-        return dict.__setitem__(self, key, val)
-
-    def __delitem__(self, key):
-        self.on_update()
-        return self.dict.__delitem__(self, key)
-
-    def clear(self):
-        self.on_update()
-        return self.dict.clear(self)
+    @property
+    def modified(self):
+        return pickle.dumps(self) != self.initials
 
 
 class RedisSessionInterface(SessionInterface):
