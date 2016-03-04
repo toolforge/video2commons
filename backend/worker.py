@@ -20,6 +20,7 @@
 import os
 import sys
 import celery
+from redis import Redis
 import shutil
 import pywikibot
 import download
@@ -39,6 +40,7 @@ app = celery.Celery(
 )
 app.conf.CELERY_TASK_RESULT_EXPIRES = 30 * 24 * 3600  # 1 month
 
+redisconnection = Redis(host=redis_host, db=3, password=redis_pw)
 
 class Stats:
     """Storage for task status."""
@@ -61,6 +63,15 @@ def main(
     convertkey, username, oauth
 ):
     """Main worker code."""
+
+    # Get a lock to prevent double-running with same task ID
+    lockkey = 'tasklock:' + self.request.id
+    if redisconnection.exists(lockkey):
+        raise TaskError("Task has already been run")
+    else:
+        redisconnection.setex(lockkey, 'T', 7 * 24 * 3600)
+
+    # Generate temporary directory for task
     for i in range(10):  # 10 tries
         id = os.urandom(8).encode('hex')
         outputdir = '/srv/v2c/output/' + id
