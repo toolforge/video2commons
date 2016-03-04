@@ -14,7 +14,6 @@ class RedisSession(dict, SessionMixin):
     def __init__(self, initial=None, sid=None, new=False):
         self.sid = sid
         self.new = new
-        self.modified = False
         initial = initial or {}
         if initial:
             self.update(initial or {})
