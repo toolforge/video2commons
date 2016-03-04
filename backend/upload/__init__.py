@@ -48,13 +48,13 @@ def upload(
     size = os.path.getsize(filename)
 
     if size < 1000000000:
-        upload_pwb(
+        return upload_pwb(
             filename, wikifilename, sourceurl, filedesc, username,
             size, statuscallback, errorcallback
         )
     elif size < 2000000000:
         try:
-            upload_pwb(
+            return upload_pwb(
                 filename, wikifilename, sourceurl, filedesc, username,
                 size, statuscallback, errorcallback
             )
