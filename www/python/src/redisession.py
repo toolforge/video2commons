@@ -60,12 +60,16 @@ class RedisSessionInterface(SessionInterface):
             if session.modified:
                 response.delete_cookie(app.session_cookie_name,
                                        domain=domain, path=path)
-            return
-        redis_exp = self.get_redis_expiration_time(app, session)
-        cookie_exp = self.get_expiration_time(app, session)
-        val = self.serializer.dumps(dict(session))
-        self.redis.setex(self.prefix + session.sid, val,
-                         int(redis_exp.total_seconds()))
-        response.set_cookie(app.session_cookie_name, session.sid,
-                            expires=cookie_exp, httponly=True,
-                            domain=domain, path=path)
+        else:
+            redis_exp = self.get_redis_expiration_time(app, session)
+            cookie_exp = self.get_expiration_time(app, session)
+            if session.modified:
+                val = self.serializer.dumps(dict(session))
+                self.redis.setex(self.prefix + session.sid, val,
+                                 int(redis_exp.total_seconds()))
+            else:
+                self.redis.expire(self.prefix + session.sid,
+                                  int(redis_exp.total_seconds()))
+            response.set_cookie(app.session_cookie_name, session.sid,
+                                expires=cookie_exp, httponly=True,
+                                domain=domain, path=path)
