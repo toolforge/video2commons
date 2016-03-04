@@ -7,19 +7,34 @@ import pickle
 from datetime import timedelta
 from uuid import uuid4
 from redis import Redis
-from werkzeug.datastructures import CallbackDict
 from flask.sessions import SessionInterface, SessionMixin
 
 
-class RedisSession(CallbackDict, SessionMixin):
+class RedisSession(SessionMixin):
 
     def __init__(self, initial=None, sid=None, new=False):
-        def on_update(self):
-            self.modified = True
-        CallbackDict.__init__(self, initial, on_update)
         self.sid = sid
         self.new = new
         self.modified = False
+        self.dict = initial or {}
+
+    def on_update(self):
+        self.modified = True
+
+    def __getitem__(self, key):
+        self.dict.__getitem__(key)
+
+    def __setitem__(self, key, val):
+        self.on_update()
+        self.dict.__getitem__(key, val)
+
+    def __delitem__(self, key):
+        self.on_update()
+        self.dict.__delitem__(key)
+
+    def clear(self):
+        self.on_update()
+        self.dict.clear()
 
 
 class RedisSessionInterface(SessionInterface):
