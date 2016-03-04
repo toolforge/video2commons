@@ -21,20 +21,30 @@ class RedisSession(SessionMixin):
     def on_update(self):
         self.modified = True
 
+    def __len__(self):
+        return self.dict.__len__()
+
     def __getitem__(self, key):
-        self.dict.__getitem__(key)
+        return self.dict.__getitem__(key)
 
     def __setitem__(self, key, val):
         self.on_update()
-        self.dict.__getitem__(key, val)
+        return self.dict.__getitem__(key, val)
 
     def __delitem__(self, key):
         self.on_update()
-        self.dict.__delitem__(key)
+        return self.dict.__delitem__(key)
+
+    def __iter__(self):
+        return self.dict.__iter__()
+
+    def __contains__(self, key):
+        return self.dict.__contains__(key)
 
     def clear(self):
         self.on_update()
-        self.dict.clear()
+        return self.dict.clear()
+
 
 
 class RedisSessionInterface(SessionInterface):
