@@ -46,49 +46,89 @@ def upload(
     errorcallback = errorcallback or (lambda text: None)
 
     size = os.path.getsize(filename)
+
     if size < 1000000000:
-        # Upload
-        # ENSURE PYWIKIBOT OAUTH PROPERLY CONFIGURED!
-        site = pywikibot.Site('commons', 'commons', user=username)
-        page = pywikibot.FilePage(site, wikifilename)
-
-        if page.exists():
-            errorcallback('File already exists. Please choose another name.')
-
-        comment = u'Imported media from ' + sourceurl
-        chunked = (64 * (1 << 20)) if size >= 100000000 else 0
-
-        statuscallback('Uploading...', -1)
-        if site.upload(
-            page, source_filename=filename, comment=comment, text=filedesc,
-            chunk_size=chunked, ignore_warnings=['exists-normalized']
-        ):
-            statuscallback('Upload success!', 100)
-            return page.title(withNamespace=False), page.full_url()
-        else:
-            errorcallback('Upload failed!')
-
-    else:
-        assert size < (1 << 32), \
-            'Sorry, but files larger than 4GB can not be uploaded even ' + \
-            'with server-side uploading. This task may need manual ' + \
-            ' intervention.'
-
-        # file name check
-        wikifilename = wikifilename.replace('/', '-').replace(' ', '_')
-        wikifilename = wikifilename.replace('\r\n', '_')
-        wikifilename = wikifilename.replace('\r', '_').replace('\n', '_')
-
-        newfilename = '/srv/v2c/ssu/' + wikifilename
-        shutil.move(filename, newfilename)
-
-        with open(newfilename + '.txt', 'w') as filedescfile:
-            filedesc = filedesc.replace(
-                '[[Category:Uploaded with video2commons]]',
-                '[[Category:Uploaded with video2commons/Server-side uploads]]'
+        upload_pwb(
+            filename, wikifilename, sourceurl, filedesc, username,
+            size, statuscallback, errorcallback
+        )
+    elif size < 2000000000:
+        try:
+            upload_pwb(
+                filename, wikifilename, sourceurl, filedesc, username,
+                size, statuscallback, errorcallback
             )
-            filedescfile.write(filedesc.encode('utf-8'))
+        except pywikibot.data.api.APIError, e:
+            if e.code in [
+                'stashedfilenotfound', 'stashpathinvalid',
+                'stashfilestorage', 'stashnosuchfilekey', 'stasherror'
+            ]:
+                upload_ss(
+                    filename, wikifilename, http_host, filedesc,
+                    statuscallback, errorcallback
+                )
+            else:
+                raise
 
-        fileurl = 'http://' + http_host + '/' + wikifilename
+    elif size < (1 << 32):
+        upload_ss(
+            filename, wikifilename, http_host, filedesc,
+            statuscallback, errorcallback
+        )
+    else:
+        errorcallback(
+            'Sorry, but files larger than 4GB can not be uploaded even ' +
+            'with server-side uploading. This task may need manual ' +
+            ' intervention.'
+        )
 
-        raise NeedServerSideUpload(fileurl)
+
+def upload_pwb(
+    filename, wikifilename, sourceurl, filedesc, username,
+    size, statuscallback, errorcallback
+):
+    """Upload with pywikibot."""
+    # ENSURE PYWIKIBOT OAUTH PROPERLY CONFIGURED!
+    site = pywikibot.Site('commons', 'commons', user=username)
+    page = pywikibot.FilePage(site, wikifilename)
+
+    if page.exists():
+        errorcallback('File already exists. Please choose another name.')
+
+    comment = u'Imported media from ' + sourceurl
+    chunked = (64 * (1 << 20)) if size >= 100000000 else 0
+
+    statuscallback('Uploading...', -1)
+    if site.upload(
+        page, source_filename=filename, comment=comment, text=filedesc,
+        chunk_size=chunked, ignore_warnings=['exists-normalized']
+    ):
+        statuscallback('Upload success!', 100)
+        return page.title(withNamespace=False), page.full_url()
+    else:
+        errorcallback('Upload failed!')
+
+
+def upload_ss(
+    filename, wikifilename, http_host, filedesc,
+    statuscallback, errorcallback
+):
+    """Prepare for server-side upload."""
+    # file name check
+    wikifilename = wikifilename.replace('/', '-').replace(' ', '_')
+    wikifilename = wikifilename.replace('\r\n', '_')
+    wikifilename = wikifilename.replace('\r', '_').replace('\n', '_')
+
+    newfilename = '/srv/v2c/ssu/' + wikifilename
+    shutil.move(filename, newfilename)
+
+    with open(newfilename + '.txt', 'w') as filedescfile:
+        filedesc = filedesc.replace(
+            '[[Category:Uploaded with video2commons]]',
+            '[[Category:Uploaded with video2commons/Server-side uploads]]'
+        )
+    filedescfile.write(filedesc.encode('utf-8'))
+
+    fileurl = 'http://' + http_host + '/' + wikifilename
+
+    raise NeedServerSideUpload(fileurl)
