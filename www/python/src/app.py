@@ -43,6 +43,8 @@ sys.path.append(
     os.path.dirname(os.path.realpath(__file__)) + "/../../../backend/"
 )
 
+import worker  # NOQA
+
 consumer_token = ConsumerToken(consumer_key, consumer_secret)
 handshaker = Handshaker(api_url, consumer_token)
 
@@ -128,8 +130,6 @@ def logout():
 @app.route('/api/status')
 def status():
     """Get all visible task status for user."""
-    from worker.upload import NeedServerSideUpload
-
     ids = get_tasks()
     goodids = []
     values = []
@@ -177,7 +177,7 @@ def status():
                 task['text'] = filename
             elif state == 'FAILURE':
                 e = res.result
-                if isinstance(e, NeedServerSideUpload):
+                if isinstance(e, worker.upload.NeedServerSideUpload):
                     task['status'] = 'needssu'
                     url = e.url
                     ssus.append(url)
@@ -597,7 +597,6 @@ def run_task(id):
 
 def run_task_internal(filename, params):
     """Internal run task function to accept whatever params given."""
-    import worker
     res = worker.main.delay(*params)
     taskid = res.id
 
