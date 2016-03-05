@@ -1,0 +1,14 @@
+language: generic
+
+sudo: required
+dist: trusty
+
+before_install:
+    - sudo apt-get -q install python gcc python-pip
+    - sudo pip install -q flake8
+    - sudo apt-get -q nodejs-legacy npm
+    - sudo npm install -q -g jshint
+
+script:
+    - find . -name \*.py -exec flake8 {} \;
+    - find . -name \*.js | grep -v min.js | xargs jshint
