@@ -17,15 +17,18 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>
 #
 
-import os, sys
+"""Remove expired tasks (title forgotten) from user task list."""
+
+import os
+import sys
 from redis import Redis
 
-sys.path.append(os.path.dirname(os.path.realpath(__file__))+"/../")
-from config import redis_pw, redis_host
+sys.path.append(os.path.dirname(os.path.realpath(__file__)) + "/../")
+from config import redis_pw, redis_host  # NOQA
 
 redisconnection = Redis(host=redis_host, db=3, password=redis_pw)
 
-for userkey in redisconnection.keys('tasks:*')+['alltasks']:
+for userkey in redisconnection.keys('tasks:*') + ['alltasks']:
     for id in redisconnection.lrange(userkey, 0, -1):
         if not redisconnection.exists('titles:' + id):
             redisconnection.lrem(userkey, id)
