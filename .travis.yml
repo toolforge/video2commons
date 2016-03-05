@@ -4,9 +4,9 @@ sudo: required
 dist: trusty
 
 before_install:
-    - sudo apt-get -q install python gcc python-pip
+    - sudo apt-get install -q python gcc python-pip
     - sudo pip install -q flake8
-    - sudo apt-get -q nodejs-legacy npm
+    - sudo apt-get install -q nodejs-legacy npm
     - sudo npm install -q -g jshint
 
 script:
