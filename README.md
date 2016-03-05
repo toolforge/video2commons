@@ -1,4 +1,5 @@
-# video2commons
+# video2commons [![Build Status](https://travis-ci.org/Toollabs/video2commons.svg?branch=master)](https://travis-ci.org/Toollabs/video2commons)
+
 Transfer video and audio from external sites to Commons. Video2commons is available for everyone (uses OAuth) via Wikimedia Commons.
 
 See also:
