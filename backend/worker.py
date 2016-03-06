@@ -146,9 +146,12 @@ def main(
 
     except pywikibot.Error:  # T124922 workaround
         exc_info = sys.exc_info()
-        raise TaskError('pywikibot.Error: %s: %s' % (
-            exc_info[0].__name__, str(exc_info[1])
-        )), None, exc_info[2]
+        raise TaskError(
+            (
+                u'pywikibot.Error: %s: %s' % (
+                    exc_info[0].__name__, exc_info[1]
+                )
+            ).encode('utf-8')), None, exc_info[2]
     else:
         statuscallback('Done!', 100)
         return filename, wikifileurl

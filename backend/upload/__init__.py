@@ -60,8 +60,8 @@ def upload(
             )
         except pywikibot.data.api.APIError, e:
             if e.code in [
-                'stashedfilenotfound', 'stashpathinvalid',
-                'stashfilestorage', 'stashnosuchfilekey', 'stasherror'
+                'stashedfilenotfound', 'stashpathinvalid', 'stasherror'
+                'stashfilestorage', 'stashnosuchfilekey', 'stashfailed'
             ]:
                 upload_ss(
                     filename, wikifilename, http_host, filedesc,
@@ -127,7 +127,7 @@ def upload_ss(
             '[[Category:Uploaded with video2commons]]',
             '[[Category:Uploaded with video2commons/Server-side uploads]]'
         )
-    filedescfile.write(filedesc.encode('utf-8'))
+        filedescfile.write(filedesc.encode('utf-8'))
 
     fileurl = 'http://' + http_host + '/' + wikifilename
 
