@@ -99,14 +99,20 @@ def upload_pwb(
     chunked = (4 * (1 << 20)) if size >= 100000000 else 0
 
     statuscallback('Uploading...', -1)
-    if site.upload(
-        page, source_filename=filename, comment=comment, text=filedesc,
-        chunk_size=chunked, ignore_warnings=['exists-normalized']
-    ):
-        statuscallback('Upload success!', 100)
-        return page.title(withNamespace=False), page.full_url()
-    else:
-        errorcallback('Upload failed!')
+    try:
+        if not site.upload(
+            page, source_filename=filename, comment=comment, text=filedesc,
+            chunk_size=chunked, ignore_warnings=['exists-normalized']
+        ):
+            errorcallback('Upload failed!')
+    except pywikibot.data.api.APIError:
+        # recheck
+        site.loadpageinfo(page)
+        if not page.exists():
+            raise
+
+    statuscallback('Upload success!', 100)
+    return page.title(withNamespace=False), page.full_url()
 
 
 def upload_ss(
