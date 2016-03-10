@@ -102,7 +102,7 @@ def upload_pwb(
     try:
         if not site.upload(
             page, source_filename=filename, comment=comment, text=filedesc,
-            chunk_size=chunked, ignore_warnings=['exists-normalized']
+            chunk_size=chunked  # , ignore_warnings=['exists-normalized']
         ):
             errorcallback('Upload failed!')
     except pywikibot.data.api.APIError:
