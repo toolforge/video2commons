@@ -179,7 +179,7 @@ def status():
                 e = res.result
                 if e is False:
                     task['status'] = 'fail'
-                    task['text'] = e.traceback
+                    task['text'] = res.traceback
                     task['restartable'] = True
                 elif isinstance(e, worker.upload.NeedServerSideUpload):
                     task['status'] = 'needssu'
