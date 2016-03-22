@@ -177,7 +177,11 @@ def status():
                 task['text'] = filename
             elif state == 'FAILURE':
                 e = res.result
-                if isinstance(e, worker.upload.NeedServerSideUpload):
+                if e is False:
+                    task['status'] = 'fail'
+                    task['text'] = e.traceback
+                    task['restartable'] = True
+                elif isinstance(e, worker.upload.NeedServerSideUpload):
                     task['status'] = 'needssu'
                     url = e.url
                     ssus.append(url)
