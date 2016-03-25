@@ -425,6 +425,7 @@ def submit_task():
             )
 
     except Exception, e:
+        session.rollback()
         return jsonify(
             step='error',
             error='An exception occured: %s: %s' %
@@ -656,6 +657,7 @@ def restart_task():
 
         return jsonify(restart='success', id=id, taskid=newid)
     except Exception, e:
+        session.rollback()
         return jsonify(
             restart='error',
             error='An exception occured: %s: %s' %
@@ -676,6 +678,7 @@ def remove_task():
         redisconnection.delete('restarted:' + id)
         return jsonify(remove='success', id=id)
     except Exception, e:
+        session.rollback()
         return jsonify(
             remove='error', error='An exception occured: %s: %s' %
             (type(e).__name__, str(e)), traceback=traceback.format_exc()

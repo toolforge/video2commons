@@ -24,12 +24,17 @@ class RedisSession(dict, SessionMixin):
         if initial:
             self.update(initial or {})
 
-        self.initials = pickle.dumps(dict(self))
+        self._initials = pickle.dumps(dict(self))
 
     @property
     def modified(self):
         """Check if this is modified recursively."""
-        return pickle.dumps(dict(self)) != self.initials
+        return pickle.dumps(dict(self)) != self._initials
+
+    def rollback(self):
+        """Rollback all changes."""
+        self.clear()
+        self.update(pickle.loads(self._initials))
 
 
 class RedisSessionInterface(SessionInterface):
