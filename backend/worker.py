@@ -61,7 +61,7 @@ class TaskError(Exception):
 @app.task(bind=True, track_started=True)
 def main(
     self, url, ie_key, subtitles, filename, filedesc,
-    convertkey, username, oauth
+    downloadkey, convertkey, username, oauth
 ):
     """Main worker code."""
     # Get a lock to prevent double-running with same task ID
@@ -101,7 +101,7 @@ def main(
     try:
         statuscallback('Downloading...', -1)
         d = download.download(
-            url, ie_key, 'bestvideo+bestaudio/best', subtitles,
+            url, ie_key, downloadkey, subtitles,
             outputdir, statuscallback, errorcallback
         )
         if not d:

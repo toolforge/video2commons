@@ -433,7 +433,7 @@ def submit_task():
 
 
 def relist_formats(id):
-    """List the possible convert formats from a given audio/vidio pair."""
+    """List the possible convert formats from a given audio/video pair."""
     formats = []
     prefer = ''
     if not session['newtasks'][id]['video'] and \
@@ -457,8 +457,22 @@ def relist_formats(id):
     session['newtasks'][id]['formats'] = formats
 
 
+def get_download_key(format):
+    """Get the youtube-dl download format key."""
+    return {
+        'ogv (Theora)': 'bestvideo/best',
+        'webm (VP8)': 'bestvideo/best',
+        'webm (VP9, experimental)': 'bestvideo/best',
+        'ogg (Vorbis)': 'bestaudio/best',
+        'opus (Opus, experimental)': 'bestaudio/best',
+        'ogv (Theora/Vorbis)': 'bestvideo+bestaudio/best',
+        'webm (VP8/Vorbis)': 'bestvideo+bestaudio/best',
+        'webm (VP9/Opus, experimental)': 'bestvideo+bestaudio/best',
+    }[format]
+
+
 def get_convert_key(format):
-    """Get the backnd convert key from human-readable convert format."""
+    """Get the backend convert key from human-readable convert format."""
     return {
         'ogv (Theora)': 'an.ogv',
         'webm (VP8)': 'an.webm',
@@ -586,12 +600,14 @@ def run_task(id):
     subtitles = session['newtasks'][id]['subtitles']
     filename = session['newtasks'][id]['filename']
     filedesc = session['newtasks'][id]['filedesc']
+    downloadkey = get_download_key(session['newtasks'][id]['format'])
     convertkey = get_convert_key(session['newtasks'][id]['format'])
     username = session['username']
     oauth = (session['access_token_key'], session['access_token_secret'])
 
     taskid = run_task_internal(filename, (
-        url, ie_key, subtitles, filename, filedesc, convertkey, username, oauth
+        url, ie_key, subtitles, filename, filedesc,
+        downloadkey, convertkey, username, oauth
     ))
 
     del session['newtasks'][id]
