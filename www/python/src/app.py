@@ -36,6 +36,7 @@ from config import consumer_key, consumer_secret, api_url, redis_pw, redis_host
 from redis import Redis
 from celery.result import AsyncResult
 import youtube_dl
+import guess_language
 
 from redisession import RedisSessionInterface
 
@@ -528,7 +529,7 @@ def rextract_url(id):
     title = info.get('title', '').strip()
     uploader = info.get('uploader', '').strip()
     date = info.get('upload_date', '').strip()
-    desc = info.get('description', '').strip()
+    desc_orig = desc = info.get('description', '').strip() or title
 
     # Process date
     if re.match(r'^[0-9]{8}$', date):
@@ -546,6 +547,13 @@ def rextract_url(id):
     else:
         source = '[%(url)s %(title)s - %(extractor)s]' % \
             {'url': url, 'title': escape_wikitext(title), 'extractor': ie_key}
+
+    # Description
+    desc = escape_wikitext(desc)
+    if len(desc_orig) > 100:
+        lang = guess_language.guessLanguage(desc_orig)
+        if lang != 'UNKNOWN':
+            desc = u'{{' + lang + u'|1=' + desc + u'}}'
 
     filedesc = """
 =={{int:filedesc}}==
@@ -565,7 +573,7 @@ def rextract_url(id):
 
 [[Category:Uploaded with video2commons]]
 """ % {
-        'desc': escape_wikitext(desc or title),
+        'desc': desc,
         'date': date,
         'source': source,
         'uploader': escape_wikitext(uploader)
