@@ -527,7 +527,7 @@ def rextract_url(id):
 
     ie_key = info['extractor_key']
     title = info.get('title', '').strip()
-    uploader = info.get('uploader', '').strip()
+    uploader = escape_wikitext(info.get('uploader', '').strip())
     date = info.get('upload_date', '').strip()
     desc_orig = desc = info.get('description', '').strip() or title
 
@@ -555,6 +555,17 @@ def rextract_url(id):
         if lang != 'UNKNOWN':
             desc = u'{{' + lang + u'|1=' + desc + u'}}'
 
+    # License
+    lic = '{{subst:nld}}'
+    if ie_key == 'Youtube' and info.get('license') == \
+            'Creative Commons Attribution license (reuse allowed)':
+        lic = '{{YouTube CC-BY}}'
+
+    # Author
+    uploader_url = info.get('uploader_url', '')
+    if uploader_url:
+        uploader = u'[%s %s]' % (uploader_url, uploader)
+
     filedesc = """
 =={{int:filedesc}}==
 {{Information
@@ -568,7 +579,7 @@ def rextract_url(id):
 }}
 
 =={{int:license-header}}==
-{{subst:nld}}
+%(license)s
 {{LicenseReview}}
 
 [[Category:Uploaded with video2commons]]
@@ -576,7 +587,8 @@ def rextract_url(id):
         'desc': desc,
         'date': date,
         'source': source,
-        'uploader': escape_wikitext(uploader)
+        'uploader': uploader,
+        'license': lic
     }
     session['newtasks'][id]['extractor'] = ie_key
     session['newtasks'][id]['filedesc'] = filedesc.strip()
