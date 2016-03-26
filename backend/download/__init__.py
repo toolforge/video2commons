@@ -47,6 +47,8 @@ def download(
             'format': 'srt',
         }],
         'max_filesize': 5 * (1 << 30),
+        'retries': 10,
+        'fragment_retries': 10,
         'prefer_ffmpeg': True,  # avconv do not have srt encoder
         'prefer_free_formats': True
     }
