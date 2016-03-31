@@ -559,7 +559,10 @@ def rextract_url(id):
     lic = '{{subst:nld}}'
     if ie_key == 'Youtube' and info.get('license') == \
             'Creative Commons Attribution license (reuse allowed)':
-        lic = '{{YouTube CC-BY}}'
+        if uploader:
+            lic = '{{YouTube CC-BY|%s}}' % uploader
+        else:
+            lic = '{{YouTube CC-BY}}'
 
     # Author
     uploader_url = info.get('uploader_url', '')
