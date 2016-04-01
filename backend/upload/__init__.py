@@ -32,7 +32,7 @@ class NeedServerSideUpload(Exception):
     """A server server-side is needed."""
 
     # So no one should handle it
-    def __init__(self, url, hashsum):
+    def __init__(self, url, hashsum=None):
         """Initialize the instance."""
         super(NeedServerSideUpload, self).__init__(url)
         self.url = url
