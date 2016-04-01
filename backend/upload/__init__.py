@@ -25,16 +25,18 @@ If not, NeedServerSideUpload with url of file is thrown
 import os
 import shutil
 import pywikibot
+import hashlib
 
 
 class NeedServerSideUpload(Exception):
     """A server server-side is needed."""
 
     # So no one should handle it
-    def __init__(self, url):
+    def __init__(self, url, hashsum):
         """Initialize the instance."""
         super(NeedServerSideUpload, self).__init__(url)
         self.url = url
+        self.hashsum = hashsum
 
 
 def upload(
@@ -120,6 +122,8 @@ def upload_ss(
     statuscallback, errorcallback
 ):
     """Prepare for server-side upload."""
+    statuscallback('Preparing for server-side upload...', -1)
+
     # file name check
     wikifilename = wikifilename.replace('/', '-').replace(' ', '_')
     wikifilename = wikifilename.replace('\r\n', '_')
@@ -137,4 +141,13 @@ def upload_ss(
 
     fileurl = 'http://' + http_host + '/' + wikifilename
 
-    raise NeedServerSideUpload(fileurl)
+    # Get hash
+    md5 = hashlib.md5()
+    with open(newfilename, 'rb') as f:
+        while True:
+            data = f.read(65536)
+            if not data:
+                break
+            md5.update(data)
+
+    raise NeedServerSideUpload(fileurl, 'md5: ' + md5.hexdigest())

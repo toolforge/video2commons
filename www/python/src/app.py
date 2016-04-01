@@ -184,9 +184,8 @@ def status():
                     task['restartable'] = True
                 elif isinstance(e, worker.upload.NeedServerSideUpload):
                     task['status'] = 'needssu'
-                    url = e.url
-                    ssus.append(url)
-                    task['url'] = create_phab_url([url])
+                    ssus.append(e)
+                    task['url'] = create_phab_url([e])
                 else:
                     task['status'] = 'fail'
                     task['text'] = 'An exception occured: %s: %s' % \
@@ -230,9 +229,17 @@ def get_title_from_task(id):
     return redisconnection.get('titles:' + id)
 
 
-def create_phab_url(fileurls):
+def create_phab_url(es):
     """Create a server side upload Phabricator URL."""
-    wgetlinks = '\n'.join(['wget ' + url + '{,.txt}'for url in fileurls])
+    wgetlinks = []
+
+    for e in es:
+        wgetlink = 'wget ' + e.url + '{,.txt}'
+        if e.hashsum:
+            wgetlink += ' # ' + e.hashsum
+        wgetlinks.append(wgetlink)
+
+    wgetlinks = '\n'.join(wgetlinks)
     # Partial Source: videoconverter tool
     phabdesc = """Please upload these file(s) to Wikimedia Commons:
 ```
