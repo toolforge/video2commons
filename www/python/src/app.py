@@ -63,15 +63,28 @@ def all_exception_handler(error):
         traceback.format_exc(), 500
 
 
+def check_banned():
+    """Check for banned cases."""
+    # Check for WP0 traffic
+    if request.headers.get('X-Carrier'):
+        return 'Wikipedia zero case, Phabricator:T129845'
+
+    return None
+
+
 @app.route('/')
 def main():
     """Main page."""
+    banned = check_banned()
+    if banned:
+        return render_template('banned.html', reason=banned)
+
     try:
         dologin()
     except:
-        return render_template('bootstraphtml.html', loggedin=False)
+        return render_template('main.html', loggedin=False)
 
-    return render_template('bootstraphtml.html', loggedin=True)
+    return render_template('main.html', loggedin=True)
 
 
 def dologin():
@@ -293,6 +306,13 @@ def new_task():
 @app.route('/api/task/submit', methods=['POST'])
 def submit_task():
     """Handle task parameters."""
+    banned = check_banned()
+    if banned:
+        return jsonify(
+            step='error',
+            error='You are banned from using this tool! Reason: ' + banned
+        )
+
     try:
         if 'newtasks' not in session:
             session['newtasks'] = {}
