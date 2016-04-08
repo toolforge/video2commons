@@ -201,7 +201,8 @@ def status():
                     task['url'] = create_phab_url([e])
                 else:
                     task['status'] = 'fail'
-                    task['text'] = u'An exception occured: %s' % repr(e)
+                    task['text'] = u'An exception occured: %s: %s' % \
+                        (type(e).__name__, e)
                     task['restartable'] = (
                         (not redisconnection.exists('restarted:' + id)) and
                         redisconnection.exists('params:' + id)
@@ -455,7 +456,8 @@ def submit_task():
         session.rollback()
         return jsonify(
             step='error',
-            error=u'An exception occured: %s' % repr(e)
+            error=u'An exception occured: %s: %s' %
+            (type(e).__name__, e), traceback=traceback.format_exc()
         )
 
 
@@ -708,7 +710,8 @@ def restart_task():
         session.rollback()
         return jsonify(
             restart='error',
-            error=u'An exception occured: %s' % repr(e)
+            error=u'An exception occured: %s: %s' %
+            (type(e).__name__, e), traceback=traceback.format_exc()
         )
 
 
@@ -727,7 +730,8 @@ def remove_task():
     except Exception, e:
         session.rollback()
         return jsonify(
-            remove='error', error=u'An exception occured: %s' % repr(e)
+            remove='error', error=u'An exception occured: %s: %s' %
+            (type(e).__name__, e), traceback=traceback.format_exc()
         )
 
 if __name__ == '__main__':
