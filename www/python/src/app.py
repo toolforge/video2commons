@@ -77,14 +77,14 @@ def main():
     """Main page."""
     banned = check_banned()
     if banned:
-        return render_template('banned.html', reason=banned)
+        return render_template('banned.min.html', reason=banned)
 
     try:
         dologin()
     except:
-        return render_template('main.html', loggedin=False)
+        return render_template('main.min.html', loggedin=False)
 
-    return render_template('main.html', loggedin=True)
+    return render_template('main.min.html', loggedin=True)
 
 
 def dologin():
