@@ -229,8 +229,11 @@ def format_exception(e):
         desc = str(e)
     except UnicodeError:
         desc = u'%s' % e
-    if isinstance(desc, unicode):
-        desc = desc.decode('utf-8')
+
+    try:
+        desc = str(desc.encode('utf-8'))
+    except UnicodeEncodeError:
+        desc = str(desc.decode('utf-8').encode('utf-8'))
 
     return 'An exception occured: %s: %s' % \
         (type(e).__name__, desc)
