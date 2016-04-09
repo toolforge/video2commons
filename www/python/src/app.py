@@ -721,6 +721,9 @@ def remove_task():
     try:
         id = request.form['id']
         username = session['username']
+        assert id in \
+            redisconnection.lrange('tasks:' + username, 0, -1), \
+            'Task must belong to you.'
         redisconnection.lrem('alltasks', id)  # not StrictRedis
         redisconnection.lrem('tasks:' + username, id)  # not StrictRedis
         redisconnection.delete('titles:' + id)
