@@ -201,8 +201,7 @@ def status():
                     task['url'] = create_phab_url([e])
                 else:
                     task['status'] = 'fail'
-                    task['text'] = u'An exception occured: %s: %s' % \
-                        (type(e).__name__, e)
+                    task['text'] = format_exception(e)
                     task['restartable'] = (
                         (not redisconnection.exists('restarted:' + id)) and
                         redisconnection.exists('params:' + id)
@@ -222,6 +221,19 @@ def status():
         hasrunning=hasrunning,
         ssulink=ssulink
     )
+
+
+def format_exception(e):
+    """Format an exception to text."""
+    try:
+        desc = str(e)
+    except UnicodeError:
+        desc = u'%s' % e
+    if isinstance(desc, unicode):
+        desc = desc.decode('utf-8')
+
+    return 'An exception occured: %s: %s' % \
+        (type(e).__name__, desc)
 
 
 def get_tasks():
@@ -456,8 +468,8 @@ def submit_task():
         session.rollback()
         return jsonify(
             step='error',
-            error=u'An exception occured: %s: %s' %
-            (type(e).__name__, e), traceback=traceback.format_exc()
+            error=format_exception(e),
+            traceback=traceback.format_exc()
         )
 
 
@@ -710,8 +722,8 @@ def restart_task():
         session.rollback()
         return jsonify(
             restart='error',
-            error=u'An exception occured: %s: %s' %
-            (type(e).__name__, e), traceback=traceback.format_exc()
+            error=format_exception(e),
+            traceback=traceback.format_exc()
         )
 
 
@@ -733,8 +745,9 @@ def remove_task():
     except Exception, e:
         session.rollback()
         return jsonify(
-            remove='error', error=u'An exception occured: %s: %s' %
-            (type(e).__name__, e), traceback=traceback.format_exc()
+            remove='error',
+            error=format_exception(e),
+            traceback=traceback.format_exc()
         )
 
 if __name__ == '__main__':
