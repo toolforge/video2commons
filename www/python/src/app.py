@@ -232,7 +232,7 @@ def format_exception(e):
 
     try:
         desc = str(desc.encode('utf-8'))
-    except UnicodeEncodeError:
+    except UnicodeError:
         desc = str(desc.decode('utf-8').encode('utf-8'))
 
     return 'An exception occured: %s: %s' % \
