@@ -5,7 +5,7 @@
       "description" : "Transfer video and audio from external sites to Wikimedia Commons",
       "url" : "https://tools.wmflabs.org/video2commons/",
       "keywords" : "video, audio, conversion, transfer, webm",
-      "author" : "Zhuyifei1999, Steinsplitter",
+      "author" : "Zhuyifei1999, Steinsplitter, Matanya",
       "repository" : "https://github.com/Toollabs/video2commons"
     }
 ]
