@@ -1,0 +1,11 @@
+[
+    {
+      "name" : "video2commons",
+      "title" : "video2commons",
+      "description" : "Transfer video and audio from external sites to Wikimedia Commons",
+      "url" : "https://tools.wmflabs.org/video2commons/",
+      "keywords" : "video, audio, conversion, transfer, webm",
+      "author" : "Zhuyifei1999, Steinsplitter",
+      "repository" : "https://github.com/Toollabs/video2commons"
+    }
+]
