@@ -66,8 +66,6 @@ def all_exception_handler(error):
 def check_banned():
     """Check for banned cases."""
     # Check for WP0 traffic
-    if request.headers.get('X-Carrier'):
-        return 'Wikipedia zero case, Phabricator:T129845'
 
     return None
 
