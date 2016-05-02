@@ -351,7 +351,7 @@
           </form>' );
 
 				window.addTaskDialog.find( '#url' )
-					.val( data.url );
+					.val( data.url ).focus();
 				window.addTaskDialog.find( '#video' )
 					.prop( 'checked', data.video );
 				window.addTaskDialog.find( '#audio' )
