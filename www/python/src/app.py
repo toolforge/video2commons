@@ -257,10 +257,12 @@ def get_title_from_task(id):
 
 def create_phab_url(es):
     """Create a server side upload Phabricator URL."""
+    import pipes
+
     wgetlinks = []
 
     for e in es:
-        wgetlink = 'wget ' + e.url + '{,.txt}'
+        wgetlink = 'wget ' + pipes.quote(e.url) + '{,.txt}'
         if e.hashsum:
             wgetlink += ' # ' + e.hashsum
         wgetlinks.append(wgetlink)
