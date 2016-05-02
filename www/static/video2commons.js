@@ -299,6 +299,12 @@
 
 		this.newTask();
 		window.addTaskDialog.modal();
+
+		// HACK
+		window.addTaskDialog.on( 'shown.bs.modal', function() {
+			window.addTaskDialog.find( '#url' )
+				.focus()
+		} );
 	};
 
 	video2commons.newTask = function() {
