@@ -280,6 +280,16 @@
 </div>' );
 			$( 'body' )
 				.append( window.addTaskDialog );
+
+			// HACK
+			window.addTaskDialog.find( '#modal-body' )
+				.keypress( function( e ) {
+					if ( ( e.which || e.keyCode ) === 13 ) {
+						window.addTaskDialog.find( '#modal-footer button[type=submit]' )
+							.click();
+						e.preventDefault();
+					}
+				} );
 		}
 
 		window.addTaskDialog.find( '#dialog-spinner' )
@@ -351,7 +361,8 @@
           </form>' );
 
 				window.addTaskDialog.find( '#url' )
-					.val( data.url ).focus();
+					.val( data.url )
+					.focus();
 				window.addTaskDialog.find( '#video' )
 					.prop( 'checked', data.video );
 				window.addTaskDialog.find( '#audio' )
