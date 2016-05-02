@@ -34,7 +34,7 @@
 		$( '#content' )
 			.html( '<div class="container" id="content"><h4>Your tasks:</h4>\
 			<table id="tasktable" class="table"><tbody></tbody></table></div>' );
-		var addButton = $( '<input class="btn btn-primary btn-success btn-md" type="button" value="Add task...">' );
+		var addButton = $( '<input class="btn btn-primary btn-success btn-md" type="button" accesskey="n" value="Add task...">' );
 		$( '#content' )
 			.append( addButton );
 		addButton.click( function() {
