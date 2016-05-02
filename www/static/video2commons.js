@@ -40,7 +40,7 @@
 		addButton.click( function() {
 			video2commons.addTask();
 		} );
-		var ssuButton = $( '<a class="btn btn-primary btn-success btn-md pull-right disabled" id="ssubtn" accesskey="n">Create server-side upload ticket in one go (recommended)</a>' );
+		var ssuButton = $( '<a class="btn btn-primary btn-success btn-md pull-right disabled" id="ssubtn">Create server-side upload ticket in one go (recommended)</a>' );
 		$( '#content' )
 			.append( ssuButton.hide() );
 	};
