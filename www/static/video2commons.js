@@ -285,7 +285,7 @@
 			window.addTaskDialog.find( '.modal-body' )
 				.keypress( function( e ) {
 					if ( ( e.which || e.keyCode ) === 13 ) {
-						window.addTaskDialog.find( '.modal-footer button[type=submit]' )
+						window.addTaskDialog.find( '.modal-footer #btn-next' )
 							.click();
 						e.preventDefault();
 					}
@@ -395,7 +395,8 @@
           </form>' );
 
 				window.addTaskDialog.find( '#filename' )
-					.val( data.filename );
+					.val( data.filename )
+					.focus();
 				$.each( data.formats, function( i, desc ) {
 					window.addTaskDialog.find( '#format' )
 						.append( $( '<option></option>' )
@@ -466,6 +467,9 @@
 					.text( data.format );
 				window.addTaskDialog.find( '#filedesc' )
 					.val( data.filedesc );
+
+				window.addTaskDialog.find( '#btn-next' )
+					.focus();
 		}
 
 		switch ( window.addTaskStep ) {
