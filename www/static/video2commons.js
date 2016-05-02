@@ -282,10 +282,10 @@
 				.append( window.addTaskDialog );
 
 			// HACK
-			window.addTaskDialog.find( '#modal-body' )
+			window.addTaskDialog.find( '.modal-body' )
 				.keypress( function( e ) {
 					if ( ( e.which || e.keyCode ) === 13 ) {
-						window.addTaskDialog.find( '#modal-footer button[type=submit]' )
+						window.addTaskDialog.find( '.modal-footer button[type=submit]' )
 							.click();
 						e.preventDefault();
 					}
