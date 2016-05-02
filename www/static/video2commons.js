@@ -303,7 +303,7 @@
 		// HACK
 		window.addTaskDialog.on( 'shown.bs.modal', function() {
 			window.addTaskDialog.find( '#url' )
-				.focus()
+				.focus();
 		} );
 	};
 
