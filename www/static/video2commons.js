@@ -284,7 +284,9 @@
 			// HACK
 			window.addTaskDialog.find( '.modal-body' )
 				.keypress( function( e ) {
-					if ( ( e.which || e.keyCode ) === 13 ) {
+					if ( ( e.which || e.keyCode ) === 13 &&
+						!( $( ':focus' )
+							.is( 'textarea' ) ) ) {
 						window.addTaskDialog.find( '.modal-footer #btn-next' )
 							.click();
 						e.preventDefault();
