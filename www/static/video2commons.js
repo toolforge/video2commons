@@ -398,14 +398,9 @@
 					.off();
 				window.addTaskDialog.find( '#btn-next' )
 					.click( function() {
-						window.addTaskDialog.find( '.modal-body #dialog-errorbox' )
-							.hide();
-						window.addTaskDialog.find( '#btn-prev' )
-							.addClass( 'disabled' )
-							.off();
-						window.addTaskDialog.find( '#btn-next' )
-							.addClass( 'disabled' )
-							.off();
+						
+						video2commons.disablePrevNext();
+
 						window.addTaskDialog.find( '#dialog-spinner' )
 							.show();
 						var postdata = {
@@ -447,14 +442,8 @@
 					.off();
 				window.addTaskDialog.find( '#btn-prev' )
 					.click( function() {
-						window.addTaskDialog.find( '.modal-body #dialog-errorbox' )
-							.hide();
-						window.addTaskDialog.find( '#btn-prev' )
-							.addClass( 'disabled' )
-							.off();
-						window.addTaskDialog.find( '#btn-next' )
-							.addClass( 'disabled' )
-							.off();
+						video2commons.disablePrevNext();
+							
 						window.addTaskDialog.find( '#dialog-spinner' )
 							.show();
 						var postdata = {
@@ -468,14 +457,8 @@
 					} );
 				window.addTaskDialog.find( '#btn-next' )
 					.click( function() {
-						window.addTaskDialog.find( '.modal-body #dialog-errorbox' )
-							.hide();
-						window.addTaskDialog.find( '#btn-prev' )
-							.addClass( 'disabled' )
-							.off();
-						window.addTaskDialog.find( '#btn-next' )
-							.addClass( 'disabled' )
-							.off();
+						video2commons.disablePrevNext();
+							
 						window.addTaskDialog.modal( "hide" );
 						$( '#tasktable > tbody' )
 							.append( '<tr id="task-new"><td colspan="3"><img alt="File:Ajax-loader.gif" src="//upload.wikimedia.org/wikipedia/commons/d/de/Ajax-loader.gif" data-file-width="32" data-file-height="32" height="32" width="32"></td></tr>' );
@@ -545,23 +528,35 @@
 	
 	video2commons.addTargetDialog = function(type) {
 					
-				window.addTaskDialog.find( '#btn-'+type )
-					.click( function() {
-						window.addTaskDialog.find( '.modal-body #dialog-errorbox' )
-							.hide();
-						window.addTaskDialog.find( '#btn-prev' )
-							.addClass( 'disabled' )
-							.off();
-						window.addTaskDialog.find( '#btn-next' )
-							.addClass( 'disabled' )
-							.off();
-						window.addTaskDialog.find( '#dialog-spinner' )
-							.show();
-						
-						this.submitTask(this.getPostData(type));
-						
-					} );
+		window.addTaskDialog.find( '#btn-'+type )
+			.click( function() {
+				window.addTaskDialog.find( '.modal-body #dialog-errorbox' )
+					.hide();
+				window.addTaskDialog.find( '#btn-prev' )
+					.addClass( 'disabled' )
+					.off();
+				window.addTaskDialog.find( '#btn-next' )
+					.addClass( 'disabled' )
+					.off();
+				window.addTaskDialog.find( '#dialog-spinner' )
+					.show();
+				
+				this.submitTask(this.getPostData(type));
+				
+			} );
 	};
+	
+	video2commons.disablePrevNext = function () {
+		
+		window.addTaskDialog.find( '.modal-body #dialog-errorbox' )
+			.hide();
+		window.addTaskDialog.find( '#btn-prev' )
+			.addClass( 'disabled' )
+			.off();
+		window.addTaskDialog.find( '#btn-next' )
+			.addClass( 'disabled' )
+			.off();
+	}
 	
 	$( document )
 		.ready( function() {
