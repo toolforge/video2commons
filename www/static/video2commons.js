@@ -260,6 +260,7 @@
 
 	video2commons.addTask = function() {
 		if ( !window.addTaskDialog ) {
+			//addTask.html
 			window.addTaskDialog = $( '\n\
 <div class="modal fade" id="addTaskDialog" role="dialog">\n\
   <div class="modal-dialog">\n\
@@ -340,33 +341,9 @@
 					.show();
 				break;
 			case 'source':
+			    //sourceForm.html
 				window.addTaskDialog.find( '.modal-body' )
-					.html( '\n\
-          <form role="form">\n\
-            <div class="form-group">\n\
-              <label for="url"><span class="glyphicon glyphicon-import"></span> URL</label>\n\
-              <input type="text" class="form-control" id="url" placeholder="http://example.com/examplevideo">\n\
-            </div>\n\
-            <div class="checkbox">\n\
-              <label><input type="checkbox" value="" checked id="video">Keep video</label>\n\
-            </div>\n\
-            <div class="checkbox">\n\
-              <label><input type="checkbox" value="" checked id="audio">Keep audio</label>\n\
-            </div>\n\
-            <div class="checkbox">\n\
-              <label><input type="checkbox" value="" checked id="subtitles">Import subtitles</label>\n\
-            </div>\n\
-            <div class="alert alert-info">\n\
-              Note:\n\
-              <ul>\n\
-                <li>Playlists will not be processed correctly. Some sites (such as Youku and Comedy Central) make use of multipart videos, interpreted as playlists, and will not be processed correctly either.</li>\n\
-                <li>If the media does not include video or audio tracks, please uncheck the corresponding checkboxes; otherwise conversion may fail, even if the format is free.</li>\n\
-                <li>If "Import subtitles" is checked, subtitles will be imported, excluding auto-generated ones.</li>\n\
-                <li>What if I need to convert and upload a file on my computer? Well, while NFS and Grid engine is still here, you can use <a href="//tools.wmflabs.org/videoconvert/">videoconvert</a></li> tool.\n\
-              </ul>\n\
-              <b>Important note:</b> Only upload <a href="//commons.wikimedia.org/wiki/Commons:Licensing#Acceptable_licenses" title="Commons:Licensing">freely licensed</a> or <a href="//commons.wikimedia.org/wiki/Commons:Licensing#Material_in_the_public_domain" title="Commons:Licensing">public domain</a> content. <a href="//commons.wikimedia.org/wiki/Commons:FU" title="Commons:FU" class="mw-redirect">Fair use</a> is not allowed on commons.\n\
-            </div>\n\
-          </form>' );
+					.load( 'html/sourceForm.html' );
 
 				window.addTaskDialog.find( '#url' )
 					.val( data.url )
@@ -380,27 +357,8 @@
 				break;
 			case 'target':
 				window.addTaskDialog.find( '.modal-body' )
-					.html( '\n\
-          <form role="form">\n\
-            <div class="form-group">\n\
-              <label for="filename"><span class="glyphicon glyphicon-export"></span> Filename</label>\n\
-              <div class="form-inline">\n\
-                <input type="text" class="form-control" id="filename" placeholder="Example" size="30">\n\
-                <p class="form-control-static">.</p>\n\
-                <select class="form-control" id="format" style="max-width:40%;"></select>\n\
-              </div>\n\
-            </div>\n\
-            <div class="form-group">\n\
-              <label for="filedesc"><span class="glyphicon glyphicon-list"></span> File description page:</label>\n\
-              <textarea class="form-control" rows="10" id="filedesc"></textarea>\n\
-            </div>\n\
-            <div class="alert alert-info">\n\
-              Note:\n\
-              <ul>\n\
-                <li>The file extension set above is used if and only if the video is in a non-free format, which transcoding is required. Videos in free formats will keep their extensions.</li>\n\
-              </ul>\n\
-            </div>\n\
-          </form>' );
+				//targetForm.html
+					.load( 'html/targetForm.html');
 
 				window.addTaskDialog.find( '#filename' )
 					.val( data.filename )
@@ -417,51 +375,8 @@
 				break;
 			case 'confirm':
 				window.addTaskDialog.find( '.modal-body' )
-					.html( '\n\
-          <form class="form-horizontal" role="form">\n\
-            <div class="form-group">\n\
-              <label class="control-label col-sm-2" for="url">URL:</label>\n\
-              <div class="col-sm-10">\n\
-                <p class="form-control-static" id="url"></p>\n\
-              </div>\n\
-            </div>\n\
-            <div class="form-group">\n\
-              <label class="control-label col-sm-2" for="extractor">Extractor:</label>\n\
-              <div class="col-sm-10">\n\
-                <p class="form-control-static" id="extractor"></p>\n\
-              </div>\n\
-            </div>\n\
-            <div class="form-group">\n\
-              <label class="control-label col-sm-2" for="keep">Keep:</label>\n\
-              <div class="col-sm-10">\n\
-                <p class="form-control-static" id="keep"></p>\n\
-              </div>\n\
-            </div>\n\
-            <div class="form-group">\n\
-              <label class="control-label col-sm-2" for="filename">Target filename:</label>\n\
-              <div class="col-sm-10">\n\
-                <p class="form-control-static" id="filename"></p>\n\
-              </div>\n\
-            </div>\n\
-            <div class="form-group">\n\
-              <label class="control-label col-sm-2" for="format">Transcoding format:</label>\n\
-              <div class="col-sm-10">\n\
-                <p class="form-control-static" id="format"></p>\n\
-              </div>\n\
-            </div>\n\
-            <div class="form-group">\n\
-              <label class="control-label col-sm-2" for="filedesc">File description page:</label>\n\
-              <div class="col-sm-10">\n\
-                <textarea class="form-control" rows="5" id="filedesc" readonly="readonly"></textarea>\n\
-              </div>\n\
-            </div>\n\
-            <div class="alert alert-info">\n\
-              Note:\n\
-              <ul>\n\
-                <li>Please confirm the task or click "Back" to change the parameters. By clicking "Confirm", the task will be submitted and executed. Due to technical restrictions, a task cannot be easily aborted once it is submitted.</li>\n\
-              </ul>\n\
-            </div>\n\
-          </form>' );
+				//confirmForm.html
+					.load( 'html/confirmForm.html');
 
 				window.addTaskDialog.find( '#url' )
 					.text( data.url );
@@ -644,18 +559,15 @@
 	};
 
 	video2commons.removeTask = function( taskid ) {
-		$.post( '/video2commons/api/task/remove', {
-				id: taskid
-			} )
-			.done( function( data ) {
-				if ( data.error )
-					window.alert( data.error );
-				video2commons.checkStatus();
-			} );
+		video2commons.eventTask(taskid,'removet');
 	};
 
 	video2commons.restartTask = function( taskid ) {
-		$.post( '/video2commons/api/task/restart', {
+		video2commons.eventTask(taskid,'restart');
+	};
+	
+	video2commons.eventTask = function (taskid,eventName) {
+		$.post( '/video2commons/api/task/'+eventName, {
 				id: taskid
 			} )
 			.done( function( data ) {
@@ -663,7 +575,7 @@
 					window.alert( data.error );
 				video2commons.checkStatus();
 			} );
-	};
+	}
 
 	$( document )
 		.ready( function() {
