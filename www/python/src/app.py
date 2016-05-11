@@ -599,12 +599,24 @@ def rextract_url(id):
 
     # License
     lic = '{{subst:nld}}'
+    uploader_param = '|%s' % uploader if uploader else ''
     if ie_key == 'Youtube' and info.get('license') == \
             'Creative Commons Attribution license (reuse allowed)':
-        if uploader:
-            lic = '{{YouTube CC-BY|%s}}' % uploader
-        else:
-            lic = '{{YouTube CC-BY}}'
+        lic = '{{YouTube CC-BY%s}}' % uploader_param
+    elif ie_key == 'Flickr':
+        if info.get('license') == 'Attribution':
+            lic = '{{cc-by-2.0%s}}' % uploader_param
+        elif info.get('license') == 'Attribution-ShareAlike':
+            lic = '{{cc-by-sa-2.0%s}}' % uploader_param
+        elif info.get('license') == 'No known copyright restrictions':
+            lic = '{{Flickr-no known copyright restrictions}}'
+        elif info.get('license') == 'United States government work':
+            lic = '{{PD-USGov}}'
+        elif info.get('license') == 'Public Domain Dedication (CC0)':
+            lic = '{{cc-zero}}'
+        elif info.get('license') in \
+                ['Public Domain Work', 'Public Domain Mark']:
+            lic = '{{safesubst:Flickr-public domain mark/subst}}'
 
     # Author
     uploader_url = info.get('uploader_url', '')
