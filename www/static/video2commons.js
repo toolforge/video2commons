@@ -101,6 +101,8 @@
 			}
 
 			var removebutton; // to make JSHint happy
+			var removebuttonHTML = '<button type="button" class="btn btn-danger btn-xs pull-right"><span class="glyphicon glyphicon-trash"></span> Remove</button>';
+			var restartbuttonHTML = '<button type="button" class="btn btn-warning btn-xs pull-right"><span class="glyphicon glyphicon-repeat"></span> Restart</button>';
 
 			if ( setup ) {
 				switch ( val.status ) {
@@ -125,7 +127,7 @@
 						row.append( $( '<td />' )
 							.attr( 'id', id + '-title' )
 							.attr( 'width', '30%' ) );
-						removebutton = $( '<button type="button" class="btn btn-danger btn-xs pull-right"><span class="glyphicon glyphicon-trash"></span> Remove</button>' )
+						removebutton = $( removebuttonHTML )
 							.attr( 'id', id + '-removebutton' )
 							.off()
 							.click( function() {
@@ -148,7 +150,7 @@
 						row.append( $( '<td />' )
 							.attr( 'id', id + '-title' )
 							.attr( 'width', '30%' ) );
-						removebutton = $( '<button type="button" class="btn btn-danger btn-xs pull-right"><span class="glyphicon glyphicon-trash"></span> Remove</button>' )
+						removebutton = $( removebuttonHTML )
 							.attr( 'id', id + '-removebutton' )
 							.off()
 							.click( function() {
@@ -157,7 +159,7 @@
 								video2commons.removeTask( video2commons.getTaskIDFromDOMID( $( this )
 									.attr( 'id' ) ) );
 							} );
-						var restartbutton = $( '<button type="button" class="btn btn-warning btn-xs pull-right"><span class="glyphicon glyphicon-repeat"></span> Restart</button>' )
+						var restartbutton = $( restartbuttonHTML )
 							.attr( 'id', id + '-restartbutton' )
 							.hide();
 						row.append( $( '<td />' )
@@ -175,7 +177,7 @@
 						row.append( $( '<td />' )
 							.attr( 'id', id + '-title' )
 							.attr( 'width', '30%' ) );
-						removebutton = $( '<button type="button" class="btn btn-danger btn-xs pull-right"><span class="glyphicon glyphicon-trash"></span> Remove</button>' )
+						removebutton = $( removebuttonHTML)
 							.attr( 'id', id + '-removebutton' )
 							.off()
 							.click( function() {
