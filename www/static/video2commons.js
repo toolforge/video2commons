@@ -433,38 +433,9 @@
 					.removeClass( 'disabled' )
 					.html( 'Next <span class="glyphicon glyphicon-chevron-right"></span>' )
 					.off();
-				window.addTaskDialog.find( '#btn-prev' )
-					.click( function() {
-						window.addTaskDialog.find( '.modal-body #dialog-errorbox' )
-							.hide();
-						window.addTaskDialog.find( '#btn-prev' )
-							.addClass( 'disabled' )
-							.off();
-						window.addTaskDialog.find( '#btn-next' )
-							.addClass( 'disabled' )
-							.off();
-						window.addTaskDialog.find( '#dialog-spinner' )
-							.show();
-							
-						video2commons.submitTask(video2commons.getPostData('prev'));
-
-					} );
-				window.addTaskDialog.find( '#btn-next' )
-					.click( function() {
-						window.addTaskDialog.find( '.modal-body #dialog-errorbox' )
-							.hide();
-						window.addTaskDialog.find( '#btn-prev' )
-							.addClass( 'disabled' )
-							.off();
-						window.addTaskDialog.find( '#btn-next' )
-							.addClass( 'disabled' )
-							.off();
-						window.addTaskDialog.find( '#dialog-spinner' )
-							.show();
-						
-						video2commons.submitTask(video2commons.getPostData('next'));
-						
-					} );
+					
+				video2commons.addTargetDialog('prev');
+				video2commons.addTargetDialog('next');
 				break;
 			case 'confirm':
 				window.addTaskDialog.find( '#btn-prev' )
@@ -570,6 +541,26 @@
 					window.alert( data.error );
 				video2commons.setupAddTaskDialog( data );
 			} );
+	};
+	
+	video2commons.addTargetDialog = function(type) {
+					
+				window.addTaskDialog.find( '#btn-'+type )
+					.click( function() {
+						window.addTaskDialog.find( '.modal-body #dialog-errorbox' )
+							.hide();
+						window.addTaskDialog.find( '#btn-prev' )
+							.addClass( 'disabled' )
+							.off();
+						window.addTaskDialog.find( '#btn-next' )
+							.addClass( 'disabled' )
+							.off();
+						window.addTaskDialog.find( '#dialog-spinner' )
+							.show();
+						
+						this.submitTask(this.getPostData(type));
+						
+					} );
 	};
 	
 	$( document )
