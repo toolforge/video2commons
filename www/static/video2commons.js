@@ -18,11 +18,7 @@
 				if ( !$( '#tasktable' )
 					.length ) video2commons.setupTables();
 				video2commons.populateResults( data );
-				if ( data.hasrunning ) {
-					window.lastStatusCheck = setTimeout( video2commons.checkStatus, 5000 );
-				} else {
-					window.lastStatusCheck = setTimeout( video2commons.checkStatus, 60000 );
-				}
+				window.lastStatusCheck = setTimeout( video2commons.checkStatus, ( data.hasrunning )?5000:60000 );
 			} )
 			.fail( function() {
 				$( '#content' )
