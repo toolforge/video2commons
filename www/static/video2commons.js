@@ -259,24 +259,8 @@
 	video2commons.addTask = function() {
 		if ( !window.addTaskDialog ) {
 			//addTask.html
-			window.addTaskDialog = $( '\n\
-<div class="modal fade" id="addTaskDialog" role="dialog">\n\
-  <div class="modal-dialog">\n\
-    <div class="modal-content">\n\
-      <div class="modal-header">\n\
-        <button type="button" class="close" data-dismiss="modal">&times;</button>\n\
-        <h4><span class="glyphicon glyphicon-plus"></span> Add Task</h4>\n\
-      </div>\n\
-      <div class="modal-body" style="padding:40px 50px;"></div>\n\
-      <div class="modal-footer">\n\
-        <button type="button" class="btn btn-danger pull-left" data-dismiss="modal"><span class="glyphicon glyphicon-remove"></span> Cancel</button>\n\
-        <button type="submit" class="btn btn-success pull-right" id="btn-next">Next <span class="glyphicon glyphicon-chevron-right"></span></button>\n\
-        <button type="button" class="btn btn-warning pull-right disabled" id="btn-prev"><span class="glyphicon glyphicon-chevron-left"></span> Back</button>\n\
-        <img class="pull-right" alt="File:Ajax-loader.gif" src="//upload.wikimedia.org/wikipedia/commons/d/de/Ajax-loader.gif" data-file-width="32" data-file-height="32" height="32" width="32" id="dialog-spinner">\n\
-      </div>\n\
-    </div>\n\
-  </div>\n\
-</div>' );
+			window.addTaskDialog = $('<div>').load( 'html/addTask.html' );
+			
 			$( 'body' )
 				.append( window.addTaskDialog );
 
