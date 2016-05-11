@@ -370,20 +370,16 @@
 					.val( data.filedesc );
 				break;
 			case 'confirm':
-				window.addTaskDialog.find( '.modal-body' )
-				//confirmForm.html
-					.load( 'html/confirmForm.html');
-
-				window.addTaskDialog.find( '#url' )
-					.text( data.url );
-				window.addTaskDialog.find( '#extractor' )
-					.text( data.extractor );
-				window.addTaskDialog.find( '#keep' )
-					.text( data.keep );
-				window.addTaskDialog.find( '#filename' )
-					.text( data.filename );
-				window.addTaskDialog.find( '#format' )
-					.text( data.format );
+			    //confirmForm.html
+				window.addTaskDialog.find( '.modal-body' ).load( 'html/confirmForm.html');
+				video2commons.setText([
+				 'url',
+				 'extractor',
+				 'keep',
+				 'filename',
+				 'format'
+				]);
+				
 				window.addTaskDialog.find( '#filedesc' )
 					.val( data.filedesc );
 
@@ -425,10 +421,8 @@
 							subtitles: window.addTaskDialog.find( '#subtitles' )
 								.is( ":checked" )
 						};
-						$.post( '/video2commons/api/task/submit', postdata )
-							.done( function( data ) {
-								video2commons.setupAddTaskDialog( data );
-							} );
+						
+						video2commons.submitTask(postdata );
 					} );
 				break;
 			case 'target':
@@ -451,21 +445,9 @@
 							.off();
 						window.addTaskDialog.find( '#dialog-spinner' )
 							.show();
-						var postdata = {
-							id: window.newTaskTempID,
-							action: 'prev',
-							step: window.addTaskStep,
-							filename: window.addTaskDialog.find( '#filename' )
-								.val(),
-							format: window.addTaskDialog.find( '#format' )
-								.val(),
-							filedesc: window.addTaskDialog.find( '#filedesc' )
-								.val()
-						};
-						$.post( '/video2commons/api/task/submit', postdata )
-							.done( function( data ) {
-								video2commons.setupAddTaskDialog( data );
-							} );
+							
+						video2commons.submitTask(video2commons.getPostData('prev'));
+
 					} );
 				window.addTaskDialog.find( '#btn-next' )
 					.click( function() {
@@ -479,21 +461,9 @@
 							.off();
 						window.addTaskDialog.find( '#dialog-spinner' )
 							.show();
-						var postdata = {
-							id: window.newTaskTempID,
-							action: 'next',
-							step: window.addTaskStep,
-							filename: window.addTaskDialog.find( '#filename' )
-								.val(),
-							format: window.addTaskDialog.find( '#format' )
-								.val(),
-							filedesc: window.addTaskDialog.find( '#filedesc' )
-								.val()
-						};
-						$.post( '/video2commons/api/task/submit', postdata )
-							.done( function( data ) {
-								video2commons.setupAddTaskDialog( data );
-							} );
+						
+						video2commons.submitTask(video2commons.getPostData('next'));
+						
 					} );
 				break;
 			case 'confirm':
@@ -521,10 +491,9 @@
 							action: 'prev',
 							step: window.addTaskStep
 						};
-						$.post( '/video2commons/api/task/submit', postdata )
-							.done( function( data ) {
-								video2commons.setupAddTaskDialog( data );
-							} );
+						
+						video2commons.submitTask(postdata);
+
 					} );
 				window.addTaskDialog.find( '#btn-next' )
 					.click( function() {
@@ -544,6 +513,7 @@
 							action: 'next',
 							step: window.addTaskStep
 						};
+						
 						$.post( '/video2commons/api/task/submit', postdata )
 							.done( function( data ) {
 								if ( data.error )
@@ -572,7 +542,36 @@
 				video2commons.checkStatus();
 			} );
 	}
-
+	
+	video2commons.setText = function( arr ) {
+		$.each( arr, function( i, l ){
+		  window.addTaskDialog.find( '#'+l ).text( data[l] );
+		});
+	};
+	
+	video2commons.getPostData = function(action) {
+		return {
+			id: window.newTaskTempID,
+			action: action,
+			step: window.addTaskStep,
+			filename: window.addTaskDialog.find( '#filename' )
+				.val(),
+			format: window.addTaskDialog.find( '#format' )
+				.val(),
+			filedesc: window.addTaskDialog.find( '#filedesc' )
+				.val()
+		};
+    };
+	
+	video2commons.submitTask = function(postdata) {
+		$.post( '/video2commons/api/task/submit', postdata )
+			.done( function( data ) {
+				if ( data.error )
+					window.alert( data.error );
+				video2commons.setupAddTaskDialog( data );
+			} );
+	};
+	
 	$( document )
 		.ready( function() {
 			video2commons.init();
