@@ -12,7 +12,7 @@
 	video2commons.checkStatus = function() {
 		if ( window.lastStatusCheck )
 			clearTimeout( window.lastStatusCheck );
-		var url = '/video2commons/api/status';
+		var url = 'api/status';
 		$.get( url )
 			.done( function( data ) {
 				if ( !$( '#tasktable' )
@@ -298,7 +298,7 @@
 	};
 
 	video2commons.newTask = function() {
-		var url = '/video2commons/api/task/new';
+		var url = 'api/task/new';
 		$.post( url )
 			.done( function( data ) {
 				window.newTaskTempID = data.id;
@@ -460,7 +460,7 @@
 							step: window.addTaskStep
 						};
 
-						$.post( '/video2commons/api/task/submit', postdata )
+						$.post( 'api/task/submit', postdata )
 							.done( function( data ) {
 								if ( data.error )
 									window.alert( data.error );
@@ -479,7 +479,7 @@
 	};
 
 	video2commons.eventTask = function( taskid, eventName ) {
-		$.post( '/video2commons/api/task/' + eventName, {
+		$.post( 'api/task/' + eventName, {
 				id: taskid
 			} )
 			.done( function( data ) {
@@ -510,7 +510,7 @@
 	};
 
 	video2commons.submitTask = function( postdata ) {
-		$.post( '/video2commons/api/task/submit', postdata )
+		$.post( 'api/task/submit', postdata )
 			.done( function( data ) {
 				if ( data.error )
 					window.alert( data.error );
