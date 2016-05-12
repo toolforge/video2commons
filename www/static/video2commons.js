@@ -28,8 +28,7 @@
 
 	video2commons.setupTables = function() {
 		$( '#content' )
-			.html( '<div class="container" id="content"><h4>Your tasks:</h4>\
-			<table id="tasktable" class="table"><tbody></tbody></table></div>' );
+			.html( '<div class="container" id="content"><h4>Your tasks:</h4><table id="tasktable" class="table"><tbody></tbody></table></div>');
 		var addButton = $( '<input class="btn btn-primary btn-success btn-md" type="button" accesskey="n" value="Add task...">' );
 		$( '#content' )
 			.append( addButton );
@@ -306,8 +305,7 @@
 	};
 
 	video2commons.setupAddTaskDialog = function( data ) {
-		window.addTaskDialog.find( '#dialog-spinner' )
-			.hide();
+		window.addTaskDialog.find( '#dialog-spinner' ).hide();
 		if ( data.step !== 'error' )
 			window.addTaskStep = data.step;
 		switch ( data.step ) {
@@ -366,13 +364,11 @@
 					'keep',
 					'filename',
 					'format'
-				] );
+				],data );
 
-				window.addTaskDialog.find( '#filedesc' )
-					.val( data.filedesc );
+				window.addTaskDialog.find( '#filedesc' ).val( data.filedesc );
 
-				window.addTaskDialog.find( '#btn-next' )
-					.focus();
+				window.addTaskDialog.find( '#btn-next' ).focus();
 		}
 
 		switch ( window.addTaskStep ) {
@@ -395,14 +391,10 @@
 							id: window.newTaskTempID,
 							action: 'next',
 							step: window.addTaskStep,
-							url: window.addTaskDialog.find( '#url' )
-								.val(),
-							video: window.addTaskDialog.find( '#video' )
-								.is( ":checked" ),
-							audio: window.addTaskDialog.find( '#audio' )
-								.is( ":checked" ),
-							subtitles: window.addTaskDialog.find( '#subtitles' )
-								.is( ":checked" )
+							url: window.addTaskDialog.find( '#url' ).val(),
+							video: window.addTaskDialog.find( '#video' ).is( ":checked" ),
+							audio: window.addTaskDialog.find( '#audio' ).is( ":checked" ),
+							subtitles: window.addTaskDialog.find( '#subtitles' ).is( ":checked" )
 						};
 
 						video2commons.submitTask( postdata );
@@ -467,7 +459,7 @@
 	};
 
 	video2commons.removeTask = function( taskid ) {
-		video2commons.eventTask( taskid, 'removet' );
+		video2commons.eventTask( taskid, 'remove' );
 	};
 
 	video2commons.restartTask = function( taskid ) {
@@ -483,13 +475,11 @@
 					window.alert( data.error );
 				video2commons.checkStatus();
 			} );
-	}
+	};
 
-	video2commons.setText = function( arr ) {
-		$.each( arr, function( i, l ) {
-			window.addTaskDialog.find( '#' + l )
-				.text( data[ l ] );
-		} );
+	video2commons.setText = function( arr,data ) {
+		for (var i = 0; i < arr.length; i++) 
+    		window.addTaskDialog.find( '#' + arr[i] ).text( data[ arr[i] ] );
 	};
 
 	video2commons.getPostData = function( action ) {
@@ -545,7 +535,7 @@
 		window.addTaskDialog.find( '#btn-next' )
 			.addClass( 'disabled' )
 			.off();
-	}
+	};
 
 	$( document )
 		.ready( function() {
