@@ -28,7 +28,7 @@
 
 	video2commons.setupTables = function() {
 		$( '#content' )
-			.html( '<div class="container" id="content"><h4>Your tasks:</h4><table id="tasktable" class="table"><tbody></tbody></table></div>');
+			.html( '<div class="container" id="content"><h4>Your tasks:</h4><table id="tasktable" class="table"><tbody></tbody></table></div>' );
 		var addButton = $( '<input class="btn btn-primary btn-success btn-md" type="button" accesskey="n" value="Add task...">' );
 		$( '#content' )
 			.append( addButton );
@@ -259,7 +259,7 @@
 		if ( !window.addTaskDialog ) {
 			//addTask.html
 			window.addTaskDialog = $( '<div>' )
-				.load( 'html/addTask.html' );
+				.load( 'html/addTask.min.html' );
 
 			$( 'body' )
 				.append( window.addTaskDialog );
@@ -305,7 +305,8 @@
 	};
 
 	video2commons.setupAddTaskDialog = function( data ) {
-		window.addTaskDialog.find( '#dialog-spinner' ).hide();
+		window.addTaskDialog.find( '#dialog-spinner' )
+			.hide();
 		if ( data.step !== 'error' )
 			window.addTaskStep = data.step;
 		switch ( data.step ) {
@@ -324,7 +325,7 @@
 			case 'source':
 				//sourceForm.html
 				window.addTaskDialog.find( '.modal-body' )
-					.load( 'html/sourceForm.html' );
+					.load( 'html/sourceForm.min.html' );
 
 				window.addTaskDialog.find( '#url' )
 					.val( data.url )
@@ -337,9 +338,9 @@
 					.prop( 'checked', data.subtitles );
 				break;
 			case 'target':
+				//targetForm.html
 				window.addTaskDialog.find( '.modal-body' )
-					//targetForm.html
-					.load( 'html/targetForm.html' );
+					.load( 'html/targetForm.min.html' );
 
 				window.addTaskDialog.find( '#filename' )
 					.val( data.filename )
@@ -357,18 +358,20 @@
 			case 'confirm':
 				//confirmForm.html
 				window.addTaskDialog.find( '.modal-body' )
-					.load( 'html/confirmForm.html' );
+					.load( 'html/confirmForm.min.html' );
 				video2commons.setText( [
 					'url',
 					'extractor',
 					'keep',
 					'filename',
 					'format'
-				],data );
+				], data );
 
-				window.addTaskDialog.find( '#filedesc' ).val( data.filedesc );
+				window.addTaskDialog.find( '#filedesc' )
+					.val( data.filedesc );
 
-				window.addTaskDialog.find( '#btn-next' ).focus();
+				window.addTaskDialog.find( '#btn-next' )
+					.focus();
 		}
 
 		switch ( window.addTaskStep ) {
@@ -391,10 +394,14 @@
 							id: window.newTaskTempID,
 							action: 'next',
 							step: window.addTaskStep,
-							url: window.addTaskDialog.find( '#url' ).val(),
-							video: window.addTaskDialog.find( '#video' ).is( ":checked" ),
-							audio: window.addTaskDialog.find( '#audio' ).is( ":checked" ),
-							subtitles: window.addTaskDialog.find( '#subtitles' ).is( ":checked" )
+							url: window.addTaskDialog.find( '#url' )
+								.val(),
+							video: window.addTaskDialog.find( '#video' )
+								.is( ":checked" ),
+							audio: window.addTaskDialog.find( '#audio' )
+								.is( ":checked" ),
+							subtitles: window.addTaskDialog.find( '#subtitles' )
+								.is( ":checked" )
 						};
 
 						video2commons.submitTask( postdata );
@@ -477,9 +484,10 @@
 			} );
 	};
 
-	video2commons.setText = function( arr,data ) {
-		for (var i = 0; i < arr.length; i++) 
-    		window.addTaskDialog.find( '#' + arr[i] ).text( data[ arr[i] ] );
+	video2commons.setText = function( arr, data ) {
+		for ( var i = 0; i < arr.length; i++ )
+			window.addTaskDialog.find( '#' + arr[ i ] )
+			.text( data[ arr[ i ] ] );
 	};
 
 	video2commons.getPostData = function( action ) {
