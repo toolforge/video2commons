@@ -259,8 +259,12 @@
 		if ( !window.addTaskDialog ) {
 			//addTask.html
 			window.addTaskDialog = $( '<div>' )
-				.load( 'static/html/addTask.min.html' )
-				.find( '#addTaskDialog' );
+				.addClass( 'modal fade' )
+				.attr( {
+					id: 'addTaskDialog',
+					role: 'dialog'
+				} )
+				.load( 'static/html/addTask.min.html' );
 
 			$( 'body' )
 				.append( window.addTaskDialog );
