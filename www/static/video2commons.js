@@ -18,7 +18,7 @@
 				if ( !$( '#tasktable' )
 					.length ) video2commons.setupTables();
 				video2commons.populateResults( data );
-				window.lastStatusCheck = setTimeout( video2commons.checkStatus, ( data.hasrunning )?5000:60000 );
+				window.lastStatusCheck = setTimeout( video2commons.checkStatus, ( data.hasrunning ) ? 5000 : 60000 );
 			} )
 			.fail( function() {
 				$( '#content' )
@@ -177,7 +177,7 @@
 						row.append( $( '<td />' )
 							.attr( 'id', id + '-title' )
 							.attr( 'width', '30%' ) );
-						removebutton = $( removebuttonHTML)
+						removebutton = $( removebuttonHTML )
 							.attr( 'id', id + '-removebutton' )
 							.off()
 							.click( function() {
@@ -259,8 +259,9 @@
 	video2commons.addTask = function() {
 		if ( !window.addTaskDialog ) {
 			//addTask.html
-			window.addTaskDialog = $('<div>').load( 'html/addTask.html' );
-			
+			window.addTaskDialog = $( '<div>' )
+				.load( 'html/addTask.html' );
+
 			$( 'body' )
 				.append( window.addTaskDialog );
 
@@ -323,7 +324,7 @@
 					.show();
 				break;
 			case 'source':
-			    //sourceForm.html
+				//sourceForm.html
 				window.addTaskDialog.find( '.modal-body' )
 					.load( 'html/sourceForm.html' );
 
@@ -339,8 +340,8 @@
 				break;
 			case 'target':
 				window.addTaskDialog.find( '.modal-body' )
-				//targetForm.html
-					.load( 'html/targetForm.html');
+					//targetForm.html
+					.load( 'html/targetForm.html' );
 
 				window.addTaskDialog.find( '#filename' )
 					.val( data.filename )
@@ -356,16 +357,17 @@
 					.val( data.filedesc );
 				break;
 			case 'confirm':
-			    //confirmForm.html
-				window.addTaskDialog.find( '.modal-body' ).load( 'html/confirmForm.html');
-				video2commons.setText([
-				 'url',
-				 'extractor',
-				 'keep',
-				 'filename',
-				 'format'
-				]);
-				
+				//confirmForm.html
+				window.addTaskDialog.find( '.modal-body' )
+					.load( 'html/confirmForm.html' );
+				video2commons.setText( [
+					'url',
+					'extractor',
+					'keep',
+					'filename',
+					'format'
+				] );
+
 				window.addTaskDialog.find( '#filedesc' )
 					.val( data.filedesc );
 
@@ -384,7 +386,7 @@
 					.off();
 				window.addTaskDialog.find( '#btn-next' )
 					.click( function() {
-						
+
 						video2commons.disablePrevNext();
 
 						window.addTaskDialog.find( '#dialog-spinner' )
@@ -402,8 +404,8 @@
 							subtitles: window.addTaskDialog.find( '#subtitles' )
 								.is( ":checked" )
 						};
-						
-						video2commons.submitTask(postdata );
+
+						video2commons.submitTask( postdata );
 					} );
 				break;
 			case 'target':
@@ -414,9 +416,9 @@
 					.removeClass( 'disabled' )
 					.html( 'Next <span class="glyphicon glyphicon-chevron-right"></span>' )
 					.off();
-					
-				video2commons.addTargetDialog('prev');
-				video2commons.addTargetDialog('next');
+
+				video2commons.addTargetDialog( 'prev' );
+				video2commons.addTargetDialog( 'next' );
 				break;
 			case 'confirm':
 				window.addTaskDialog.find( '#btn-prev' )
@@ -429,7 +431,7 @@
 				window.addTaskDialog.find( '#btn-prev' )
 					.click( function() {
 						video2commons.disablePrevNext();
-							
+
 						window.addTaskDialog.find( '#dialog-spinner' )
 							.show();
 						var postdata = {
@@ -437,14 +439,14 @@
 							action: 'prev',
 							step: window.addTaskStep
 						};
-						
-						video2commons.submitTask(postdata);
+
+						video2commons.submitTask( postdata );
 
 					} );
 				window.addTaskDialog.find( '#btn-next' )
 					.click( function() {
 						video2commons.disablePrevNext();
-							
+
 						window.addTaskDialog.modal( "hide" );
 						$( '#tasktable > tbody' )
 							.append( '<tr id="task-new"><td colspan="3"><img alt="File:Ajax-loader.gif" src="//upload.wikimedia.org/wikipedia/commons/d/de/Ajax-loader.gif" data-file-width="32" data-file-height="32" height="32" width="32"></td></tr>' );
@@ -453,7 +455,7 @@
 							action: 'next',
 							step: window.addTaskStep
 						};
-						
+
 						$.post( '/video2commons/api/task/submit', postdata )
 							.done( function( data ) {
 								if ( data.error )
@@ -465,15 +467,15 @@
 	};
 
 	video2commons.removeTask = function( taskid ) {
-		video2commons.eventTask(taskid,'removet');
+		video2commons.eventTask( taskid, 'removet' );
 	};
 
 	video2commons.restartTask = function( taskid ) {
-		video2commons.eventTask(taskid,'restart');
+		video2commons.eventTask( taskid, 'restart' );
 	};
-	
-	video2commons.eventTask = function (taskid,eventName) {
-		$.post( '/video2commons/api/task/'+eventName, {
+
+	video2commons.eventTask = function( taskid, eventName ) {
+		$.post( '/video2commons/api/task/' + eventName, {
 				id: taskid
 			} )
 			.done( function( data ) {
@@ -482,14 +484,15 @@
 				video2commons.checkStatus();
 			} );
 	}
-	
+
 	video2commons.setText = function( arr ) {
-		$.each( arr, function( i, l ){
-		  window.addTaskDialog.find( '#'+l ).text( data[l] );
-		});
+		$.each( arr, function( i, l ) {
+			window.addTaskDialog.find( '#' + l )
+				.text( data[ l ] );
+		} );
 	};
-	
-	video2commons.getPostData = function(action) {
+
+	video2commons.getPostData = function( action ) {
 		return {
 			id: window.newTaskTempID,
 			action: action,
@@ -501,9 +504,9 @@
 			filedesc: window.addTaskDialog.find( '#filedesc' )
 				.val()
 		};
-    };
-	
-	video2commons.submitTask = function(postdata) {
+	};
+
+	video2commons.submitTask = function( postdata ) {
 		$.post( '/video2commons/api/task/submit', postdata )
 			.done( function( data ) {
 				if ( data.error )
@@ -511,10 +514,10 @@
 				video2commons.setupAddTaskDialog( data );
 			} );
 	};
-	
-	video2commons.addTargetDialog = function(type) {
-					
-		window.addTaskDialog.find( '#btn-'+type )
+
+	video2commons.addTargetDialog = function( type ) {
+
+		window.addTaskDialog.find( '#btn-' + type )
 			.click( function() {
 				window.addTaskDialog.find( '.modal-body #dialog-errorbox' )
 					.hide();
@@ -526,14 +529,14 @@
 					.off();
 				window.addTaskDialog.find( '#dialog-spinner' )
 					.show();
-				
-				this.submitTask(this.getPostData(type));
-				
+
+				this.submitTask( this.getPostData( type ) );
+
 			} );
 	};
-	
-	video2commons.disablePrevNext = function () {
-		
+
+	video2commons.disablePrevNext = function() {
+
 		window.addTaskDialog.find( '.modal-body #dialog-errorbox' )
 			.hide();
 		window.addTaskDialog.find( '#btn-prev' )
@@ -543,7 +546,7 @@
 			.addClass( 'disabled' )
 			.off();
 	}
-	
+
 	$( document )
 		.ready( function() {
 			video2commons.init();
