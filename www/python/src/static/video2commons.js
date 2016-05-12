@@ -284,23 +284,13 @@
 					} );
                 
          	
-				window.addTaskDialog.find( '#dialog-spinner' )
-							.hide();
-				window.addTaskDialog.find( '.modal-body' )
-					.html( '<center><img alt="File:Ajax-loader.gif" src="//upload.wikimedia.org/wikipedia/commons/d/de/Ajax-loader.gif" data-file-width="32" data-file-height="32" height="32" width="32"></center>' );
-
-				video2commons.newTask();
-				window.addTaskDialog.modal();
-
-				// HACK
-				window.addTaskDialog.on( 'shown.bs.modal', function() {
-					window.addTaskDialog.find( '#url' )
-						.focus();
-				} );
+				video2commons.openTaskModal();
 
          	});
 			
-		}
+		} else //It's not redundant because Ajax load
+
+		  video2commons.openTaskModal();
 	};
 
 	video2commons.newTask = function() {
@@ -574,6 +564,23 @@
 		window.addTaskDialog.find( '#btn-next' )
 			.addClass( 'disabled' )
 			.off();
+	};
+
+	video2commons.openTaskModal = function () {
+
+		window.addTaskDialog.find( '#dialog-spinner' )
+							.hide();
+				window.addTaskDialog.find( '.modal-body' )
+					.html( '<center><img alt="File:Ajax-loader.gif" src="//upload.wikimedia.org/wikipedia/commons/d/de/Ajax-loader.gif" data-file-width="32" data-file-height="32" height="32" width="32"></center>' );
+
+				video2commons.newTask();
+				window.addTaskDialog.modal();
+
+				// HACK
+				window.addTaskDialog.on( 'shown.bs.modal', function() {
+					window.addTaskDialog.find( '#url' )
+						.focus();
+				} );
 	};
 
 	$( document )
