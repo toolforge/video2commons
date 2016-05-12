@@ -259,7 +259,8 @@
 		if ( !window.addTaskDialog ) {
 			//addTask.html
 			window.addTaskDialog = $( '<div>' )
-				.load( 'static/html/addTask.min.html' );
+				.load( 'static/html/addTask.min.html' )
+				.find( '#addTaskDialog' );
 
 			$( 'body' )
 				.append( window.addTaskDialog );
