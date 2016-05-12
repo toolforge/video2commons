@@ -18,11 +18,7 @@
 				if ( !$( '#tasktable' )
 					.length ) video2commons.setupTables();
 				video2commons.populateResults( data );
-				if ( data.hasrunning ) {
-					window.lastStatusCheck = setTimeout( video2commons.checkStatus, 5000 );
-				} else {
-					window.lastStatusCheck = setTimeout( video2commons.checkStatus, 60000 );
-				}
+				window.lastStatusCheck = setTimeout( video2commons.checkStatus, ( data.hasrunning ) ? 5000 : 60000 );
 			} )
 			.fail( function() {
 				$( '#content' )
@@ -32,8 +28,7 @@
 
 	video2commons.setupTables = function() {
 		$( '#content' )
-			.html( '<div class="container" id="content"><h4>Your tasks:</h4>\
-			<table id="tasktable" class="table"><tbody></tbody></table></div>' );
+			.html( '<div class="container" id="content"><h4>Your tasks:</h4><table id="tasktable" class="table"><tbody></tbody></table></div>' );
 		var addButton = $( '<input class="btn btn-primary btn-success btn-md" type="button" accesskey="n" value="Add task...">' );
 		$( '#content' )
 			.append( addButton );
@@ -105,6 +100,8 @@
 			}
 
 			var removebutton; // to make JSHint happy
+			var removebuttonHTML = '<button type="button" class="btn btn-danger btn-xs pull-right"><span class="glyphicon glyphicon-trash"></span> Remove</button>';
+			var restartbuttonHTML = '<button type="button" class="btn btn-warning btn-xs pull-right"><span class="glyphicon glyphicon-repeat"></span> Restart</button>';
 
 			if ( setup ) {
 				switch ( val.status ) {
@@ -129,7 +126,7 @@
 						row.append( $( '<td />' )
 							.attr( 'id', id + '-title' )
 							.attr( 'width', '30%' ) );
-						removebutton = $( '<button type="button" class="btn btn-danger btn-xs pull-right"><span class="glyphicon glyphicon-trash"></span> Remove</button>' )
+						removebutton = $( removebuttonHTML )
 							.attr( 'id', id + '-removebutton' )
 							.off()
 							.click( function() {
@@ -152,7 +149,7 @@
 						row.append( $( '<td />' )
 							.attr( 'id', id + '-title' )
 							.attr( 'width', '30%' ) );
-						removebutton = $( '<button type="button" class="btn btn-danger btn-xs pull-right"><span class="glyphicon glyphicon-trash"></span> Remove</button>' )
+						removebutton = $( removebuttonHTML )
 							.attr( 'id', id + '-removebutton' )
 							.off()
 							.click( function() {
@@ -161,7 +158,7 @@
 								video2commons.removeTask( video2commons.getTaskIDFromDOMID( $( this )
 									.attr( 'id' ) ) );
 							} );
-						var restartbutton = $( '<button type="button" class="btn btn-warning btn-xs pull-right"><span class="glyphicon glyphicon-repeat"></span> Restart</button>' )
+						var restartbutton = $( restartbuttonHTML )
 							.attr( 'id', id + '-restartbutton' )
 							.hide();
 						row.append( $( '<td />' )
@@ -179,7 +176,7 @@
 						row.append( $( '<td />' )
 							.attr( 'id', id + '-title' )
 							.attr( 'width', '30%' ) );
-						removebutton = $( '<button type="button" class="btn btn-danger btn-xs pull-right"><span class="glyphicon glyphicon-trash"></span> Remove</button>' )
+						removebutton = $( removebuttonHTML )
 							.attr( 'id', id + '-removebutton' )
 							.off()
 							.click( function() {
@@ -260,24 +257,10 @@
 
 	video2commons.addTask = function() {
 		if ( !window.addTaskDialog ) {
-			window.addTaskDialog = $( '\n\
-<div class="modal fade" id="addTaskDialog" role="dialog">\n\
-  <div class="modal-dialog">\n\
-    <div class="modal-content">\n\
-      <div class="modal-header">\n\
-        <button type="button" class="close" data-dismiss="modal">&times;</button>\n\
-        <h4><span class="glyphicon glyphicon-plus"></span> Add Task</h4>\n\
-      </div>\n\
-      <div class="modal-body" style="padding:40px 50px;"></div>\n\
-      <div class="modal-footer">\n\
-        <button type="button" class="btn btn-danger pull-left" data-dismiss="modal"><span class="glyphicon glyphicon-remove"></span> Cancel</button>\n\
-        <button type="submit" class="btn btn-success pull-right" id="btn-next">Next <span class="glyphicon glyphicon-chevron-right"></span></button>\n\
-        <button type="button" class="btn btn-warning pull-right disabled" id="btn-prev"><span class="glyphicon glyphicon-chevron-left"></span> Back</button>\n\
-        <img class="pull-right" alt="File:Ajax-loader.gif" src="//upload.wikimedia.org/wikipedia/commons/d/de/Ajax-loader.gif" data-file-width="32" data-file-height="32" height="32" width="32" id="dialog-spinner">\n\
-      </div>\n\
-    </div>\n\
-  </div>\n\
-</div>' );
+			//addTask.html
+			window.addTaskDialog = $( '<div>' )
+				.load( 'html/addTask.min.html' );
+
 			$( 'body' )
 				.append( window.addTaskDialog );
 
@@ -340,33 +323,9 @@
 					.show();
 				break;
 			case 'source':
+				//sourceForm.html
 				window.addTaskDialog.find( '.modal-body' )
-					.html( '\n\
-          <form role="form">\n\
-            <div class="form-group">\n\
-              <label for="url"><span class="glyphicon glyphicon-import"></span> URL</label>\n\
-              <input type="text" class="form-control" id="url" placeholder="http://example.com/examplevideo">\n\
-            </div>\n\
-            <div class="checkbox">\n\
-              <label><input type="checkbox" value="" checked id="video">Keep video</label>\n\
-            </div>\n\
-            <div class="checkbox">\n\
-              <label><input type="checkbox" value="" checked id="audio">Keep audio</label>\n\
-            </div>\n\
-            <div class="checkbox">\n\
-              <label><input type="checkbox" value="" checked id="subtitles">Import subtitles</label>\n\
-            </div>\n\
-            <div class="alert alert-info">\n\
-              Note:\n\
-              <ul>\n\
-                <li>Playlists will not be processed correctly. Some sites (such as Youku and Comedy Central) make use of multipart videos, interpreted as playlists, and will not be processed correctly either.</li>\n\
-                <li>If the media does not include video or audio tracks, please uncheck the corresponding checkboxes; otherwise conversion may fail, even if the format is free.</li>\n\
-                <li>If "Import subtitles" is checked, subtitles will be imported, excluding auto-generated ones.</li>\n\
-                <li>What if I need to convert and upload a file on my computer? Well, while NFS and Grid engine is still here, you can use <a href="//tools.wmflabs.org/videoconvert/">videoconvert</a></li> tool.\n\
-              </ul>\n\
-              <b>Important note:</b> Only upload <a href="//commons.wikimedia.org/wiki/Commons:Licensing#Acceptable_licenses" title="Commons:Licensing">freely licensed</a> or <a href="//commons.wikimedia.org/wiki/Commons:Licensing#Material_in_the_public_domain" title="Commons:Licensing">public domain</a> content. <a href="//commons.wikimedia.org/wiki/Commons:FU" title="Commons:FU" class="mw-redirect">Fair use</a> is not allowed on commons.\n\
-            </div>\n\
-          </form>' );
+					.load( 'html/sourceForm.min.html' );
 
 				window.addTaskDialog.find( '#url' )
 					.val( data.url )
@@ -379,28 +338,9 @@
 					.prop( 'checked', data.subtitles );
 				break;
 			case 'target':
+				//targetForm.html
 				window.addTaskDialog.find( '.modal-body' )
-					.html( '\n\
-          <form role="form">\n\
-            <div class="form-group">\n\
-              <label for="filename"><span class="glyphicon glyphicon-export"></span> Filename</label>\n\
-              <div class="form-inline">\n\
-                <input type="text" class="form-control" id="filename" placeholder="Example" size="30">\n\
-                <p class="form-control-static">.</p>\n\
-                <select class="form-control" id="format" style="max-width:40%;"></select>\n\
-              </div>\n\
-            </div>\n\
-            <div class="form-group">\n\
-              <label for="filedesc"><span class="glyphicon glyphicon-list"></span> File description page:</label>\n\
-              <textarea class="form-control" rows="10" id="filedesc"></textarea>\n\
-            </div>\n\
-            <div class="alert alert-info">\n\
-              Note:\n\
-              <ul>\n\
-                <li>The file extension set above is used if and only if the video is in a non-free format, which transcoding is required. Videos in free formats will keep their extensions.</li>\n\
-              </ul>\n\
-            </div>\n\
-          </form>' );
+					.load( 'html/targetForm.min.html' );
 
 				window.addTaskDialog.find( '#filename' )
 					.val( data.filename )
@@ -416,63 +356,17 @@
 					.val( data.filedesc );
 				break;
 			case 'confirm':
+				//confirmForm.html
 				window.addTaskDialog.find( '.modal-body' )
-					.html( '\n\
-          <form class="form-horizontal" role="form">\n\
-            <div class="form-group">\n\
-              <label class="control-label col-sm-2" for="url">URL:</label>\n\
-              <div class="col-sm-10">\n\
-                <p class="form-control-static" id="url"></p>\n\
-              </div>\n\
-            </div>\n\
-            <div class="form-group">\n\
-              <label class="control-label col-sm-2" for="extractor">Extractor:</label>\n\
-              <div class="col-sm-10">\n\
-                <p class="form-control-static" id="extractor"></p>\n\
-              </div>\n\
-            </div>\n\
-            <div class="form-group">\n\
-              <label class="control-label col-sm-2" for="keep">Keep:</label>\n\
-              <div class="col-sm-10">\n\
-                <p class="form-control-static" id="keep"></p>\n\
-              </div>\n\
-            </div>\n\
-            <div class="form-group">\n\
-              <label class="control-label col-sm-2" for="filename">Target filename:</label>\n\
-              <div class="col-sm-10">\n\
-                <p class="form-control-static" id="filename"></p>\n\
-              </div>\n\
-            </div>\n\
-            <div class="form-group">\n\
-              <label class="control-label col-sm-2" for="format">Transcoding format:</label>\n\
-              <div class="col-sm-10">\n\
-                <p class="form-control-static" id="format"></p>\n\
-              </div>\n\
-            </div>\n\
-            <div class="form-group">\n\
-              <label class="control-label col-sm-2" for="filedesc">File description page:</label>\n\
-              <div class="col-sm-10">\n\
-                <textarea class="form-control" rows="5" id="filedesc" readonly="readonly"></textarea>\n\
-              </div>\n\
-            </div>\n\
-            <div class="alert alert-info">\n\
-              Note:\n\
-              <ul>\n\
-                <li>Please confirm the task or click "Back" to change the parameters. By clicking "Confirm", the task will be submitted and executed. Due to technical restrictions, a task cannot be easily aborted once it is submitted.</li>\n\
-              </ul>\n\
-            </div>\n\
-          </form>' );
+					.load( 'html/confirmForm.min.html' );
+				video2commons.setText( [
+					'url',
+					'extractor',
+					'keep',
+					'filename',
+					'format'
+				], data );
 
-				window.addTaskDialog.find( '#url' )
-					.text( data.url );
-				window.addTaskDialog.find( '#extractor' )
-					.text( data.extractor );
-				window.addTaskDialog.find( '#keep' )
-					.text( data.keep );
-				window.addTaskDialog.find( '#filename' )
-					.text( data.filename );
-				window.addTaskDialog.find( '#format' )
-					.text( data.format );
 				window.addTaskDialog.find( '#filedesc' )
 					.val( data.filedesc );
 
@@ -491,14 +385,9 @@
 					.off();
 				window.addTaskDialog.find( '#btn-next' )
 					.click( function() {
-						window.addTaskDialog.find( '.modal-body #dialog-errorbox' )
-							.hide();
-						window.addTaskDialog.find( '#btn-prev' )
-							.addClass( 'disabled' )
-							.off();
-						window.addTaskDialog.find( '#btn-next' )
-							.addClass( 'disabled' )
-							.off();
+
+						video2commons.disablePrevNext();
+
 						window.addTaskDialog.find( '#dialog-spinner' )
 							.show();
 						var postdata = {
@@ -514,10 +403,8 @@
 							subtitles: window.addTaskDialog.find( '#subtitles' )
 								.is( ":checked" )
 						};
-						$.post( '/video2commons/api/task/submit', postdata )
-							.done( function( data ) {
-								video2commons.setupAddTaskDialog( data );
-							} );
+
+						video2commons.submitTask( postdata );
 					} );
 				break;
 			case 'target':
@@ -528,62 +415,9 @@
 					.removeClass( 'disabled' )
 					.html( 'Next <span class="glyphicon glyphicon-chevron-right"></span>' )
 					.off();
-				window.addTaskDialog.find( '#btn-prev' )
-					.click( function() {
-						window.addTaskDialog.find( '.modal-body #dialog-errorbox' )
-							.hide();
-						window.addTaskDialog.find( '#btn-prev' )
-							.addClass( 'disabled' )
-							.off();
-						window.addTaskDialog.find( '#btn-next' )
-							.addClass( 'disabled' )
-							.off();
-						window.addTaskDialog.find( '#dialog-spinner' )
-							.show();
-						var postdata = {
-							id: window.newTaskTempID,
-							action: 'prev',
-							step: window.addTaskStep,
-							filename: window.addTaskDialog.find( '#filename' )
-								.val(),
-							format: window.addTaskDialog.find( '#format' )
-								.val(),
-							filedesc: window.addTaskDialog.find( '#filedesc' )
-								.val()
-						};
-						$.post( '/video2commons/api/task/submit', postdata )
-							.done( function( data ) {
-								video2commons.setupAddTaskDialog( data );
-							} );
-					} );
-				window.addTaskDialog.find( '#btn-next' )
-					.click( function() {
-						window.addTaskDialog.find( '.modal-body #dialog-errorbox' )
-							.hide();
-						window.addTaskDialog.find( '#btn-prev' )
-							.addClass( 'disabled' )
-							.off();
-						window.addTaskDialog.find( '#btn-next' )
-							.addClass( 'disabled' )
-							.off();
-						window.addTaskDialog.find( '#dialog-spinner' )
-							.show();
-						var postdata = {
-							id: window.newTaskTempID,
-							action: 'next',
-							step: window.addTaskStep,
-							filename: window.addTaskDialog.find( '#filename' )
-								.val(),
-							format: window.addTaskDialog.find( '#format' )
-								.val(),
-							filedesc: window.addTaskDialog.find( '#filedesc' )
-								.val()
-						};
-						$.post( '/video2commons/api/task/submit', postdata )
-							.done( function( data ) {
-								video2commons.setupAddTaskDialog( data );
-							} );
-					} );
+
+				video2commons.addTargetDialog( 'prev' );
+				video2commons.addTargetDialog( 'next' );
 				break;
 			case 'confirm':
 				window.addTaskDialog.find( '#btn-prev' )
@@ -595,14 +429,8 @@
 					.off();
 				window.addTaskDialog.find( '#btn-prev' )
 					.click( function() {
-						window.addTaskDialog.find( '.modal-body #dialog-errorbox' )
-							.hide();
-						window.addTaskDialog.find( '#btn-prev' )
-							.addClass( 'disabled' )
-							.off();
-						window.addTaskDialog.find( '#btn-next' )
-							.addClass( 'disabled' )
-							.off();
+						video2commons.disablePrevNext();
+
 						window.addTaskDialog.find( '#dialog-spinner' )
 							.show();
 						var postdata = {
@@ -610,21 +438,14 @@
 							action: 'prev',
 							step: window.addTaskStep
 						};
-						$.post( '/video2commons/api/task/submit', postdata )
-							.done( function( data ) {
-								video2commons.setupAddTaskDialog( data );
-							} );
+
+						video2commons.submitTask( postdata );
+
 					} );
 				window.addTaskDialog.find( '#btn-next' )
 					.click( function() {
-						window.addTaskDialog.find( '.modal-body #dialog-errorbox' )
-							.hide();
-						window.addTaskDialog.find( '#btn-prev' )
-							.addClass( 'disabled' )
-							.off();
-						window.addTaskDialog.find( '#btn-next' )
-							.addClass( 'disabled' )
-							.off();
+						video2commons.disablePrevNext();
+
 						window.addTaskDialog.modal( "hide" );
 						$( '#tasktable > tbody' )
 							.append( '<tr id="task-new"><td colspan="3"><img alt="File:Ajax-loader.gif" src="//upload.wikimedia.org/wikipedia/commons/d/de/Ajax-loader.gif" data-file-width="32" data-file-height="32" height="32" width="32"></td></tr>' );
@@ -633,6 +454,7 @@
 							action: 'next',
 							step: window.addTaskStep
 						};
+
 						$.post( '/video2commons/api/task/submit', postdata )
 							.done( function( data ) {
 								if ( data.error )
@@ -644,7 +466,15 @@
 	};
 
 	video2commons.removeTask = function( taskid ) {
-		$.post( '/video2commons/api/task/remove', {
+		video2commons.eventTask( taskid, 'remove' );
+	};
+
+	video2commons.restartTask = function( taskid ) {
+		video2commons.eventTask( taskid, 'restart' );
+	};
+
+	video2commons.eventTask = function( taskid, eventName ) {
+		$.post( '/video2commons/api/task/' + eventName, {
 				id: taskid
 			} )
 			.done( function( data ) {
@@ -654,15 +484,65 @@
 			} );
 	};
 
-	video2commons.restartTask = function( taskid ) {
-		$.post( '/video2commons/api/task/restart', {
-				id: taskid
-			} )
+	video2commons.setText = function( arr, data ) {
+		for ( var i = 0; i < arr.length; i++ )
+			window.addTaskDialog.find( '#' + arr[ i ] )
+			.text( data[ arr[ i ] ] );
+	};
+
+	video2commons.getPostData = function( action ) {
+		return {
+			id: window.newTaskTempID,
+			action: action,
+			step: window.addTaskStep,
+			filename: window.addTaskDialog.find( '#filename' )
+				.val(),
+			format: window.addTaskDialog.find( '#format' )
+				.val(),
+			filedesc: window.addTaskDialog.find( '#filedesc' )
+				.val()
+		};
+	};
+
+	video2commons.submitTask = function( postdata ) {
+		$.post( '/video2commons/api/task/submit', postdata )
 			.done( function( data ) {
 				if ( data.error )
 					window.alert( data.error );
-				video2commons.checkStatus();
+				video2commons.setupAddTaskDialog( data );
 			} );
+	};
+
+	video2commons.addTargetDialog = function( type ) {
+
+		window.addTaskDialog.find( '#btn-' + type )
+			.click( function() {
+				window.addTaskDialog.find( '.modal-body #dialog-errorbox' )
+					.hide();
+				window.addTaskDialog.find( '#btn-prev' )
+					.addClass( 'disabled' )
+					.off();
+				window.addTaskDialog.find( '#btn-next' )
+					.addClass( 'disabled' )
+					.off();
+				window.addTaskDialog.find( '#dialog-spinner' )
+					.show();
+
+				this.submitTask( this.getPostData( type ) );
+
+			} );
+	};
+
+	video2commons.disablePrevNext = function() {
+
+		window.addTaskDialog.find( '.modal-body #dialog-errorbox' )
+			.hide();
+		window.addTaskDialog.find( '#btn-prev' )
+			.addClass( 'disabled' )
+			.off();
+		window.addTaskDialog.find( '#btn-next' )
+			.addClass( 'disabled' )
+			.off();
 	};
 
 	$( document )
