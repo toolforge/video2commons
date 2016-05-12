@@ -70,12 +70,6 @@ def check_banned():
     return None
 
 
-@app.route('/statics/<path:path>')
-def static_url(path):
-    """HACK: Get the url for static files."""
-    return redirect('//tools-static.wmflabs.org/video2commons/' + path, 301)
-
-
 @app.route('/')
 def main():
     """Main page."""
