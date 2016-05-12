@@ -86,7 +86,7 @@ def main():
 
 #Only for client test purposes
 @app.route('/test')
-def main():
+def mainTest():
     """Main page."""
     banned = check_banned()
     if banned:
