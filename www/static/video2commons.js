@@ -259,7 +259,7 @@
 		if ( !window.addTaskDialog ) {
 			//addTask.html
 			window.addTaskDialog = $( '<div>' )
-				.load( 'html/addTask.min.html' );
+				.load( 'static/html/addTask.min.html' );
 
 			$( 'body' )
 				.append( window.addTaskDialog );
@@ -325,7 +325,7 @@
 			case 'source':
 				//sourceForm.html
 				window.addTaskDialog.find( '.modal-body' )
-					.load( 'html/sourceForm.min.html' );
+					.load( 'static/html/sourceForm.min.html' );
 
 				window.addTaskDialog.find( '#url' )
 					.val( data.url )
@@ -340,7 +340,7 @@
 			case 'target':
 				//targetForm.html
 				window.addTaskDialog.find( '.modal-body' )
-					.load( 'html/targetForm.min.html' );
+					.load( 'static/html/targetForm.min.html' );
 
 				window.addTaskDialog.find( '#filename' )
 					.val( data.filename )
@@ -358,7 +358,7 @@
 			case 'confirm':
 				//confirmForm.html
 				window.addTaskDialog.find( '.modal-body' )
-					.load( 'html/confirmForm.min.html' );
+					.load( 'static/html/confirmForm.min.html' );
 				video2commons.setText( [
 					'url',
 					'extractor',
