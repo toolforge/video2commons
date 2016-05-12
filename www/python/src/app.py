@@ -84,6 +84,20 @@ def main():
 
     return render_template('main.min.html', loggedin=True)
 
+#Only for client test purposes
+@app.route('/test')
+def main():
+    """Main page."""
+    banned = check_banned()
+    if banned:
+        return render_template('banned.min.html', reason=banned)
+
+    try:
+        dologin()
+    except:
+        return render_template('mainTest.html', loggedin=False)
+
+    return render_template('mainTest.html', loggedin=True)
 
 def dologin():
     """Attempt to login."""
