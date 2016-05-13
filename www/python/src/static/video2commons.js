@@ -258,39 +258,38 @@
 	video2commons.addTask = function() {
 		if ( !window.addTaskDialog ) {
 			//addTask.html
-			$.get('static/html/addTask.min.html')
-             .success(function(data) {
-             	window.addTaskDialog = $( '<div>' )
-             	                        .html(data);
-             	                        
-     	        window.addTaskDialog.addClass( 'modal fade' )
-									.attr( {
-										id: 'addTaskDialog',
-										role: 'dialog'
-									} );
-				$( 'body' )
-					.append( window.addTaskDialog );
+			$.get( 'static/html/addTask.min.html' )
+				.success( function( data ) {
+					window.addTaskDialog = $( '<div>' )
+						.html( data );
 
-			    // HACK
-				window.addTaskDialog.find( '.modal-body' )
-					.keypress( function( e ) {
-						if ( ( e.which || e.keyCode ) === 13 &&
-							!( $( ':focus' )
-								.is( 'textarea' ) ) ) {
-							window.addTaskDialog.find( '.modal-footer #btn-next' )
-								.click();
-							e.preventDefault();
-						}
-					} );
-                
-         	
-				video2commons.openTaskModal();
+					window.addTaskDialog.addClass( 'modal fade' )
+						.attr( {
+							id: 'addTaskDialog',
+							role: 'dialog'
+						} );
+					$( 'body' )
+						.append( window.addTaskDialog );
 
-         	});
-			
-		} else //It's not redundant because Ajax load
+					// HACK
+					window.addTaskDialog.find( '.modal-body' )
+						.keypress( function( e ) {
+							if ( ( e.which || e.keyCode ) === 13 &&
+								!( $( ':focus' )
+									.is( 'textarea' ) ) ) {
+								window.addTaskDialog.find( '.modal-footer #btn-next' )
+									.click();
+								e.preventDefault();
+							}
+						} );
 
-		  video2commons.openTaskModal();
+
+					video2commons.openTaskModal();
+
+				} );
+
+		} else // It's not redundant because Ajax load
+			video2commons.openTaskModal();
 	};
 
 	video2commons.newTask = function() {
@@ -325,8 +324,8 @@
 				break;
 			case 'source':
 				//sourceForm.html
-				$.get('static/html/sourceForm.min.html')
-             		.success(function(dataHtml) {
+				$.get( 'static/html/sourceForm.min.html' )
+					.success( function( dataHtml ) {
 						window.addTaskDialog.find( '.modal-body' )
 							.html( dataHtml );
 
@@ -339,60 +338,60 @@
 							.prop( 'checked', data.audio );
 						window.addTaskDialog.find( '#subtitles' )
 							.prop( 'checked', data.subtitles );
-						});
+					} );
 				break;
 			case 'target':
 				//targetForm.html
-				
 
-				$.get('static/html/targetForm.min.html')
-             		.success(function(dataHtml) {
 
-             		window.addTaskDialog.find( '.modal-body' )
-					.html( dataHtml );
+				$.get( 'static/html/targetForm.min.html' )
+					.success( function( dataHtml ) {
 
-					window.addTaskDialog.find( '#filename' )
-					.val( data.filename )
-					.focus();
-					$.each( data.formats, function( i, desc ) {
+						window.addTaskDialog.find( '.modal-body' )
+							.html( dataHtml );
+
+						window.addTaskDialog.find( '#filename' )
+							.val( data.filename )
+							.focus();
+						$.each( data.formats, function( i, desc ) {
+							window.addTaskDialog.find( '#format' )
+								.append( $( '<option></option>' )
+									.text( desc ) );
+						} );
 						window.addTaskDialog.find( '#format' )
-							.append( $( '<option></option>' )
-								.text( desc ) );
+							.val( data.format );
+						window.addTaskDialog.find( '#filedesc' )
+							.val( data.filedesc );
 					} );
-					window.addTaskDialog.find( '#format' )
-						.val( data.format );
-					window.addTaskDialog.find( '#filedesc' )
-						.val( data.filedesc );
-             	});
 
-				
+
 				break;
 			case 'confirm':
 				//confirmForm.html
-				
 
-				$.get('static/html/confirmForm.min.html')
-				    .success(function(dataHtml) {
 
-				    window.addTaskDialog.find( '.modal-body' )
-					.html( dataHtml );
+				$.get( 'static/html/confirmForm.min.html' )
+					.success( function( dataHtml ) {
 
-					video2commons.setText( [
-					'url',
-					'extractor',
-					'keep',
-					'filename',
-					'format'
-					], data );
+						window.addTaskDialog.find( '.modal-body' )
+							.html( dataHtml );
 
-					window.addTaskDialog.find( '#filedesc' )
-						.val( data.filedesc );
+						video2commons.setText( [
+							'url',
+							'extractor',
+							'keep',
+							'filename',
+							'format'
+						], data );
 
-					window.addTaskDialog.find( '#btn-next' )
-						.focus();
-				 });
+						window.addTaskDialog.find( '#filedesc' )
+							.val( data.filedesc );
 
-				
+						window.addTaskDialog.find( '#btn-next' )
+							.focus();
+					} );
+
+
 		}
 
 		switch ( window.addTaskStep ) {
@@ -566,21 +565,21 @@
 			.off();
 	};
 
-	video2commons.openTaskModal = function () {
+	video2commons.openTaskModal = function() {
 
 		window.addTaskDialog.find( '#dialog-spinner' )
-							.hide();
-				window.addTaskDialog.find( '.modal-body' )
-					.html( '<center><img alt="File:Ajax-loader.gif" src="//upload.wikimedia.org/wikipedia/commons/d/de/Ajax-loader.gif" data-file-width="32" data-file-height="32" height="32" width="32"></center>' );
+			.hide();
+		window.addTaskDialog.find( '.modal-body' )
+			.html( '<center><img alt="File:Ajax-loader.gif" src="//upload.wikimedia.org/wikipedia/commons/d/de/Ajax-loader.gif" data-file-width="32" data-file-height="32" height="32" width="32"></center>' );
 
-				video2commons.newTask();
-				window.addTaskDialog.modal();
+		video2commons.newTask();
+		window.addTaskDialog.modal();
 
-				// HACK
-				window.addTaskDialog.on( 'shown.bs.modal', function() {
-					window.addTaskDialog.find( '#url' )
-						.focus();
-				} );
+		// HACK
+		window.addTaskDialog.on( 'shown.bs.modal', function() {
+			window.addTaskDialog.find( '#url' )
+				.focus();
+		} );
 	};
 
 	$( document )
