@@ -3,6 +3,9 @@
 
 	var video2commons = window.video2commons = {};
 
+	var removebuttonHTML = '<button type="button" class="btn btn-danger btn-xs pull-right"><span class="glyphicon glyphicon-trash"></span> Remove</button>';
+	var restartbuttonHTML = '<button type="button" class="btn btn-warning btn-xs pull-right"><span class="glyphicon glyphicon-repeat"></span> Restart</button>';
+
 	video2commons.init = function() {
 		$( '#content' )
 			.html( '<center><img alt="File:Ajax-loader.gif" src="//upload.wikimedia.org/wikipedia/commons/d/de/Ajax-loader.gif" data-file-width="32" data-file-height="32" height="32" width="32">&nbsp;&nbsp;LOADING...</center>' );
@@ -100,9 +103,7 @@
 			}
 
 			var removebutton; // to make JSHint happy
-			var removebuttonHTML = '<button type="button" class="btn btn-danger btn-xs pull-right"><span class="glyphicon glyphicon-trash"></span> Remove</button>';
-			var restartbuttonHTML = '<button type="button" class="btn btn-warning btn-xs pull-right"><span class="glyphicon glyphicon-repeat"></span> Restart</button>';
-
+			
 			if ( setup ) {
 				switch ( val.status ) {
 					case 'progress':
@@ -123,80 +124,41 @@
 						row.removeClass( 'success danger' );
 						break;
 					case 'done':
-						row.append( $( '<td />' )
-							.attr( 'id', id + '-title' )
-							.attr( 'width', '30%' ) );
-						removebutton = $( removebuttonHTML )
-							.attr( 'id', id + '-removebutton' )
-							.off()
-							.click( function() {
-								$( this )
-									.addClass( 'disabled' );
-								video2commons.removeTask( video2commons.getTaskIDFromDOMID( $( this )
-									.attr( 'id' ) ) );
-							} );
-						row.append( $( '<td />' )
-								.attr( 'id', id + '-status' )
-								.attr( 'width', '70%' )
-								.attr( 'colspan', '2' )
-								.append( $( '<span />' )
-									.attr( 'id', id + '-statustext' ) )
-								.append( removebutton ) )
-							.removeClass( 'danger' )
-							.addClass( 'success' );
+						
+						removebutton = video2commons.removebutton(this,id);
+						video2commons.appendButtoms(
+						      			[removebutton],
+						      			row,
+						      			['danger','success'],
+						      			id
+						      );
 						break;
 					case 'fail':
-						row.append( $( '<td />' )
-							.attr( 'id', id + '-title' )
-							.attr( 'width', '30%' ) );
-						removebutton = $( removebuttonHTML )
-							.attr( 'id', id + '-removebutton' )
-							.off()
-							.click( function() {
-								$( this )
-									.addClass( 'disabled' );
-								video2commons.removeTask( video2commons.getTaskIDFromDOMID( $( this )
-									.attr( 'id' ) ) );
-							} );
+					
+						removebutton = video2commons.removebutton(this,id);
 						var restartbutton = $( restartbuttonHTML )
 							.attr( 'id', id + '-restartbutton' )
 							.hide();
-						row.append( $( '<td />' )
-								.attr( 'id', id + '-status' )
-								.attr( 'width', '70%' )
-								.attr( 'colspan', '2' )
-								.append( $( '<span />' )
-									.attr( 'id', id + '-statustext' ) )
-								.append( removebutton )
-								.append( restartbutton ) )
-							.removeClass( 'success' )
-							.addClass( 'danger' );
+
+						video2commons.appendButtoms(
+						      			[removebutton,restartbutton],
+						      			row,
+						      			['success','danger'],
+						      			id
+						     );
 						break;
 					case 'needssu':
-						row.append( $( '<td />' )
-							.attr( 'id', id + '-title' )
-							.attr( 'width', '30%' ) );
-						removebutton = $( removebuttonHTML )
-							.attr( 'id', id + '-removebutton' )
-							.off()
-							.click( function() {
-								$( this )
-									.addClass( 'disabled' );
-								video2commons.removeTask( video2commons.getTaskIDFromDOMID( $( this )
-									.attr( 'id' ) ) );
-							} );
+						
+						removebutton = video2commons.removebutton(this,id);
 						var uploadlink = $( '<a>request a server-side upload</a>' )
 							.attr( 'href', val.url );
-						row.append( $( '<td />' )
-								.attr( 'id', id + '-status' )
-								.attr( 'width', '70%' )
-								.attr( 'colspan', '2' )
-								.append( $( '<span />' )
-									.attr( 'id', id + '-statustext' )
-									.append( uploadlink ) )
-								.append( removebutton ) )
-							.removeClass( 'success' )
-							.addClass( 'danger' );
+
+						video2commons.appendButtoms(
+							  	        [uploadlink,removebutton],
+							  	        row,
+							  	        ['success','danger'],
+							  	        id
+							  );
 						break;
 				}
 
@@ -563,6 +525,48 @@
 		window.addTaskDialog.find( '#btn-next' )
 			.addClass( 'disabled' )
 			.off();
+	};
+
+	video2commons.removeButtomClick = function(obj) {
+	 	return function() {
+			$( obj )
+				.addClass( 'disabled' );
+			video2commons.removeTask( video2commons.getTaskIDFromDOMID( $( obj )
+				.attr( 'id' ) ) );
+		} 
+	};
+
+	video2commons.removebutton = function(obj,id) {
+		return $( removebuttonHTML )
+							.attr( 'id', id + '-removebutton' )
+							.off()
+							.click( video2commons.removeButtomClick(obj) );
+	};
+
+	video2commons.appendButtoms = function (buttomArray,row,type,id) {
+
+		row.append( $( '<td />' )
+							.attr( 'id', id + '-title' )
+							.attr( 'width', '30%' ) );
+
+		var butoms = $( '<td />' )
+				.attr( 'id', id + '-status' )
+				.attr( 'width', '70%' )
+				.attr( 'colspan', '2' )
+				.append( $( '<span />' )
+					.attr( 'id', id + '-statustext' ) )
+				.append( buttomArray[0]);
+
+		for ( var i = 1; i < buttomArray.length; i++ )
+
+				butoms.append( buttomArray[i] );
+
+		row.append( butoms )
+			.removeClass( type[0] )
+			.addClass( type[1] );
+
+		//return row;
+
 	};
 
 	video2commons.openTaskModal = function() {
