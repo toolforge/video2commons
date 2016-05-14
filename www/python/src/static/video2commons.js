@@ -103,7 +103,7 @@
 			}
 
 			var removebutton; // to make JSHint happy
-			
+
 			if ( setup ) {
 				switch ( val.status ) {
 					case 'progress':
@@ -124,41 +124,38 @@
 						row.removeClass( 'success danger' );
 						break;
 					case 'done':
-						
-						removebutton = video2commons.removebutton(this,id);
+
+						removebutton = video2commons.removebutton( this, id );
 						video2commons.appendButtoms(
-						      			[removebutton],
-						      			row,
-						      			['danger','success'],
-						      			id
-						      );
+							[ removebutton ],
+							row, [ 'danger', 'success' ],
+							id
+						);
 						break;
 					case 'fail':
-					
-						removebutton = video2commons.removebutton(this,id);
+
+						removebutton = video2commons.removebutton( this, id );
 						var restartbutton = $( restartbuttonHTML )
 							.attr( 'id', id + '-restartbutton' )
 							.hide();
 
 						video2commons.appendButtoms(
-						      			[removebutton,restartbutton],
-						      			row,
-						      			['success','danger'],
-						      			id
-						     );
+							[ removebutton, restartbutton ],
+							row, [ 'success', 'danger' ],
+							id
+						);
 						break;
 					case 'needssu':
-						
-						removebutton = video2commons.removebutton(this,id);
+
+						removebutton = video2commons.removebutton( this, id );
 						var uploadlink = $( '<a>request a server-side upload</a>' )
 							.attr( 'href', val.url );
 
 						video2commons.appendButtoms(
-							  	        [uploadlink,removebutton],
-							  	        row,
-							  	        ['success','danger'],
-							  	        id
-							  );
+							[ uploadlink, removebutton ],
+							row, [ 'success', 'danger' ],
+							id
+						);
 						break;
 				}
 
@@ -304,8 +301,6 @@
 				break;
 			case 'target':
 				//targetForm.html
-
-
 				$.get( 'static/html/targetForm.min.html' )
 					.success( function( dataHtml ) {
 
@@ -330,8 +325,6 @@
 				break;
 			case 'confirm':
 				//confirmForm.html
-
-
 				$.get( 'static/html/confirmForm.min.html' )
 					.success( function( dataHtml ) {
 
@@ -352,8 +345,6 @@
 						window.addTaskDialog.find( '#btn-next' )
 							.focus();
 					} );
-
-
 		}
 
 		switch ( window.addTaskStep ) {
@@ -516,7 +507,6 @@
 	};
 
 	video2commons.disablePrevNext = function() {
-
 		window.addTaskDialog.find( '.modal-body #dialog-errorbox' )
 			.hide();
 		window.addTaskDialog.find( '#btn-prev' )
@@ -527,50 +517,47 @@
 			.off();
 	};
 
-	video2commons.removeButtomClick = function(obj) {
-	 	return function() {
+	video2commons.removeButtomClick = function( obj ) {
+		return function() {
 			$( obj )
 				.addClass( 'disabled' );
 			video2commons.removeTask( video2commons.getTaskIDFromDOMID( $( obj )
 				.attr( 'id' ) ) );
-		} 
+		};
 	};
 
-	video2commons.removebutton = function(obj,id) {
+	video2commons.removebutton = function( obj, id ) {
 		return $( removebuttonHTML )
-							.attr( 'id', id + '-removebutton' )
-							.off()
-							.click( video2commons.removeButtomClick(obj) );
+			.attr( 'id', id + '-removebutton' )
+			.off()
+			.click( video2commons.removeButtomClick( obj ) );
 	};
 
-	video2commons.appendButtoms = function (buttomArray,row,type,id) {
-
+	video2commons.appendButtoms = function( buttomArray, row, type, id ) {
 		row.append( $( '<td />' )
-							.attr( 'id', id + '-title' )
-							.attr( 'width', '30%' ) );
+			.attr( 'id', id + '-title' )
+			.attr( 'width', '30%' ) );
 
 		var butoms = $( '<td />' )
-				.attr( 'id', id + '-status' )
-				.attr( 'width', '70%' )
-				.attr( 'colspan', '2' )
-				.append( $( '<span />' )
-					.attr( 'id', id + '-statustext' ) )
-				.append( buttomArray[0]);
+			.attr( 'id', id + '-status' )
+			.attr( 'width', '70%' )
+			.attr( 'colspan', '2' )
+			.append( $( '<span />' )
+				.attr( 'id', id + '-statustext' ) )
+			.append( buttomArray[ 0 ] );
 
 		for ( var i = 1; i < buttomArray.length; i++ )
 
-				butoms.append( buttomArray[i] );
+			butoms.append( buttomArray[ i ] );
 
 		row.append( butoms )
-			.removeClass( type[0] )
-			.addClass( type[1] );
+			.removeClass( type[ 0 ] )
+			.addClass( type[ 1 ] );
 
 		//return row;
-
 	};
 
 	video2commons.openTaskModal = function() {
-
 		window.addTaskDialog.find( '#dialog-spinner' )
 			.hide();
 		window.addTaskDialog.find( '.modal-body' )
