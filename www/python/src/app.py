@@ -127,7 +127,8 @@ def dologin():
         language = None
 
     if language and not os.path.isfile(
-        os.path.realpath(__file__) + '/static/lang/' + language + '.min.js'
+        os.path.dirname(os.path.realpath(__file__)) +
+        '/static/lang/' + language + '.min.js'
     ):
         language = None
 
