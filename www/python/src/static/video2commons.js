@@ -36,7 +36,7 @@
 			} )
 			.fail( function() {
 				$( '#content' )
-					.html( htmlContent.genericError );
+					.html( htmlContent.errorGeneric );
 			} );
 	};
 
