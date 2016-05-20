@@ -1,6 +1,5 @@
-var labels = {};
 //English language
-labels = {
+var labels = {
 	remove            :"Remove",
 	restart           :"Restart",
 	next              :"Next",
