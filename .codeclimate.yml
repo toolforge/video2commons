@@ -27,3 +27,4 @@ ratings:
   - "**.rb"
 exclude_paths:
 - "**.min.*"
+- "**/i18n/**"
