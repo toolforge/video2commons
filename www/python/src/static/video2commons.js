@@ -1,21 +1,21 @@
- ( function( $ ) {
+( function( $ ) {
 	'use strict';
 
-    var loaderImage = '<img alt="File:Ajax-loader.gif" src="//upload.wikimedia.org/wikipedia/commons/d/de/Ajax-loader.gif" data-file-width="32" data-file-height="32" height="32" width="32">';
+	var loaderImage = '<img alt="File:Ajax-loader.gif" src="//upload.wikimedia.org/wikipedia/commons/d/de/Ajax-loader.gif" data-file-width="32" data-file-height="32" height="32" width="32">';
 
-    var htmlContent = {
-	    removebutton      : '<button type="button" class="btn btn-danger btn-xs pull-right"><span class="glyphicon glyphicon-trash"></span> '+labels.remove+'</button>',
-	    restartbutton     : '<button type="button" class="btn btn-warning btn-xs pull-right"><span class="glyphicon glyphicon-repeat"></span> '+labels.restart+'</button>',
-	    loading           : '<center>'+ loaderImage +'&nbsp;&nbsp;'+labels.loading+'...</center>',
-	    errorGeneric      : '<div class="alert alert-danger">'+labels.errorGeneric+'.</div>',
-	    yourTasks         : '<div class="container" id="content"><h4>'+labels.yourTasks+':</h4><table id="tasktable" class="table"><tbody></tbody></table></div>',
-	    addTask           : '<input class="btn btn-primary btn-success btn-md" type="button" accesskey="n" value="'+labels.addTask+'...">',
-	    requestServerSide : '<a class="btn btn-primary btn-success btn-md pull-right disabled" id="ssubtn">'+labels.createServerSide+'</a>',
-	    progressbar       : '<div class="progress"><div class="progress-bar" role="progressbar"></div></div>',
+	var htmlContent = {
+		removebutton: '<button type="button" class="btn btn-danger btn-xs pull-right"><span class="glyphicon glyphicon-trash"></span> ' + window.labels.remove + '</button>',
+		restartbutton: '<button type="button" class="btn btn-warning btn-xs pull-right"><span class="glyphicon glyphicon-repeat"></span> ' + window.labels.restart + '</button>',
+		loading: '<center>' + loaderImage + '&nbsp;&nbsp;' + window.labels.loading + '...</center>',
+		errorGeneric: '<div class="alert alert-danger">' + window.labels.errorGeneric + '.</div>',
+		yourTasks: '<div class="container" id="content"><h4>' + window.labels.yourTasks + ':</h4><table id="tasktable" class="table"><tbody></tbody></table></div>',
+		addTask: '<input class="btn btn-primary btn-success btn-md" type="button" accesskey="n" value="' + window.labels.addTask + '...">',
+		requestServerSide: '<a class="btn btn-primary btn-success btn-md pull-right disabled" id="ssubtn">' + window.labels.createServerSide + '</a>',
+		progressbar: '<div class="progress"><div class="progress-bar" role="progressbar"></div></div>'
 	};
 
 	var video2commons = window.video2commons = {};
-	
+
 
 	video2commons.init = function() {
 		$( '#content' )
@@ -159,7 +159,7 @@
 					case 'needssu':
 
 						removebutton = video2commons.removebutton( this, id );
-						var uploadlink = $( labels.requestServerSide )
+						var uploadlink = $( window.labels.requestServerSide )
 							.attr( 'href', val.url );
 
 						video2commons.appendButtoms(
@@ -177,13 +177,13 @@
 				.text( val.title );
 			if ( val.status === 'done' ) {
 				row.find( '#' + id + '-statustext' )
-					.html( labels.taskDone+' <a></a>.' )
+					.html( window.labels.taskDone + ' <a></a>.' )
 					.find( 'a' )
 					.attr( 'href', val.url )
 					.text( val.text );
 			} else if ( val.status === 'needssu' ) {
 				row.find( '#' + id + '-statustext' )
-					.html( labels.errorTooLarge )
+					.html( window.labels.errorTooLarge )
 					.find( 'a' )
 					.attr( 'href', val.url );
 			} else if ( val.status === 'fail' ) {
@@ -270,7 +270,7 @@
 				video2commons.setupAddTaskDialog( data );
 			} )
 			.fail( function() {
-				window.addTaskDialog.html( htmlContent.errorGeneric);
+				window.addTaskDialog.html( htmlContent.errorGeneric );
 			} );
 	};
 
@@ -365,7 +365,7 @@
 					.off();
 				window.addTaskDialog.find( '#btn-next' )
 					.removeClass( 'disabled' )
-					.html( labels.next+' <span class="glyphicon glyphicon-chevron-right"></span>' )
+					.html( window.labels.next + ' <span class="glyphicon glyphicon-chevron-right"></span>' )
 					.off();
 				window.addTaskDialog.find( '#btn-next' )
 					.click( function() {
@@ -397,7 +397,7 @@
 					.off();
 				window.addTaskDialog.find( '#btn-next' )
 					.removeClass( 'disabled' )
-					.html( labels.next+'t <span class="glyphicon glyphicon-chevron-right"></span>' )
+					.html( window.labels.next + 't <span class="glyphicon glyphicon-chevron-right"></span>' )
 					.off();
 
 				video2commons.addTargetDialog( 'prev' );
@@ -409,7 +409,7 @@
 					.off();
 				window.addTaskDialog.find( '#btn-next' )
 					.removeClass( 'disabled' )
-					.html( labels.confirm+' <span class="glyphicon glyphicon-ok"></span>' )
+					.html( window.labels.confirm + ' <span class="glyphicon glyphicon-ok"></span>' )
 					.off();
 				window.addTaskDialog.find( '#btn-prev' )
 					.click( function() {
@@ -432,7 +432,7 @@
 
 						window.addTaskDialog.modal( "hide" );
 						$( '#tasktable > tbody' )
-							.append( '<tr id="task-new"><td colspan="3">'+ loaderImage +'</td></tr>' );
+							.append( '<tr id="task-new"><td colspan="3">' + loaderImage + '</td></tr>' );
 						var postdata = {
 							id: window.newTaskTempID,
 							action: 'next',
@@ -572,7 +572,7 @@
 		window.addTaskDialog.find( '#dialog-spinner' )
 			.hide();
 		window.addTaskDialog.find( '.modal-body' )
-			.html( '<center>'+ loaderImage +'</center>' );
+			.html( '<center>' + loaderImage + '</center>' );
 
 		video2commons.newTask();
 		window.addTaskDialog.modal();
