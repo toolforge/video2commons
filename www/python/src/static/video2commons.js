@@ -1,7 +1,7 @@
 ( function( $ ) {
 	'use strict';
 
-	var labels = window.labels
+	var labels = window.labels;
 
 	var loaderImage = '<img alt="File:Ajax-loader.gif" src="//upload.wikimedia.org/wikipedia/commons/d/de/Ajax-loader.gif" data-file-width="32" data-file-height="32" height="32" width="32">';
 
@@ -342,7 +342,7 @@
 				//confirmForm.html
 				$.get( 'static/html/confirmForm.min.html' )
 					.success( function( dataHtml ) {
-						
+
 						dataHtml = Mustache.to_html( labels, dataHtml );
 
 						window.addTaskDialog.find( '.modal-body' )
