@@ -42,7 +42,7 @@ labels = {
 				"contenido",
 				"Fair use",
 				"no se me permite en commons"
-			   ]
+			   ],
         extensionmsg      : "La extensión de archivo seleccionada arriba es usada si y sólo si el vídeo está en formato no-libre, los cuales requieren transcodificación. Vídeos en formatos libres mantendrán sus extensiones"
 	
 	
