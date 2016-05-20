@@ -1,6 +1,5 @@
-var labels = {};
 //Spanish Language
-labels = {
+var labels = {
 	remove            :"Remover",
 	restart           :"Reiniciar",
 	next              :"Siguiente",
