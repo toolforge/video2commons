@@ -234,7 +234,7 @@
 				.success( function( data ) {
 
 					window.addTaskDialog = $( '<div>' )
-						.html( Mustache.to_html( labels, data ) );
+						.html( Mustache.to_html( data, labels ) );
 
 					window.addTaskDialog.addClass( 'modal fade' )
 						.attr( {
@@ -299,7 +299,7 @@
 				//sourceForm.html
 				$.get( 'static/html/sourceForm.min.html' )
 					.success( function( dataHtml ) {
-						dataHtml = Mustache.to_html( labels, dataHtml );
+						dataHtml = Mustache.to_html( dataHtml, labels );
 						window.addTaskDialog.find( '.modal-body' )
 							.html( dataHtml );
 
@@ -318,7 +318,7 @@
 				//targetForm.html
 				$.get( 'static/html/targetForm.min.html' )
 					.success( function( dataHtml ) {
-						dataHtml = Mustache.to_html( labels, dataHtml );
+						dataHtml = Mustache.to_html( dataHtml, labels );
 						window.addTaskDialog.find( '.modal-body' )
 							.html( dataHtml );
 
@@ -343,7 +343,7 @@
 				$.get( 'static/html/confirmForm.min.html' )
 					.success( function( dataHtml ) {
 
-						dataHtml = Mustache.to_html( labels, dataHtml );
+						dataHtml = Mustache.to_html( dataHtml, labels );
 
 						window.addTaskDialog.find( '.modal-body' )
 							.html( dataHtml );
