@@ -32,6 +32,7 @@ from flask import (
 # https://github.com/mediawiki-utilities/python-mwoauth
 from mwoauth import AccessToken, ConsumerToken, RequestToken, Handshaker
 from requests_oauthlib import OAuth1
+import requests
 from config import consumer_key, consumer_secret, api_url, redis_pw, redis_host
 from redis import Redis
 from celery.result import AsyncResult
@@ -82,7 +83,11 @@ def main():
     except:
         return render_template('main.min.html', loggedin=False)
 
-    return render_template('main.min.html', loggedin=True)
+    return render_template(
+        'main.min.html',
+        loggedin=True,
+        lang=session['language']
+    )
 
 
 def dologin():
@@ -98,12 +103,38 @@ def dologin():
         session['access_token_secret']
     )
     session['username'] = handshaker.identify(access_token)['username']
-    return OAuth1(
+    auth = OAuth1(
         client_key=consumer_token.key,
         client_secret=consumer_token.secret,
         resource_owner_key=access_token.key,
         resource_owner_secret=access_token.secret
     )
+
+    r = requests.post(
+        url=api_url.replace('index.php', 'api.php'),
+        data={
+            'action': 'query',
+            'format': 'json',
+            'meta': 'userinfo',
+            'uiprop': 'options'
+        },
+        auth=auth
+    )
+
+    try:
+        language = r.json()['query']['userinfo']['options']['language']
+    except (NameError, KeyError):
+        language = None
+
+    if language and not os.path.isfile(
+        os.path.dirname(os.path.realpath(__file__)) +
+        '/static/lang/' + language + '.min.js'
+    ):
+        language = None
+
+    session['language'] = language or 'en'
+
+    return auth
 
 
 @app.route('/oauthinit')
