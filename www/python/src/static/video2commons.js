@@ -1,57 +1,25 @@
-var labels = {};
-	var lang = "en";
-	labels["en"] = {
-	    "remove"            :" Remove",
-	    "restart"           :" Restart", 
-	    "next"              :" Next",
-	    "loading"           :"LOADING",
-	    "confirm"           :"Confirm ", 
-	    "errorGeneric"      :"Something went terribly wrong. Please refresh this page or contact [[:commons:User:Zhuyifei1999]].",
-	    "errorTooLarge"     :"File too large to upload directly! You may want to <a>request a server-side upload</a>.", 
-	    "addTask"           :"Add task", 
-	    "yourTasks"         :"Your tasks",
-	    "createServerSide"  :"Create server-side upload ticket in one go (recommended)", 
-	    "requestServerSide" :"<a>request a server-side upload</a>",
-	    "taskDone"          :"Your task is done. You may find your upload at"
-	};
+ ( function( $ ) {
+	'use strict';
 
-	labels["es"] = {
-	    "remove"            :" Remover",
-	    "restart"           :" Reiniciar", 
-	    "next"              :" Siguiente",
-	    "loading"           :"CARGANDO",
-	    "confirm"           :"Confirmar ", 
-	    "errorGeneric"      :"Algo terrible ha ocurrido. Por favor, actualiza la página o contacta a [[:commons:User:Zhuyifei1999]].",
-	    "errorTooLarge"     :"El archivo es demasiado grande para subir directamente! Podrías hacer una <a>petición de subida en server-side upload</a>.", 
-	    "addTask"           :"Agregar tarea", 
-	    "yourTasks"         :"Tus tareas",
-	    "createServerSide"  :"Crear un ticket para subidas en server-side (recomendado)", 
-	    "requestServerSide" :"<a>petición de subida en server-side upload</a>",
-	    "taskDone"          :"Tarea completada. Podrías encontrar tu subida en"
-	};
-    
     var loaderImage = '<img alt="File:Ajax-loader.gif" src="//upload.wikimedia.org/wikipedia/commons/d/de/Ajax-loader.gif" data-file-width="32" data-file-height="32" height="32" width="32">';
 
     var htmlContent = {
-		'removebutton'      : '<button type="button" class="btn btn-danger btn-xs pull-right"><span class="glyphicon glyphicon-trash"></span>'+labels[lang]["remove"]+'</button>',
-	    'restartbutton'     : '<button type="button" class="btn btn-warning btn-xs pull-right"><span class="glyphicon glyphicon-repeat"></span>'+labels[lang]["restart"]+'</button>',
-	    'loading'           : '<center>'+ loaderImage +'&nbsp;&nbsp;'+labels[lang]["loading"]+'...</center>',
-	    'errorGeneric'	    : '<div class="alert alert-danger">'+labels[lang]["errorGeneric"]+'.</div>',
-	    'yourTasks'         : '<div class="container" id="content"><h4>'+labels[lang]["yourTasks"]+':</h4><table id="tasktable" class="table"><tbody></tbody></table></div>',
-	    'addTask'           : '<input class="btn btn-primary btn-success btn-md" type="button" accesskey="n" value="'+labels[lang]["addTask"]+'...">',
-	    'requestServerSide' : '<a class="btn btn-primary btn-success btn-md pull-right disabled" id="ssubtn">'+labels[lang]["createServerSide"]+'</a>',
-	    'progressbar'       : '<div class="progress"><div class="progress-bar" role="progressbar"></div></div>',
+	    removebutton      : '<button type="button" class="btn btn-danger btn-xs pull-right"><span class="glyphicon glyphicon-trash"></span> '+labels.remove+'</button>',
+	    restartbutton     : '<button type="button" class="btn btn-warning btn-xs pull-right"><span class="glyphicon glyphicon-repeat"></span> '+labels.restart+'</button>',
+	    loading           : '<center>'+ loaderImage +'&nbsp;&nbsp;'+labels.loading+'...</center>',
+	    errorGeneric      : '<div class="alert alert-danger">'+labels.errorGeneric+'.</div>',
+	    yourTasks         : '<div class="container" id="content"><h4>'+labels.yourTasks+':</h4><table id="tasktable" class="table"><tbody></tbody></table></div>',
+	    addTask           : '<input class="btn btn-primary btn-success btn-md" type="button" accesskey="n" value="'+labels.addTask+'...">',
+	    requestServerSide : '<a class="btn btn-primary btn-success btn-md pull-right disabled" id="ssubtn">'+labels.createServerSide+'</a>',
+	    progressbar       : '<div class="progress"><div class="progress-bar" role="progressbar"></div></div>',
 	};
-
-( function( $ ) {
-	'use strict';
 
 	var video2commons = window.video2commons = {};
 	
 
 	video2commons.init = function() {
 		$( '#content' )
-			.html( htmlContent['loading'] );
+			.html( htmlContent.loading );
 		video2commons.checkStatus();
 	};
 
@@ -68,20 +36,20 @@ var labels = {};
 			} )
 			.fail( function() {
 				$( '#content' )
-					.html( htmlContent['genericError'] );
+					.html( htmlContent.genericError );
 			} );
 	};
 
 	video2commons.setupTables = function() {
 		$( '#content' )
-			.html( htmlContent['yourTasks'] );
-		var addButton = $( htmlContent['addTask'] );
+			.html( htmlContent.yourTasks );
+		var addButton = $( htmlContent.addTask );
 		$( '#content' )
 			.append( addButton );
 		addButton.click( function() {
 			video2commons.addTask();
 		} );
-		var ssuButton = $( htmlContent['requestServerSide'] );
+		var ssuButton = $( htmlContent.requestServerSide );
 		$( '#content' )
 			.append( ssuButton.hide() );
 	};
@@ -162,7 +130,7 @@ var labels = {};
 								.attr( 'id', id + '-progress' )
 								.attr( 'width', '30%' ) );
 						var progressbar = row.find( '#' + id + '-progress' )
-							.html( htmlContent['progressbar'] );
+							.html( htmlContent.progressbar );
 						video2commons.setProgressBar( progressbar, -1 );
 						row.removeClass( 'success danger' );
 						break;
@@ -178,7 +146,7 @@ var labels = {};
 					case 'fail':
 
 						removebutton = video2commons.removebutton( this, id );
-						var restartbutton = $( htmlContent['restartbuttom'] )
+						var restartbutton = $( htmlContent.restartbuttom )
 							.attr( 'id', id + '-restartbutton' )
 							.hide();
 
@@ -191,7 +159,7 @@ var labels = {};
 					case 'needssu':
 
 						removebutton = video2commons.removebutton( this, id );
-						var uploadlink = $( labels[lang]["requestServerSide"] )
+						var uploadlink = $( labels.requestServerSide )
 							.attr( 'href', val.url );
 
 						video2commons.appendButtoms(
@@ -209,13 +177,13 @@ var labels = {};
 				.text( val.title );
 			if ( val.status === 'done' ) {
 				row.find( '#' + id + '-statustext' )
-					.html( labels[lang]["taskDone"]+' <a></a>.' )
+					.html( labels.taskDone+' <a></a>.' )
 					.find( 'a' )
 					.attr( 'href', val.url )
 					.text( val.text );
 			} else if ( val.status === 'needssu' ) {
 				row.find( '#' + id + '-statustext' )
-					.html( labels[lang]["errorTooLarge"] )
+					.html( labels.errorTooLarge )
 					.find( 'a' )
 					.attr( 'href', val.url );
 			} else if ( val.status === 'fail' ) {
@@ -302,7 +270,7 @@ var labels = {};
 				video2commons.setupAddTaskDialog( data );
 			} )
 			.fail( function() {
-				window.addTaskDialog.html( htmlContent['errorGeneric']);
+				window.addTaskDialog.html( htmlContent.errorGeneric);
 			} );
 	};
 
@@ -397,7 +365,7 @@ var labels = {};
 					.off();
 				window.addTaskDialog.find( '#btn-next' )
 					.removeClass( 'disabled' )
-					.html( labels[lang]["next"]+' <span class="glyphicon glyphicon-chevron-right"></span>' )
+					.html( labels.next+' <span class="glyphicon glyphicon-chevron-right"></span>' )
 					.off();
 				window.addTaskDialog.find( '#btn-next' )
 					.click( function() {
@@ -429,7 +397,7 @@ var labels = {};
 					.off();
 				window.addTaskDialog.find( '#btn-next' )
 					.removeClass( 'disabled' )
-					.html( labels[lang]["next"]+'t <span class="glyphicon glyphicon-chevron-right"></span>' )
+					.html( labels.next+'t <span class="glyphicon glyphicon-chevron-right"></span>' )
 					.off();
 
 				video2commons.addTargetDialog( 'prev' );
@@ -441,7 +409,7 @@ var labels = {};
 					.off();
 				window.addTaskDialog.find( '#btn-next' )
 					.removeClass( 'disabled' )
-					.html( labels[lang]["confirm"]+' <span class="glyphicon glyphicon-ok"></span>' )
+					.html( labels.confirm+' <span class="glyphicon glyphicon-ok"></span>' )
 					.off();
 				window.addTaskDialog.find( '#btn-prev' )
 					.click( function() {
@@ -570,7 +538,7 @@ var labels = {};
 	};
 
 	video2commons.removebutton = function( obj, id ) {
-		return $( htmlContent['removebutton'] )
+		return $( htmlContent.removebutton )
 			.attr( 'id', id + '-removebutton' )
 			.off()
 			.click( video2commons.removeButtomClick( obj ) );
