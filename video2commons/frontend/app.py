@@ -42,7 +42,7 @@ from celery.result import AsyncResult
 import youtube_dl
 import guess_language
 
-from redisession import RedisSessionInterface
+from video2commons.frontend.redisession import RedisSessionInterface
 
 from video2commons.backend import worker
 

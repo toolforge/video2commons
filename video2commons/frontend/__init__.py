@@ -17,12 +17,10 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>
 #
 
-"""videocommons package."""
+"""videocommons backend."""
 
 from __future__ import absolute_import
 
-from video2commons import config
-from video2commons import backend
-from video2commons import frontend
+from video2commons.frontend import app
 
-__all__ = ['config', 'backend', 'frontend']
+__all__ = ['app']

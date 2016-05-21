@@ -17,17 +17,19 @@
 
 """video2commons backend worker."""
 
+from __future__ import absolute_import
+
 import os
 import sys
 import celery
 from redis import Redis
 import shutil
 import pywikibot
-import download
-import encode
-import upload
-import subtitles as subtitleuploader
-from config import (
+from video2commons.backend import download
+from video2commons.backend import encode
+from video2commons.backend import upload
+from video2commons.backend import subtitles as subtitleuploader
+from video2commons.config import (
     redis_pw, redis_host, consumer_key, consumer_secret, http_host
 )
 
