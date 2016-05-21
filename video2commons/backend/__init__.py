@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: UTF-8 -*-
 #
-# Copyright (C) 2015 Zhuyifei1999
+# Copyright (C) 2016 Zhuyifei1999
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -17,11 +17,10 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>
 #
 
-"""video2commons web frontend wrapper."""
+"""videocommons backend."""
 
 from __future__ import absolute_import
 
-from video2commons.frontend import app
+from video2commons.backend import worker
 
-if __name__ == '__main__':
-    app.run()
+__all__ = ['worker']

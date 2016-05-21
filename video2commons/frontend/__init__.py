@@ -1,7 +1,7 @@
-#!/usr/bin/python
+#!/usr/bin/env python
 # -*- coding: UTF-8 -*-
 #
-# Copyright (C) 2015 Zhuyifei1999
+# Copyright (C) 2016 Zhuyifei1999
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -17,7 +17,10 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>
 #
 
-import os
+"""videocommons backend."""
 
-for line in open(os.path.expanduser("~/config.py")):
-    exec line
+from __future__ import absolute_import
+
+from video2commons.frontend import app
+
+__all__ = ['app']
