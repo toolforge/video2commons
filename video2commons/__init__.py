@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python
 # -*- coding: UTF-8 -*-
 #
 # Copyright (C) 2015 Zhuyifei1999
@@ -17,7 +17,12 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>
 #
 
-import os
+"""videocommons package."""
 
-for line in open(os.path.expanduser("~/config.py")):
-    exec line
+from __future__ import absolute_import
+
+import config
+import backend
+import frontend
+
+__all__ = ['config', 'backend', 'frontend']
