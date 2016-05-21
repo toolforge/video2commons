@@ -794,6 +794,3 @@ def remove_task():
             error=format_exception(e),
             traceback=traceback.format_exc()
         )
-
-if __name__ == '__main__':
-    app.run()
