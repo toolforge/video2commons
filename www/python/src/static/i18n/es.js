@@ -1,6 +1,7 @@
 var labels = {};
 //Spanish Language
 labels = {
+	abort             :"Abort", // Translation needed
 	remove            :"Remover",
 	restart           :"Reiniciar",
 	next              :"Siguiente",
