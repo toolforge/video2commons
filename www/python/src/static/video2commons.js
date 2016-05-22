@@ -76,7 +76,7 @@
 	};
 
 	video2commons.getTaskIDFromDOMID = function( id ) {
-		var result = /^(?:task-)?(.+?)(?:-(?:title|statustext|progress|removebutton|restartbutton))?$/.exec( id );
+		var result = /^(?:task-)?(.+?)(?:-(?:title|statustext|progress|abortbutton|removebutton|restartbutton))?$/.exec( id );
 		return result[ 1 ];
 	};
 
