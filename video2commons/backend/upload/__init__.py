@@ -22,21 +22,14 @@ Wrapper around pywikibot when the file can be uploaded automatically.
 If not, NeedServerSideUpload with url of file is thrown
 """
 
+from __future__ import absolute_import
+
 import os
 import shutil
 import pywikibot
 import hashlib
 
-
-class NeedServerSideUpload(Exception):
-    """A server server-side is needed."""
-
-    # So no one should handle it
-    def __init__(self, url, hashsum=None):
-        """Initialize the instance."""
-        super(NeedServerSideUpload, self).__init__(url)
-        self.url = url
-        self.hashsum = hashsum
+from video2commons.exceptions import NeedServerSideUpload
 
 
 def upload(

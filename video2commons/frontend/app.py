@@ -45,6 +45,7 @@ import guess_language
 from video2commons.frontend.redisession import RedisSessionInterface
 
 from video2commons.backend import worker
+from video2commons.exceptions import NeedServerSideUpload
 
 consumer_token = ConsumerToken(consumer_key, consumer_secret)
 handshaker = Handshaker(api_url, consumer_token)
@@ -223,7 +224,7 @@ def status():
                     task['status'] = 'fail'
                     task['text'] = res.traceback
                     task['restartable'] = True
-                elif isinstance(e, worker.upload.NeedServerSideUpload):
+                elif isinstance(e, NeedServerSideUpload):
                     task['status'] = 'needssu'
                     ssus.append(e)
                     task['url'] = create_phab_url([e])

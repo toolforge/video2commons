@@ -25,6 +25,7 @@ import celery
 from redis import Redis
 import shutil
 import pywikibot
+from video2commons.exceptions import TaskError
 from video2commons.backend import download
 from video2commons.backend import encode
 from video2commons.backend import upload
@@ -50,14 +51,6 @@ class Stats:
 
     text = ''
     percent = 0
-
-
-class TaskError(Exception):
-    """A generic task error exception."""
-
-    def __init__(self, desc):
-        """Initialize."""
-        super(TaskError, self).__init__(desc)
 
 
 @app.task(bind=True, track_started=True)
