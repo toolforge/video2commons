@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: UTF-8 -*-
 #
-# Copyright (C) 2016 Zhuyifei1999
+# Copyright (C) 2015 Zhuyifei1999
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -17,13 +17,23 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>
 #
 
-"""videocommons package."""
+"""video2commons exceptions."""
 
-from __future__ import absolute_import
 
-from video2commons import config
-from video2commons import exceptions
-from video2commons import backend
-from video2commons import frontend
+class TaskError(Exception):
+    """A generic task error exception."""
 
-__all__ = ['config', 'exceptions', 'backend', 'frontend']
+    def __init__(self, desc):
+        """Initialize."""
+        super(TaskError, self).__init__(desc)
+
+
+class NeedServerSideUpload(Exception):
+    """A server server-side is needed."""
+
+    # So no one should handle it
+    def __init__(self, url, hashsum=None):
+        """Initialize the instance."""
+        super(NeedServerSideUpload, self).__init__(url)
+        self.url = url
+        self.hashsum = hashsum
