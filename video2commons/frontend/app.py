@@ -37,7 +37,6 @@ from video2commons.config import (
     consumer_key, consumer_secret, api_url, redis_pw, redis_host
 )
 from redis import Redis
-from celery.result import AsyncResult
 import youtube_dl
 import guess_language
 
@@ -183,7 +182,7 @@ def status():
             # task has been forgotten -- results should have been expired
             continue
         goodids.append(id)
-        res = AsyncResult(id)
+        res = worker.main.AsyncResult(id)
         task = {
             'id': id,
             'title': title
@@ -234,6 +233,9 @@ def status():
                         (not redisconnection.exists('restarted:' + id)) and
                         redisconnection.exists('params:' + id)
                     )
+            elif state == 'ABORTED':
+                task['status'] = 'abort'
+                task['adminabort'] = redisconnection.exists('restarted:' + id)
             else:
                 task['status'] = 'fail'
                 task['text'] = 'Something weird going on. ' + \
@@ -267,12 +269,16 @@ def format_exception(e):
         (type(e).__name__, desc)
 
 
+def is_sudoer(username):
+    """Check if a user is a sudoer."""
+    return username in redisconnection.lrange('sudoers', 0, -1)
+
+
 def get_tasks():
     """Get a list of visible tasks for user."""
     # sudoer = able to monitor all tasks
     username = session['username']
-    sudoers = redisconnection.lrange('sudoers', 0, -1)
-    if username in sudoers:
+    if is_sudoer(username):
         key = 'alltasks'
     else:
         key = 'tasks:' + username
@@ -786,6 +792,35 @@ def remove_task():
         redisconnection.delete('titles:' + id)
         redisconnection.delete('params:' + id)
         redisconnection.delete('restarted:' + id)
+        return jsonify(remove='success', id=id)
+    except Exception, e:
+        session.rollback()
+        return jsonify(
+            remove='error',
+            error=format_exception(e),
+            traceback=traceback.format_exc()
+        )
+
+
+@app.route('/api/task/abort', methods=['POST'])
+def abort_task():
+    """Abort a task."""
+    try:
+        id = request.form['id']
+        username = session['username']
+        adminabort = False
+        try:
+            assert id in \
+                redisconnection.lrange('tasks:' + username, 0, -1), \
+                'Task must belong to you.'
+        except AssertionError:
+            if is_sudoer(username):
+                adminabort = True
+            else:
+                raise
+        worker.main.AsyncResult(id).abort()
+        if adminabort:
+            redisconnection.set('restarted:' + id, 'ADMINABORT')
         return jsonify(remove='success', id=id)
     except Exception, e:
         session.rollback()
