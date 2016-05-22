@@ -1,6 +1,7 @@
 var labels = {};
 //English language
 labels = {
+	abort             :"Abort",
 	remove            :"Remove",
 	restart           :"Restart",
 	next              :"Next",
