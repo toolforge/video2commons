@@ -17,17 +17,21 @@
 
 """video2commons backend worker."""
 
+from __future__ import absolute_import
+
 import os
 import sys
 import celery
+from celery.contrib.abortable import AbortableTask
 from redis import Redis
 import shutil
 import pywikibot
-import download
-import encode
-import upload
-import subtitles as subtitleuploader
-from config import (
+from video2commons.exceptions import TaskError, TaskAbort
+from video2commons.backend import download
+from video2commons.backend import encode
+from video2commons.backend import upload
+from video2commons.backend import subtitles as subtitleuploader
+from video2commons.config import (
     redis_pw, redis_host, consumer_key, consumer_secret, http_host
 )
 
@@ -50,15 +54,7 @@ class Stats:
     percent = 0
 
 
-class TaskError(Exception):
-    """A generic task error exception."""
-
-    def __init__(self, desc):
-        """Initialize."""
-        super(TaskError, self).__init__(desc)
-
-
-@app.task(bind=True, track_started=True)
+@app.task(bind=True, track_started=True, base=AbortableTask)
 def main(
     self, url, ie_key, subtitles, filename, filedesc,
     downloadkey, convertkey, username, oauth
@@ -84,6 +80,8 @@ def main(
     s = Stats()
 
     def statuscallback(text, percent):
+        if self.is_aborted():
+            raise TaskAbort
         if text is not None:
             s.text = text
         if percent is not None:
@@ -139,6 +137,8 @@ def main(
                     subtitles, filename, username,
                     statuscallback, errorcallback
                 )
+            except TaskAbort:
+                raise
             except Exception, e:
                 statuscallback(type(e).__name__ + ": " + str(e), None)
                 print e

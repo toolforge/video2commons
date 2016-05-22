@@ -32,12 +32,15 @@ import re
 import math
 import time
 import subprocess
+import signal
 from transcode import WebVideoTranscode
 from globals import (
     background_priority, background_time_limit, background_memory_limit,
     background_size_limit, ffmpeg_threads, ffmpeg_location, escape_shellarg,
     time_to_seconds
 )
+
+from video2commons.exceptions import TaskAbort
 
 
 class WebVideoTranscodeJob(object):
@@ -434,7 +437,7 @@ class WebVideoTranscodeJob(object):
         # Adapted from https://gist.github.com/marazmiki/3015621
         process = subprocess.Popen(
             cmd, stdin=None, stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
-            universal_newlines=True, shell=True
+            universal_newlines=True, shell=True, preexec_fn=os.setsid
         )
 
         re_duration = re.compile(r'Duration: (\d{2}:\d{2}:\d{2})')
@@ -469,7 +472,11 @@ class WebVideoTranscodeJob(object):
 
                     if newpercentage != percentage:
                         percentage = newpercentage
-                        self.statuscallback(None, percentage)
+                        try:
+                            self.statuscallback(None, percentage)
+                        except TaskAbort:
+                            os.killpg(os.getpgid(process.pid), signal.SIGTERM)
+                            raise
 
             time.sleep(2)
 

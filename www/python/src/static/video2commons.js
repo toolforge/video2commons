@@ -6,6 +6,7 @@
 	var loaderImage = '<img alt="File:Ajax-loader.gif" src="//upload.wikimedia.org/wikipedia/commons/d/de/Ajax-loader.gif" data-file-width="32" data-file-height="32" height="32" width="32">';
 
 	var htmlContent = {
+<<<<<<< HEAD
 		removebutton: '<button type="button" class="btn btn-danger btn-xs pull-right"><span class="glyphicon glyphicon-trash"></span> ' + labels.remove + '</button>',
 		restartbutton: '<button type="button" class="btn btn-warning btn-xs pull-right"><span class="glyphicon glyphicon-repeat"></span> ' + labels.restart + '</button>',
 		loading: '<center>' + loaderImage + '&nbsp;&nbsp;' + labels.loading + '...</center>',
@@ -13,6 +14,16 @@
 		yourTasks: '<div class="container" id="content"><h4>' + labels.yourTasks + ':</h4><table id="tasktable" class="table"><tbody></tbody></table></div>',
 		addTask: '<input class="btn btn-primary btn-success btn-md" type="button" accesskey="n" value="' + labels.addTask + '...">',
 		requestServerSide: '<a class="btn btn-primary btn-success btn-md pull-right disabled" id="ssubtn">' + labels.createServerSide + '</a>',
+=======
+		abortbutton: '<button type="button" class="btn btn-danger btn-xs pull-right"><span class="glyphicon glyphicon-remove"></span> ' + window.labels.abort + '</button>',
+		removebutton: '<button type="button" class="btn btn-danger btn-xs pull-right"><span class="glyphicon glyphicon-trash"></span> ' + window.labels.remove + '</button>',
+		restartbutton: '<button type="button" class="btn btn-warning btn-xs pull-right"><span class="glyphicon glyphicon-repeat"></span> ' + window.labels.restart + '</button>',
+		loading: '<center>' + loaderImage + '&nbsp;&nbsp;' + window.labels.loading + '...</center>',
+		errorGeneric: '<div class="alert alert-danger">' + window.labels.errorGeneric + '.</div>',
+		yourTasks: '<div class="container" id="content"><h4>' + window.labels.yourTasks + ':</h4><table id="tasktable" class="table"><tbody></tbody></table></div>',
+		addTask: '<input class="btn btn-primary btn-success btn-md" type="button" accesskey="n" value="' + window.labels.addTask + '...">',
+		requestServerSide: '<a class="btn btn-primary btn-success btn-md pull-right disabled" id="ssubtn">' + window.labels.createServerSide + '</a>',
+>>>>>>> master
 		progressbar: '<div class="progress"><div class="progress-bar" role="progressbar"></div></div>'
 	};
 
@@ -77,7 +88,7 @@
 	};
 
 	video2commons.getTaskIDFromDOMID = function( id ) {
-		var result = /^(?:task-)?(.+?)(?:-(?:title|statustext|progress|removebutton|restartbutton))?$/.exec( id );
+		var result = /^(?:task-)?(.+?)(?:-(?:title|statustext|progress|abortbutton|removebutton|restartbutton))?$/.exec( id );
 		return result[ 1 ];
 	};
 
@@ -131,41 +142,49 @@
 							.append( $( '<td />' )
 								.attr( 'id', id + '-progress' )
 								.attr( 'width', '30%' ) );
+						var abortbutton = $( htmlContent.abortbutton )
+							.attr( 'id', id + '-abortbutton' );
+						row.find( '#' + id + '-status' )
+							.append( abortbutton );
 						var progressbar = row.find( '#' + id + '-progress' )
 							.html( htmlContent.progressbar );
 						video2commons.setProgressBar( progressbar, -1 );
 						row.removeClass( 'success danger' );
 						break;
 					case 'done':
-
 						removebutton = video2commons.removebutton( this, id );
-						video2commons.appendButtoms(
+						video2commons.appendButtons(
 							[ removebutton ],
 							row, [ 'danger', 'success' ],
 							id
 						);
 						break;
 					case 'fail':
-
 						removebutton = video2commons.removebutton( this, id );
-						var restartbutton = $( htmlContent.restartbuttom )
+						var restartbutton = $( htmlContent.restartbutton )
 							.attr( 'id', id + '-restartbutton' )
 							.hide();
 
-						video2commons.appendButtoms(
+						video2commons.appendButtons(
 							[ removebutton, restartbutton ],
 							row, [ 'success', 'danger' ],
 							id
 						);
 						break;
 					case 'needssu':
-
 						removebutton = video2commons.removebutton( this, id );
 						var uploadlink = $( labels.requestServerSide )
 							.attr( 'href', val.url );
 
-						video2commons.appendButtoms(
+						video2commons.appendButtons(
 							[ uploadlink, removebutton ],
+							row, [ 'success', 'danger' ],
+							id
+						);
+						break;
+					case 'abort':
+						video2commons.appendButtons(
+							[],
 							row, [ 'success', 'danger' ],
 							id
 						);
@@ -211,8 +230,18 @@
 					.text( val.text );
 			}
 
-			if ( val.status === 'progress' )
+			if ( val.status === 'progress' ) {
 				video2commons.setProgressBar( row.find( '#' + id + '-progress' ), val.progress );
+				row.find( '#' + id + '-abortbutton' )
+					.show()
+					.off()
+					.click( function() {
+						$( this )
+							.addClass( 'disabled' );
+						video2commons.abortTask( video2commons.getTaskIDFromDOMID( $( this )
+							.attr( 'id' ) ) );
+					} );
+			}
 		} );
 
 		if ( data.ssulink ) {
@@ -375,7 +404,6 @@
 					.off();
 				window.addTaskDialog.find( '#btn-next' )
 					.click( function() {
-
 						video2commons.disablePrevNext();
 
 						window.addTaskDialog.find( '#dialog-spinner' )
@@ -455,6 +483,10 @@
 		}
 	};
 
+	video2commons.abortTask = function( taskid ) {
+		video2commons.eventTask( taskid, 'abort' );
+	};
+
 	video2commons.removeTask = function( taskid ) {
 		video2commons.eventTask( taskid, 'remove' );
 	};
@@ -504,7 +536,6 @@
 	};
 
 	video2commons.addTargetDialog = function( type ) {
-
 		window.addTaskDialog.find( '#btn-' + type )
 			.click( function() {
 				window.addTaskDialog.find( '.modal-body #dialog-errorbox' )
@@ -534,7 +565,7 @@
 			.off();
 	};
 
-	video2commons.removeButtomClick = function( obj ) {
+	video2commons.removeButtonClick = function( obj ) {
 		return function() {
 			$( obj )
 				.addClass( 'disabled' );
@@ -547,27 +578,28 @@
 		return $( htmlContent.removebutton )
 			.attr( 'id', id + '-removebutton' )
 			.off()
-			.click( video2commons.removeButtomClick( obj ) );
+			.click( video2commons.removeButtonClick( obj ) );
 	};
 
-	video2commons.appendButtoms = function( buttomArray, row, type, id ) {
+	video2commons.appendButtons = function( buttonArray, row, type, id ) {
 		row.append( $( '<td />' )
 			.attr( 'id', id + '-title' )
 			.attr( 'width', '30%' ) );
 
-		var butoms = $( '<td />' )
+		var buttons = $( '<td />' )
 			.attr( 'id', id + '-status' )
 			.attr( 'width', '70%' )
 			.attr( 'colspan', '2' )
 			.append( $( '<span />' )
-				.attr( 'id', id + '-statustext' ) )
-			.append( buttomArray[ 0 ] );
+				.attr( 'id', id + '-statustext' ) );
 
-		for ( var i = 1; i < buttomArray.length; i++ )
+		if ( buttonArray.length )
+			buttons.append( buttonArray[ 0 ] );
 
-			butoms.append( buttomArray[ i ] );
+		for ( var i = 1; i < buttonArray.length; i++ )
+			buttons.append( buttonArray[ i ] );
 
-		row.append( butoms )
+		row.append( buttons )
 			.removeClass( type[ 0 ] )
 			.addClass( type[ 1 ] );
 

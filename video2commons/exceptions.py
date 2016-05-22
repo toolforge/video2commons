@@ -17,15 +17,31 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>
 #
 
-"""video2commons web frontend wrapper."""
+"""video2commons exceptions."""
 
-from __future__ import absolute_import
 
-import os
-import sys
-sys.path.append(os.path.dirname(os.path.realpath(__file__)) + "/../../../")
+class TaskError(Exception):
+    """A generic task error exception."""
 
-from video2commons.frontend import app  # NOQA
+    def __init__(self, desc):
+        """Initialize."""
+        super(TaskError, self).__init__(desc)
 
-if __name__ == '__main__':
-    app.run()
+
+class NeedServerSideUpload(TaskError):
+    """A server server-side is needed."""
+
+    # So no one should handle it
+    def __init__(self, url, hashsum=None):
+        """Initialize."""
+        super(NeedServerSideUpload, self).__init__(url)
+        self.url = url
+        self.hashsum = hashsum
+
+
+class TaskAbort(TaskError):
+    """The task has been aborted."""
+
+    def __init__(self):
+        """Initialize."""
+        super(TaskAbort, self).__init__('The task has been aborted.')
