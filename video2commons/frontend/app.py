@@ -30,7 +30,6 @@ import urllib
 from flask import (
     Flask, request, session, render_template, redirect, url_for, jsonify
 )
-# https://github.com/mediawiki-utilities/python-mwoauth
 from mwoauth import AccessToken, ConsumerToken, RequestToken, Handshaker
 from requests_oauthlib import OAuth1
 import requests

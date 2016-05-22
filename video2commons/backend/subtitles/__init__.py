@@ -17,14 +17,15 @@
 
 """Convert and upload subtitles."""
 
+from __future__ import absolute_import
+
 import subprocess
 import pywikibot
-# https://bitbucket.org/flyingcircus/pycountry
 import pycountry
-# https://github.com/senko/python-video-converter
 from converter import Converter
-# https://github.com/chardet/chardet
 import chardet
+
+from video2commons.exceptions import TaskAbort
 
 
 def subtitles(
@@ -103,7 +104,8 @@ def subtitles(
                     'Finished processing subtitle in ' + langname,
                     int(percent)
                 )
-
+        except TaskAbort:
+            raise
         except Exception, e:
             statuscallback(type(e).__name__ + ": " + str(e), None)
             pass

@@ -137,6 +137,8 @@ def main(
                     subtitles, filename, username,
                     statuscallback, errorcallback
                 )
+            except TaskAbort:
+                raise
             except Exception, e:
                 statuscallback(type(e).__name__ + ": " + str(e), None)
                 print e
