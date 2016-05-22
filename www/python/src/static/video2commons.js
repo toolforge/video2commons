@@ -6,15 +6,6 @@
 	var loaderImage = '<img alt="File:Ajax-loader.gif" src="//upload.wikimedia.org/wikipedia/commons/d/de/Ajax-loader.gif" data-file-width="32" data-file-height="32" height="32" width="32">';
 
 	var htmlContent = {
-<<<<<<< HEAD
-		removebutton: '<button type="button" class="btn btn-danger btn-xs pull-right"><span class="glyphicon glyphicon-trash"></span> ' + labels.remove + '</button>',
-		restartbutton: '<button type="button" class="btn btn-warning btn-xs pull-right"><span class="glyphicon glyphicon-repeat"></span> ' + labels.restart + '</button>',
-		loading: '<center>' + loaderImage + '&nbsp;&nbsp;' + labels.loading + '...</center>',
-		errorGeneric: '<div class="alert alert-danger">' + labels.errorGeneric + '.</div>',
-		yourTasks: '<div class="container" id="content"><h4>' + labels.yourTasks + ':</h4><table id="tasktable" class="table"><tbody></tbody></table></div>',
-		addTask: '<input class="btn btn-primary btn-success btn-md" type="button" accesskey="n" value="' + labels.addTask + '...">',
-		requestServerSide: '<a class="btn btn-primary btn-success btn-md pull-right disabled" id="ssubtn">' + labels.createServerSide + '</a>',
-=======
 		abortbutton: '<button type="button" class="btn btn-danger btn-xs pull-right"><span class="glyphicon glyphicon-remove"></span> ' + window.labels.abort + '</button>',
 		removebutton: '<button type="button" class="btn btn-danger btn-xs pull-right"><span class="glyphicon glyphicon-trash"></span> ' + window.labels.remove + '</button>',
 		restartbutton: '<button type="button" class="btn btn-warning btn-xs pull-right"><span class="glyphicon glyphicon-repeat"></span> ' + window.labels.restart + '</button>',
@@ -23,7 +14,6 @@
 		yourTasks: '<div class="container" id="content"><h4>' + window.labels.yourTasks + ':</h4><table id="tasktable" class="table"><tbody></tbody></table></div>',
 		addTask: '<input class="btn btn-primary btn-success btn-md" type="button" accesskey="n" value="' + window.labels.addTask + '...">',
 		requestServerSide: '<a class="btn btn-primary btn-success btn-md pull-right disabled" id="ssubtn">' + window.labels.createServerSide + '</a>',
->>>>>>> master
 		progressbar: '<div class="progress"><div class="progress-bar" role="progressbar"></div></div>'
 	};
 
