@@ -137,7 +137,7 @@
 					case 'done':
 
 						removebutton = video2commons.removebutton( this, id );
-						video2commons.appendButtoms(
+						video2commons.appendButtons(
 							[ removebutton ],
 							row, [ 'danger', 'success' ],
 							id
@@ -146,11 +146,11 @@
 					case 'fail':
 
 						removebutton = video2commons.removebutton( this, id );
-						var restartbutton = $( htmlContent.restartbuttom )
+						var restartbutton = $( htmlContent.restartbutton )
 							.attr( 'id', id + '-restartbutton' )
 							.hide();
 
-						video2commons.appendButtoms(
+						video2commons.appendButtons(
 							[ removebutton, restartbutton ],
 							row, [ 'success', 'danger' ],
 							id
@@ -162,7 +162,7 @@
 						var uploadlink = $( window.labels.requestServerSide )
 							.attr( 'href', val.url );
 
-						video2commons.appendButtoms(
+						video2commons.appendButtons(
 							[ uploadlink, removebutton ],
 							row, [ 'success', 'danger' ],
 							id
@@ -528,7 +528,7 @@
 			.off();
 	};
 
-	video2commons.removeButtomClick = function( obj ) {
+	video2commons.removeButtonClick = function( obj ) {
 		return function() {
 			$( obj )
 				.addClass( 'disabled' );
@@ -541,27 +541,27 @@
 		return $( htmlContent.removebutton )
 			.attr( 'id', id + '-removebutton' )
 			.off()
-			.click( video2commons.removeButtomClick( obj ) );
+			.click( video2commons.removeButtonClick( obj ) );
 	};
 
-	video2commons.appendButtoms = function( buttomArray, row, type, id ) {
+	video2commons.appendButtons = function( buttonArray, row, type, id ) {
 		row.append( $( '<td />' )
 			.attr( 'id', id + '-title' )
 			.attr( 'width', '30%' ) );
 
-		var butoms = $( '<td />' )
+		var buttons = $( '<td />' )
 			.attr( 'id', id + '-status' )
 			.attr( 'width', '70%' )
 			.attr( 'colspan', '2' )
 			.append( $( '<span />' )
 				.attr( 'id', id + '-statustext' ) )
-			.append( buttomArray[ 0 ] );
+			.append( buttonArray[ 0 ] );
 
-		for ( var i = 1; i < buttomArray.length; i++ )
+		for ( var i = 1; i < buttonArray.length; i++ )
 
-			butoms.append( buttomArray[ i ] );
+			buttons.append( buttonArray[ i ] );
 
-		row.append( butoms )
+		row.append( buttons )
 			.removeClass( type[ 0 ] )
 			.addClass( type[ 1 ] );
 
