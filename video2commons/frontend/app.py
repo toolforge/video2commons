@@ -235,7 +235,11 @@ def status():
                     )
             elif state == 'ABORTED':
                 task['status'] = 'abort'
-                task['adminabort'] = redisconnection.exists('restarted:' + id)
+                if redisconnection.exists('restarted:' + id):
+                    task['text'] = 'Your task is being aborted by an admin...'
+                else:
+                    task['text'] = 'Your task is being aborted...'
+                hasrunning = True
             else:
                 task['status'] = 'fail'
                 task['text'] = 'Something weird going on. ' + \
