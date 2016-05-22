@@ -476,6 +476,7 @@ class WebVideoTranscodeJob(object):
                             self.statuscallback(None, percentage)
                         except TaskAbort:
                             os.killpg(os.getpgid(process.pid), signal.SIGTERM)
+                            raise
 
             time.sleep(2)
 
