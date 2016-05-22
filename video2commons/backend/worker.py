@@ -22,10 +22,11 @@ from __future__ import absolute_import
 import os
 import sys
 import celery
+from celery.contrib.abortable import AbortableTask
 from redis import Redis
 import shutil
 import pywikibot
-from video2commons.exceptions import TaskError
+from video2commons.exceptions import TaskError, TaskAbort
 from video2commons.backend import download
 from video2commons.backend import encode
 from video2commons.backend import upload
@@ -53,7 +54,7 @@ class Stats:
     percent = 0
 
 
-@app.task(bind=True, track_started=True)
+@app.task(bind=True, track_started=True, base=AbortableTask)
 def main(
     self, url, ie_key, subtitles, filename, filedesc,
     downloadkey, convertkey, username, oauth
@@ -79,6 +80,8 @@ def main(
     s = Stats()
 
     def statuscallback(text, percent):
+        if self.is_aborted():
+            raise TaskAbort
         if text is not None:
             s.text = text
         if percent is not None:
