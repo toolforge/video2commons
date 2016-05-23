@@ -1,6 +1,6 @@
 //Spanish Language
 window.labels = {
-	abort             :"Abort", // Translation needed
+	abort             :"Abortar", 
 	remove            :"Remover",
 	restart           :"Reiniciar",
 	next              :"Siguiente",
@@ -24,7 +24,10 @@ window.labels = {
 	confirmmsg        :"Por favor, confirme la tarea o haga click en 'Atrás' para cambiar los parámetros. Al hacer clic en 'Confirmar', la tarea será enviada y ejecutada. Debido a restricciones técnicas, la tarea no se puede interrumpir con facilidad una vez que comienza",
 	video             :"video",
 	audio             :"audio",
-	'import'          :"Import",
+	import            :"Import",
+	keepvideo         :"Conservar video",
+	keepaudio         :"Conservar audio",
+	importsubtitles   :"Importar subtitulos",
 	subtitles         :"subtítulos",
 	note              :"Nota",
 	tool              :"herramienta",
