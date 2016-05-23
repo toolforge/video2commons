@@ -421,7 +421,7 @@
 					.off();
 				window.addTaskDialog.find( '#btn-next' )
 					.removeClass( 'disabled' )
-					.html( labels.next + 't <span class="glyphicon glyphicon-chevron-right"></span>' )
+					.html( labels.next + ' <span class="glyphicon glyphicon-chevron-right"></span>' )
 					.off();
 
 				video2commons.addTargetDialog( 'prev' );
