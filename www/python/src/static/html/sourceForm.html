@@ -4,22 +4,22 @@
     <input type="text" class="form-control" id="url" placeholder="http://example.com/examplevideo">
   </div>
   <div class="checkbox">
-    <label><input type="checkbox" value="" checked id="video">Keep video</label>
+    <label><input type="checkbox" value="" checked id="video">{{keepvideo}}</label>
   </div>
   <div class="checkbox">
-    <label><input type="checkbox" value="" checked id="audio">Keep audio</label>
+    <label><input type="checkbox" value="" checked id="audio">{{keepaudio}}</label>
   </div>
   <div class="checkbox">
-    <label><input type="checkbox" value="" checked id="subtitles">Import subtitles</label>
+    <label><input type="checkbox" value="" checked id="subtitles">{{importsubtitles}}</label>
   </div>
   <div class="alert alert-info">
-    Note:
+    {{note}}:
     <ul>
-      <li>Playlists will not be processed correctly. Some sites (such as Youku and Comedy Central) make use of multipart videos, interpreted as playlists, and will not be processed correctly either.</li>
-      <li>If the media does not include video or audio tracks, please uncheck the corresponding checkboxes; otherwise conversion may fail, even if the format is free.</li>
-      <li>If "Import subtitles" is checked, subtitles will be imported, excluding auto-generated ones.</li>
-      <li>What if I need to convert and upload a file on my computer? Well, while NFS and Grid engine is still here, you can use <a href="//tools.wmflabs.org/videoconvert/">videoconvert</a></li> tool.
+      <li>{{notes.0}}.</li>
+      <li>{{notes.1}}.</li>
+      <li>{{notes.2}}.</li>
+      <li>{{notes.3}} <a href="//tools.wmflabs.org/videoconvert/">videoconvert</a> {{tool}}.</li> 
     </ul>
-    <b>Important note:</b> Only upload <a href="//commons.wikimedia.org/wiki/Commons:Licensing#Acceptable_licenses" title="Commons:Licensing">freely licensed</a> or <a href="//commons.wikimedia.org/wiki/Commons:Licensing#Material_in_the_public_domain" title="Commons:Licensing">public domain</a> content. <a href="//commons.wikimedia.org/wiki/Commons:FU" title="Commons:FU" class="mw-redirect">Fair use</a> is not allowed on commons.
+    <b>{{importantnote}}:</b> {{notes.4}} <a href="//commons.wikimedia.org/wiki/Commons:Licensing#Acceptable_licenses" title="Commons:Licensing">{{notes.5}}</a> {{notes.6}} <a href="//commons.wikimedia.org/wiki/Commons:Licensing#Material_in_the_public_domain" title="Commons:Licensing">{{notes.7}}</a> {{notes.8}} <a href="//commons.wikimedia.org/wiki/Commons:FU" title="Commons:FU" class="mw-redirect">{{notes.9}}</a> {{notes.10}}.
   </div>
 </form>

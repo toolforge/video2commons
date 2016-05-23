@@ -1,6 +1,8 @@
 ( function( $ ) {
 	'use strict';
 
+	var labels = window.labels;
+
 	var loaderImage = '<img alt="File:Ajax-loader.gif" src="//upload.wikimedia.org/wikipedia/commons/d/de/Ajax-loader.gif" data-file-width="32" data-file-height="32" height="32" width="32">';
 
 	var htmlContent = {
@@ -161,7 +163,7 @@
 						break;
 					case 'needssu':
 						removebutton = video2commons.removebutton( this, id );
-						var uploadlink = $( window.labels.requestServerSide )
+						var uploadlink = $( labels.requestServerSide )
 							.attr( 'href', val.url );
 
 						video2commons.appendButtons(
@@ -186,13 +188,13 @@
 				.text( val.title );
 			if ( val.status === 'done' ) {
 				row.find( '#' + id + '-statustext' )
-					.html( window.labels.taskDone + ' <a></a>.' )
+					.html( labels.taskDone + ' <a></a>.' )
 					.find( 'a' )
 					.attr( 'href', val.url )
 					.text( val.text );
 			} else if ( val.status === 'needssu' ) {
 				row.find( '#' + id + '-statustext' )
-					.html( window.labels.errorTooLarge )
+					.html( labels.errorTooLarge )
 					.find( 'a' )
 					.attr( 'href', val.url );
 			} else if ( val.status === 'fail' ) {
@@ -249,8 +251,9 @@
 			//addTask.html
 			$.get( 'static/html/addTask.min.html' )
 				.success( function( data ) {
+
 					window.addTaskDialog = $( '<div>' )
-						.html( data );
+						.html( Mustache.to_html( data, labels ) );
 
 					window.addTaskDialog.addClass( 'modal fade' )
 						.attr( {
@@ -315,6 +318,7 @@
 				//sourceForm.html
 				$.get( 'static/html/sourceForm.min.html' )
 					.success( function( dataHtml ) {
+						dataHtml = Mustache.to_html( dataHtml, labels );
 						window.addTaskDialog.find( '.modal-body' )
 							.html( dataHtml );
 
@@ -333,7 +337,7 @@
 				//targetForm.html
 				$.get( 'static/html/targetForm.min.html' )
 					.success( function( dataHtml ) {
-
+						dataHtml = Mustache.to_html( dataHtml, labels );
 						window.addTaskDialog.find( '.modal-body' )
 							.html( dataHtml );
 
@@ -357,6 +361,8 @@
 				//confirmForm.html
 				$.get( 'static/html/confirmForm.min.html' )
 					.success( function( dataHtml ) {
+
+						dataHtml = Mustache.to_html( dataHtml, labels );
 
 						window.addTaskDialog.find( '.modal-body' )
 							.html( dataHtml );
@@ -384,7 +390,7 @@
 					.off();
 				window.addTaskDialog.find( '#btn-next' )
 					.removeClass( 'disabled' )
-					.html( window.labels.next + ' <span class="glyphicon glyphicon-chevron-right"></span>' )
+					.html( labels.next + ' <span class="glyphicon glyphicon-chevron-right"></span>' )
 					.off();
 				window.addTaskDialog.find( '#btn-next' )
 					.click( function() {
@@ -415,7 +421,7 @@
 					.off();
 				window.addTaskDialog.find( '#btn-next' )
 					.removeClass( 'disabled' )
-					.html( window.labels.next + 't <span class="glyphicon glyphicon-chevron-right"></span>' )
+					.html( labels.next + ' <span class="glyphicon glyphicon-chevron-right"></span>' )
 					.off();
 
 				video2commons.addTargetDialog( 'prev' );
@@ -427,7 +433,7 @@
 					.off();
 				window.addTaskDialog.find( '#btn-next' )
 					.removeClass( 'disabled' )
-					.html( window.labels.confirm + ' <span class="glyphicon glyphicon-ok"></span>' )
+					.html( labels.confirm + ' <span class="glyphicon glyphicon-ok"></span>' )
 					.off();
 				window.addTaskDialog.find( '#btn-prev' )
 					.click( function() {
