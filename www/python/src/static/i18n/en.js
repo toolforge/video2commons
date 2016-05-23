@@ -24,7 +24,6 @@ window.labels = {
 	confirmmsg        :"Please confirm the task or click 'Back' to change the parameters. By clicking 'Confirm', the task will be submitted and executed. Due to technical restrictions, a task cannot be easily aborted once it is submitted",
 	video             :"video",
 	audio             :"audio",
-	import            :"Import",
 	keepvideo         :"Keep video",
 	keepaudio         :"Keep audio",
 	importsubtitles   :"Import subtitles",
