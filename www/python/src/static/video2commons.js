@@ -11,7 +11,7 @@
 		restartbutton: '<button type="button" class="btn btn-warning btn-xs pull-right"><span class="glyphicon glyphicon-repeat"></span> ' + window.labels.restart + '</button>',
 		loading: '<center>' + loaderImage + '&nbsp;&nbsp;' + window.labels.loading + '</center>',
 		errorGeneric: '<div class="alert alert-danger">' + window.labels.errorGeneric + '</div>',
-		yourTasks: '<div class="container" id="content"><h4>' + window.labels.yourTasks + '</h4><table id="tasktable" class="tablse"><tbody></tbody></table></div>',
+		yourTasks: '<div class="container" id="content"><h4>' + window.labels.yourTasks + '</h4><table id="tasktable" class="table"><tbody></tbody></table></div>',
 		addTask: '<input class="btn btn-primary btn-success btn-md" type="button" accesskey="n" value="' + window.labels.addTask + '">',
 		requestServerSide: '<a class="btn btn-primary btn-success btn-md pull-right disabled" id="ssubtn">' + window.labels.createServerSide + '</a>',
 		progressbar: '<div class="progress"><div class="progress-bar" role="progressbar"></div></div>'
