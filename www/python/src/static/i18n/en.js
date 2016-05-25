@@ -29,21 +29,14 @@ window.labels = {
 	importsubtitles   :"Import subtitles",
 	subtitles         :"subtitles",
 	note              :"Note:",
-	tool              :"tool",
 	filename          :"Filename",
 	importantnote     :"Important note: ",
 	notes             :[
 	                        "Playlists will not be processed correctly. Some sites (such as Youku and Comedy Central) make use of multipart videos, interpreted as playlists, and will not be processed correctly either.",
 	                        "If the media does not include video or audio tracks, please uncheck the corresponding checkboxes; otherwise conversion may fail, even if the format is free.",
 	                        "If 'Import subtitles' is checked, subtitles will be imported, excluding auto-generated ones.",
-	                        "What if I need to convert and upload a file on my computer? Well, while NFS and Grid engine is still here, you can use",
-	                        "Only upload",
-	                        "freely licensed",
-	                        "or",
-	                        "public domain",
-	                        "content.",
-	                        "Fair use",
-	                        "is not allowed on commons."
+	                        'What if I need to convert and upload a file on my computer? Well, while NFS and Grid engine is still here, you can use <a id="vc">videoconvert</a> tool.',
+	                        'Only upload <a id="fl">freely licensed</a> or <a id="pd">public domain</a> content. <a id="fu">Fair use</a> is not allowed on commons.'
 	                   ],
 	extensionmsg      :"The file extension set above is used if and only if the video is in a non-free format, which transcoding is required. Videos in free formats will keep their extensions."
 };

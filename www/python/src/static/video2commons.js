@@ -322,6 +322,15 @@
 						window.addTaskDialog.find( '.modal-body' )
 							.html( dataHtml );
 
+						window.addTaskDialog.find( 'a#vc' )
+							.attr( 'href', '//tools.wmflabs.org/videoconvert/' );
+						window.addTaskDialog.find( 'a#fl' )
+							.attr( 'href', '//commons.wikimedia.org/wiki/Commons:Licensing#Acceptable_licenses' );
+						window.addTaskDialog.find( 'a#pd' )
+							.attr( 'href', '//commons.wikimedia.org/wiki/Commons:Licensing#Material_in_the_public_domain' );
+						window.addTaskDialog.find( 'a#fu' )
+							.attr( 'href', '//commons.wikimedia.org/wiki/Commons:FU' );
+
 						window.addTaskDialog.find( '#url' )
 							.val( data.url )
 							.focus();

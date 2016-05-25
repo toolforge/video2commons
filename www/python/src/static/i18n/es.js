@@ -29,21 +29,14 @@ window.labels = {
 	importsubtitles   :"Importar subtitulos",
 	subtitles         :"subtítulos",
 	note              :"Nota:",
-	tool              :"herramienta",
 	filename          :"Nombre de archivo",
 	importantnote     :"Nota importante: ",
 	notes             :[
 	                        "Listas de reproducción no se procesarán correctamente. Algunos sitios web (como Youku y Comedy Central) utilizar vídeos divididos en varias partes, interpretado como una lista de reproducción, no serán procesadas correctamente.",
 	                        "Si el archivo de media no incluye pistas de audio o de vídeo, por favor, desactive las casillas de verificación correspondientes, de lo contrario la conversión puede fallar, incluso si el formato es libre.",
 	                        "Si se marca 'Importar subtítulos', se importarán los subtítulos, a excepción de los auto-generadas.",
-	                        "¿Y que si necesito subir y convertir el archivo en mi computador? Pues bien, mientras NFS y el motor de grid esten todavía aquí, puedes usarlos",
-	                        "Sólo subir",
-	                        "con licencia libre",
-	                        "o",
-	                        "dominio público",
-	                        "contenido",
-	                        "Fair use",
-	                        "no se me permite en commons."
+	                        '¿Y que si necesito subir y convertir el archivo en mi computador? Pues bien, mientras NFS y el motor de grid esten todavía aquí, puedes usarlos <a id="vc">videoconvert</a> herramienta.',
+	                        'Sólo subir <a id="fl">con licencia libre</a> o <a id="pd">dominio público</a> contenido. <a id="fu">Fair use</a> no se me permite en commons.'
 	                   ],
     extensionmsg      : "La extensión de archivo seleccionada arriba es usada si y sólo si el vídeo está en formato no-libre, los cuales requieren transcodificación. Vídeos en formatos libres mantendrán sus extensiones."
 };
