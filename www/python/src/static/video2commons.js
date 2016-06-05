@@ -456,12 +456,12 @@
 	};
 
 	video2commons.processInput = function( button ) {
-		function nextStep() {
+		var nextStep = function() {
 			var action = {'prev': -1, 'next': 1}[button];
 			var steps = ['source', 'target', 'confirm'];
 			window.newTaskData.step = steps[steps.indexOf(window.newTaskData.step) + action];
 			video2commons.setupAddTaskDialog();
-		}
+		};
 
 		switch ( window.addTaskStep ) {
 			case 'source':
@@ -475,21 +475,21 @@
 					return;
 				}
 
-				function ask2() {
+				var ask2 = function() {
 					if ( video !== window.newTaskData.video || audio !== window.newTaskData.audio ) {
 						video2commons.askAPI( 'listformats', { video: video, audio: audio }, ['video', 'audio', 'format', 'formats'], nextStep);
 					} else {
 						nextStep();
 					}
-				}
+				};
 
-				function ask1() {
+				var ask1 = function() {
 					if ( url !== window.newTaskData.url ) {
 						video2commons.askAPI( 'extracturl', { url: url }, ['url', 'extractor', 'filedesc', 'filename'], ask2);
 					} else {
 						ask2();
 					}
-				}
+				};
 
 				ask1();
 				break;
