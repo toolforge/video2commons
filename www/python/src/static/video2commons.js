@@ -437,6 +437,8 @@
 						video2commons.disablePrevNext( false );
 
 						window.addTaskDialog.modal( "hide" );
+						$( '#tasktable > tbody' )
+							.append( '<tr id="task-new"><td colspan="3">' + loaderImage + '</td></tr>' );
 
 						$.post( 'api/task/run', window.newTaskData )
 							.done( function( data ) {
