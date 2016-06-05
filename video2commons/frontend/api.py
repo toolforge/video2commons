@@ -356,8 +356,8 @@ def list_formats():
     prefer = ''
     video = _boolize(request.form['video'])
     audio = _boolize(request.form['audio'])
-    if not video and audio:
-        raise RuntimeError('Eithor video or audio must be kept')
+    if not video and not audio:
+        raise RuntimeError('Either video or audio must be kept')
     elif video and not audio:
         formats = ['ogv (Theora)', 'webm (VP8)', 'webm (VP9, experimental)']
         prefer = 'webm (VP8)'
