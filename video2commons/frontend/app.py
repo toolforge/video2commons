@@ -77,7 +77,8 @@ def main():
         return render_template('banned.min.html', reason=banned)
 
     try:
-        dologin()
+        auth = dologin()
+        session['language'] = querylanguage(auth)
     except:
         return render_template('main.min.html', loggedin=False)
 
@@ -108,6 +109,13 @@ def dologin():
         resource_owner_secret=access_token.secret
     )
 
+    return auth
+
+
+def querylanguage(auth):
+    """Query user's language that's available on v2c."""
+    default = 'en'
+
     r = requests.post(
         url=api_url.replace('index.php', 'api.php'),
         data={
@@ -122,17 +130,23 @@ def dologin():
     try:
         language = r.json()['query']['userinfo']['options']['language']
     except (NameError, KeyError):
-        language = None
+        return default
 
-    if language and not os.path.isfile(
+    if not language:
+        return default
+
+    if os.path.isfile(
         os.path.dirname(os.path.realpath(__file__)) +
         '/static/i18n/' + language + '.min.js'
     ):
-        language = None
-
-    session['language'] = language or 'en'
-
-    return auth
+        return language
+    elif '-' in language and os.path.isfile(
+        os.path.dirname(os.path.realpath(__file__)) +
+        '/static/i18n/' + language.split('-')[0] + '.min.js'
+    ):
+        return language.split('-')[0]
+    else:
+        return default
 
 
 @app.route('/oauthinit')
