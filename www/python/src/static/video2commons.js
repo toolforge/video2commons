@@ -398,7 +398,7 @@
 	};
 
 	video2commons.reactivatePrevNextButtons = function() {
-		switch ( window.addTaskStep ) {
+		switch ( window.newTaskData.step ) {
 			case 'source':
 				window.addTaskDialog.find( '#btn-prev' )
 					.addClass( 'disabled' )
@@ -463,7 +463,7 @@
 			video2commons.setupAddTaskDialog();
 		};
 
-		switch ( window.addTaskStep ) {
+		switch ( window.newTaskData.step ) {
 			case 'source':
 				var url = window.addTaskDialog.find( '#url' ).val(),
 					video = window.addTaskDialog.find( '#video' ).is( ":checked" ),
@@ -552,20 +552,6 @@
 		for ( var i = 0; i < arr.length; i++ )
 			window.addTaskDialog.find( '#' + arr[ i ] )
 			.text( data[ arr[ i ] ] );
-	};
-
-	video2commons.getPostData = function( action ) {
-		return {
-			id: window.newTaskTempID,
-			action: action,
-			step: window.addTaskStep,
-			filename: window.addTaskDialog.find( '#filename' )
-				.val(),
-			format: window.addTaskDialog.find( '#format' )
-				.val(),
-			filedesc: window.addTaskDialog.find( '#filedesc' )
-				.val()
-		};
 	};
 
 	video2commons.disablePrevNext = function( spin ) {
