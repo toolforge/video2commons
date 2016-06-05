@@ -520,7 +520,7 @@
 					return;
 				}
 				for ( var i = 0; i < dataout.length; i++ )
-					window.newTaskData[ dataout[i] ] = window.newTaskData[ data[i] ];
+					window.newTaskData[ dataout[i] ] = data[ dataout[i] ];
 				if (cb) cb();
 			} )
 			.fail( function() {
