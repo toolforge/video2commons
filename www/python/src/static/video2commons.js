@@ -555,7 +555,8 @@
 				}
 				for ( var i = 0; i < dataout.length; i++ )
 					window.newTaskData[ dataout[ i ] ] = data[ dataout[ i ] ];
-				if ( cb ) cb();
+				if ( cb )
+					return cb();
 			} )
 			.fail( function() {
 				video2commons.showFormError( 'Something weird happened. Please try again.' );
