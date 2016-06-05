@@ -293,6 +293,7 @@
 			video: true,
 			subtitles: true,
 			filename: true,
+			filenamechecked: false,
 			formats: [],
 			format: '',
 			filedesc: ''
@@ -488,6 +489,7 @@
 
 				var ask1 = function() {
 					if ( url !== window.newTaskData.url ) {
+						window.newTaskData.filenamechecked = false;
 						video2commons.askAPI( 'extracturl', { url: url }, ['url', 'extractor', 'filedesc', 'filename'], ask2);
 					} else {
 						ask2();
@@ -505,8 +507,12 @@
 					video2commons.showFormError( 'Filename and file description cannot be empty!' );
 					return;
 				}
-				if ( filename !== window.newTaskData.filename ) {
-					video2commons.askAPI( 'validatefilename', { filename: filename }, ['filename'], nextStep);
+
+				if ( !window.newTaskData.filenamechecked || filename !== window.newTaskData.filename ) {
+					video2commons.askAPI( 'validatefilename', { filename: filename }, ['filename'], function() {
+						window.newTaskData.filenamechecked = true;
+						nextStep();
+					} );
 				} else {
 					nextStep();
 				}
