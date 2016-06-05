@@ -1,4 +1,4 @@
-//English language
+//Chinese language
 window.labels = {
 	abort             :"取消",
 	remove            :"删除",
