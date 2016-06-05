@@ -30,6 +30,7 @@ window.labels = {
 	subtitles         :"subtítulos",
 	note              :"Nota:",
 	filename          :"Nombre de archivo",
+	commaseperator    :", ",
 	importantnote     :"Nota importante: ",
 	notes             :[
 	                        "Listas de reproducción no se procesarán correctamente. Algunos sitios web (como Youku y Comedy Central) utilizar vídeos divididos en varias partes, interpretado como una lista de reproducción, no serán procesadas correctamente.",

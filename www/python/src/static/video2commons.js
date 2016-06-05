@@ -363,10 +363,16 @@
 						window.addTaskDialog.find( '.modal-body' )
 							.html( dataHtml );
 
+						var keep = [];
+						if ( window.newTaskData.video ) keep.push( labels.video );
+						if ( window.newTaskData.audio ) keep.push( labels.audio );
+						if ( window.newTaskData.subtitles ) keep.push( labels.subtitles );
+						window.addTaskDialog.find( '#keep' )
+							.text( keep.join( labels.commaseperator ) );
+
 						video2commons.setText( [
 							'url',
 							'extractor',
-							'keep',
 							'filename',
 							'format'
 						], window.newTaskData );
