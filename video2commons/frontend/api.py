@@ -59,8 +59,11 @@ def format_exception(e):
     except UnicodeError:
         desc = str(desc.decode('utf-8').encode('utf-8'))
 
-    return 'An exception occured: %s: %s' % \
-        (type(e).__name__, desc)
+    if isinstance(e, AssertionError):
+        return desc
+    else:
+        return 'An exception occured: %s: %s' % \
+            (type(e).__name__, desc)
 
 
 def error_json(e):
@@ -386,43 +389,32 @@ def escape_wikitext(wikitext):
 def submit_task():
     """Handle task parameters."""
     banned = check_banned()
-    if banned:
-        return error_json(
-            'You are banned from using this tool! Reason: ' + banned
-        )
+    assert not banned, 'You are banned from using this tool! Reason: ' + banned
 
     if 'newtasks' not in session:
         session['newtasks'] = {}
 
     # Asserts
-    if 'id' not in request.form:
-        return jsonify(
-            step='error',
-            error='Your submitted data cannot be parsed. Please try again.'
-        )
+    assert 'id' in request.form, \
+        'Your submitted data cannot be parsed. Please try again.'
 
     id = request.form['id']
-    if id not in session['newtasks']:
-        return error_json(
-            'We could not process your data due to loss of ' +
-            'session data. Please reload the page and try again.'
-        )
+    assert id in session['newtasks'], \
+        'We could not process your data due to loss of ' + \
+        'session data. Please reload the page and try again.'
 
     for data in [
         'url', 'extractor', 'audio', 'video', 'subtitles',
         'filename', 'format', 'formats', 'filedesc'
     ]:
-        if data not in session['newtasks'][id]:
-            return error_json(
-                'We could not process your data due to loss of ' +
-                'session data. Please reload the page and try again.'
-            )
+        assert data in session['newtasks'][id], \
+            'We could not process your data due to loss of ' + \
+            'session data. Please reload the page and try again.'
 
     # Save current data
     step = request.form['step']
     if step == 'source':
-        if not request.form['url'].strip():
-            return error_json('URL cannot be empty!')
+        assert request.form['url'].strip(), 'URL cannot be empty!'
 
         formaudio = request.form['audio'] in \
             [True, 'true', 'TRUE', 'True', 1, '1']
@@ -444,19 +436,16 @@ def submit_task():
         relist_formats(id)
 
     elif step == 'target':
-        if request.form['format'].strip() not in \
-                session['newtasks'][id]['formats']:
-            return error_json(
-                'An invalid format was requested and could ' +
-                'not be processed. Please reload the dialog and try again.'
-            )
-        if not (
+        assert request.form['format'].strip() in \
+            session['newtasks'][id]['formats'], \
+            'An invalid format was requested and could ' + \
+            'not be processed. Please reload the dialog and try again.'
+
+        assert (
             request.form['filename'].strip() and
             request.form['filedesc'].strip()
-        ):
-            return error_json(
-                'Filename and file description cannot be empty!'
-            )
+        ), \
+            'Filename and file description cannot be empty!'
 
         session['newtasks'][id]['filename'] = \
             request.form['filename'].strip()
