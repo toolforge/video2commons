@@ -514,8 +514,10 @@
 	video2commons.askAPI = function( url, datain, dataout, cb ) {
 		$.post( 'api/' + url, datain )
 			.done( function( data ) {
-				if ( data.error )
+				if ( data.error ) {
 					video2commons.showFormError( data.error );
+					return;
+				}
 				for ( var i = 0; i < dataout.length; i++ )
 					window.newTaskData[ dataout[i] ] = window.newTaskData[ data[i] ];
 				if (cb) cb();
