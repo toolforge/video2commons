@@ -352,8 +352,6 @@
 						window.addTaskDialog.find( '#filedesc' )
 							.val( window.newTaskData.filedesc );
 					} );
-
-
 				break;
 			case 'confirm':
 				//confirmForm.html
@@ -387,7 +385,7 @@
 		video2commons.reactivatePrevNextButtons();
 	};
 
-	video2commons.showFormError = function(error) {
+	video2commons.showFormError = function( error ) {
 		if ( !window.addTaskDialog.find( '.modal-body #dialog-errorbox' )
 			.length ) {
 			window.addTaskDialog.find( '.modal-body' )
@@ -467,18 +465,25 @@
 
 	video2commons.processInput = function( button ) {
 		var nextStep = function() {
-			var action = {'prev': -1, 'next': 1}[button];
-			var steps = ['source', 'target', 'confirm'];
-			window.newTaskData.step = steps[steps.indexOf(window.newTaskData.step) + action];
+			var action = {
+				'prev': -1,
+				'next': 1
+			}[ button ];
+			var steps = [ 'source', 'target', 'confirm' ];
+			window.newTaskData.step = steps[ steps.indexOf( window.newTaskData.step ) + action ];
 			video2commons.setupAddTaskDialog();
 		};
 
 		switch ( window.newTaskData.step ) {
 			case 'source':
-				var url = window.addTaskDialog.find( '#url' ).val(),
-					video = window.addTaskDialog.find( '#video' ).is( ":checked" ),
-					audio = window.addTaskDialog.find( '#audio' ).is( ":checked" );
-				window.newTaskData.subtitles = window.addTaskDialog.find( '#subtitles' ).is( ":checked" );
+				var url = window.addTaskDialog.find( '#url' )
+					.val(),
+					video = window.addTaskDialog.find( '#video' )
+					.is( ":checked" ),
+					audio = window.addTaskDialog.find( '#audio' )
+					.is( ":checked" );
+				window.newTaskData.subtitles = window.addTaskDialog.find( '#subtitles' )
+					.is( ":checked" );
 
 				if ( !url ) {
 					video2commons.showFormError( 'URL cannot be empty!' );
@@ -487,7 +492,10 @@
 
 				var ask2 = function() {
 					if ( !window.newTaskData.formats.length || video !== window.newTaskData.video || audio !== window.newTaskData.audio ) {
-						video2commons.askAPI( 'listformats', { video: video, audio: audio }, ['video', 'audio', 'format', 'formats'], nextStep);
+						video2commons.askAPI( 'listformats', {
+							video: video,
+							audio: audio
+						}, [ 'video', 'audio', 'format', 'formats' ], nextStep );
 					} else {
 						nextStep();
 					}
@@ -496,7 +504,9 @@
 				var ask1 = function() {
 					if ( url !== window.newTaskData.url ) {
 						window.newTaskData.filenamechecked = false;
-						video2commons.askAPI( 'extracturl', { url: url }, ['url', 'extractor', 'filedesc', 'filename'], ask2);
+						video2commons.askAPI( 'extracturl', {
+							url: url
+						}, [ 'url', 'extractor', 'filedesc', 'filename' ], ask2 );
 					} else {
 						ask2();
 					}
@@ -505,17 +515,22 @@
 				ask1();
 				break;
 			case 'target':
-				var filename = window.addTaskDialog.find( '#filename' ).val();
-				window.newTaskData.filedesc = window.addTaskDialog.find( '#filedesc' ).val();
-				window.newTaskData.format = window.addTaskDialog.find( '#format' ).val();
+				var filename = window.addTaskDialog.find( '#filename' )
+					.val();
+				window.newTaskData.filedesc = window.addTaskDialog.find( '#filedesc' )
+					.val();
+				window.newTaskData.format = window.addTaskDialog.find( '#format' )
+					.val();
 
-				if ( !filename || ! window.newTaskData.filedesc ) {
+				if ( !filename || !window.newTaskData.filedesc ) {
 					video2commons.showFormError( 'Filename and file description cannot be empty!' );
 					return;
 				}
 
 				if ( !window.newTaskData.filenamechecked || filename !== window.newTaskData.filename ) {
-					video2commons.askAPI( 'validatefilename', { filename: filename }, ['filename'], function() {
+					video2commons.askAPI( 'validatefilename', {
+						filename: filename
+					}, [ 'filename' ], function() {
 						window.newTaskData.filenamechecked = true;
 						nextStep();
 					} );
@@ -539,8 +554,8 @@
 					return;
 				}
 				for ( var i = 0; i < dataout.length; i++ )
-					window.newTaskData[ dataout[i] ] = data[ dataout[i] ];
-				if (cb) cb();
+					window.newTaskData[ dataout[ i ] ] = data[ dataout[ i ] ];
+				if ( cb ) cb();
 			} )
 			.fail( function() {
 				video2commons.showFormError( 'Something weird happened. Please try again.' );
@@ -587,7 +602,7 @@
 			.off();
 		if ( spin )
 			window.addTaskDialog.find( '#dialog-spinner' )
-				.show();
+			.show();
 	};
 
 	video2commons.removeButtonClick = function( obj ) {
