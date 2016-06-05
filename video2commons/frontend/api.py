@@ -370,6 +370,8 @@ def list_formats():
         prefer = 'webm (VP8/Vorbis)'
 
     return jsonify(
+        audio=audio,
+        video=video,
         format=prefer,
         formats=formats
     )
