@@ -38,5 +38,5 @@ window.labels = {
 	                        'What if I need to convert and upload a file on my computer? Well, while NFS and Grid engine is still here, you can use <a id="vc">videoconvert</a> tool.',
 	                        'Only upload <a id="fl">freely licensed</a> or <a id="pd">public domain</a> content. <a id="fu">Fair use</a> is not allowed on commons.'
 	                   ],
-	extensionmsg      :"The file extension set above is used if and only if the video is in a non-free format, which transcoding is required. Videos in free formats will keep their extensions."
+	extensionmsg      :"The file extension set above is used if and only if the video is in a non-free format, which requires transcoding. Videos in free formats will keep their extensions."
 };
