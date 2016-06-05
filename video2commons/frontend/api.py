@@ -258,7 +258,7 @@ def new_task():
 
 
 @api.route('/extracturl', methods=['POST'])
-def rextract_url():
+def extract_url():
     """Extract a video url."""
     url = request.form['url']
 
@@ -385,6 +385,60 @@ def escape_wikitext(wikitext):
     return pattern.sub(lambda m: rep[re.escape(m.group(0))], wikitext)
 
 
+@api.route('/listformats', methods=['POST'])
+def list_formats():
+    """List the possible convert formats from a given audio/video pair."""
+    formats = []
+    prefer = ''
+    video = _boolize(request.form['video'])
+    audio = _boolize(request.form['audio'])
+    if not video and audio:
+        raise RuntimeError('Eithor video or audio must be kept')
+    elif video and not audio:
+        formats = ['ogv (Theora)', 'webm (VP8)', 'webm (VP9, experimental)']
+        prefer = 'webm (VP8)'
+    elif not video and audio:
+        formats = ['ogg (Vorbis)', 'opus (Opus, experimental)']
+        prefer = 'ogg (Vorbis)'
+    elif video and audio:
+        formats = ['ogv (Theora/Vorbis)', 'webm (VP8/Vorbis)',
+                   'webm (VP9/Opus, experimental)']
+        prefer = 'webm (VP8/Vorbis)'
+
+    return jsonify(
+        format=prefer,
+        formats=formats
+    )
+
+
+def _boolize(data):
+    return data in [True, 'true', 'TRUE', 'True', 1, '1']
+
+
+@api.route('/validatefilename', methods=['POST'])
+def validate_filename():
+    """Validate filename for invalid characters/parts."""
+    filename = request.form['filename']
+    for char in '[]{}|#<>%+?!:/\\.':
+        assert char not in filename, \
+            'Your filename contains an illegal character: ' + char
+
+    illegalords = range(0, 32) + [127]
+    for char in filename:
+        # ord(char) to prevent bad renderings
+        assert ord(char) not in illegalords, \
+            'Your filename contains an illegal character: chr(%d)' % ord(char)
+
+    assert len(filename) < 250, 'Your filename is too long'
+
+    assert not re.search(r"&[A-Za-z0-9\x80-\xff]+;", filename), \
+        'Your filename contains XML/HTML character references'
+
+    return jsonify(
+        filename=filename.replace('_', ' ')
+    )
+
+
 @api.route('/task/submit', methods=['POST'])
 def submit_task():
     """Handle task parameters."""
@@ -416,12 +470,9 @@ def submit_task():
     if step == 'source':
         assert request.form['url'].strip(), 'URL cannot be empty!'
 
-        formaudio = request.form['audio'] in \
-            [True, 'true', 'TRUE', 'True', 1, '1']
-        formvideo = request.form['video'] in \
-            [True, 'true', 'TRUE', 'True', 1, '1']
-        formsubtitles = request.form['subtitles'] in \
-            [True, 'true', 'TRUE', 'True', 1, '1']
+        formaudio = _boolize(request.form['audio'])
+        formvideo = _boolize(request.form['video'])
+        formsubtitles = _boolize(request.form['subtitles'])
 
         # re-extract url data via youtube-dl
         need_rextract = \
@@ -512,31 +563,6 @@ def submit_task():
         )
 
 
-def relist_formats(id):
-    """List the possible convert formats from a given audio/video pair."""
-    formats = []
-    prefer = ''
-    if not session['newtasks'][id]['video'] and \
-            not session['newtasks'][id]['audio']:
-        raise RuntimeError('Eithor video or audio must be kept')
-    elif session['newtasks'][id]['video'] and \
-            not session['newtasks'][id]['audio']:
-        formats = ['ogv (Theora)', 'webm (VP8)', 'webm (VP9, experimental)']
-        prefer = 'webm (VP8)'
-    elif not session['newtasks'][id]['video'] and \
-            session['newtasks'][id]['audio']:
-        formats = ['ogg (Vorbis)', 'opus (Opus, experimental)']
-        prefer = 'ogg (Vorbis)'
-    elif session['newtasks'][id]['video'] and \
-            session['newtasks'][id]['audio']:
-        formats = ['ogv (Theora/Vorbis)', 'webm (VP8/Vorbis)',
-                   'webm (VP9/Opus, experimental)']
-        prefer = 'webm (VP8/Vorbis)'
-
-    session['newtasks'][id]['format'] = prefer
-    session['newtasks'][id]['formats'] = formats
-
-
 def get_download_key(format):
     """Get the youtube-dl download format key."""
     return {
@@ -563,27 +589,6 @@ def get_convert_key(format):
         'webm (VP8/Vorbis)': 'webm',
         'webm (VP9/Opus, experimental)': 'vp9.webm',
     }[format]
-
-
-def revalidate_filename(id):
-    """Validate filename for invalid characters/parts."""
-    filename = session['newtasks'][id]['filename']
-    for char in '[]{}|#<>%+?!:/\\.':
-        assert char not in filename, \
-            'Your filename contains an illegal character: ' + char
-
-    illegalords = range(0, 32) + [127]
-    for char in filename:
-        # ord(char) to prevent bad renderings
-        assert ord(char) not in illegalords, \
-            'Your filename contains an illegal character: chr(%d)' % ord(char)
-
-    assert len(filename) < 250, 'Your filename is too long'
-
-    assert not re.search(r"&[A-Za-z0-9\x80-\xff]+;", filename), \
-        'Your filename contains XML/HTML character references'
-
-    session['newtasks'][id]['filename'] = filename.replace('_', ' ')
 
 
 def run_task(id):
