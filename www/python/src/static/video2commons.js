@@ -451,6 +451,7 @@
 	video2commons.setPrevNextButton = function( button ) {
 		window.addTaskDialog.find( '#btn-' + button )
 			.click( function() {
+				video2commons.disablePrevNext( true );
 				video2commons.processInput( button );
 			} );
 	};
