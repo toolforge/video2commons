@@ -498,7 +498,12 @@
 				var filename = window.addTaskDialog.find( '#filename' ).val();
 				window.newTaskData.filedesc = window.addTaskDialog.find( '#filedesc' ).val();
 				window.newTaskData.format = window.addTaskDialog.find( '#format' ).val();
-				if ( url !== window.newTaskData.url ) {
+
+				if ( !filename || ! window.newTaskData.filedesc ) {
+					video2commons.showFormError( 'Filename and file description cannot be empty!' );
+					return;
+				}
+				if ( filename !== window.newTaskData.filename ) {
 					video2commons.askAPI( 'validatefilename', { filename: filename }, ['filename'], nextStep);
 				} else {
 					nextStep();
