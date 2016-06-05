@@ -477,7 +477,7 @@
 				}
 
 				var ask2 = function() {
-					if ( video !== window.newTaskData.video || audio !== window.newTaskData.audio ) {
+					if ( !window.newTaskData.formats.length || video !== window.newTaskData.video || audio !== window.newTaskData.audio ) {
 						video2commons.askAPI( 'listformats', { video: video, audio: audio }, ['video', 'audio', 'format', 'formats'], nextStep);
 					} else {
 						nextStep();
