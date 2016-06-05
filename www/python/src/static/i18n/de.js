@@ -1,0 +1,42 @@
+//German language
+window.labels = {
+	abort             :"Abbrechen",
+	remove            :"Entfernen",
+	restart           :"Neustart",
+	next              :"Weiter",
+	loading           :"LADEN...",
+	confirm           :"Bestätigen ",
+	errorGeneric      :"Etwas ging furchtbar schief. Bitte aktualisieren die Seite oder kontaktiere [[:commons:User:Zhuyifei1999]].",
+	errorTooLarge     :"Die Datei zu groß um sie direkt hochzuladen! Du kannst einen <a>Serverseitigen-Upload</a> beantragen.",
+	addTask           :"Task hinzufügen...",
+	yourTasks         :"Deine Tasks:",
+	createServerSide  :"Erstellen einen Antrag (Ticket) für serverseitiges Hochladen in einem Schritt (empfohlen)",
+	requestServerSide :"<a>Serverseitigen-Upload beantragen</a>",
+	taskDone          :"Der Task wurde erledigt. Du findest die Datei unter <a></a>.",
+	//templates
+	cancel            :"Abbrechen",
+	back              :"Zurück",
+	extractor         :"Extractor",
+	keep              :"Behalten",
+	filetarget        :"Ziel Dateiname",
+	transcoding       :"Transcode Format",
+	filedescription   :"Dateibeschreibungsseite",
+	confirmmsg        :"Bitte bestätige den Task oder klicke auf 'Zurück' um die Parameter anzupassen. Wenn du auf 'Bestätigen' klickst wird der Task gestartet und ausgeführt. Ein Task kann nach dem Start aufgrund technischer Einschränkungen nicht beendet werden. ",
+	video             :"video",
+	audio             :"ton (audio)",
+	keepvideo         :"Video behalten",
+	keepaudio         :"Ton audio",
+	importsubtitles   :"Untertitel importieren",
+	subtitles         :"Untertitel",
+	note              :"Notiz:",
+	filename          :"Hinweis",
+	importantnote     :"Wichtiger Hinweis: ",
+	notes             :[
+	                        "Playlists will not be processed correctly. Some sites (such as Youku and Comedy Central) make use of multipart videos, interpreted as playlists, and will not be processed correctly either.",
+	                        "If the media does not include video or audio tracks, please uncheck the corresponding checkboxes; otherwise conversion may fail, even if the format is free.",
+	                        "If 'Import subtitles' is checked, subtitles will be imported, excluding auto-generated ones.",
+	                        'What if I need to convert and upload a file on my computer? Well, while NFS and Grid engine is still here, you can use <a id="vc">videoconvert</a> tool.',
+	                        'Only upload <a id="fl">freely licensed</a> or <a id="pd">public domain</a> content. <a id="fu">Fair use</a> is not allowed on commons.'
+	                   ],
+	extensionmsg      :"The file extension set above is used if and only if the video is in a non-free format, which transcoding is required. Videos in free formats will keep their extensions."
+};
