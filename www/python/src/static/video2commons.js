@@ -301,8 +301,6 @@
 	};
 
 	video2commons.setupAddTaskDialog = function() {
-		window.addTaskDialog.find( '#dialog-spinner' )
-			.hide();
 		switch ( window.newTaskData.step ) {
 			case 'source':
 				//sourceForm.html
@@ -398,6 +396,8 @@
 	};
 
 	video2commons.reactivatePrevNextButtons = function() {
+		window.addTaskDialog.find( '#dialog-spinner' )
+			.hide();
 		switch ( window.newTaskData.step ) {
 			case 'source':
 				window.addTaskDialog.find( '#btn-prev' )
