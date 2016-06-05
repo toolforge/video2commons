@@ -21,7 +21,6 @@
 
 from __future__ import absolute_import
 
-import os
 import re
 import pickle
 import traceback
@@ -222,41 +221,6 @@ Thank you!""" % (wgetlinks)
     return phaburl
 
 
-@api.route('/task/new', methods=['POST'])
-def new_task():
-    """Create a new task with variables prefilled."""
-    if 'newtasks' not in session:
-        session['newtasks'] = {}
-
-    id = ""
-    for i in range(10):  # 10 tries
-        id = os.urandom(8).encode('hex')
-        if id not in session['newtasks']:
-            session['newtasks'][id] = {}
-            break
-    else:
-        raise RuntimeError("Too many retries to generate a task id")
-
-    session['newtasks'][id]['url'] = ""
-    session['newtasks'][id]['extractor'] = ""
-    session['newtasks'][id]['audio'] = True
-    session['newtasks'][id]['video'] = True
-    session['newtasks'][id]['subtitles'] = True
-    session['newtasks'][id]['filename'] = ""
-    session['newtasks'][id]['formats'] = []
-    session['newtasks'][id]['format'] = ""
-    session['newtasks'][id]['filedesc'] = ""
-
-    return jsonify(
-        id=id,
-        step='source',
-        url=session['newtasks'][id]['url'],
-        audio=session['newtasks'][id]['audio'],
-        video=session['newtasks'][id]['video'],
-        subtitles=session['newtasks'][id]['subtitles']
-    )
-
-
 @api.route('/extracturl', methods=['POST'])
 def extract_url():
     """Extract a video url."""
@@ -418,7 +382,12 @@ def _boolize(data):
 @api.route('/validatefilename', methods=['POST'])
 def validate_filename():
     """Validate filename for invalid characters/parts."""
-    filename = request.form['filename']
+    return jsonify(
+        filename=_validate_filename(request.form['filename'])
+    )
+
+
+def _validate_filename(filename):
     for char in '[]{}|#<>%+?!:/\\.':
         assert char not in filename, \
             'Your filename contains an illegal character: ' + char
@@ -434,133 +403,7 @@ def validate_filename():
     assert not re.search(r"&[A-Za-z0-9\x80-\xff]+;", filename), \
         'Your filename contains XML/HTML character references'
 
-    return jsonify(
-        filename=filename.replace('_', ' ')
-    )
-
-
-@api.route('/task/submit', methods=['POST'])
-def submit_task():
-    """Handle task parameters."""
-    banned = check_banned()
-    assert not banned, 'You are banned from using this tool! Reason: ' + banned
-
-    if 'newtasks' not in session:
-        session['newtasks'] = {}
-
-    # Asserts
-    assert 'id' in request.form, \
-        'Your submitted data cannot be parsed. Please try again.'
-
-    id = request.form['id']
-    assert id in session['newtasks'], \
-        'We could not process your data due to loss of ' + \
-        'session data. Please reload the page and try again.'
-
-    for data in [
-        'url', 'extractor', 'audio', 'video', 'subtitles',
-        'filename', 'format', 'formats', 'filedesc'
-    ]:
-        assert data in session['newtasks'][id], \
-            'We could not process your data due to loss of ' + \
-            'session data. Please reload the page and try again.'
-
-    # Save current data
-    step = request.form['step']
-    if step == 'source':
-        assert request.form['url'].strip(), 'URL cannot be empty!'
-
-        formaudio = _boolize(request.form['audio'])
-        formvideo = _boolize(request.form['video'])
-        formsubtitles = _boolize(request.form['subtitles'])
-
-        # re-extract url data via youtube-dl
-        need_rextract = \
-            request.form['url'].strip() != session['newtasks'][id]['url']
-        session['newtasks'][id]['url'] = request.form['url'].strip()
-        session['newtasks'][id]['audio'] = formaudio
-        session['newtasks'][id]['video'] = formvideo
-        session['newtasks'][id]['subtitles'] = formsubtitles
-
-        if need_rextract:
-            rextract_url(id)
-        relist_formats(id)
-
-    elif step == 'target':
-        assert request.form['format'].strip() in \
-            session['newtasks'][id]['formats'], \
-            'An invalid format was requested and could ' + \
-            'not be processed. Please reload the dialog and try again.'
-
-        assert (
-            request.form['filename'].strip() and
-            request.form['filedesc'].strip()
-        ), \
-            'Filename and file description cannot be empty!'
-
-        session['newtasks'][id]['filename'] = \
-            request.form['filename'].strip()
-        session['newtasks'][id]['format'] = \
-            request.form['format'].strip()
-        session['newtasks'][id]['filedesc'] = \
-            request.form['filedesc'].strip()
-
-        revalidate_filename(id)
-
-    elif step == 'confirm':
-        pass  # nothing to do in confirm screen
-
-    else:
-        return error_json(
-            'Something weird going on. ' +
-            'Please notify [[commons:User:Zhuyifei1999]]'
-        )
-
-    action = request.form['action']
-    if step == 'source' and action == 'prev':
-        return error_json('You cannot go to the previous step of first step.')
-    elif step == 'confirm' and action == 'next':
-        return run_task(id)
-
-    # Send new data
-    action = {'prev': -1, 'next': 1}[action]
-    steps = ['source', 'target', 'confirm']
-    step = steps[steps.index(step) + action]
-
-    if step == 'source':
-        return jsonify(
-            id=id,
-            step=step,
-            url=session['newtasks'][id]['url'],
-            audio=session['newtasks'][id]['audio'],
-            video=session['newtasks'][id]['video'],
-            subtitles=session['newtasks'][id]['subtitles']
-        )
-    elif step == 'target':
-        return jsonify(
-            id=id,
-            step=step,
-            filename=session['newtasks'][id]['filename'],
-            formats=session['newtasks'][id]['formats'],
-            format=session['newtasks'][id]['format'],
-            filedesc=session['newtasks'][id]['filedesc']
-        )
-    elif step == 'confirm':
-        keep = ", ".join(filter(None, [
-            'video' if session['newtasks'][id]['video'] else False,
-            'audio' if session['newtasks'][id]['audio'] else False,
-            'subtitles' if session['newtasks'][id]['subtitles'] else False,
-        ]))
-        return jsonify(
-            id=id,
-            step=step,
-            url=session['newtasks'][id]['url'],
-            extractor=session['newtasks'][id]['extractor'],
-            keep=keep,
-            filename=session['newtasks'][id]['filename'],
-            format=session['newtasks'][id]['format'],
-            filedesc=session['newtasks'][id]['filedesc']
-        )
+    return filename.replace('_', ' ')
 
 
 def get_download_key(format):
@@ -591,15 +434,16 @@ def get_convert_key(format):
     }[format]
 
 
-def run_task(id):
+@api.route('/task/run', methods=['POST'])
+def run_task():
     """Run a task with parameters from session."""
-    url = session['newtasks'][id]['url']
-    ie_key = session['newtasks'][id]['extractor']
-    subtitles = session['newtasks'][id]['subtitles']
-    filename = session['newtasks'][id]['filename']
-    filedesc = session['newtasks'][id]['filedesc']
-    downloadkey = get_download_key(session['newtasks'][id]['format'])
-    convertkey = get_convert_key(session['newtasks'][id]['format'])
+    url = request.form['url']
+    ie_key = request.form['extractor']
+    subtitles = request.form['subtitles']
+    filename = request.form['filename']
+    filedesc = request.form['filedesc']
+    downloadkey = get_download_key(request.form['format'])
+    convertkey = get_convert_key(request.form['format'])
     username = session['username']
     oauth = (session['access_token_key'], session['access_token_secret'])
 
@@ -608,13 +452,14 @@ def run_task(id):
         downloadkey, convertkey, username, oauth
     ))
 
-    del session['newtasks'][id]
-
-    return jsonify(id=id, step='success', taskid=taskid)
+    return jsonify(id=taskid, step='success')
 
 
 def run_task_internal(filename, params):
     """Internal run task function to accept whatever params given."""
+    banned = check_banned()
+    assert not banned, 'You are banned from using this tool! Reason: ' + banned
+
     res = worker.main.delay(*params)
     taskid = res.id
 
