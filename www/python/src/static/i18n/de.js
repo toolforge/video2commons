@@ -1,0 +1,43 @@
+//German language
+window.labels = {
+	abort             :"Abbrechen",
+	remove            :"Entfernen",
+	restart           :"Neustart",
+	next              :"Weiter",
+	loading           :"LADEN...",
+	confirm           :"Bestätigen ",
+	errorGeneric      :"Etwas ging fatal schief. Bitte aktualisiere die Seite oder kontaktiere [[c:User:Zhuyifei1999]].",
+	errorTooLarge     :"Die Datei ist für direkten Upload zu groß! Du kannst einen <a>serverseitigen Upload</a> beantragen.",
+	addTask           :"Task hinzufügen...",
+	yourTasks         :"Deine Tasks:",
+	createServerSide  :"Erstellen eines Antrags (Ticket) für serverseitigen Upload in einem Schritt (empfohlen)",
+	requestServerSide :"<a>serverseitigen Upload beantragen</a>",
+	taskDone          :"Der Task wurde erledigt. Du findest die Datei unter <a></a>.",
+	//templates
+	cancel            :"Abbrechen",
+	back              :"Zurück",
+	extractor         :"Extrahierer",
+	keep              :"Behalten",
+	filetarget        :"Ziel-Dateiname",
+	transcoding       :"Transcode-Format",
+	filedescription   :"Dateibeschreibungsseite",
+	confirmmsg        :"Bitte bestätige den Task oder klicke auf 'Zurück' um die Parameter anzupassen. Wenn du auf 'Bestätigen' klickst wird der Task gestartet und ausgeführt. Ein Task kann nach dem Start aufgrund technischer Einschränkungen nicht mehr beendet werden. ",
+	video             :"Video",
+	audio             :"Audio (Ton)",
+	keepvideo         :"Video behalten",
+	keepaudio         :"Audio behalten",
+	importsubtitles   :"Untertitel importieren",
+	subtitles         :"Untertitel",
+	note              :"Hinweis:",
+	filename          :"Dateiname",
+	commaseperator    :", ",
+	importantnote     :"Wichtiger Hinweis: ",
+	notes             :[
+	                        "Playlists können nicht korrekt verarbeitet werden. Manche Websites (wie Youku und Comedy Central) verwenden sogenannte Multipart-Videos, die als Playlists interpretiert werden und ebenfalls nicht korrekt verarbeitet werden können.",
+	                        "Falls die Mediendatei keine Video- oder Audiospuren beinhaltet, setze die jeweiligen Checkboxes bitte auf falsch, da ansonsten die Umwandlung fehlschlagen kann, auch wenn das Format frei ist.",
+	                        "Wenn 'Untertitel importieren' ausgewählt ist, werden Untertitel importiert, allerdings keine autogenerierten.",
+	                        'Was wenn ich eine Datei von meinem Computer konvertieren und uploaden möchte? Solange sich die NFS- und Grid-Engines auf Wikimedia Tool Labs noch in Betrieb befinden, kannst du in solchen Fällen das <a id="vc">videoconvert</a>-Tool verwenden.',
+	                        'Uploade nur Inhalte die <a id="fl">frei lizensiert/a> oder <a id="pd">gemeinfrei</a> sind. "<a id="fu">Fair use</a>" ist auf Commons nicht gestattet.'
+	                   ],
+	extensionmsg      :"Die oben ausgewählte Datei-Extension wird ausschließlich verwendet, wenn das Video in einem unfreien Format ist, was Transcoding erfordert. Videos in freien Formaten behalten ihre Extensions."
+};
