@@ -30,6 +30,7 @@ window.labels = {
 	subtitles         :"subtitles",
 	note              :"Note:",
 	filename          :"Filename",
+	commaseperator    :", ",
 	importantnote     :"Important note: ",
 	notes             :[
 	                        "Playlists will not be processed correctly. Some sites (such as Youku and Comedy Central) make use of multipart videos, interpreted as playlists, and will not be processed correctly either.",

@@ -285,35 +285,24 @@
 	};
 
 	video2commons.newTask = function() {
-		var url = 'api/task/new';
-		$.post( url )
-			.done( function( data ) {
-				window.newTaskTempID = data.id;
-				video2commons.setupAddTaskDialog( data );
-			} )
-			.fail( function() {
-				window.addTaskDialog.html( htmlContent.errorGeneric );
-			} );
+		window.newTaskData = {
+			step: 'source',
+			url: '',
+			extractor: '',
+			audio: true,
+			video: true,
+			subtitles: true,
+			filename: true,
+			filenamechecked: false,
+			formats: [],
+			format: '',
+			filedesc: ''
+		};
+		video2commons.setupAddTaskDialog();
 	};
 
-	video2commons.setupAddTaskDialog = function( data ) {
-		window.addTaskDialog.find( '#dialog-spinner' )
-			.hide();
-		if ( data.step !== 'error' )
-			window.addTaskStep = data.step;
-		switch ( data.step ) {
-			case 'error':
-				if ( !window.addTaskDialog.find( '.modal-body #dialog-errorbox' )
-					.length ) {
-					window.addTaskDialog.find( '.modal-body' )
-						.append(
-							$( '<div class="alert alert-danger" id="dialog-errorbox"></div>' )
-						);
-				}
-				window.addTaskDialog.find( '.modal-body #dialog-errorbox' )
-					.text( 'Error: ' + data.error )
-					.show();
-				break;
+	video2commons.setupAddTaskDialog = function() {
+		switch ( window.newTaskData.step ) {
 			case 'source':
 				//sourceForm.html
 				$.get( 'static/html/sourceForm.min.html' )
@@ -332,14 +321,14 @@
 							.attr( 'href', '//commons.wikimedia.org/wiki/Commons:FU' );
 
 						window.addTaskDialog.find( '#url' )
-							.val( data.url )
+							.val( window.newTaskData.url )
 							.focus();
 						window.addTaskDialog.find( '#video' )
-							.prop( 'checked', data.video );
+							.prop( 'checked', window.newTaskData.video );
 						window.addTaskDialog.find( '#audio' )
-							.prop( 'checked', data.audio );
+							.prop( 'checked', window.newTaskData.audio );
 						window.addTaskDialog.find( '#subtitles' )
-							.prop( 'checked', data.subtitles );
+							.prop( 'checked', window.newTaskData.subtitles );
 					} );
 				break;
 			case 'target':
@@ -351,20 +340,18 @@
 							.html( dataHtml );
 
 						window.addTaskDialog.find( '#filename' )
-							.val( data.filename )
+							.val( window.newTaskData.filename )
 							.focus();
-						$.each( data.formats, function( i, desc ) {
+						$.each( window.newTaskData.formats, function( i, desc ) {
 							window.addTaskDialog.find( '#format' )
 								.append( $( '<option></option>' )
 									.text( desc ) );
 						} );
 						window.addTaskDialog.find( '#format' )
-							.val( data.format );
+							.val( window.newTaskData.format );
 						window.addTaskDialog.find( '#filedesc' )
-							.val( data.filedesc );
+							.val( window.newTaskData.filedesc );
 					} );
-
-
 				break;
 			case 'confirm':
 				//confirmForm.html
@@ -374,23 +361,49 @@
 						window.addTaskDialog.find( '.modal-body' )
 							.html( dataHtml );
 
+						var keep = [];
+						if ( window.newTaskData.video ) keep.push( labels.video );
+						if ( window.newTaskData.audio ) keep.push( labels.audio );
+						if ( window.newTaskData.subtitles ) keep.push( labels.subtitles );
+						window.addTaskDialog.find( '#keep' )
+							.text( keep.join( labels.commaseperator ) );
+
 						video2commons.setText( [
 							'url',
 							'extractor',
-							'keep',
 							'filename',
 							'format'
-						], data );
+						], window.newTaskData );
 
 						window.addTaskDialog.find( '#filedesc' )
-							.val( data.filedesc );
+							.val( window.newTaskData.filedesc );
 
 						window.addTaskDialog.find( '#btn-next' )
 							.focus();
 					} );
 		}
+		video2commons.reactivatePrevNextButtons();
+	};
 
-		switch ( window.addTaskStep ) {
+	video2commons.showFormError = function( error ) {
+		if ( !window.addTaskDialog.find( '.modal-body #dialog-errorbox' )
+			.length ) {
+			window.addTaskDialog.find( '.modal-body' )
+				.append(
+					$( '<div class="alert alert-danger" id="dialog-errorbox"></div>' )
+				);
+		}
+		window.addTaskDialog.find( '.modal-body #dialog-errorbox' )
+			.text( 'Error: ' + error )
+			.show();
+
+		video2commons.reactivatePrevNextButtons();
+	};
+
+	video2commons.reactivatePrevNextButtons = function() {
+		window.addTaskDialog.find( '#dialog-spinner' )
+			.hide();
+		switch ( window.newTaskData.step ) {
 			case 'source':
 				window.addTaskDialog.find( '#btn-prev' )
 					.addClass( 'disabled' )
@@ -399,28 +412,8 @@
 					.removeClass( 'disabled' )
 					.html( labels.next + ' <span class="glyphicon glyphicon-chevron-right"></span>' )
 					.off();
-				window.addTaskDialog.find( '#btn-next' )
-					.click( function() {
-						video2commons.disablePrevNext();
 
-						window.addTaskDialog.find( '#dialog-spinner' )
-							.show();
-						var postdata = {
-							id: window.newTaskTempID,
-							action: 'next',
-							step: window.addTaskStep,
-							url: window.addTaskDialog.find( '#url' )
-								.val(),
-							video: window.addTaskDialog.find( '#video' )
-								.is( ":checked" ),
-							audio: window.addTaskDialog.find( '#audio' )
-								.is( ":checked" ),
-							subtitles: window.addTaskDialog.find( '#subtitles' )
-								.is( ":checked" )
-						};
-
-						video2commons.submitTask( postdata );
-					} );
+				video2commons.setPrevNextButton( 'next' );
 				break;
 			case 'target':
 				window.addTaskDialog.find( '#btn-prev' )
@@ -431,8 +424,8 @@
 					.html( labels.next + ' <span class="glyphicon glyphicon-chevron-right"></span>' )
 					.off();
 
-				video2commons.addTargetDialog( 'prev' );
-				video2commons.addTargetDialog( 'next' );
+				video2commons.setPrevNextButton( 'prev' );
+				video2commons.setPrevNextButton( 'next' );
 				break;
 			case 'confirm':
 				window.addTaskDialog.find( '#btn-prev' )
@@ -442,35 +435,17 @@
 					.removeClass( 'disabled' )
 					.html( labels.confirm + ' <span class="glyphicon glyphicon-ok"></span>' )
 					.off();
-				window.addTaskDialog.find( '#btn-prev' )
-					.click( function() {
-						video2commons.disablePrevNext();
 
-						window.addTaskDialog.find( '#dialog-spinner' )
-							.show();
-						var postdata = {
-							id: window.newTaskTempID,
-							action: 'prev',
-							step: window.addTaskStep
-						};
-
-						video2commons.submitTask( postdata );
-
-					} );
+				video2commons.setPrevNextButton( 'prev' );
 				window.addTaskDialog.find( '#btn-next' )
 					.click( function() {
-						video2commons.disablePrevNext();
+						video2commons.disablePrevNext( false );
 
 						window.addTaskDialog.modal( "hide" );
 						$( '#tasktable > tbody' )
 							.append( '<tr id="task-new"><td colspan="3">' + loaderImage + '</td></tr>' );
-						var postdata = {
-							id: window.newTaskTempID,
-							action: 'next',
-							step: window.addTaskStep
-						};
 
-						$.post( 'api/task/submit', postdata )
+						$.post( 'api/task/run', window.newTaskData )
 							.done( function( data ) {
 								if ( data.error )
 									window.alert( data.error );
@@ -478,6 +453,114 @@
 							} );
 					} );
 		}
+	};
+
+	video2commons.setPrevNextButton = function( button ) {
+		window.addTaskDialog.find( '#btn-' + button )
+			.click( function() {
+				video2commons.disablePrevNext( true );
+				video2commons.processInput( button );
+			} );
+	};
+
+	video2commons.processInput = function( button ) {
+		var nextStep = function() {
+			var action = {
+				'prev': -1,
+				'next': 1
+			}[ button ];
+			var steps = [ 'source', 'target', 'confirm' ];
+			window.newTaskData.step = steps[ steps.indexOf( window.newTaskData.step ) + action ];
+			video2commons.setupAddTaskDialog();
+		};
+
+		switch ( window.newTaskData.step ) {
+			case 'source':
+				var url = window.addTaskDialog.find( '#url' )
+					.val(),
+					video = window.addTaskDialog.find( '#video' )
+					.is( ":checked" ),
+					audio = window.addTaskDialog.find( '#audio' )
+					.is( ":checked" );
+				window.newTaskData.subtitles = window.addTaskDialog.find( '#subtitles' )
+					.is( ":checked" );
+
+				if ( !url ) {
+					video2commons.showFormError( 'URL cannot be empty!' );
+					return;
+				}
+
+				var ask2 = function() {
+					if ( !window.newTaskData.formats.length || video !== window.newTaskData.video || audio !== window.newTaskData.audio ) {
+						video2commons.askAPI( 'listformats', {
+							video: video,
+							audio: audio
+						}, [ 'video', 'audio', 'format', 'formats' ], nextStep );
+					} else {
+						nextStep();
+					}
+				};
+
+				var ask1 = function() {
+					if ( url !== window.newTaskData.url ) {
+						window.newTaskData.filenamechecked = false;
+						video2commons.askAPI( 'extracturl', {
+							url: url
+						}, [ 'url', 'extractor', 'filedesc', 'filename' ], ask2 );
+					} else {
+						ask2();
+					}
+				};
+
+				ask1();
+				break;
+			case 'target':
+				var filename = window.addTaskDialog.find( '#filename' )
+					.val();
+				window.newTaskData.filedesc = window.addTaskDialog.find( '#filedesc' )
+					.val();
+				window.newTaskData.format = window.addTaskDialog.find( '#format' )
+					.val();
+
+				if ( !filename || !window.newTaskData.filedesc ) {
+					video2commons.showFormError( 'Filename and file description cannot be empty!' );
+					return;
+				}
+
+				if ( !window.newTaskData.filenamechecked || filename !== window.newTaskData.filename ) {
+					video2commons.askAPI( 'validatefilename', {
+						filename: filename
+					}, [ 'filename' ], function() {
+						window.newTaskData.filenamechecked = true;
+						nextStep();
+					} );
+				} else {
+					nextStep();
+				}
+				break;
+			case 'confirm':
+				// nothing to do in confirm screen
+				nextStep();
+		}
+
+	};
+
+
+	video2commons.askAPI = function( url, datain, dataout, cb ) {
+		$.post( 'api/' + url, datain )
+			.done( function( data ) {
+				if ( data.error ) {
+					video2commons.showFormError( data.error );
+					return;
+				}
+				for ( var i = 0; i < dataout.length; i++ )
+					window.newTaskData[ dataout[ i ] ] = data[ dataout[ i ] ];
+				if ( cb )
+					return cb();
+			} )
+			.fail( function() {
+				video2commons.showFormError( 'Something weird happened. Please try again.' );
+			} );
 	};
 
 	video2commons.abortTask = function( taskid ) {
@@ -509,49 +592,7 @@
 			.text( data[ arr[ i ] ] );
 	};
 
-	video2commons.getPostData = function( action ) {
-		return {
-			id: window.newTaskTempID,
-			action: action,
-			step: window.addTaskStep,
-			filename: window.addTaskDialog.find( '#filename' )
-				.val(),
-			format: window.addTaskDialog.find( '#format' )
-				.val(),
-			filedesc: window.addTaskDialog.find( '#filedesc' )
-				.val()
-		};
-	};
-
-	video2commons.submitTask = function( postdata ) {
-		$.post( 'api/task/submit', postdata )
-			.done( function( data ) {
-				if ( data.error )
-					window.alert( data.error );
-				video2commons.setupAddTaskDialog( data );
-			} );
-	};
-
-	video2commons.addTargetDialog = function( type ) {
-		window.addTaskDialog.find( '#btn-' + type )
-			.click( function() {
-				window.addTaskDialog.find( '.modal-body #dialog-errorbox' )
-					.hide();
-				window.addTaskDialog.find( '#btn-prev' )
-					.addClass( 'disabled' )
-					.off();
-				window.addTaskDialog.find( '#btn-next' )
-					.addClass( 'disabled' )
-					.off();
-				window.addTaskDialog.find( '#dialog-spinner' )
-					.show();
-
-				video2commons.submitTask( video2commons.getPostData( type ) );
-
-			} );
-	};
-
-	video2commons.disablePrevNext = function() {
+	video2commons.disablePrevNext = function( spin ) {
 		window.addTaskDialog.find( '.modal-body #dialog-errorbox' )
 			.hide();
 		window.addTaskDialog.find( '#btn-prev' )
@@ -560,6 +601,9 @@
 		window.addTaskDialog.find( '#btn-next' )
 			.addClass( 'disabled' )
 			.off();
+		if ( spin )
+			window.addTaskDialog.find( '#dialog-spinner' )
+			.show();
 	};
 
 	video2commons.removeButtonClick = function( obj ) {

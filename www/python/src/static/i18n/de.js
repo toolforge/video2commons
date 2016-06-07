@@ -30,6 +30,7 @@ window.labels = {
 	subtitles         :"Untertitel",
 	note              :"Hinweis:",
 	filename          :"Dateiname",
+	commaseperator    :", ",
 	importantnote     :"Wichtiger Hinweis: ",
 	notes             :[
 	                        "Playlists können nicht korrekt verarbeitet werden. Manche Websites (wie Youku und Comedy Central) verwenden sogenannte Multipart-Videos, die als Playlists interpretiert werden und ebenfalls nicht korrekt verarbeitet werden können.",
