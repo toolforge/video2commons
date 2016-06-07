@@ -10,6 +10,7 @@ import pickle
 from datetime import timedelta
 from uuid import uuid4
 from redis import Redis
+from flask import url_for
 from flask.sessions import SessionInterface, SessionMixin
 
 
@@ -75,7 +76,7 @@ class RedisSessionInterface(SessionInterface):
     def save_session(self, app, session, response):
         """Save session to Redis."""
         domain = self.get_cookie_domain(app)
-        path = '/video2commons/'
+        path = url_for('main', _external=False)
 
         if not session:
             self.redis.delete(self.prefix + session.sid)
