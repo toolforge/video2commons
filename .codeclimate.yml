@@ -12,6 +12,10 @@ engines:
     enabled: true
   fixme:
     enabled: true
+    config:
+      strings:
+      - FIXME
+      - BUG
   radon:
     enabled: true
     config:

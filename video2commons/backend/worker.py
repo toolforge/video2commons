@@ -35,7 +35,6 @@ from video2commons.config import (
     redis_pw, redis_host, consumer_key, consumer_secret, http_host
 )
 
-# TODO
 redisurl = 'redis://:' + redis_pw + '@' + redis_host + ':6379/'
 app = celery.Celery(
     'v2cbackend',
