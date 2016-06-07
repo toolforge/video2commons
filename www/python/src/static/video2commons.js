@@ -202,10 +202,7 @@
 						.show()
 						.off()
 						.click( function() {
-							$( this )
-								.addClass( 'disabled' );
-							video2commons.restartTask( video2commons.getTaskIDFromDOMID( $( this )
-								.attr( 'id' ) ) );
+							video2commons.restartTask( this );
 						} );
 				} else {
 					row.find( '#' + id + '-restartbutton' )
@@ -223,10 +220,7 @@
 					.show()
 					.off()
 					.click( function() {
-						$( this )
-							.addClass( 'disabled' );
-						video2commons.abortTask( video2commons.getTaskIDFromDOMID( $( this )
-							.attr( 'id' ) ) );
+						video2commons.abortTask( this );
 					} );
 			}
 		} );
@@ -574,21 +568,24 @@
 			} );
 	};
 
-	video2commons.abortTask = function( taskid ) {
-		video2commons.eventTask( taskid, 'abort' );
+	video2commons.abortTask = function( obj ) {
+		video2commons.eventTask( obj, 'abort' );
 	};
 
-	video2commons.removeTask = function( taskid ) {
-		video2commons.eventTask( taskid, 'remove' );
+	video2commons.removeTask = function( obj ) {
+		video2commons.eventTask( obj, 'remove' );
 	};
 
-	video2commons.restartTask = function( taskid ) {
-		video2commons.eventTask( taskid, 'restart' );
+	video2commons.restartTask = function( obj ) {
+		video2commons.eventTask( obj, 'restart' );
 	};
 
-	video2commons.eventTask = function( taskid, eventName ) {
+	video2commons.eventTask = function( obj, eventName ) {
+		$( obj )
+			.addClass( 'disabled' );
 		$.post( 'api/task/' + eventName, {
-				id: taskid
+				id: video2commons.getTaskIDFromDOMID( $( obj )
+					.attr( 'id' ) )
 			} )
 			.done( function( data ) {
 				if ( data.error )
@@ -608,10 +605,7 @@
 			.attr( 'id', id + '-removebutton' )
 			.off()
 			.click( function() {
-				$( this )
-					.addClass( 'disabled' );
-				video2commons.removeTask( video2commons.getTaskIDFromDOMID( $( this )
-					.attr( 'id' ) ) );
+				video2commons.removeTask( this );
 			} );
 	};
 
