@@ -49,7 +49,7 @@ app.register_blueprint(api, url_prefix='/api')
 @app.errorhandler(Exception)
 def all_exception_handler(e):
     """Handle an exception and show the traceback to error page."""
-    return 'Please notify [[commons:User:Zhuyifei1999]]: ' + \
+    return 'Please notify [[c:User:Zhuyifei1999]]: ' + \
         traceback.format_exc(), 500
 
 

@@ -6,7 +6,7 @@ window.labels = {
 	next              :"Next",
 	loading           :"LOADING...",
 	confirm           :"Confirm ",
-	errorGeneric      :"Something went terribly wrong. Please refresh this page or contact [[:commons:User:Zhuyifei1999]].",
+	errorGeneric      :"Something went terribly wrong. Please refresh this page or contact [[c:User:Zhuyifei1999]].",
 	errorTooLarge     :"File too large to upload directly! You may want to <a>request a server-side upload</a>.",
 	addTask           :"Add task...",
 	yourTasks         :"Your tasks:",

@@ -6,7 +6,7 @@ window.labels = {
 	next              :"下一步",
 	loading           :"正在加载...",
 	confirm           :"确认 ",
-	errorGeneric      :"有东西出错了。请刷新或者联系[[:commons:User:Zhuyifei1999]]。",
+	errorGeneric      :"有东西出错了。请刷新或者联系[[c:User:Zhuyifei1999]]。",
 	errorTooLarge     :"文件太大了，无法直接上传！你也许可以<a>申请服务器端上传</a>。",
 	addTask           :"新建任务...",
 	yourTasks         :"您的任务：",
