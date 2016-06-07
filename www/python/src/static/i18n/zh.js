@@ -11,7 +11,6 @@ window.labels = {
 	addTask           :"新建任务...",
 	yourTasks         :"您的任务：",
 	createServerSide  :"一次性申请所有服务器端上传（推荐）",
-	requestServerSide :"<a>申请服务器端上传</a>",
 	taskDone          :"您的任务已完成。您可以在<a></a>找到您的上传。",
 	//templates
 	cancel            :"取消",

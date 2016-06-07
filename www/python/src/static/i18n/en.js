@@ -11,7 +11,6 @@ window.labels = {
 	addTask           :"Add task...",
 	yourTasks         :"Your tasks:",
 	createServerSide  :"Create server-side upload ticket in one go (recommended)",
-	requestServerSide :"<a>request a server-side upload</a>",
 	taskDone          :"Your task is done. You may find your upload at <a></a>.",
 	//templates
 	cancel            :"Cancel",

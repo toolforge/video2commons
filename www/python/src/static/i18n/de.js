@@ -11,7 +11,6 @@ window.labels = {
 	addTask           :"Task hinzufügen...",
 	yourTasks         :"Deine Tasks:",
 	createServerSide  :"Erstellen eines Antrags (Ticket) für serverseitigen Upload in einem Schritt (empfohlen)",
-	requestServerSide :"<a>serverseitigen Upload beantragen</a>",
 	taskDone          :"Der Task wurde erledigt. Du findest die Datei unter <a></a>.",
 	//templates
 	cancel            :"Abbrechen",

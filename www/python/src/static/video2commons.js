@@ -163,11 +163,8 @@
 						break;
 					case 'needssu':
 						removebutton = video2commons.removebutton( this, id );
-						var uploadlink = $( labels.requestServerSide )
-							.attr( 'href', val.url );
-
 						video2commons.appendButtons(
-							[ uploadlink, removebutton ],
+							[ removebutton ],
 							row, [ 'success', 'danger' ],
 							id
 						);
