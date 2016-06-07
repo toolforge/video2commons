@@ -142,7 +142,7 @@
 						row.removeClass( 'success danger' );
 						break;
 					case 'done':
-						removebutton = video2commons.removebutton( this, id );
+						removebutton = video2commons.removebutton( id );
 						video2commons.appendButtons(
 							[ removebutton ],
 							row, [ 'danger', 'success' ],
@@ -150,7 +150,7 @@
 						);
 						break;
 					case 'fail':
-						removebutton = video2commons.removebutton( this, id );
+						removebutton = video2commons.removebutton( id );
 						var restartbutton = $( htmlContent.restartbutton )
 							.attr( 'id', id + '-restartbutton' )
 							.hide();
@@ -162,7 +162,7 @@
 						);
 						break;
 					case 'needssu':
-						removebutton = video2commons.removebutton( this, id );
+						removebutton = video2commons.removebutton( id );
 						video2commons.appendButtons(
 							[ removebutton ],
 							row, [ 'success', 'danger' ],
@@ -603,20 +603,16 @@
 			.text( data[ arr[ i ] ] );
 	};
 
-	video2commons.removeButtonClick = function( obj ) {
-		return function() {
-			$( obj )
-				.addClass( 'disabled' );
-			video2commons.removeTask( video2commons.getTaskIDFromDOMID( $( obj )
-				.attr( 'id' ) ) );
-		};
-	};
-
-	video2commons.removebutton = function( obj, id ) {
+	video2commons.removebutton = function( id ) {
 		return $( htmlContent.removebutton )
 			.attr( 'id', id + '-removebutton' )
 			.off()
-			.click( video2commons.removeButtonClick( obj ) );
+			.click( function() {
+				$( this )
+					.addClass( 'disabled' );
+				video2commons.removeTask( video2commons.getTaskIDFromDOMID( $( this )
+					.attr( 'id' ) ) );
+			} );
 	};
 
 	video2commons.appendButtons = function( buttonArray, row, type, id ) {
