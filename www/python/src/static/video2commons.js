@@ -393,34 +393,28 @@
 					.off();
 				window.addTaskDialog.find( '#btn-next' )
 					.removeClass( 'disabled' )
-					.html( labels.next + ' <span class="glyphicon glyphicon-chevron-right"></span>' )
-					.off();
-
+					.html( labels.next + ' <span class="glyphicon glyphicon-chevron-right"></span>' );
 				video2commons.setPrevNextButton( 'next' );
 				break;
 			case 'target':
 				window.addTaskDialog.find( '#btn-prev' )
-					.removeClass( 'disabled' )
-					.off();
+					.removeClass( 'disabled' );
+				video2commons.setPrevNextButton( 'prev' );
+
 				window.addTaskDialog.find( '#btn-next' )
 					.removeClass( 'disabled' )
-					.html( labels.next + ' <span class="glyphicon glyphicon-chevron-right"></span>' )
-					.off();
-
-				video2commons.setPrevNextButton( 'prev' );
+					.html( labels.next + ' <span class="glyphicon glyphicon-chevron-right"></span>' );
 				video2commons.setPrevNextButton( 'next' );
 				break;
 			case 'confirm':
 				window.addTaskDialog.find( '#btn-prev' )
-					.removeClass( 'disabled' )
-					.off();
+					.removeClass( 'disabled' );
+				video2commons.setPrevNextButton( 'prev' );
+
 				window.addTaskDialog.find( '#btn-next' )
 					.removeClass( 'disabled' )
 					.html( labels.confirm + ' <span class="glyphicon glyphicon-ok"></span>' )
-					.off();
-
-				video2commons.setPrevNextButton( 'prev' );
-				window.addTaskDialog.find( '#btn-next' )
+					.off()
 					.click( function() {
 						video2commons.disablePrevNext( false );
 
@@ -440,6 +434,7 @@
 
 	video2commons.setPrevNextButton = function( button ) {
 		window.addTaskDialog.find( '#btn-' + button )
+			.off()
 			.click( function() {
 				video2commons.disablePrevNext( true );
 				video2commons.processInput( button );
