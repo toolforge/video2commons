@@ -463,6 +463,20 @@
 			} );
 	};
 
+	video2commons.disablePrevNext = function( spin ) {
+		window.addTaskDialog.find( '.modal-body #dialog-errorbox' )
+			.hide();
+		window.addTaskDialog.find( '#btn-prev' )
+			.addClass( 'disabled' )
+			.off();
+		window.addTaskDialog.find( '#btn-next' )
+			.addClass( 'disabled' )
+			.off();
+		if ( spin )
+			window.addTaskDialog.find( '#dialog-spinner' )
+			.show();
+	};
+
 	video2commons.processInput = function( button ) {
 		var nextStep = function() {
 			var action = {
@@ -590,20 +604,6 @@
 		for ( var i = 0; i < arr.length; i++ )
 			window.addTaskDialog.find( '#' + arr[ i ] )
 			.text( data[ arr[ i ] ] );
-	};
-
-	video2commons.disablePrevNext = function( spin ) {
-		window.addTaskDialog.find( '.modal-body #dialog-errorbox' )
-			.hide();
-		window.addTaskDialog.find( '#btn-prev' )
-			.addClass( 'disabled' )
-			.off();
-		window.addTaskDialog.find( '#btn-next' )
-			.addClass( 'disabled' )
-			.off();
-		if ( spin )
-			window.addTaskDialog.find( '#dialog-spinner' )
-			.show();
 	};
 
 	video2commons.removeButtonClick = function( obj ) {
