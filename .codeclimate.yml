@@ -32,3 +32,4 @@ ratings:
 exclude_paths:
 - "**.min.*"
 - "**/i18n/**"
+- ".codeclimate.yml"
