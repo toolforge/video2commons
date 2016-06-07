@@ -116,8 +116,6 @@
 				setup = true;
 			}
 
-			var removebutton; // to make JSHint happy
-
 			if ( setup ) {
 				switch ( val.status ) {
 					case 'progress':
@@ -132,8 +130,7 @@
 							.append( $( '<td />' )
 								.attr( 'id', id + '-progress' )
 								.attr( 'width', '30%' ) );
-						var abortbutton = $( htmlContent.abortbutton )
-							.attr( 'id', id + '-abortbutton' );
+						var abortbutton = video2commons.eventButton( id, 'abort' );
 						row.find( '#' + id + '-status' )
 							.append( abortbutton );
 						var progressbar = row.find( '#' + id + '-progress' )
@@ -142,17 +139,15 @@
 						row.removeClass( 'success danger' );
 						break;
 					case 'done':
-						removebutton = video2commons.removebutton( id );
 						video2commons.appendButtons(
-							[ removebutton ],
+							[ video2commons.eventButton( id, 'remove' ) ],
 							row, [ 'danger', 'success' ],
 							id
 						);
 						break;
 					case 'fail':
-						removebutton = video2commons.removebutton( id );
-						var restartbutton = $( htmlContent.restartbutton )
-							.attr( 'id', id + '-restartbutton' )
+						var removebutton = video2commons.eventButton( id, 'remove' );
+						var restartbutton = video2commons.eventButton( id, 'restart' )
 							.hide();
 
 						video2commons.appendButtons(
@@ -162,9 +157,8 @@
 						);
 						break;
 					case 'needssu':
-						removebutton = video2commons.removebutton( id );
 						video2commons.appendButtons(
-							[ removebutton ],
+							[ video2commons.eventButton( id, 'remove' ) ],
 							row, [ 'success', 'danger' ],
 							id
 						);
@@ -202,7 +196,7 @@
 						.show()
 						.off()
 						.click( function() {
-							video2commons.restartTask( this );
+							video2commons.eventTask( this, 'restart' );
 						} );
 				} else {
 					row.find( '#' + id + '-restartbutton' )
@@ -216,12 +210,6 @@
 
 			if ( val.status === 'progress' ) {
 				video2commons.setProgressBar( row.find( '#' + id + '-progress' ), val.progress );
-				row.find( '#' + id + '-abortbutton' )
-					.show()
-					.off()
-					.click( function() {
-						video2commons.abortTask( this );
-					} );
 			}
 		} );
 
@@ -401,34 +389,28 @@
 					.off();
 				window.addTaskDialog.find( '#btn-next' )
 					.removeClass( 'disabled' )
-					.html( labels.next + ' <span class="glyphicon glyphicon-chevron-right"></span>' )
-					.off();
-
+					.html( labels.next + ' <span class="glyphicon glyphicon-chevron-right"></span>' );
 				video2commons.setPrevNextButton( 'next' );
 				break;
 			case 'target':
 				window.addTaskDialog.find( '#btn-prev' )
-					.removeClass( 'disabled' )
-					.off();
+					.removeClass( 'disabled' );
+				video2commons.setPrevNextButton( 'prev' );
+
 				window.addTaskDialog.find( '#btn-next' )
 					.removeClass( 'disabled' )
-					.html( labels.next + ' <span class="glyphicon glyphicon-chevron-right"></span>' )
-					.off();
-
-				video2commons.setPrevNextButton( 'prev' );
+					.html( labels.next + ' <span class="glyphicon glyphicon-chevron-right"></span>' );
 				video2commons.setPrevNextButton( 'next' );
 				break;
 			case 'confirm':
 				window.addTaskDialog.find( '#btn-prev' )
-					.removeClass( 'disabled' )
-					.off();
+					.removeClass( 'disabled' );
+				video2commons.setPrevNextButton( 'prev' );
+
 				window.addTaskDialog.find( '#btn-next' )
 					.removeClass( 'disabled' )
 					.html( labels.confirm + ' <span class="glyphicon glyphicon-ok"></span>' )
-					.off();
-
-				video2commons.setPrevNextButton( 'prev' );
-				window.addTaskDialog.find( '#btn-next' )
+					.off()
 					.click( function() {
 						video2commons.disablePrevNext( false );
 
@@ -448,6 +430,7 @@
 
 	video2commons.setPrevNextButton = function( button ) {
 		window.addTaskDialog.find( '#btn-' + button )
+			.off()
 			.click( function() {
 				video2commons.disablePrevNext( true );
 				video2commons.processInput( button );
@@ -568,18 +551,6 @@
 			} );
 	};
 
-	video2commons.abortTask = function( obj ) {
-		video2commons.eventTask( obj, 'abort' );
-	};
-
-	video2commons.removeTask = function( obj ) {
-		video2commons.eventTask( obj, 'remove' );
-	};
-
-	video2commons.restartTask = function( obj ) {
-		video2commons.eventTask( obj, 'restart' );
-	};
-
 	video2commons.eventTask = function( obj, eventName ) {
 		obj = $( obj );
 		if ( obj.is( '.disabled' ) ) return;
@@ -602,12 +573,12 @@
 			.text( data[ arr[ i ] ] );
 	};
 
-	video2commons.removebutton = function( id ) {
-		return $( htmlContent.removebutton )
-			.attr( 'id', id + '-removebutton' )
+	video2commons.eventButton = function( id, eventName ) {
+		return $( htmlContent[ eventName + 'button' ] )
+			.attr( 'id', id + '-' + eventName + 'button' )
 			.off()
 			.click( function() {
-				video2commons.removeTask( this );
+				video2commons.eventTask( this, eventName );
 			} );
 	};
 
