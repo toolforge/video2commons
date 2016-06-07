@@ -582,6 +582,7 @@
 
 	video2commons.eventTask = function( obj, eventName ) {
 		$( obj )
+			.off()
 			.addClass( 'disabled' );
 		$.post( 'api/task/' + eventName, {
 				id: video2commons.getTaskIDFromDOMID( $( obj )
