@@ -178,7 +178,7 @@
 			row.find( '#' + id + '-title' )
 				.text( val.title );
 
-			var setStatusText = function( row, id, htmlortext, href, text ) {
+			var setStatusText = function( htmlortext, href, text ) {
 				var e = row.find( '#' + id + '-statustext' );
 				if ( !href ) {
 					e.text( htmlortext );
