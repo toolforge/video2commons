@@ -116,8 +116,6 @@
 				setup = true;
 			}
 
-			var removebutton; // to make JSHint happy
-
 			if ( setup ) {
 				switch ( val.status ) {
 					case 'progress':
@@ -141,15 +139,14 @@
 						row.removeClass( 'success danger' );
 						break;
 					case 'done':
-						removebutton = video2commons.eventButton( id, 'remove' );
 						video2commons.appendButtons(
-							[ removebutton ],
+							[ video2commons.eventButton( id, 'remove' ) ],
 							row, [ 'danger', 'success' ],
 							id
 						);
 						break;
 					case 'fail':
-						removebutton = video2commons.eventButton( id, 'remove' );
+						var removebutton = video2commons.eventButton( id, 'remove' );
 						var restartbutton = video2commons.eventButton( id, 'restart' )
 							.hide();
 
@@ -160,9 +157,8 @@
 						);
 						break;
 					case 'needssu':
-						removebutton = video2commons.eventButton( id, 'remove' );
 						video2commons.appendButtons(
-							[ removebutton ],
+							[ video2commons.eventButton( id, 'remove' ) ],
 							row, [ 'success', 'danger' ],
 							id
 						);
