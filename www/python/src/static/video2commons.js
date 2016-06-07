@@ -177,20 +177,25 @@
 
 			row.find( '#' + id + '-title' )
 				.text( val.title );
+
+			var setStatusText = function( row, id, htmlortext, href, text ) {
+				var e = row.find( '#' + id + '-statustext' );
+				if ( !href ) {
+					e.text( htmlortext );
+				} else {
+					var link = e.html( htmlortext )
+						.find( 'a' )
+						.attr( 'href', href );
+					if ( text )
+						link.text( text );
+				}
+			};
 			if ( val.status === 'done' ) {
-				row.find( '#' + id + '-statustext' )
-					.html( labels.taskDone )
-					.find( 'a' )
-					.attr( 'href', val.url )
-					.text( val.text );
+				setStatusText( labels.taskDone, val.url, val.text );
 			} else if ( val.status === 'needssu' ) {
-				row.find( '#' + id + '-statustext' )
-					.html( labels.errorTooLarge )
-					.find( 'a' )
-					.attr( 'href', val.url );
+				setStatusText( labels.errorTooLarge, val.url );
 			} else if ( val.status === 'fail' ) {
-				row.find( '#' + id + '-statustext' )
-					.text( val.text );
+				setStatusText( val.text );
 				if ( val.restartable ) {
 					row.find( '#' + id + '-restartbutton' )
 						.show()
@@ -204,8 +209,7 @@
 						.hide();
 				}
 			} else {
-				row.find( '#' + id + '-statustext' )
-					.text( val.text );
+				setStatusText( val.text );
 			}
 
 			if ( val.status === 'progress' ) {
