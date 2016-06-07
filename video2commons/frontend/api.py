@@ -46,6 +46,13 @@ def all_exception_handler(e):
     return error_json(e)
 
 
+@api.before_request
+def check_logged_in():
+    """Error if a user is not logged in."""
+    if 'username' not in session:
+        return error_json('Are you logged in?')
+
+
 def format_exception(e):
     """Format an exception to text."""
     try:
