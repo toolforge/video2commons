@@ -225,7 +225,7 @@ sanitationRules = [
     },
     # everything that wasn't covered yet
     {
-        'pattern': re.compile(ur'[|#%+?:/\\\u0000-\u001f\u007f]'),
+        'pattern': re.compile(ur'[|#+?:/\\\u0000-\u001f\u007f]'),
         'replace': '-'
     },
 ]
