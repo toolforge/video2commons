@@ -68,7 +68,7 @@ def format_exception(e):
     if isinstance(e, AssertionError):
         return desc
     else:
-        return 'An exception occured: %s: %s' % \
+        return 'An exception occurred: %s: %s' % \
             (type(e).__name__, desc)
 
 
