@@ -121,25 +121,29 @@ def _license(url, ie_key, title, info):
     uploader_param = '|' + escape_wikitext(info.get('uploader', '').strip()) \
         if 'uploader' in info else ''
 
+    default = '{{subst:nld}}'
     if ie_key == 'Youtube' and info.get('license') == \
             'Creative Commons Attribution license (reuse allowed)':
         return '{{YouTube CC-BY%s}}' % uploader_param
     elif ie_key == 'Flickr':
-        if info.get('license') == 'Attribution':
-            return '{{cc-by-2.0%s}}' % uploader_param
-        elif info.get('license') == 'Attribution-ShareAlike':
-            return '{{cc-by-sa-2.0%s}}' % uploader_param
-        elif info.get('license') == 'No known copyright restrictions':
-            return '{{Flickr-no known copyright restrictions}}'
-        elif info.get('license') == 'United States government work':
-            return '{{PD-USGov}}'
-        elif info.get('license') == 'Public Domain Dedication (CC0)':
-            return '{{cc-zero}}'
-        elif info.get('license') in \
-                ['Public Domain Work', 'Public Domain Mark']:
-            return '{{safesubst:Flickr-public domain mark/subst}}'
+        return {
+            'Attribution':
+                '{{cc-by-2.0%s}}' % uploader_param,
+            'Attribution-ShareAlike':
+                '{{cc-by-sa-2.0%s}}' % uploader_param,
+            'No known copyright restrictions':
+                '{{Flickr-no known copyright restrictions}}',
+            'United States government work':
+                '{{PD-USGov}}',
+            'Public Domain Dedication (CC0)':
+                '{{cc-zero}}',
+            'Public Domain Work':
+                '{{safesubst:Flickr-public domain mark/subst}}',
+            'Public Domain Mark':
+                '{{safesubst:Flickr-public domain mark/subst}}',
+        }.get(info.get('license'), default)
 
-    return '{{subst:nld}}'
+    return default
 
 
 def escape_wikitext(wikitext):
