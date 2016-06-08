@@ -21,7 +21,6 @@
 
 from __future__ import absolute_import
 
-import re
 import pickle
 import traceback
 import urllib
@@ -34,7 +33,9 @@ from video2commons.backend import worker
 from video2commons.exceptions import NeedServerSideUpload
 
 from video2commons.frontend.shared import redisconnection, check_banned
-from video2commons.frontend.urlextract import do_extract_url
+from video2commons.frontend.urlextract import (
+    do_extract_url, do_validate_filename, sanitize
+)
 
 api = Blueprint('api', __name__)
 
@@ -67,7 +68,7 @@ def format_exception(e):
     if isinstance(e, AssertionError):
         return desc
     else:
-        return 'An exception occured: %s: %s' % \
+        return 'An exception occurred: %s: %s' % \
             (type(e).__name__, desc)
 
 
@@ -290,26 +291,8 @@ def _boolize(data):
 def validate_filename():
     """Validate filename for invalid characters/parts."""
     return jsonify(
-        filename=_validate_filename(request.form['filename'])
+        filename=do_validate_filename(request.form['filename'])
     )
-
-
-def _validate_filename(filename):
-    illegalords = range(0, 32) + [127]
-    for char in filename:
-        assert char not in '[]{}|#<>%+?!:/\\.', \
-            'Your filename contains an illegal character: ' + char
-
-        # ord(char) to prevent bad renderings
-        assert ord(char) not in illegalords, \
-            'Your filename contains an illegal character: chr(%d)' % ord(char)
-
-    assert len(filename) < 250, 'Your filename is too long'
-
-    assert not re.search(r"&[A-Za-z0-9\x80-\xff]+;", filename), \
-        'Your filename contains XML/HTML character references'
-
-    return filename.replace('_', ' ')
 
 
 def get_backend_keys(format):
@@ -340,7 +323,7 @@ def run_task():
     url = request.form['url']
     ie_key = request.form['extractor']
     subtitles = request.form['subtitles']
-    filename = request.form['filename']
+    filename = sanitize(request.form['filename'])
     filedesc = request.form['filedesc']
     downloadkey, convertkey = get_backend_keys(request.form['format'])
     username = session['username']

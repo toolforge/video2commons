@@ -74,7 +74,7 @@ def do_extract_url(url):
         'url': url,
         'extractor': ie_key,
         'filedesc': filedesc.strip(),
-        'filename': title
+        'filename': sanitize(title)
     }
 
 
@@ -165,3 +165,87 @@ def escape_wikitext(wikitext):
     rep = dict((re.escape(k), v) for k, v in rep.iteritems())
     pattern = re.compile("|".join(rep.keys()))
     return pattern.sub(lambda m: rep[re.escape(m.group(0))], wikitext)
+
+
+# Source: mediawiki.Title.js@9df363d
+sanitationRules = [
+    # "signature"
+    {
+        'pattern': re.compile(ur'~{3}'),
+        'replace': ''
+    },
+    # Space, underscore, tab, NBSP and other unusual spaces
+    {
+        'pattern': re.compile(ur'[ _\u0009\u00A0\u1680\u180E\u2000-\u200A'
+                              ur'\u2028\u2029\u202F\u205F\u3000\s]+'),
+        'replace': ' '
+    },
+    # unicode bidi override characters: Implicit, Embeds, Overrides
+    {
+        'pattern': re.compile(ur'[\u200E\u200F\u202A-\u202E]'),
+        'replace': ''
+    },
+    # control characters
+    {
+        'pattern': re.compile(ur'[\x00-\x1f\x7f]'),
+        'replace': ''
+    },
+    # URL encoding (possibly)
+    {
+        'pattern': re.compile(ur'%([0-9A-Fa-f]{2})'),
+        'replace': r'% \1'
+    },
+    # HTML-character-entities
+    {
+        'pattern': re.compile(ur'&(([A-Za-z0-9\x80-\xff]+|'
+                              ur'#[0-9]+|#x[0-9A-Fa-f]+);)'),
+        'replace': r'& \1'
+    },
+    # slash, colon (not supported by file systems like NTFS/Windows,
+    # Mac OS 9 [:], ext4 [/])
+    {
+        'pattern': re.compile(ur'[:/#]'),
+        'replace': '-'
+    },
+    # brackets, greater than
+    {
+        'pattern': re.compile(ur'[\]\}>]'),
+        'replace': ')'
+    },
+    # brackets, lower than
+    {
+        'pattern': re.compile(ur'[\[\{<]'),
+        'replace': '('
+    },
+    # directory structures
+    {
+        'pattern': re.compile(ur'^(\.|\.\.|\./.*|\.\./.*|.*/\./.*|'
+                              ur'.*/\.\./.*|.*/\.|.*/\.\.)$'),
+        'replace': ''
+    },
+    # everything that wasn't covered yet
+    {
+        'pattern': re.compile(ur'[|#+?:/\\\u0000-\u001f\u007f]'),
+        'replace': '-'
+    },
+]
+
+
+def sanitize(filename):
+    """Sanitize a filename for uploading."""
+    for rule in sanitationRules:
+        filename = rule['pattern'].sub(rule['replace'], filename)
+
+    return filename
+
+
+def do_validate_filename(filename):
+    """Validate filename for invalid characters/parts."""
+    assert len(filename) < 250, 'Your filename is too long'
+
+    for rule in sanitationRules:
+        reobj = rule['pattern'].search(filename)
+        assert not reobj or reobj.group(0) == ' ', \
+            'Your filename contains an illegal part: %r' % reobj.group(0)
+
+    return filename.replace('_', ' ')
