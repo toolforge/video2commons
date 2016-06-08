@@ -154,6 +154,8 @@ def logincallback():
     session['access_token_key'], session['access_token_secret'] = \
         access_token.key, access_token.secret
 
+    handshaker.identify(access_token)
+
     return redirect(url_for('main'))
 
 
