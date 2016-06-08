@@ -156,10 +156,7 @@ def status():
                     )
             elif state == 'ABORTED':
                 task['status'] = 'abort'
-                if redisconnection.exists('restarted:' + id):
-                    task['text'] = 'Your task is being aborted by an admin...'
-                else:
-                    task['text'] = 'Your task is being aborted...'
+                task['text'] = 'Your task is being aborted...'
                 hasrunning = True
             else:
                 task['status'] = 'fail'
@@ -529,17 +526,8 @@ def abort_task():
     """Abort a task."""
     id = request.form['id']
     username = session['username']
-    adminabort = False
-    try:
-        assert id in \
-            redisconnection.lrange('tasks:' + username, 0, -1), \
-            'Task must belong to you.'
-    except AssertionError:
-        if is_sudoer(username):
-            adminabort = True
-        else:
-            raise
+    assert id in \
+        redisconnection.lrange('tasks:' + username, 0, -1), \
+        'Task must belong to you.'
     worker.main.AsyncResult(id).abort()
-    if adminabort:
-        redisconnection.set('restarted:' + id, 'ADMINABORT')
     return jsonify(remove='success', id=id)
