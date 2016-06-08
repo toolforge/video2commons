@@ -112,56 +112,75 @@ def status():
         try:
             state = res.state
         except:
-                task['status'] = 'fail'
-                task['text'] = \
-                    'The status of the task could not be retrieved.'
-                task['traceback'] = traceback.format_exc()
+            task.update({
+                'status': 'fail',
+                'text': 'The status of the task could not be retrieved.',
+                'traceback': traceback.format_exc()
+            })
         else:
             if state == 'PENDING':
-                task['status'] = 'progress'
-                task['text'] = 'Your task is pending...'
-                task['progress'] = -1
+                task.update({
+                    'status': 'progress',
+                    'text': 'Your task is pending...',
+                    'progress': -1
+                })
                 hasrunning = True
             elif state == 'STARTED':
-                task['status'] = 'progress'
-                task['text'] = 'Your task has been started; preprocessing...'
-                task['progress'] = -1
+                task.update({
+                    'status': 'progress',
+                    'text': 'Your task has been started; preprocessing...',
+                    'progress': -1
+                })
                 hasrunning = True
             elif state == 'PROGRESS':
-                task['status'] = 'progress'
-                task['text'] = res.result['text']
-                task['progress'] = res.result['percent']
+                task.update({
+                    'status': 'progress',
+                    'text': res.result['text'],
+                    'progress': res.result['percent']
+                })
                 hasrunning = True
             elif state == 'SUCCESS':
-                task['status'] = 'done'
                 filename, wikifileurl = res.result
-                task['url'] = wikifileurl
-                task['text'] = filename
+                task.update({
+                    'status': 'done',
+                    'url': wikifileurl,
+                    'text': filename
+                })
             elif state == 'FAILURE':
                 e = res.result
                 if e is False:
-                    task['status'] = 'fail'
-                    task['text'] = res.traceback
-                    task['restartable'] = True
+                    task.update({
+                        'status': 'fail',
+                        'text': res.traceback,
+                        'restartable': True
+                    })
                 elif isinstance(e, NeedServerSideUpload):
-                    task['status'] = 'needssu'
+                    task.update({
+                        'status': 'needssu',
+                        'url': create_phab_url([e])
+                    })
                     ssus.append(e)
-                    task['url'] = create_phab_url([e])
                 else:
-                    task['status'] = 'fail'
-                    task['text'] = format_exception(e)
-                    task['restartable'] = (
-                        (not redisconnection.exists('restarted:' + id)) and
-                        redisconnection.exists('params:' + id)
-                    )
+                    task.update({
+                        'status': 'fail',
+                        'text': format_exception(e),
+                        'restartable': (
+                            (not redisconnection.exists('restarted:' + id)) and
+                            redisconnection.exists('params:' + id)
+                        )
+                    })
             elif state == 'ABORTED':
-                task['status'] = 'abort'
-                task['text'] = 'Your task is being aborted...'
+                task.update({
+                    'status': 'abort',
+                    'text': 'Your task is being aborted...'
+                })
                 hasrunning = True
             else:
-                task['status'] = 'fail'
-                task['text'] = 'Something weird going on. ' + \
-                    'Please notify [[commons:User:Zhuyifei1999]]'
+                task.update({
+                    'status': 'fail',
+                    'text': 'Something weird going on. ' +
+                            'Please notify [[commons:User:Zhuyifei1999]]'
+                })
 
         values.append(task)
 
