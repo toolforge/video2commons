@@ -297,7 +297,7 @@ def validate_filename():
 def _validate_filename(filename):
     illegalords = range(0, 32) + [127]
     for char in filename:
-        assert char not in '[]{}|#<>%+?!:/\\.', \
+        assert char not in '[]{}|#<>%+?:/\\', \
             'Your filename contains an illegal character: ' + char
 
         # ord(char) to prevent bad renderings
