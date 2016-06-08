@@ -34,7 +34,7 @@ from video2commons.exceptions import NeedServerSideUpload
 
 from video2commons.frontend.shared import redisconnection, check_banned
 from video2commons.frontend.urlextract import (
-    do_extract_url, do_validate_filename
+    do_extract_url, do_validate_filename, sanitize
 )
 
 api = Blueprint('api', __name__)
@@ -323,7 +323,7 @@ def run_task():
     url = request.form['url']
     ie_key = request.form['extractor']
     subtitles = request.form['subtitles']
-    filename = request.form['filename']
+    filename = sanitize(request.form['filename'])
     filedesc = request.form['filedesc']
     downloadkey, convertkey = get_backend_keys(request.form['format'])
     username = session['username']

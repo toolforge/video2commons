@@ -193,13 +193,13 @@ sanitationRules = [
     # URL encoding (possibly)
     {
         'pattern': re.compile(ur'%([0-9A-Fa-f]{2})'),
-        'replace': '% $1'
+        'replace': r'% \1'
     },
     # HTML-character-entities
     {
         'pattern': re.compile(ur'&(([A-Za-z0-9\x80-\xff]+|'
                               ur'#[0-9]+|#x[0-9A-Fa-f]+);)'),
-        'replace': '& $1'
+        'replace': r'& \1'
     },
     # slash, colon (not supported by file systems like NTFS/Windows,
     # Mac OS 9 [:], ext4 [/])
@@ -245,7 +245,7 @@ def do_validate_filename(filename):
 
     for rule in sanitationRules:
         reobj = rule['pattern'].search(filename)
-        assert not reobj, \
+        assert not reobj or reobj.group(0) != ' ', \
             'Your filename contains an illegal part: %r' % reobj.group(0)
 
     return filename.replace('_', ' ')
