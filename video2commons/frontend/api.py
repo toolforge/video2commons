@@ -379,18 +379,21 @@ def list_formats():
     prefer = ''
     video = _boolize(request.form['video'])
     audio = _boolize(request.form['audio'])
-    if not video and not audio:
-        raise RuntimeError('Either video or audio must be kept')
-    elif video and not audio:
-        formats = ['ogv (Theora)', 'webm (VP8)', 'webm (VP9, experimental)']
-        prefer = 'webm (VP8)'
-    elif not video and audio:
-        formats = ['ogg (Vorbis)', 'opus (Opus, experimental)']
-        prefer = 'ogg (Vorbis)'
-    elif video and audio:
-        formats = ['ogv (Theora/Vorbis)', 'webm (VP8/Vorbis)',
-                   'webm (VP9/Opus, experimental)']
-        prefer = 'webm (VP8/Vorbis)'
+    if video:
+        if audio:
+            formats = ['ogv (Theora/Vorbis)', 'webm (VP8/Vorbis)',
+                       'webm (VP9/Opus, experimental)']
+            prefer = 'webm (VP8/Vorbis)'
+        else:
+            formats = ['ogv (Theora)', 'webm (VP8)',
+                       'webm (VP9, experimental)']
+            prefer = 'webm (VP8)'
+    else:
+        if audio:
+            formats = ['ogg (Vorbis)', 'opus (Opus, experimental)']
+            prefer = 'ogg (Vorbis)'
+        else:
+            raise RuntimeError('Either video or audio must be kept')
 
     return jsonify(
         audio=audio,
