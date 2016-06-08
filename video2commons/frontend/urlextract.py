@@ -245,7 +245,7 @@ def do_validate_filename(filename):
 
     for rule in sanitationRules:
         reobj = rule['pattern'].search(filename)
-        assert not reobj or reobj.group(0) != ' ', \
+        assert not reobj or reobj.group(0) == ' ', \
             'Your filename contains an illegal part: %r' % reobj.group(0)
 
     return filename.replace('_', ' ')
