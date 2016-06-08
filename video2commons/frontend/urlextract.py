@@ -86,13 +86,15 @@ def _date(url, ie_key, title, info):
 
 
 def _source(url, ie_key, title, info):
-    if ie_key == 'Youtube' and info['id']:
-        return '{{From YouTube|1=%(id)s|2=%(title)s}}' % \
-            {'id': info['id'], 'title': escape_wikitext(title)}
-    elif ie_key == 'Vimeo' and info['id']:
-        return '{{From Vimeo|1=%(id)s|2=%(title)s}}' % \
-            {'id': info['id'], 'title': escape_wikitext(title)}
-    elif ie_key == 'Generic':
+    if info['id']:
+        if ie_key == 'Youtube':
+            return '{{From YouTube|1=%(id)s|2=%(title)s}}' % \
+                {'id': info['id'], 'title': escape_wikitext(title)}
+        elif ie_key == 'Vimeo':
+            return '{{From Vimeo|1=%(id)s|2=%(title)s}}' % \
+                {'id': info['id'], 'title': escape_wikitext(title)}
+
+    if ie_key == 'Generic':
         return url
     else:
         return '[%(url)s %(title)s - %(extractor)s]' % \
