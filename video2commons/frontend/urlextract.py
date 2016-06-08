@@ -38,66 +38,12 @@ def do_extract_url(url):
         'cachedir': '/tmp/',
         'noplaylist': True,  # not implemented in video2commons
     }
-    url = url
     info = youtube_dl.YoutubeDL(params).extract_info(url, download=False)
 
     assert 'formats' in info, 'Your url cannot be processed correctly'
 
     ie_key = info['extractor_key']
     title = info.get('title', '').strip()
-    uploader = escape_wikitext(info.get('uploader', '').strip())
-    date = info.get('upload_date', '').strip()
-    desc_orig = desc = info.get('description', '').strip() or title
-
-    # Process date
-    if re.match(r'^[0-9]{8}$', date):
-        date = '%s-%s-%s' % (date[0:4], date[4:6], date[6:8])
-
-    # Source
-    if ie_key == 'Youtube' and info['id']:
-        source = '{{From YouTube|1=%(id)s|2=%(title)s}}' % \
-            {'id': info['id'], 'title': escape_wikitext(title)}
-    elif ie_key == 'Vimeo' and info['id']:
-        source = '{{From Vimeo|1=%(id)s|2=%(title)s}}' % \
-            {'id': info['id'], 'title': escape_wikitext(title)}
-    elif ie_key == 'Generic':
-        source = url
-    else:
-        source = '[%(url)s %(title)s - %(extractor)s]' % \
-            {'url': url, 'title': escape_wikitext(title), 'extractor': ie_key}
-
-    # Description
-    desc = escape_wikitext(desc)
-    if len(desc_orig) > 100:
-        lang = guess_language.guessLanguage(desc_orig)
-        if lang != 'UNKNOWN':
-            desc = u'{{' + lang + u'|1=' + desc + u'}}'
-
-    # License
-    lic = '{{subst:nld}}'
-    uploader_param = '|%s' % uploader if uploader else ''
-    if ie_key == 'Youtube' and info.get('license') == \
-            'Creative Commons Attribution license (reuse allowed)':
-        lic = '{{YouTube CC-BY%s}}' % uploader_param
-    elif ie_key == 'Flickr':
-        if info.get('license') == 'Attribution':
-            lic = '{{cc-by-2.0%s}}' % uploader_param
-        elif info.get('license') == 'Attribution-ShareAlike':
-            lic = '{{cc-by-sa-2.0%s}}' % uploader_param
-        elif info.get('license') == 'No known copyright restrictions':
-            lic = '{{Flickr-no known copyright restrictions}}'
-        elif info.get('license') == 'United States government work':
-            lic = '{{PD-USGov}}'
-        elif info.get('license') == 'Public Domain Dedication (CC0)':
-            lic = '{{cc-zero}}'
-        elif info.get('license') in \
-                ['Public Domain Work', 'Public Domain Mark']:
-            lic = '{{safesubst:Flickr-public domain mark/subst}}'
-
-    # Author
-    uploader_url = info.get('uploader_url', '')
-    if uploader_url:
-        uploader = u'[%s %s]' % (uploader_url, uploader)
 
     filedesc = """
 =={{int:filedesc}}==
@@ -117,11 +63,11 @@ def do_extract_url(url):
 
 [[Category:Uploaded with video2commons]]
 """ % {
-        'desc': desc,
-        'date': date,
-        'source': source,
-        'uploader': uploader,
-        'license': lic
+        'desc': _desc(url, ie_key, title, info),
+        'date': _date(url, ie_key, title, info),
+        'source': _source(url, ie_key, title, info),
+        'uploader': _uploader(url, ie_key, title, info),
+        'license': _license(url, ie_key, title, info)
     }
 
     return {
@@ -130,6 +76,70 @@ def do_extract_url(url):
         'filedesc': filedesc.strip(),
         'filename': title
     }
+
+
+def _date(url, ie_key, title, info):
+    date = info.get('upload_date', '').strip()
+    if re.match(r'^[0-9]{8}$', date):
+        date = '%s-%s-%s' % (date[0:4], date[4:6], date[6:8])
+    return date
+
+
+def _source(url, ie_key, title, info):
+    if ie_key == 'Youtube' and info['id']:
+        return '{{From YouTube|1=%(id)s|2=%(title)s}}' % \
+            {'id': info['id'], 'title': escape_wikitext(title)}
+    elif ie_key == 'Vimeo' and info['id']:
+        return '{{From Vimeo|1=%(id)s|2=%(title)s}}' % \
+            {'id': info['id'], 'title': escape_wikitext(title)}
+    elif ie_key == 'Generic':
+        return url
+    else:
+        return '[%(url)s %(title)s - %(extractor)s]' % \
+            {'url': url, 'title': escape_wikitext(title), 'extractor': ie_key}
+
+
+def _desc(url, ie_key, title, info):
+    desc_orig = desc = info.get('description', '').strip() or title
+    desc = escape_wikitext(desc)
+    if len(desc_orig) > 100:
+        lang = guess_language.guessLanguage(desc_orig)
+        if lang != 'UNKNOWN':
+            desc = u'{{' + lang + u'|1=' + desc + u'}}'
+    return desc
+
+
+def _uploader(url, ie_key, title, info):
+    uploader = escape_wikitext(info.get('uploader', '').strip())
+    uploader_url = info.get('uploader_url', '')
+    if uploader_url:
+        uploader = u'[%s %s]' % (uploader_url, uploader)
+    return uploader
+
+
+def _license(url, ie_key, title, info):
+    uploader_param = '|' + escape_wikitext(info.get('uploader', '').strip()) \
+        if 'uploader' in info else ''
+
+    if ie_key == 'Youtube' and info.get('license') == \
+            'Creative Commons Attribution license (reuse allowed)':
+        return '{{YouTube CC-BY%s}}' % uploader_param
+    elif ie_key == 'Flickr':
+        if info.get('license') == 'Attribution':
+            return '{{cc-by-2.0%s}}' % uploader_param
+        elif info.get('license') == 'Attribution-ShareAlike':
+            return '{{cc-by-sa-2.0%s}}' % uploader_param
+        elif info.get('license') == 'No known copyright restrictions':
+            return '{{Flickr-no known copyright restrictions}}'
+        elif info.get('license') == 'United States government work':
+            return '{{PD-USGov}}'
+        elif info.get('license') == 'Public Domain Dedication (CC0)':
+            return '{{cc-zero}}'
+        elif info.get('license') in \
+                ['Public Domain Work', 'Public Domain Mark']:
+            return '{{safesubst:Flickr-public domain mark/subst}}'
+
+    return '{{subst:nld}}'
 
 
 def escape_wikitext(wikitext):
