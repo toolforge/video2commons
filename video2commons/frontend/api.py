@@ -434,31 +434,25 @@ def _validate_filename(filename):
     return filename.replace('_', ' ')
 
 
-def get_download_key(format):
+def get_backend_keys(format):
     """Get the youtube-dl download format key."""
     return {
-        'ogv (Theora)': 'bestvideo/best',
-        'webm (VP8)': 'bestvideo/best',
-        'webm (VP9, experimental)': 'bestvideo/best',
-        'ogg (Vorbis)': 'bestaudio/best',
-        'opus (Opus, experimental)': 'bestaudio/best',
-        'ogv (Theora/Vorbis)': 'bestvideo+bestaudio/best',
-        'webm (VP8/Vorbis)': 'bestvideo+bestaudio/best',
-        'webm (VP9/Opus, experimental)': 'bestvideo+bestaudio/best',
-    }[format]
-
-
-def get_convert_key(format):
-    """Get the backend convert key from human-readable convert format."""
-    return {
-        'ogv (Theora)': 'an.ogv',
-        'webm (VP8)': 'an.webm',
-        'webm (VP9, experimental)': 'an.vp9.webm',
-        'ogg (Vorbis)': 'ogg',
-        'opus (Opus, experimental)': 'opus',
-        'ogv (Theora/Vorbis)': 'ogv',
-        'webm (VP8/Vorbis)': 'webm',
-        'webm (VP9/Opus, experimental)': 'vp9.webm',
+        'ogv (Theora)':
+            ('bestvideo/best', 'an.ogv'),
+        'webm (VP8)':
+            ('bestvideo/best', 'an.webm'),
+        'webm (VP9, experimental)':
+            ('bestvideo/best', 'an.vp9.webm'),
+        'ogg (Vorbis)':
+            ('bestaudio/best', 'ogg'),
+        'opus (Opus, experimental)':
+            ('bestaudio/best', 'opus'),
+        'ogv (Theora/Vorbis)':
+            ('bestvideo+bestaudio/best', 'ogv'),
+        'webm (VP8/Vorbis)':
+            ('bestvideo+bestaudio/best', 'webm'),
+        'webm (VP9/Opus, experimental)':
+            ('bestvideo+bestaudio/best', 'vp9.webm'),
     }[format]
 
 
@@ -470,8 +464,7 @@ def run_task():
     subtitles = request.form['subtitles']
     filename = request.form['filename']
     filedesc = request.form['filedesc']
-    downloadkey = get_download_key(request.form['format'])
-    convertkey = get_convert_key(request.form['format'])
+    downloadkey, convertkey = get_backend_keys(request.form['format'])
     username = session['username']
     oauth = (session['access_token_key'], session['access_token_secret'])
 
