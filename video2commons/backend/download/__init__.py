@@ -18,7 +18,9 @@
 """Wrapper around youtube-dl."""
 
 import os
-import youtube_dl  # https://github.com/rg3/youtube-dl
+from urlparse import urlparse
+
+import youtube_dl
 
 
 def download(
@@ -26,6 +28,9 @@ def download(
     statuscallback=None, errorcallback=None
 ):
     """Download a video from url to outputdir."""
+    assert not url_blacklisted(url), \
+        'Your downloading URL has been blacklisted.'
+
     outputdir = os.path.abspath(outputdir)
     statuscallback = statuscallback or (lambda text, percent: None)
     errorcallback = errorcallback or (lambda text: None)
@@ -95,3 +100,13 @@ def download(
             ret['subtitles'][key] = filename
 
     return ret
+
+
+def url_blacklisted(url):
+    """Define download url blacklist."""
+    parseresult = urlparse(url)
+    if parseresult.schemescheme in ['http', 'https']:
+        if url.endswith('.googlevideo.com'):
+            return True
+
+    return False
