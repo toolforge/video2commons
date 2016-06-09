@@ -105,8 +105,8 @@ def download(
 def url_blacklisted(url):
     """Define download url blacklist."""
     parseresult = urlparse(url)
-    if parseresult.schemescheme in ['http', 'https']:
-        if url.endswith('.googlevideo.com'):
+    if parseresult.scheme in ['http', 'https']:
+        if parseresult.netloc.endswith('.googlevideo.com'):
             return True
 
     return False
