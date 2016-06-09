@@ -83,6 +83,8 @@
 	};
 
 	video2commons.populateResults = function( data ) {
+		var isatbottom = ( window.innerHeight + window.scrollY ) >= document.body.offsetHeight;
+
 		var table = $( '#tasktable > tbody' );
 
 		$( '#task-new' )
@@ -227,6 +229,9 @@
 				.addClass( 'disabled' )
 				.hide();
 		}
+
+		if ( isatbottom )
+			window.scrollTo( 0, document.body.scrollHeight );
 	};
 
 	video2commons.addTask = function() {
