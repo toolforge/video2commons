@@ -36,7 +36,7 @@ window.labels = {
 	                        "Falls die Mediendatei keine Video- oder Audiospuren beinhaltet, setze die jeweiligen Checkboxes bitte auf falsch, da ansonsten die Umwandlung fehlschlagen kann, auch wenn das Format frei ist.",
 	                        "Wenn 'Untertitel importieren' ausgewählt ist, werden Untertitel importiert, allerdings keine autogenerierten.",
 	                        'Was wenn ich eine Datei von meinem Computer konvertieren und uploaden möchte? Solange sich die NFS- und Grid-Engines auf Wikimedia Tool Labs noch in Betrieb befinden, kannst du in solchen Fällen das <a id="vc">videoconvert</a>-Tool verwenden.',
-	                        'Uploade nur Inhalte die <a id="fl">frei lizensiert/a> oder <a id="pd">gemeinfrei</a> sind. "<a id="fu">Fair use</a>" ist auf Commons nicht gestattet.'
+	                        'Uploade nur Inhalte die <a id="fl">frei lizensiert</a> oder <a id="pd">gemeinfrei</a> sind. "<a id="fu">Fair use</a>" ist auf Commons nicht gestattet.'
 	                   ],
 	extensionmsg      :"Die oben ausgewählte Datei-Extension wird ausschließlich verwendet, wenn das Video in einem unfreien Format ist, was Transcoding erfordert. Videos in freien Formaten behalten ihre Extensions."
 };
