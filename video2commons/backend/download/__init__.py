@@ -22,14 +22,15 @@ from urlparse import urlparse
 
 import youtube_dl
 
+from video2commons.exceptions import TaskError
+
 
 def download(
     url, ie_key, formats, subtitles, outputdir,
     statuscallback=None, errorcallback=None
 ):
     """Download a video from url to outputdir."""
-    assert not url_blacklisted(url), \
-        'Your downloading URL has been blacklisted.'
+    url_blacklisted(url)
 
     outputdir = os.path.abspath(outputdir)
     statuscallback = statuscallback or (lambda text, percent: None)
@@ -79,6 +80,9 @@ def download(
     statuscallback('Preprocessing...', -1)
     info = dl.extract_info(url, download=True, ie_key=ie_key)
 
+    if info.get('webpage_url'):
+        url_blacklisted(info['webpage_url'])
+
     filename = outtmpl % {'ext': info['ext']}
     if not os.path.isfile(filename):
         # https://github.com/rg3/youtube-dl/issues/8349
@@ -107,6 +111,4 @@ def url_blacklisted(url):
     parseresult = urlparse(url)
     if parseresult.scheme in ['http', 'https']:
         if parseresult.netloc.endswith('.googlevideo.com'):
-            return True
-
-    return False
+            raise TaskError('Your downloading URL has been blacklisted.')
