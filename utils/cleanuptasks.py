@@ -29,7 +29,14 @@ from config import redis_pw, redis_host  # NOQA
 redisconnection = Redis(host=redis_host, db=3, password=redis_pw)
 
 for userkey in redisconnection.keys('tasks:*') + ['alltasks']:
-    for id in redisconnection.lrange(userkey, 0, -1):
-        if not redisconnection.exists('titles:' + id):
-            redisconnection.lrem(userkey, id)
-            print "delete %s from %s" % (id, userkey)
+    for taskid in redisconnection.lrange(userkey, 0, -1):
+        if not redisconnection.exists('titles:' + taskid):
+            redisconnection.lrem(userkey, taskid)
+            print "delete %s from %s" % (taskid, userkey)
+
+for pattern in ['params:*', 'restarted:*']:  # 'tasklock:*'
+    for key in redisconnection.keys(pattern):
+        taskid = key.split(':')[1]
+        if not redisconnection.exists('titles:' + taskid):
+            redisconnection.delete(key)
+            print "delete %s" % (key)
