@@ -17,6 +17,8 @@
 
 """Wrapper around youtube-dl."""
 
+from __future__ import absolute_import
+
 import os
 from urlparse import urlparse
 
