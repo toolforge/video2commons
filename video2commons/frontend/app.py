@@ -175,7 +175,16 @@ def logincallback():
     session['access_token_key'], session['access_token_secret'] = \
         access_token.key, access_token.secret
 
-    handshaker.identify(access_token)
+    identify = handshaker.identify(access_token)
+
+    if not identify['editcount'] >= 50 and \
+            'autoconfirmed' in identify['rights']:
+        return render_template(
+            'error.min.html',
+            message='Due to ongoing abuse, you must be autoconfirmed '
+                    'with at least 50 edits on Commons to use this tool.',
+            loggedin=True
+        )
 
     return redirect(url_for('main'))
 
