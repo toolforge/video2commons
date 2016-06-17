@@ -173,8 +173,9 @@ def logincallback():
     )
     access_token = handshaker.complete(request_token, request.query_string)
 
-    del session['access_token_key'], session['access_token_secret']
-    del session['username']
+    session.pop('access_token_key', None)
+    session.pop('access_token_secret', None)
+    session.pop('username', None)
 
     identify = handshaker.identify(access_token)
     if not identify['editcount'] >= 50 and \
