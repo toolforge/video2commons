@@ -50,8 +50,8 @@ app.register_blueprint(api, url_prefix='/api')
 def all_exception_handler(e):
     """Handle an exception and show the traceback to error page."""
     try:
-        message = ('Please notify [[c:User:Zhuyifei1999]]: ' +
-                   traceback.format_exc()).replace('\n', '<br>')
+        message = 'Please notify [[c:User:Zhuyifei1999]]: ' + \
+                  traceback.format_exc()
         loggedin = 'username' in session
     except:
         message = (
