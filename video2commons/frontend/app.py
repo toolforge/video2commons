@@ -58,7 +58,11 @@ def main():
     """Main page."""
     banned = check_banned()
     if banned:
-        return render_template('banned.min.html', reason=banned)
+        return render_template(
+            'error.min.html',
+            message='You are banned from using this tool! Reason: ' + banned,
+            loggedin=False
+        )
 
     try:
         auth = dologin()

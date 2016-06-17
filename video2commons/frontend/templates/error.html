@@ -11,11 +11,16 @@
       <div class="navbar-header">
         <a class="navbar-brand" href="#">video2commons</a>
       </div>
+{% if loggedin %}
+        <ul class="nav navbar-nav navbar-right">
+          <li><a href="{{ url_for('logout') }}"><span class="glyphicon glyphicon-log-out"></span> Logout</a></li>
+        </ul>
+{% endif %}
     </div>
   </div>
 
   <div class="container" id="content">
-    <div class="alert alert-danger">You are banned from using this tool! Reason: {{ reason }}</div>
+    <div class="alert alert-danger">{{ message }}</div>
   </div>
   <div class="github-fork-ribbon-wrapper right-bottom">
     <div class="github-fork-ribbon">
