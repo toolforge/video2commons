@@ -49,8 +49,25 @@ app.register_blueprint(api, url_prefix='/api')
 @app.errorhandler(Exception)
 def all_exception_handler(e):
     """Handle an exception and show the traceback to error page."""
-    return 'Please notify [[c:User:Zhuyifei1999]]: ' + \
-        traceback.format_exc(), 500
+    try:
+        message = 'Please notify [[c:User:Zhuyifei1999]]: ' + \
+                  traceback.format_exc()
+        loggedin = 'username' in session
+    except:
+        message = (
+            'Something went terribly wrong, '
+            'and we failed to find the cause automatically. '
+            'Please notify [[c:User:Zhuyifei1999]].'
+        )
+        loggedin = False
+    try:
+        return render_template(
+            'error.min.html',
+            message=message,
+            loggedin=loggedin
+        ), 500
+    except:
+        return 500
 
 
 @app.route('/')
@@ -58,7 +75,11 @@ def main():
     """Main page."""
     banned = check_banned()
     if banned:
-        return render_template('banned.min.html', reason=banned)
+        return render_template(
+            'error.min.html',
+            message='You are banned from using this tool! Reason: ' + banned,
+            loggedin=False
+        )
 
     try:
         auth = dologin()
@@ -151,10 +172,25 @@ def logincallback():
         session['request_token_secret']
     )
     access_token = handshaker.complete(request_token, request.query_string)
+
+    session.pop('access_token_key', None)
+    session.pop('access_token_secret', None)
+    session.pop('username', None)
+
+    identify = handshaker.identify(access_token)
+    if not identify['editcount'] >= 50 and \
+            'autoconfirmed' in identify['rights']:
+        return render_template(
+            'error.min.html',
+            message='Due to ongoing abuse, you must be autoconfirmed '
+                    'with at least 50 edits on Commons to use this tool.',
+            loggedin=True
+        )
+
     session['access_token_key'], session['access_token_secret'] = \
         access_token.key, access_token.secret
 
-    handshaker.identify(access_token)
+    session['username'] = identify['username']
 
     return redirect(url_for('main'))
 
