@@ -172,11 +172,11 @@ def logincallback():
         session['request_token_secret']
     )
     access_token = handshaker.complete(request_token, request.query_string)
-    session['access_token_key'], session['access_token_secret'] = \
-        access_token.key, access_token.secret
+
+    del session['access_token_key'], session['access_token_secret']
+    del session['username']
 
     identify = handshaker.identify(access_token)
-
     if not identify['editcount'] >= 50 and \
             'autoconfirmed' in identify['rights']:
         return render_template(
@@ -185,6 +185,11 @@ def logincallback():
                     'with at least 50 edits on Commons to use this tool.',
             loggedin=True
         )
+
+    session['access_token_key'], session['access_token_secret'] = \
+        access_token.key, access_token.secret
+
+    session['username'] = identify['username']
 
     return redirect(url_for('main'))
 
