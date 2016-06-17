@@ -49,8 +49,25 @@ app.register_blueprint(api, url_prefix='/api')
 @app.errorhandler(Exception)
 def all_exception_handler(e):
     """Handle an exception and show the traceback to error page."""
-    return 'Please notify [[c:User:Zhuyifei1999]]: ' + \
-        traceback.format_exc(), 500
+    try:
+        message = ('Please notify [[c:User:Zhuyifei1999]]: ' +
+                   traceback.format_exc()).replace('\n', '<br>')
+        loggedin = 'username' in session
+    except:
+        message = (
+            'Something went terribly wrong, '
+            'and we failed to find the cause automatically. '
+            'Please notify [[c:User:Zhuyifei1999]].'
+        )
+        loggedin = False
+    try:
+        return render_template(
+            'error.min.html',
+            message=message,
+            loggedin=loggedin
+        ), 500
+    except:
+        return 500
 
 
 @app.route('/')
