@@ -178,8 +178,8 @@ def logincallback():
     session.pop('username', None)
 
     identify = handshaker.identify(access_token)
-    if not identify['editcount'] >= 50 and \
-            'autoconfirmed' in identify['rights']:
+    if not (identify['editcount'] >= 50 and
+            'autoconfirmed' in identify['rights']):
         return render_template(
             'error.min.html',
             message='Due to ongoing abuse, you must be autoconfirmed '
