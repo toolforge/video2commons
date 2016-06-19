@@ -17,13 +17,22 @@
 		progressbar: '<div class="progress"><div class="progress-bar" role="progressbar"></div></div>'
 	};
 
-	var video2commons = window.video2commons = {};
+	var csrf_token = '';
 
+	var video2commons = window.video2commons = {};
 
 	video2commons.init = function() {
 		$( '#content' )
 			.html( htmlContent.loading );
+		video2commons.loadCsrf();
 		video2commons.checkStatus();
+	};
+
+	video2commons.loadCsrf = function() {
+		$.get( 'api/csrf' )
+			.done( function( data ) {
+				csrf_token = data.csrf;
+			});
 	};
 
 	video2commons.checkStatus = function() {
@@ -634,7 +643,7 @@
 	};
 
 	video2commons.apiPost = function( endpoint, data ) {
-		data._csrf_token = window.csrf;
+		data._csrf_token = csrf_token;
 		return $.post( 'api/' + endpoint, data );
 	};
 

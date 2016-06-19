@@ -33,9 +33,7 @@ import requests
 from video2commons.config import consumer_key, consumer_secret, api_url
 
 from video2commons.frontend.redisession import RedisSessionInterface
-from video2commons.frontend.shared import (
-    redisconnection, check_banned, generate_csrf_token
-)
+from video2commons.frontend.shared import redisconnection, check_banned
 from video2commons.frontend.api import api
 
 consumer_token = ConsumerToken(consumer_key, consumer_secret)
@@ -46,8 +44,6 @@ app = Flask(__name__)
 app.session_interface = RedisSessionInterface(redisconnection)
 
 app.register_blueprint(api, url_prefix='/api')
-
-app.jinja_env.globals['csrf_token'] = generate_csrf_token
 
 
 @app.errorhandler(Exception)
