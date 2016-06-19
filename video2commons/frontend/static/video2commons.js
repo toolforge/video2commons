@@ -428,7 +428,7 @@
 							.append( '<tr id="task-new"><td colspan="3">' + loaderImage + '</td></tr>' );
 						window.scrollTo( 0, document.body.scrollHeight );
 
-						$.post( 'api/task/run', window.newTaskData )
+						video2commons.apiPost( 'task/run', window.newTaskData )
 							.done( function( data ) {
 								if ( data.error )
 									window.alert( data.error );
@@ -545,7 +545,7 @@
 
 
 	video2commons.askAPI = function( url, datain, dataout, cb ) {
-		$.post( 'api/' + url, datain )
+		video2commons.apiPost( url, datain )
 			.done( function( data ) {
 				if ( data.error ) {
 					video2commons.showFormError( data.error );
@@ -567,7 +567,7 @@
 		obj.off()
 			.addClass( 'disabled' );
 
-		$.post( 'api/task/' + eventName, {
+		video2commons.apiPost( 'task/' + eventName, {
 				id: video2commons.getTaskIDFromDOMID( obj.attr( 'id' ) )
 			} )
 			.done( function( data ) {
@@ -631,6 +631,11 @@
 			window.addTaskDialog.find( '#url' )
 				.focus();
 		} );
+	};
+
+	video2commons.apiPost = function( endpoint, data ) {
+		data._csrf_token = window.csrf;
+		return $.post( 'api/' + endpoint, data );
 	};
 
 	$( document )

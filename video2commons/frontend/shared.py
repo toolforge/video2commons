@@ -21,14 +21,23 @@
 
 from __future__ import absolute_import
 
-from video2commons.config import redis_pw, redis_host
+from uuid import uuid4
+
+from flask import session
 from redis import Redis
+
+from video2commons.config import redis_pw, redis_host
 
 redisconnection = Redis(host=redis_host, db=3, password=redis_pw)
 
 
 def check_banned():
     """Check for banned cases."""
-    # Check for WP0 traffic
-
     return None
+
+
+def generate_csrf_token():
+    """Generate a CSRF token."""
+    if '_csrf_token' not in session:
+        session['_csrf_token'] = str(uuid4())
+    return session['_csrf_token']

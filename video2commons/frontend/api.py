@@ -32,7 +32,9 @@ from flask import (
 from video2commons.backend import worker
 from video2commons.exceptions import NeedServerSideUpload
 
-from video2commons.frontend.shared import redisconnection, check_banned
+from video2commons.frontend.shared import (
+    redisconnection, check_banned, generate_csrf_token
+)
 from video2commons.frontend.urlextract import (
     do_extract_url, do_validate_filename, sanitize
 )
@@ -51,6 +53,15 @@ def check_logged_in():
     """Error if a user is not logged in."""
     if 'username' not in session:
         return error_json('Are you logged in?')
+
+
+@api.before_request
+def csrf_protect():
+    """For POSTs, require CSRF token."""
+    if request.method == "POST":
+        token = session.pop('_csrf_token', None)
+        if not token or token != request.form.get('_csrf_token'):
+            return error_json('Invalid CSRF token. Try reloading this page.')
 
 
 def format_exception(e):
@@ -87,6 +98,14 @@ def error_json(e):
             error=e,
             traceback=None
         )
+
+
+@api.route('/csrf')
+def get_csrf():
+    """Get the CSRF token for API-only access."""
+    return jsonify(
+        csrf=generate_csrf_token()
+    )
 
 
 @api.route('/status')
