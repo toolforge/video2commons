@@ -74,6 +74,15 @@ def all_exception_handler(e):
         return 500
 
 
+@app.before_request
+def force_https():
+    """Force user to redirect to https, checking X-Forwarded-Proto."""
+    if request.headers.get('X-Forwarded-Proto') == 'http':
+        return redirect('https://' + request.headers['Host'] +
+                        request.headers['X-Original-URI'],
+                        code=301)
+
+
 @app.route('/')
 def main():
     """Main page."""
