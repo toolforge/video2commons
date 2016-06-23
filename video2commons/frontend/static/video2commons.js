@@ -6,14 +6,14 @@
 	var loaderImage = '<img alt="File:Ajax-loader.gif" src="//upload.wikimedia.org/wikipedia/commons/d/de/Ajax-loader.gif" data-file-width="32" data-file-height="32" height="32" width="32">';
 
 	var htmlContent = {
-		abortbutton: '<button type="button" class="btn btn-danger btn-xs pull-right"><span class="glyphicon glyphicon-remove"></span> ' + i18n.abort + '</button>',
-		removebutton: '<button type="button" class="btn btn-danger btn-xs pull-right"><span class="glyphicon glyphicon-trash"></span> ' + i18n.remove + '</button>',
-		restartbutton: '<button type="button" class="btn btn-warning btn-xs pull-right"><span class="glyphicon glyphicon-repeat"></span> ' + i18n.restart + '</button>',
-		loading: '<center>' + loaderImage + '&nbsp;&nbsp;' + i18n.loading + '</center>',
-		errorGeneric: '<div class="alert alert-danger">' + i18n.errorGeneric + '</div>',
-		yourTasks: '<h4>' + i18n.yourTasks + '</h4><table id="tasktable" class="table"><tbody></tbody></table>',
-		addTask: '<input class="btn btn-primary btn-success btn-md" type="button" accesskey="n" value="' + i18n.addTask + '">',
-		requestServerSide: '<a class="btn btn-primary btn-success btn-md pull-right disabled" id="ssubtn">' + i18n.createServerSide + '</a>',
+		abortbutton: '<button type="button" class="btn btn-danger btn-xs pull-right"><span class="glyphicon glyphicon-remove"></span> ' + Mustache.escape( i18n.abort ) + '</button>',
+		removebutton: '<button type="button" class="btn btn-danger btn-xs pull-right"><span class="glyphicon glyphicon-trash"></span> ' + Mustache.escape( i18n.remove ) + '</button>',
+		restartbutton: '<button type="button" class="btn btn-warning btn-xs pull-right"><span class="glyphicon glyphicon-repeat"></span> ' + Mustache.escape( i18n.restart ) + '</button>',
+		loading: '<center>' + loaderImage + '&nbsp;&nbsp;' + Mustache.escape( i18n.loading ) + '</center>',
+		errorGeneric: '<div class="alert alert-danger">' + Mustache.escape( i18n.errorGeneric ) + '</div>',
+		yourTasks: '<h4>' + Mustache.escape( i18n.yourTasks ) + '</h4><table id="tasktable" class="table"><tbody></tbody></table>',
+		addTask: '<input class="btn btn-primary btn-success btn-md" type="button" accesskey="n" value="' + Mustache.escape( i18n.addTask ) + '">',
+		requestServerSide: '<a class="btn btn-primary btn-success btn-md pull-right disabled" id="ssubtn">' + Mustache.escape( i18n.createServerSide ) + '</a>',
 		progressbar: '<div class="progress"><div class="progress-bar" role="progressbar"></div></div>'
 	};
 
@@ -32,7 +32,7 @@
 		$.get( 'api/csrf' )
 			.done( function( data ) {
 				csrf_token = data.csrf;
-			});
+			} );
 	};
 
 	video2commons.checkStatus = function() {
@@ -202,9 +202,9 @@
 				}
 			};
 			if ( val.status === 'done' ) {
-				setStatusText( i18n.taskDone, val.url, val.text );
+				setStatusText( Mustache.escape( i18n.taskDone ), val.url, val.text );
 			} else if ( val.status === 'needssu' ) {
-				setStatusText( i18n.errorTooLarge, val.url );
+				setStatusText( Mustache.escape( i18n.errorTooLarge ), val.url );
 			} else if ( val.status === 'fail' ) {
 				setStatusText( val.text );
 				if ( val.restartable ) {
@@ -407,7 +407,7 @@
 					.off();
 				window.addTaskDialog.find( '#btn-next' )
 					.removeClass( 'disabled' )
-					.html( i18n.next + ' <span class="glyphicon glyphicon-chevron-right"></span>' );
+					.html( Mustache.escape( i18n.next ) + ' <span class="glyphicon glyphicon-chevron-right"></span>' );
 				video2commons.setPrevNextButton( 'next' );
 				break;
 			case 'target':
@@ -417,7 +417,7 @@
 
 				window.addTaskDialog.find( '#btn-next' )
 					.removeClass( 'disabled' )
-					.html( i18n.next + ' <span class="glyphicon glyphicon-chevron-right"></span>' );
+					.html( Mustache.escape( i18n.next ) + ' <span class="glyphicon glyphicon-chevron-right"></span>' );
 				video2commons.setPrevNextButton( 'next' );
 				break;
 			case 'confirm':
@@ -427,7 +427,7 @@
 
 				window.addTaskDialog.find( '#btn-next' )
 					.removeClass( 'disabled' )
-					.html( i18n.confirm + ' <span class="glyphicon glyphicon-ok"></span>' )
+					.html( Mustache.escape( i18n.confirm ) + ' <span class="glyphicon glyphicon-ok"></span>' )
 					.off()
 					.click( function() {
 						video2commons.disablePrevNext( false );
