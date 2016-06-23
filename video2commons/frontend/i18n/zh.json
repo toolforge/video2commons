@@ -4,7 +4,7 @@
 	"restart"           :"重试",
 	"next"              :"下一步",
 	"loading"           :"正在加载...",
-	"confirm"           :"确认 ",
+	"confirm"           :"确认",
 	"errorDisconnect"   :"无法连接服务器。请刷新或者在GitHub上报告此问题。",
 	"errorTooLarge"     :"文件太大了，无法直接上传！你也许可以{{#a}}申请服务器端上传{{/a}}。",
 	"addTask"           :"新建任务...",
