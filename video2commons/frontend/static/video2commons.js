@@ -422,24 +422,19 @@
 				window.addTaskDialog.find( '#btn-prev' )
 					.addClass( 'disabled' )
 					.off();
+
 				window.addTaskDialog.find( '#btn-next' )
-					.removeClass( 'disabled' )
 					.html( Mustache.escape( i18n.next ) + ' <span class="glyphicon glyphicon-chevron-right"></span>' );
 				video2commons.setPrevNextButton( 'next' );
 				break;
 			case 'target':
-				window.addTaskDialog.find( '#btn-prev' )
-					.removeClass( 'disabled' );
 				video2commons.setPrevNextButton( 'prev' );
 
 				window.addTaskDialog.find( '#btn-next' )
-					.removeClass( 'disabled' )
 					.html( Mustache.escape( i18n.next ) + ' <span class="glyphicon glyphicon-chevron-right"></span>' );
 				video2commons.setPrevNextButton( 'next' );
 				break;
 			case 'confirm':
-				window.addTaskDialog.find( '#btn-prev' )
-					.removeClass( 'disabled' );
 				video2commons.setPrevNextButton( 'prev' );
 
 				window.addTaskDialog.find( '#btn-next' )
@@ -466,6 +461,7 @@
 
 	video2commons.setPrevNextButton = function( button ) {
 		window.addTaskDialog.find( '#btn-' + button )
+			.removeClass( 'disabled' )
 			.off()
 			.click( function() {
 				video2commons.disablePrevNext( true );

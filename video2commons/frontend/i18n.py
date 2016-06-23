@@ -46,16 +46,8 @@ def get(lang):
         data = redisconnection.get(i18nkey)
     else:
         data = {}
-        datafiles = {}
         fallbacklist = [lang] + i18n._altlang(lang) + ['en']
-        for code in fallbacklist:
-            if code not in datafiles:
-                path = os.path.dirname(os.path.realpath(__file__)) + \
-                    '/i18n/' + code + '.json'
-                if os.path.isfile(path):
-                    with open(path, 'r') as f:
-                        datafiles[code] = json.loads(f.read())
-
+        datafiles = _loadfiles(fallbacklist)
         for key in datafiles['en']:
             for code in fallbacklist:
                 if key in datafiles[code]:
@@ -73,3 +65,15 @@ def get(lang):
 
     data = 'window.i18n=' + data + ';'
     return Response(data, mimetype='application/javascript')
+
+
+def _loadfiles(fallbacklist):
+    datafiles = {}
+    for code in fallbacklist:
+        if code not in datafiles:
+            path = os.path.dirname(os.path.realpath(__file__)) + \
+                '/i18n/' + code + '.json'
+            if os.path.isfile(path):
+                with open(path, 'r') as f:
+                    datafiles[code] = json.loads(f.read())
+    return datafiles
