@@ -50,7 +50,7 @@ def get(lang):
         datafiles = _loadfiles(fallbacklist)
         for key in datafiles['en']:
             for code in fallbacklist:
-                if key in datafiles[code]:
+                if key in datafiles.get(code, {}):
                     data[key] = datafiles[code][key]
                     # <'s and >'s aren't supposed to be here,
                     # if the translation breaks, oh well,
