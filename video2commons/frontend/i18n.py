@@ -43,28 +43,29 @@ def get(lang):
     """Get the i18n of language lang."""
     i18nkey = 'i18n:' + lang
     if redisconnection.exists(i18nkey):
-        data = redisconnection.get(i18nkey)
+        # Let's not have hackers be too powerful if they hack into redis
+        data = json.dumps(json.loads(redisconnection.get(i18nkey)))
     else:
         data = {}
-        fallbacklist = [lang] + i18n._altlang(lang) + ['en']
+        fallbacklist = _create_fallback(lang)
         datafiles = _loadfiles(fallbacklist)
         for key in datafiles['en']:
             for code in fallbacklist:
                 if key in datafiles.get(code, {}):
                     data[key] = datafiles[code][key]
-                    # <'s and >'s aren't supposed to be here,
-                    # if the translation breaks, oh well,
-                    # why are are you hacking this tool?
+                    # <'s and >'s aren't supposed to be here;
+                    # if the translation breaks due to double escaping,
+                    # oh well, why are are you hacking this tool?
                     # --XSS prevention
                     data[key] = data[key].replace('<', '&lt;')
                     data[key] = data[key].replace('>', '&gt;')
                     break
 
         data = json.dumps(data)
-        redisconnection.setex(i18nkey, data, 60)
+        redisconnection.setex(data, data, 60)
 
     data = 'window.i18n=' + data + ';'
-    return Response(data, mimetype='application/javascript')
+    return Response(data, mimetype='application/javascript; charset=utf-8')
 
 
 def _loadfiles(fallbacklist):
@@ -77,3 +78,14 @@ def _loadfiles(fallbacklist):
                 with open(path, 'r') as f:
                     datafiles[code] = json.loads(f.read())
     return datafiles
+
+
+def _create_fallback(lang):
+    fallbacklist = [lang] + i18n._altlang(lang)
+
+    if '-' in lang:
+        lang = lang.split('-')[0]
+        fallbacklist += [lang] + i18n._altlang(lang)
+
+    fallbacklist += ['en']
+    return fallbacklist
