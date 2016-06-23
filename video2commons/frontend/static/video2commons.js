@@ -24,13 +24,15 @@
 			if ( text[ 0 ] === '#' ) {
 				var splitloc = text.indexOf( '|' );
 				if ( splitloc < 0 ) {
-					return '<a id="' + render( text.slice( 1 ) ) + '"></a>';
+					// XSS prevention: Nasty attribute escaping -- allow alphanumerics and hyphens only here
+					if ( /^[a-z0-9\-]+$/i.test( text.slice( 1 ) ) )
+						return '<a id="' + text.slice( 1 ) + '"></a>';
 				} else {
-					return '<a id="' + render( text.substring( 1, splitloc ) ) + '">' + render( text.slice( splitloc + 1 ) ) + '</a>';
+					if ( /^[a-z0-9\-]+$/i.test( text.slice( 1 ) ) )
+						return '<a id="' + text.substring( 1, splitloc ) + '">' + render( text.slice( splitloc + 1 ) ) + '</a>';
 				}
-			} else {
-				return '<a>' + render( text ) + '</a>';
 			}
+			return '<a>' + render( text ) + '</a>';
 		};
 	};
 
