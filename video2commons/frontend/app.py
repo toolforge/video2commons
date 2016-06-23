@@ -43,6 +43,8 @@ app = Flask(__name__)
 
 app.session_interface = RedisSessionInterface(redisconnection)
 
+app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 3600
+
 app.register_blueprint(api, url_prefix='/api')
 
 
