@@ -21,7 +21,6 @@
 
 from __future__ import absolute_import
 
-import os
 import traceback
 
 from flask import (
@@ -35,6 +34,7 @@ from video2commons.config import consumer_key, consumer_secret, api_url
 from video2commons.frontend.redisession import RedisSessionInterface
 from video2commons.frontend.shared import redisconnection, check_banned
 from video2commons.frontend.api import api
+from video2commons.frontend.i18n import i18nblueprint
 
 consumer_token = ConsumerToken(consumer_key, consumer_secret)
 handshaker = Handshaker(api_url, consumer_token)
@@ -46,6 +46,7 @@ app.session_interface = RedisSessionInterface(redisconnection)
 app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 3600
 
 app.register_blueprint(api, url_prefix='/api')
+app.register_blueprint(i18nblueprint, url_prefix='/i18n')
 
 
 @app.errorhandler(Exception)
@@ -151,18 +152,7 @@ def querylanguage(auth):
     if not language:
         return default
 
-    if os.path.isfile(
-        os.path.dirname(os.path.realpath(__file__)) +
-        '/static/i18n/' + language + '.min.js'
-    ):
-        return language
-    elif '-' in language and os.path.isfile(
-        os.path.dirname(os.path.realpath(__file__)) +
-        '/static/i18n/' + language.split('-')[0] + '.min.js'
-    ):
-        return language.split('-')[0]
-    else:
-        return default
+    return language
 
 
 @app.route('/oauthinit')
