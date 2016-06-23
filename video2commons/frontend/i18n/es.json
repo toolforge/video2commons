@@ -36,5 +36,5 @@
 	"notessubtitles"    :"Si se marca 'Importar subtítulos', se importarán los subtítulos, a excepción de los auto-generadas.",
 	"notesown"          :"¿Y que si necesito subir y convertir el archivo en mi computador? Pues bien, mientras NFS y el motor de grid esten todavía aquí, puedes usarlos {{#a}}#vc|videoconvert{{/a}} herramienta.",
 	"noteslicensing"    :"Sólo subir {{#a}}#fl|con licencia libre{{/a}} o {{#a}}#pd|dominio público{{/a}} contenido. {{#a}}#fu|Fair use{{/a}}no se me permite en commons.",
-    "extensionmsg"      : "La extensión de archivo seleccionada arriba es usada si y sólo si el vídeo está en formato no-libre, los cuales requieren transcodificación. Vídeos en formatos libres mantendrán sus extensiones."
+	"extensionmsg"      : "La extensión de archivo seleccionada arriba es usada si y sólo si el vídeo está en formato no-libre, los cuales requieren transcodificación. Vídeos en formatos libres mantendrán sus extensiones."
 };
