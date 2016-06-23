@@ -1,4 +1,3 @@
-//English language
 {
 	"abort"             :"Abort",
 	"remove"            :"Remove",
@@ -12,7 +11,6 @@
 	"yourTasks"         :"Your tasks:",
 	"createServerSide"  :"Create server-side upload ticket in one go (recommended)",
 	"taskDone"          :"Your task is done. You may find your upload at {{#a}}{{/a}}.",
-	//templates
 	"cancel"            :"Cancel",
 	"back"              :"Back",
 	"extractor"         :"Extractor",
@@ -37,4 +35,4 @@
 	"notesown"          :"What if I need to convert and upload a file on my computer? Well, while NFS and Grid engine are still available in Tool Labs, you can use {{#a}}#vc|videoconvert{{/a}} tool.",
 	"noteslicensing"    :"Only upload {{#a}}#fl|freely licensed{{/a}} or {{#a}}#pd|public domain{{/a}} content. {{#a}}#fu|Fair use{{/a}} is not allowed on commons.",
 	"extensionmsg"      :"The file extension set above is used if and only if the video is in a non-free format, which requires transcoding. Videos in free formats will keep their extensions."
-};
+}

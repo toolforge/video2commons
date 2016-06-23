@@ -1,4 +1,3 @@
-//German language
 {
 	"abort"             :"Abbrechen",
 	"remove"            :"Entfernen",
@@ -12,7 +11,6 @@
 	"yourTasks"         :"Deine Tasks:",
 	"createServerSide"  :"Erstellen eines Antrags (Ticket) für serverseitigen Upload in einem Schritt (empfohlen)",
 	"taskDone"          :"Der Task wurde erledigt. Du findest die Datei unter {{#a}}{{/a}}.",
-	//templates
 	"cancel"            :"Abbrechen",
 	"back"              :"Zurück",
 	"extractor"         :"Extrahierer",
@@ -37,4 +35,4 @@
 	"notesown"          :"Was wenn ich eine Datei von meinem Computer konvertieren und uploaden möchte? Solange sich die NFS- und Grid-Engines auf Wikimedia Tool Labs noch in Betrieb befinden, kannst du in solchen Fällen das {{#a}}#vc|videoconvert{{/a}}-Tool verwenden.",
 	"noteslicensing"    :"Uploade nur Inhalte die {{#a}}#fl|frei lizensiert{{/a}} oder {{#a}}#pd|gemeinfrei{{/a}} sind. \"{{#a}}#fu|Fair use{{/a}}\" ist auf Commons nicht gestattet.",
 	"extensionmsg"      :"Die oben ausgewählte Datei-Extension wird ausschließlich verwendet, wenn das Video in einem unfreien Format ist, was Transcoding erfordert. Videos in freien Formaten behalten ihre Extensions."
-};
+}
