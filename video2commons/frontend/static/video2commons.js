@@ -217,9 +217,9 @@
 				}
 			};
 			if ( val.status === 'done' ) {
-				setStatusText( Mustache.escape( i18n.taskDone ), val.url, val.text );
+				setStatusText( Mustache.render( '{{> taskDone}}', i18n, i18n ), val.url, val.text );
 			} else if ( val.status === 'needssu' ) {
-				setStatusText( Mustache.escape( i18n.errorTooLarge ), val.url );
+				setStatusText( Mustache.render( '{{> errorTooLarge}}', i18n, i18n ), val.url );
 			} else if ( val.status === 'fail' ) {
 				setStatusText( val.text );
 				if ( val.restartable ) {
@@ -319,7 +319,7 @@
 				//sourceForm.html
 				$.get( 'static/html/sourceForm.min.html' )
 					.success( function( dataHtml ) {
-						dataHtml = Mustache.render( dataHtml, i18n );
+						dataHtml = Mustache.render( dataHtml, i18n, i18n );
 						window.addTaskDialog.find( '.modal-body' )
 							.html( dataHtml );
 
