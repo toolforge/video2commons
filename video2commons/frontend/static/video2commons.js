@@ -380,7 +380,7 @@
 						if ( window.newTaskData.audio ) keep.push( i18n.audio );
 						if ( window.newTaskData.subtitles ) keep.push( i18n.subtitles );
 						window.addTaskDialog.find( '#keep' )
-							.text( keep.join( i18n.commaseperator ) );
+							.text( keep.join( ', ' ) );
 
 						video2commons.setText( [
 							'url',

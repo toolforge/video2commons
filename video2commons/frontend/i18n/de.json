@@ -26,7 +26,6 @@
 	"subtitles"         :"Untertitel",
 	"note"              :"Hinweis:",
 	"filename"          :"Dateiname",
-	"commaseperator"    :", ",
 	"importantnote"     :"Wichtiger Hinweis:",
 	"notesplaylists"    :"Playlists können nicht korrekt verarbeitet werden. Manche Websites (wie Youku und Comedy Central) verwenden sogenannte Multipart-Videos, die als Playlists interpretiert werden und ebenfalls nicht korrekt verarbeitet werden können.",
 	"notesuncheck"      :"Falls die Mediendatei keine Video- oder Audiospuren beinhaltet, setze die jeweiligen Checkboxes bitte auf falsch, da ansonsten die Umwandlung fehlschlagen kann, auch wenn das Format frei ist.",

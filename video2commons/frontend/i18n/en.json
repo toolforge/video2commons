@@ -27,7 +27,6 @@
 	"subtitles"         :"subtitles",
 	"note"              :"Note:",
 	"filename"          :"Filename",
-	"commaseperator"    :", ",
 	"importantnote"     :"Important note:",
 	"notesplaylists"    :"Playlists will not be processed correctly. Some sites (such as Youku and Comedy Central) make use of multipart videos, interpreted as playlists, and will not be processed correctly either.",
 	"notesuncheck"      :"If the media does not include video or audio tracks, please uncheck the corresponding checkboxes; otherwise conversion may fail, even if the format is free.",

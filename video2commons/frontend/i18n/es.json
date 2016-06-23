@@ -26,7 +26,6 @@
 	"subtitles"         :"subtítulos",
 	"note"              :"Nota:",
 	"filename"          :"Nombre de archivo",
-	"commaseperator"    :", ",
 	"importantnote"     :"Nota importante:",
 	"notesplaylists"    :"Listas de reproducción no se procesarán correctamente. Algunos sitios web (como Youku y Comedy Central) utilizar vídeos divididos en varias partes, interpretado como una lista de reproducción, no serán procesadas correctamente.",
 	"notesuncheck"      :"Si el archivo de media no incluye pistas de audio o de vídeo, por favor, desactive las casillas de verificación correspondientes, de lo contrario la conversión puede fallar, incluso si el formato es libre.",
