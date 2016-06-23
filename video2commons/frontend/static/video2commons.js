@@ -19,6 +19,21 @@
 
 	var csrf_token = '';
 
+	i18n.a = function() {
+		return function( text, render ) {
+			if ( text[ 0 ] === '#' ) {
+				var splitloc = text.indexOf( '|' );
+				if ( splitloc < 0 ) {
+					return '<a id="' + render( text.slice( 1 ) ) + '"></a>';
+				} else {
+					return '<a id="' + render( text.substring( 1, splitloc ) ) + '">' + render( text.slice( splitloc + 1 ) ) + '</a>';
+				}
+			} else {
+				return '<a>' + render( text ) + '</a>';
+			}
+		};
+	};
+
 	var video2commons = window.video2commons = {};
 
 	video2commons.init = function() {

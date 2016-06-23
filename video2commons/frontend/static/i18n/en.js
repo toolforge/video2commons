@@ -7,11 +7,11 @@ window.labels = {
 	loading           :"LOADING...",
 	confirm           :"Confirm ",
 	errorGeneric      :"Something went terribly wrong. Please refresh this page or contact [[c:User:Zhuyifei1999]].",
-	errorTooLarge     :"File too large to upload directly! You may want to <a>request a server-side upload</a>.",
+	errorTooLarge     :"File too large to upload directly! You may want to {{#a}}request a server-side upload{{/a}}.",
 	addTask           :"Add task...",
 	yourTasks         :"Your tasks:",
 	createServerSide  :"Create server-side upload ticket in one go (recommended)",
-	taskDone          :"Your task is done. You may find your upload at <a></a>.",
+	taskDone          :"Your task is done. You may find your upload at {{#a}}{{/a}}.",
 	//templates
 	cancel            :"Cancel",
 	back              :"Back",
@@ -35,8 +35,8 @@ window.labels = {
 	                        "Playlists will not be processed correctly. Some sites (such as Youku and Comedy Central) make use of multipart videos, interpreted as playlists, and will not be processed correctly either.",
 	                        "If the media does not include video or audio tracks, please uncheck the corresponding checkboxes; otherwise conversion may fail, even if the format is free.",
 	                        "If 'Import subtitles' is checked, subtitles will be imported, excluding auto-generated ones.",
-	                        'What if I need to convert and upload a file on my computer? Well, while NFS and Grid engine are still available in Tool Labs, you can use <a id="vc">videoconvert</a> tool.',
-	                        'Only upload <a id="fl">freely licensed</a> or <a id="pd">public domain</a> content. <a id="fu">Fair use</a> is not allowed on commons.'
+	                        'What if I need to convert and upload a file on my computer? Well, while NFS and Grid engine are still available in Tool Labs, you can use {{#a}}#vc|videoconvert{{/a}} tool.',
+	                        'Only upload {{#a}}#fl|freely licensed{{/a}} or {{#a}}#pd|public domain{{/a}} content. {{#a}}#fu|Fair use{{/a}} is not allowed on commons.'
 	                   ],
 	extensionmsg      :"The file extension set above is used if and only if the video is in a non-free format, which requires transcoding. Videos in free formats will keep their extensions."
 };
