@@ -1,23 +1,40 @@
 ( function( $ ) {
 	'use strict';
 
-	var labels = window.labels;
+	var i18n = window.i18n;
 
 	var loaderImage = '<img alt="File:Ajax-loader.gif" src="//upload.wikimedia.org/wikipedia/commons/d/de/Ajax-loader.gif" data-file-width="32" data-file-height="32" height="32" width="32">';
 
 	var htmlContent = {
-		abortbutton: '<button type="button" class="btn btn-danger btn-xs pull-right"><span class="glyphicon glyphicon-remove"></span> ' + window.labels.abort + '</button>',
-		removebutton: '<button type="button" class="btn btn-danger btn-xs pull-right"><span class="glyphicon glyphicon-trash"></span> ' + window.labels.remove + '</button>',
-		restartbutton: '<button type="button" class="btn btn-warning btn-xs pull-right"><span class="glyphicon glyphicon-repeat"></span> ' + window.labels.restart + '</button>',
-		loading: '<center>' + loaderImage + '&nbsp;&nbsp;' + window.labels.loading + '</center>',
-		errorGeneric: '<div class="alert alert-danger">' + window.labels.errorGeneric + '</div>',
-		yourTasks: '<h4>' + window.labels.yourTasks + '</h4><table id="tasktable" class="table"><tbody></tbody></table>',
-		addTask: '<input class="btn btn-primary btn-success btn-md" type="button" accesskey="n" value="' + window.labels.addTask + '">',
-		requestServerSide: '<a class="btn btn-primary btn-success btn-md pull-right disabled" id="ssubtn">' + window.labels.createServerSide + '</a>',
+		abortbutton: '<button type="button" class="btn btn-danger btn-xs pull-right"><span class="glyphicon glyphicon-remove"></span> ' + Mustache.escape( i18n.abort ) + '</button>',
+		removebutton: '<button type="button" class="btn btn-danger btn-xs pull-right"><span class="glyphicon glyphicon-trash"></span> ' + Mustache.escape( i18n.remove ) + '</button>',
+		restartbutton: '<button type="button" class="btn btn-warning btn-xs pull-right"><span class="glyphicon glyphicon-repeat"></span> ' + Mustache.escape( i18n.restart ) + '</button>',
+		loading: '<center>' + loaderImage + '&nbsp;&nbsp;' + Mustache.escape( i18n.loading ) + '</center>',
+		errorGeneric: '<div class="alert alert-danger">' + Mustache.escape( i18n.errorGeneric ) + '</div>',
+		yourTasks: '<h4>' + Mustache.escape( i18n.yourTasks ) + '</h4><table id="tasktable" class="table"><tbody></tbody></table>',
+		addTask: '<input class="btn btn-primary btn-success btn-md" type="button" accesskey="n" value="' + Mustache.escape( i18n.addTask ) + '">',
+		requestServerSide: '<a class="btn btn-primary btn-success btn-md pull-right disabled" id="ssubtn">' + Mustache.escape( i18n.createServerSide ) + '</a>',
 		progressbar: '<div class="progress"><div class="progress-bar" role="progressbar"></div></div>'
 	};
 
 	var csrf_token = '';
+
+	i18n.a = function() {
+		return function( text, render ) {
+			if ( text[ 0 ] === '#' ) {
+				var splitloc = text.indexOf( '|' );
+				if ( splitloc < 0 ) {
+					// XSS prevention: Nasty attribute escaping -- allow alphanumerics and hyphens only here
+					if ( /^[a-z0-9\-]+$/i.test( text.slice( 1 ) ) )
+						return '<a id="' + text.slice( 1 ) + '"></a>';
+				} else {
+					if ( /^[a-z0-9\-]+$/i.test( text.substring( 1, splitloc ) ) )
+						return '<a id="' + text.substring( 1, splitloc ) + '">' + render( text.slice( splitloc + 1 ) ) + '</a>';
+				}
+			}
+			return '<a>' + render( text ) + '</a>';
+		};
+	};
 
 	var video2commons = window.video2commons = {};
 
@@ -32,7 +49,7 @@
 		$.get( 'api/csrf' )
 			.done( function( data ) {
 				csrf_token = data.csrf;
-			});
+			} );
 	};
 
 	video2commons.checkStatus = function() {
@@ -202,9 +219,9 @@
 				}
 			};
 			if ( val.status === 'done' ) {
-				setStatusText( labels.taskDone, val.url, val.text );
+				setStatusText( Mustache.render( '{{> taskDone}}', i18n, i18n ), val.url, val.text );
 			} else if ( val.status === 'needssu' ) {
-				setStatusText( labels.errorTooLarge, val.url );
+				setStatusText( Mustache.render( '{{> errorTooLarge}}', i18n, i18n ), val.url );
 			} else if ( val.status === 'fail' ) {
 				setStatusText( val.text );
 				if ( val.restartable ) {
@@ -250,7 +267,7 @@
 				.success( function( data ) {
 
 					window.addTaskDialog = $( '<div>' )
-						.html( Mustache.render( data, labels ) );
+						.html( Mustache.render( data, i18n ) );
 
 					window.addTaskDialog.addClass( 'modal fade' )
 						.attr( {
@@ -304,7 +321,7 @@
 				//sourceForm.html
 				$.get( 'static/html/sourceForm.min.html' )
 					.success( function( dataHtml ) {
-						dataHtml = Mustache.render( dataHtml, labels );
+						dataHtml = Mustache.render( dataHtml, i18n, i18n );
 						window.addTaskDialog.find( '.modal-body' )
 							.html( dataHtml );
 
@@ -332,7 +349,7 @@
 				//targetForm.html
 				$.get( 'static/html/targetForm.min.html' )
 					.success( function( dataHtml ) {
-						dataHtml = Mustache.render( dataHtml, labels );
+						dataHtml = Mustache.render( dataHtml, i18n );
 						window.addTaskDialog.find( '.modal-body' )
 							.html( dataHtml );
 
@@ -354,16 +371,16 @@
 				//confirmForm.html
 				$.get( 'static/html/confirmForm.min.html' )
 					.success( function( dataHtml ) {
-						dataHtml = Mustache.render( dataHtml, labels );
+						dataHtml = Mustache.render( dataHtml, i18n );
 						window.addTaskDialog.find( '.modal-body' )
 							.html( dataHtml );
 
 						var keep = [];
-						if ( window.newTaskData.video ) keep.push( labels.video );
-						if ( window.newTaskData.audio ) keep.push( labels.audio );
-						if ( window.newTaskData.subtitles ) keep.push( labels.subtitles );
+						if ( window.newTaskData.video ) keep.push( i18n.video );
+						if ( window.newTaskData.audio ) keep.push( i18n.audio );
+						if ( window.newTaskData.subtitles ) keep.push( i18n.subtitles );
 						window.addTaskDialog.find( '#keep' )
-							.text( keep.join( labels.commaseperator ) );
+							.text( keep.join( i18n.commaseperator ) );
 
 						video2commons.setText( [
 							'url',
@@ -405,29 +422,24 @@
 				window.addTaskDialog.find( '#btn-prev' )
 					.addClass( 'disabled' )
 					.off();
+
 				window.addTaskDialog.find( '#btn-next' )
-					.removeClass( 'disabled' )
-					.html( labels.next + ' <span class="glyphicon glyphicon-chevron-right"></span>' );
+					.html( Mustache.escape( i18n.next ) + ' <span class="glyphicon glyphicon-chevron-right"></span>' );
 				video2commons.setPrevNextButton( 'next' );
 				break;
 			case 'target':
-				window.addTaskDialog.find( '#btn-prev' )
-					.removeClass( 'disabled' );
 				video2commons.setPrevNextButton( 'prev' );
 
 				window.addTaskDialog.find( '#btn-next' )
-					.removeClass( 'disabled' )
-					.html( labels.next + ' <span class="glyphicon glyphicon-chevron-right"></span>' );
+					.html( Mustache.escape( i18n.next ) + ' <span class="glyphicon glyphicon-chevron-right"></span>' );
 				video2commons.setPrevNextButton( 'next' );
 				break;
 			case 'confirm':
-				window.addTaskDialog.find( '#btn-prev' )
-					.removeClass( 'disabled' );
 				video2commons.setPrevNextButton( 'prev' );
 
 				window.addTaskDialog.find( '#btn-next' )
 					.removeClass( 'disabled' )
-					.html( labels.confirm + ' <span class="glyphicon glyphicon-ok"></span>' )
+					.html( Mustache.escape( i18n.confirm ) + ' <span class="glyphicon glyphicon-ok"></span>' )
 					.off()
 					.click( function() {
 						video2commons.disablePrevNext( false );
@@ -449,6 +461,7 @@
 
 	video2commons.setPrevNextButton = function( button ) {
 		window.addTaskDialog.find( '#btn-' + button )
+			.removeClass( 'disabled' )
 			.off()
 			.click( function() {
 				video2commons.disablePrevNext( true );
