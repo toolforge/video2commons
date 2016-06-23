@@ -45,6 +45,7 @@ def get(lang):
     if redisconnection.exists(i18nkey):
         data = redisconnection.get(i18nkey)
     else:
+        data = {}
         datafiles = {}
         fallbacklist = [lang] + i18n._altlang(lang) + ['en']
         for code in fallbacklist:
