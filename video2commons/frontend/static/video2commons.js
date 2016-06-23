@@ -65,7 +65,7 @@
 			} )
 			.fail( function() {
 				$( '#content' )
-					.html( htmlContent.errorGeneric );
+					.html( htmlContent.errorDisconnect );
 			} );
 	};
 
