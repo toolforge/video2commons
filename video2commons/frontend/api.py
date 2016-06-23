@@ -197,8 +197,8 @@ def status():
             else:
                 task.update({
                     'status': 'fail',
-                    'text': 'Something weird going on. ' +
-                            'Please notify [[commons:User:Zhuyifei1999]]'
+                    'text': 'This task is in an unknown state. ' +
+                            'Please file an issue in GitHub.'
                 })
 
         values.append(task)

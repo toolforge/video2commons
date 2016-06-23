@@ -5,7 +5,6 @@
 	"next"              :"Weiter",
 	"loading"           :"LADEN...",
 	"confirm"           :"Bestätigen ",
-	"errorGeneric"      :"Etwas ging fatal schief. Bitte aktualisiere die Seite oder kontaktiere [[c:User:Zhuyifei1999]].",
 	"errorTooLarge"     :"Die Datei ist für direkten Upload zu groß! Du kannst einen {{#a}}serverseitigen Upload{{/a}} beantragen.",
 	"addTask"           :"Task hinzufügen...",
 	"yourTasks"         :"Deine Tasks:",

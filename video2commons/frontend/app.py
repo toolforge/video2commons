@@ -53,14 +53,14 @@ app.register_blueprint(i18nblueprint, url_prefix='/i18n')
 def all_exception_handler(e):
     """Handle an exception and show the traceback to error page."""
     try:
-        message = 'Please notify [[c:User:Zhuyifei1999]]: ' + \
+        message = 'Please file an issue in GitHub: ' + \
                   traceback.format_exc()
         loggedin = 'username' in session
     except:
         message = (
             'Something went terribly wrong, '
             'and we failed to find the cause automatically. '
-            'Please notify [[c:User:Zhuyifei1999]].'
+            'Please file an issue in GitHub.'
         )
         loggedin = False
     try:

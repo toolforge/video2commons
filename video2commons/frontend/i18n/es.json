@@ -5,7 +5,6 @@
 	"next"              :"Siguiente",
 	"loading"           :"CARGANDO...",
 	"confirm"           :"Confirmar ",
-	"errorGeneric"      :"Algo terrible ha ocurrido. Por favor, actualiza la página o contacta a [[:commons:User:Zhuyifei1999]].",
 	"errorTooLarge"     :"El archivo es demasiado grande para subir directamente! Podrías hacer una {{#a}}petición de subida en server-side upload{{/a}}.",
 	"addTask"           :"Agregar tarea...",
 	"yourTasks"         :"Tus tareas:",
