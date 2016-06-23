@@ -28,7 +28,7 @@
 					if ( /^[a-z0-9\-]+$/i.test( text.slice( 1 ) ) )
 						return '<a id="' + text.slice( 1 ) + '"></a>';
 				} else {
-					if ( /^[a-z0-9\-]+$/i.test( text.slice( 1 ) ) )
+					if ( /^[a-z0-9\-]+$/i.test( text.substring( 1, splitloc ) ) )
 						return '<a id="' + text.substring( 1, splitloc ) + '">' + render( text.slice( splitloc + 1 ) ) + '</a>';
 				}
 			}
