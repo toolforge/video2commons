@@ -24,8 +24,7 @@ from __future__ import absolute_import
 import traceback
 
 from flask import (
-    Flask, request, session, render_template, redirect, url_for,
-    translate as _, getlanguage
+    Flask, request, session, render_template, redirect, url_for
 )
 from mwoauth import AccessToken, ConsumerToken, RequestToken, Handshaker
 from requests_oauthlib import OAuth1
@@ -33,7 +32,9 @@ import requests
 from video2commons.config import consumer_key, consumer_secret, api_url
 
 from video2commons.frontend.redisession import RedisSessionInterface
-from video2commons.frontend.shared import redisconnection, check_banned
+from video2commons.frontend.shared import (
+    redisconnection, check_banned, translate as _, getlanguage
+)
 from video2commons.frontend.api import api
 from video2commons.frontend.i18n import i18nblueprint
 
