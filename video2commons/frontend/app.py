@@ -32,7 +32,9 @@ import requests
 from video2commons.config import consumer_key, consumer_secret, api_url
 
 from video2commons.frontend.redisession import RedisSessionInterface
-from video2commons.frontend.shared import redisconnection, check_banned
+from video2commons.frontend.shared import (
+    redisconnection, check_banned, translate as _
+)
 from video2commons.frontend.api import api
 from video2commons.frontend.i18n import i18nblueprint
 
@@ -44,6 +46,8 @@ app = Flask(__name__)
 app.session_interface = RedisSessionInterface(redisconnection)
 
 app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 3600
+
+app.jinja_env.filters['_'] = _
 
 app.register_blueprint(api, url_prefix='/api')
 app.register_blueprint(i18nblueprint, url_prefix='/i18n')

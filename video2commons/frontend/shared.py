@@ -27,6 +27,7 @@ from flask import session
 from redis import Redis
 
 from video2commons.config import redis_pw, redis_host
+from video2commons.frontend.i18n import get as _get
 
 redisconnection = Redis(host=redis_host, db=3, password=redis_pw)
 
@@ -41,3 +42,8 @@ def generate_csrf_token():
     if '_csrf_token' not in session:
         session['_csrf_token'] = str(uuid4())
     return session['_csrf_token']
+
+
+def translate(key):
+    """Translate a key in user language."""
+    return _get(session['language']).get(key, '&lt;' + key + '&gt;')

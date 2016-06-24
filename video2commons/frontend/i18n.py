@@ -39,12 +39,17 @@ def max_age(response):
 
 
 @i18nblueprint.route('/<lang>')
+def urlget(lang):
+    """Get the i18n of language lang and output Javascript."""
+    data = 'window.i18n=' + json.dumps(get(lang)) + ';'
+    return Response(data, mimetype='application/javascript; charset=utf-8')
+
+
 def get(lang):
-    """Get the i18n of language lang."""
+    """Get the i18n of language lang and output dict."""
     i18nkey = 'i18n:' + lang
     if redisconnection.exists(i18nkey):
-        # Let's not have hackers be too powerful if they hack into redis
-        data = json.dumps(json.loads(redisconnection.get(i18nkey)))
+        return json.loads(redisconnection.get(i18nkey))
     else:
         data = {}
         fallbacklist = _create_fallback(lang)
@@ -61,11 +66,8 @@ def get(lang):
                     data[key] = data[key].replace('>', '&gt;')
                     break
 
-        data = json.dumps(data)
-        redisconnection.setex(data, data, 60)
-
-    data = 'window.i18n=' + data + ';'
-    return Response(data, mimetype='application/javascript; charset=utf-8')
+        redisconnection.setex(i18nkey, json.dumps(data), 60)
+        return data
 
 
 def _loadfiles(fallbacklist):
