@@ -33,7 +33,7 @@ from video2commons.config import consumer_key, consumer_secret, api_url
 
 from video2commons.frontend.redisession import RedisSessionInterface
 from video2commons.frontend.shared import (
-    redisconnection, check_banned, translate as _
+    redisconnection, check_banned, translate as _, getlanguage
 )
 from video2commons.frontend.api import api
 from video2commons.frontend.i18n import i18nblueprint
@@ -106,7 +106,7 @@ def main():
     return render_template(
         'main.min.html',
         loggedin=True,
-        lang=session['language']
+        lang=getlanguage()
     )
 
 
