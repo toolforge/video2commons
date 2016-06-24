@@ -101,6 +101,7 @@ def translate(key):
 def getlanguage():
     """Get the user language."""
     return request.form.get('uselang') or \
-        (session.get('language') if 'username' in session else '') or \
+        request.args.get('uselang') or\
+        session.get('language') or \
         request.accept_languages.best or \
         'en'
