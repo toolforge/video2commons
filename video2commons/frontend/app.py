@@ -32,11 +32,11 @@ import requests
 from video2commons.config import consumer_key, consumer_secret, api_url
 
 from video2commons.frontend.redisession import RedisSessionInterface
-from video2commons.frontend.shared import (
-    redisconnection, check_banned, translate as _, getlanguage
-)
+from video2commons.frontend.shared import redisconnection, check_banned
 from video2commons.frontend.api import api
-from video2commons.frontend.i18n import i18nblueprint
+from video2commons.frontend.i18n import (
+    i18nblueprint, translate as _, getlanguage
+)
 
 consumer_token = ConsumerToken(consumer_key, consumer_secret)
 handshaker = Handshaker(api_url, consumer_token)
