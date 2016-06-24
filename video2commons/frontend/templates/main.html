@@ -31,7 +31,7 @@
       </div>
 {% if loggedin %}
         <ul class="nav navbar-nav navbar-right">
-          <li><a href="{{ url_for('logout') }}"><span class="glyphicon glyphicon-log-out"></span> {{ _("logout") }}</a></li>
+          <li><a href="{{ url_for('logout') }}"><span class="glyphicon glyphicon-log-out"></span> {{ _('logout') }}</a></li>
         </ul>
 {% endif %}
     </div>
@@ -39,18 +39,18 @@
 
   <div class="container" id="content">
 {% if loggedin %}
-    <noscript>Javascript is Required to use this tool!</noscript>
+    <noscript>{{ _('JavascriptRequired') }}</noscript>
 {% else %}
     <form method="get" action="{{ url_for('loginredirect') }}">
       <center>
-        <input class="btn btn-primary btn-success btn-lg" value="Login on Wikimedia Commons" type="submit">
+        <input class="btn btn-primary btn-success btn-lg" value="{{ _('loginOnCommons') }}" type="submit">
       </center>
     </form>
 {% endif %}
   </div>
   <div class="github-fork-ribbon-wrapper right-bottom">
     <div class="github-fork-ribbon">
-       <a href="https://github.com/Toollabs/video2commons">Fork me on GitHub</a>
+       <a href="https://github.com/Toollabs/video2commons">{{ _('forkOnGitHub') }}</a>
     </div>
   </div>
 </body>

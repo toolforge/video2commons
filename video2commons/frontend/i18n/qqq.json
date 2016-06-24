@@ -1,4 +1,8 @@
 {
+	"loginOnCommons"    :"Plain text shown on a button in the center of the page when the user is logged out. Clicking the link will initialize the OAuth login to [[:commons:|Commons]].",
+	"logout"            :"Plain text shown on a link on the tool bar. Clicking the link will log the user out.",
+	"forkOnGitHub"      :"Plain text shown on a ribbon on the bottom of the tool webpage. Clicking the ribbon will redirect the brwoser to the tool's source code on GitHub. [[:wikt:fork#Verb|Fork]]: to divide into two or more branches; usage here is encouraging the user to improve the tool.",
+	"JavascriptRequired":"Plain text shown when [[:w:JavaScript|JavaScript]] is not enabled on the user's browser.",
 	"abort"             :"Plain text shown on a button near the progressbar for a running task. Clicking the button will abort the task.",
 	"remove"            :"Plain text shown on a button near the result text for a completed or errored task. Clicking the button will remove the task from the screen.",
 	"restart"           :"Plain text shown on a button near the result text for a errored task. Clicking the button will restart the task with the same parameters.",

@@ -1,4 +1,8 @@
 {
+	"loginOnCommons"    :"Login on Wikimedia Commons",
+	"logout"            :"Logout",
+	"forkOnGitHub"      :"Fork me on GitHub",
+	"JavascriptRequired":"JavaScript is required to use this tool!",
 	"abort"             :"Abort",
 	"remove"            :"Remove",
 	"restart"           :"Restart",
