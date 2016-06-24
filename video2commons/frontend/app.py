@@ -93,14 +93,19 @@ def main():
         return render_template(
             'error.min.html',
             message='You are banned from using this tool! Reason: ' + banned,
-            loggedin=False
+            loggedin=False,
+            lang=getlanguage()
         )
 
     try:
         auth = dologin()
         session['language'] = querylanguage(auth)
     except:
-        return render_template('main.min.html', loggedin=False)
+        return render_template(
+            'main.min.html',
+            loggedin=False,
+            lang=getlanguage()
+        )
 
     return render_template(
         'main.min.html',
@@ -188,7 +193,8 @@ def logincallback():
             'error.min.html',
             message='Due to ongoing abuse, you must be autoconfirmed '
                     'with at least 50 edits on Commons to use this tool.',
-            loggedin=True
+            loggedin=True,
+            lang=getlanguage()
         )
 
     session['access_token_key'], session['access_token_secret'] = \
