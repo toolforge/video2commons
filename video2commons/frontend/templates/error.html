@@ -22,7 +22,7 @@
       </div>
 {% if loggedin %}
         <ul class="nav navbar-nav navbar-right">
-          <li><a href="{{ url_for('logout') }}"><span class="glyphicon glyphicon-log-out"></span> Logout</a></li>
+          <li><a href="{{ url_for('logout') }}"><span class="glyphicon glyphicon-log-out"></span> {{ _("logout") }}</a></li>
         </ul>
 {% endif %}
     </div>
