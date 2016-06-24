@@ -23,11 +23,10 @@ from __future__ import absolute_import
 
 from uuid import uuid4
 
-from flask import session, request
+from flask import session
 from redis import Redis
 
 from video2commons.config import redis_pw, redis_host
-from video2commons.frontend.i18n import get as _get
 
 redisconnection = Redis(host=redis_host, db=3, password=redis_pw)
 
@@ -42,16 +41,3 @@ def generate_csrf_token():
     if '_csrf_token' not in session:
         session['_csrf_token'] = str(uuid4())
     return session['_csrf_token']
-
-
-def translate(key):
-    """Translate a key in user language."""
-    return _get(getlanguage()).get(key, '&lt;' + key + '&gt;')
-
-
-def getlanguage():
-    """Get the user language."""
-    return request.form.get('uselang') or \
-        (session.get('language') if 'username' in session else '') or \
-        request.accept_languages.best or \
-        'en'

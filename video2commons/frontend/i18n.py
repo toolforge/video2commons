@@ -24,7 +24,7 @@ from __future__ import absolute_import
 import os
 import json
 
-from flask import Blueprint, Response
+from flask import Blueprint, Response, request, session
 from pywikibot import i18n
 from video2commons.frontend.shared import redisconnection
 
@@ -91,3 +91,16 @@ def _create_fallback(lang):
 
     fallbacklist += ['en']
     return fallbacklist
+
+
+def translate(key):
+    """Translate a key in user language."""
+    return get(getlanguage()).get(key, '&lt;' + key + '&gt;')
+
+
+def getlanguage():
+    """Get the user language."""
+    return request.form.get('uselang') or \
+        (session.get('language') if 'username' in session else '') or \
+        request.accept_languages.best or \
+        'en'
