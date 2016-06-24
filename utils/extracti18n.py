@@ -46,6 +46,7 @@ if not os.path.isdir(dest) or not os.access(dest, os.W_OK):
 data = {
     'fallbacks': {},
     'rtl': [],
+    'alllangs': [],
 }
 rFallback = re.compile(r"fallback = '(.*?)'", re.I)
 rIsRtl = re.compile(r'rtl = true', re.I)
@@ -68,12 +69,14 @@ for file in os.listdir(msgDir):
     if rIsRtl.search(content):
         data['rtl'].append(source)
 
-destFile = dest + "/fallbacks.json"
-with open(destFile, 'w') as openfile:
-    json.dump(data['fallbacks'], openfile, sort_keys=True,
-              indent=4, separators=(',', ': '))
+    data['alllangs'].append(source)
 
-destFile = dest + "/rtl.json"
-with open(destFile, 'w') as openfile:
-    json.dump(data['rtl'], openfile, sort_keys=True,
-              indent=4, separators=(',', ': '))
+
+def _write(key):
+    dest_file = dest + "/" + key + ".json"
+    with open(dest_file, 'w') as openfile:
+        json.dump(data[key], openfile, sort_keys=True,
+                  indent=4, separators=(',', ': '))
+
+for key in data:
+    _write(key)
