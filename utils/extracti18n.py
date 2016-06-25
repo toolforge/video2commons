@@ -33,15 +33,9 @@ if not len(sys.argv) > 1 or '/messages' not in sys.argv[1]:
     sys.exit(1)
 
 msgDir = sys.argv[1]
-if not os.path.isdir(msgDir) or not os.access(msgDir, os.R_OK):
-    print "error: Path to languages/messages not found\n"
-    sys.exit(1)
 
 dest = os.path.dirname(os.path.realpath(__file__)) + \
     '/../video2commons/frontend/i18n'
-if not os.path.isdir(dest) or not os.access(dest, os.W_OK):
-    print "error: Unable to write to $dest\n"
-    sys.exit(1)
 
 data = {
     'fallbacks': {},
