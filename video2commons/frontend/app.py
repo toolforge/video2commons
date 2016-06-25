@@ -69,14 +69,12 @@ def all_exception_handler(e):
             'Please file an issue in GitHub.'
         )
         loggedin = False
-    try:
-        return render_template(
-            'error.min.html',
-            message=message,
-            loggedin=loggedin
-        ), 500
-    except:
-        return 500
+
+    return render_template(
+        'error.min.html',
+        message=message,
+        loggedin=loggedin
+    ), 500
 
 
 @app.before_request
