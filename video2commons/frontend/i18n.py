@@ -49,8 +49,9 @@ def urlget(lang):
 def get(lang):
     """Get the i18n of language lang and output dict."""
     i18nkey = 'i18n:' + lang
-    if i18nkey in g:
-        return g[i18nkey]
+    gval = g.get(i18nkey, None)
+    if gval:
+        return gval
     if redisconnection.exists(i18nkey):
         return json.loads(redisconnection.get(i18nkey))
 
@@ -69,9 +70,8 @@ def get(lang):
                 data[key] = data[key].replace('>', '&gt;')
                 break
 
-    dump = json.dumps(data)
-    g[i18nkey] = dump
-    redisconnection.setex(i18nkey, dump, 60)
+    setattr(g, i18nkey, data)
+    redisconnection.setex(i18nkey, json.dumps(data), 60)
     return data
 
 
@@ -99,8 +99,9 @@ def translate(key):
 
 def getlanguage():
     """Get the user language."""
-    if 'language' in g:
-        return g['language']
+    gval = g.get('language', None)
+    if gval:
+        return gval
 
     for lang in [
         request.form.get('uselang'),
@@ -113,21 +114,22 @@ def getlanguage():
     else:
         lang = 'en'
 
-    g['language'] = lang
+    g.language = lang
 
     return lang
 
 
 def _loadmetadatafile(metadata):
     key = 'i18nmeta-' + metadata
-    if key in g:
-        return g[key]
+    gval = g.get(key, None)
+    if gval:
+        return gval
 
     path = _dir + '/i18n-metadata/' + metadata + '.json'
     with open(path, 'r') as f:
         data = json.load(f)
 
-    g[key] = data
+    setattr(g, key, data)
     return data
 
 
