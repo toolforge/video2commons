@@ -73,6 +73,7 @@ def get(lang):
                 data[key] = data[key].replace('<', '&lt;')
                 data[key] = data[key].replace('>', '&gt;')
                 break
+    data['@dir'] = _dir(lang)
 
     setattr(g, i18nkey, data)
     redisconnection.setex(i18nkey, json.dumps(data), 60)
@@ -139,3 +140,7 @@ def _loadmetadatafile(metadata):
 
 def _islang(lang):
     return lang in _loadmetadatafile('alllangs')
+
+
+def _dir(lang):
+    return 'rtl' if lang in _loadmetadatafile('rtl') else 'ltr'

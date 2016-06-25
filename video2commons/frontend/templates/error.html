@@ -1,15 +1,19 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<html xmlns="http://www.w3.org/1999/xhtml" dir="{{ _('@dir') }}" lang="{{ lang() }}">
 <head>
   <meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
   <title>video2commons</title>
+{% if _('@dir') == 'rtl'}
+  <link href="//tools-static.wmflabs.org/cdnjs/ajax/libs/bootstrap-rtl/3.1.2/css/bootstrap-rtl.min.css" rel="stylesheet">
+{% else %}
   <link href="//tools-static.wmflabs.org/cdnjs/ajax/libs/twitter-bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
+{% endif %}
   <link href="//tools-static.wmflabs.org/cdnjs/ajax/libs/github-fork-ribbon-css/0.1.1/gh-fork-ribbon.min.css" rel="stylesheet">
   <style>
     body {
       padding-top: 60px;
     }
-    .right-bottom .github-fork-ribbon {
+    .github-fork-ribbon {
       background-color: #333;
     }
   </style>

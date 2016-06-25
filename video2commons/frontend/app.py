@@ -48,6 +48,7 @@ app.session_interface = RedisSessionInterface(redisconnection)
 app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 3600
 
 app.jinja_env.globals['_'] = _
+app.jinja_env.globals['lang'] = getlanguage
 
 app.register_blueprint(api, url_prefix='/api')
 app.register_blueprint(i18nblueprint, url_prefix='/i18n')
@@ -94,8 +95,7 @@ def main():
         return render_template(
             'error.min.html',
             message='You are banned from using this tool! Reason: ' + banned,
-            loggedin=False,
-            lang=getlanguage()
+            loggedin=False
         )
 
     try:
@@ -104,14 +104,12 @@ def main():
     except:
         return render_template(
             'main.min.html',
-            loggedin=False,
-            lang=getlanguage()
+            loggedin=False
         )
 
     return render_template(
         'main.min.html',
-        loggedin=True,
-        lang=getlanguage()
+        loggedin=True
     )
 
 
@@ -194,8 +192,7 @@ def logincallback():
             'error.min.html',
             message='Due to ongoing abuse, you must be autoconfirmed '
                     'with at least 50 edits on Commons to use this tool.',
-            loggedin=True,
-            lang=getlanguage()
+            loggedin=True
         )
 
     session['access_token_key'], session['access_token_secret'] = \
