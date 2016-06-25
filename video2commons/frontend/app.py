@@ -70,11 +70,14 @@ def all_exception_handler(e):
         )
         loggedin = False
 
-    return render_template(
-        'error.min.html',
-        message=message,
-        loggedin=loggedin
-    ), 500
+    try:
+        return render_template(
+            'error.min.html',
+            message=message,
+            loggedin=loggedin
+        ), 500
+    except:
+        return message, 500
 
 
 @app.before_request
