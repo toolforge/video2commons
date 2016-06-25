@@ -59,6 +59,10 @@ def get(lang):
     fallbacklist = _create_fallback(lang)
     datafiles = _loadi18nfiles(fallbacklist)
     for key in datafiles['en']:
+        if key == '@metadata':
+            # @metadata is a dict not a string
+            continue
+
         for code in fallbacklist:
             if key in datafiles.get(code, {}):
                 data[key] = datafiles[code][key]
