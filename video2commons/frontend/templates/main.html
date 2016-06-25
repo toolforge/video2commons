@@ -33,7 +33,7 @@
         <a class="navbar-brand" href="#">video2commons</a>
       </div>
 {% if loggedin %}
-        <ul class="nav navbar-nav navbar-right">
+        <ul class="nav navbar-nav navbar-{% if lang() is rtl %}left{% else %}right{% endif %}">
           <li><a href="{{ url_for('logout') }}"><span class="glyphicon glyphicon-log-out"></span> {{ _('logout') }}</a></li>
         </ul>
 {% endif %}
@@ -51,7 +51,7 @@
     </form>
 {% endif %}
   </div>
-  <div class="github-fork-ribbon-wrapper right-bottom">
+  <div class="github-fork-ribbon-wrapper {% if lang() is rtl %}left{% else %}right{% endif %}-bottom">
     <div class="github-fork-ribbon">
        <a href="https://github.com/Toollabs/video2commons">{{ _('forkOnGitHub') }}</a>
     </div>
