@@ -110,6 +110,8 @@ def getlanguage():
     ]:
         if lang and _islang(lang):
             break
+    else:
+        lang = 'en'
 
     g['language'] = lang
 
