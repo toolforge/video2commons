@@ -24,11 +24,12 @@ from __future__ import absolute_import
 import os
 import json
 
-from flask import Blueprint, Response, request, session
-from pywikibot import i18n
+from flask import Blueprint, Response, request, session, g
 from video2commons.frontend.shared import redisconnection
 
 i18nblueprint = Blueprint('i18n', __name__)
+
+_dir = os.path.dirname(os.path.realpath(__file__))
 
 
 @i18nblueprint.after_request
@@ -48,49 +49,47 @@ def urlget(lang):
 def get(lang):
     """Get the i18n of language lang and output dict."""
     i18nkey = 'i18n:' + lang
+    if i18nkey in g:
+        return g[i18nkey]
     if redisconnection.exists(i18nkey):
         return json.loads(redisconnection.get(i18nkey))
-    else:
-        data = {}
-        fallbacklist = _create_fallback(lang)
-        datafiles = _loadfiles(fallbacklist)
-        for key in datafiles['en']:
-            for code in fallbacklist:
-                if key in datafiles.get(code, {}):
-                    data[key] = datafiles[code][key]
-                    # <'s and >'s aren't supposed to be here;
-                    # if the translation breaks due to double escaping,
-                    # oh well, why are are you hacking this tool?
-                    # --XSS prevention
-                    data[key] = data[key].replace('<', '&lt;')
-                    data[key] = data[key].replace('>', '&gt;')
-                    break
 
-        redisconnection.setex(i18nkey, json.dumps(data), 60)
-        return data
+    data = {}
+    fallbacklist = _create_fallback(lang)
+    datafiles = _loadi18nfiles(fallbacklist)
+    for key in datafiles['en']:
+        for code in fallbacklist:
+            if key in datafiles.get(code, {}):
+                data[key] = datafiles[code][key]
+                # <'s and >'s aren't supposed to be here;
+                # if the translation breaks due to double escaping,
+                # oh well, why are are you hacking this tool?
+                # --XSS prevention
+                data[key] = data[key].replace('<', '&lt;')
+                data[key] = data[key].replace('>', '&gt;')
+                break
+
+    dump = json.dumps(data)
+    g[i18nkey] = dump
+    redisconnection.setex(i18nkey, dump, 60)
+    return data
 
 
-def _loadfiles(fallbacklist):
+def _loadi18nfiles(fallbacklist):
     datafiles = {}
     for code in fallbacklist:
         if code not in datafiles:
-            path = os.path.dirname(os.path.realpath(__file__)) + \
-                '/i18n/' + code + '.json'
+            path = _dir + '/i18n/' + code + '.json'
             if os.path.isfile(path):
                 with open(path, 'r') as f:
-                    datafiles[code] = json.loads(f.read())
+                    datafiles[code] = json.load(f)
     return datafiles
 
 
 def _create_fallback(lang):
-    fallbacklist = [lang] + i18n._altlang(lang)
-
-    if '-' in lang:
-        lang = lang.split('-')[0]
-        fallbacklist += [lang] + i18n._altlang(lang)
-
-    fallbacklist += ['en']
-    return fallbacklist
+    fallbacks = _loadmetadatafile('fallbacks').get(lang, [])
+    fallbacks = fallbacks if isinstance(fallbacks, list) else [fallbacks]
+    return [lang] + fallbacks + ['en']
 
 
 def translate(key):
@@ -100,8 +99,35 @@ def translate(key):
 
 def getlanguage():
     """Get the user language."""
-    return request.form.get('uselang') or \
-        request.args.get('uselang') or\
-        session.get('language') or \
-        request.accept_languages.best or \
-        'en'
+    if 'language' in g:
+        return g['language']
+
+    for lang in [
+        request.form.get('uselang'),
+        request.args.get('uselang'),
+        session.get('language'),
+        request.accept_languages.best,
+    ]:
+        if lang and _islang(lang):
+            break
+
+    g['language'] = lang
+
+    return lang
+
+
+def _loadmetadatafile(metadata):
+    key = 'i18nmeta-' + metadata
+    if key in g:
+        return g[key]
+
+    path = _dir + '/i18n-metadata/' + metadata + '.json'
+    with open(path, 'r') as f:
+        data = json.load(f)
+
+    g[key] = data
+    return data
+
+
+def _islang(lang):
+    return lang in _loadmetadatafile('alllangs')
