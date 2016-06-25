@@ -35,7 +35,7 @@ if not len(sys.argv) > 1 or '/messages' not in sys.argv[1]:
 msgDir = sys.argv[1]
 
 dest = os.path.dirname(os.path.realpath(__file__)) + \
-    '/../video2commons/frontend/i18n'
+    '/../video2commons/frontend/i18n-metadata'
 
 data = {
     'fallbacks': {},
