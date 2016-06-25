@@ -6,3 +6,4 @@ See also:
 * https://tools.wmflabs.org/video2commons/
 * https://commons.wikimedia.org/wiki/Commons:Upload_tools#video2commons
 * https://wikitech.wikimedia.org/wiki/Nova_Resource:Video/Help/video2commons
+* https://translatewiki.net/wiki/Translating:Video2commons
