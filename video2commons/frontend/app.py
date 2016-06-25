@@ -35,7 +35,7 @@ from video2commons.frontend.redisession import RedisSessionInterface
 from video2commons.frontend.shared import redisconnection, check_banned
 from video2commons.frontend.api import api
 from video2commons.frontend.i18n import (
-    i18nblueprint, translate as _, getlanguage
+    i18nblueprint, translate as _, getlanguage, is_rtl
 )
 
 consumer_token = ConsumerToken(consumer_key, consumer_secret)
@@ -49,6 +49,7 @@ app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 3600
 
 app.jinja_env.globals['_'] = _
 app.jinja_env.globals['lang'] = getlanguage
+app.jinja_env.tests['rtl'] = is_rtl
 
 app.register_blueprint(api, url_prefix='/api')
 app.register_blueprint(i18nblueprint, url_prefix='/i18n')

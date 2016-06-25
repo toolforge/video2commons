@@ -144,3 +144,8 @@ def _islang(lang):
 
 def _dir(lang):
     return 'rtl' if lang in _loadmetadatafile('rtl') else 'ltr'
+
+
+def is_rtl(lang):
+    """Jinja2 test for rtl-ness."""
+    return get(lang)['@dir'] == 'rtl'
