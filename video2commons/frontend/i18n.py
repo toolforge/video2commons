@@ -148,4 +148,4 @@ def _dir(lang):
 
 def is_rtl(lang):
     """Jinja2 test for rtl-ness."""
-    return get(lang)['@dir'] == 'rtl'
+    return get(lang).get('@dir') == 'rtl'
