@@ -5,6 +5,7 @@
 
 	var loaderImage = '<img alt="File:Ajax-loader.gif" src="//upload.wikimedia.org/wikipedia/commons/d/de/Ajax-loader.gif" data-file-width="32" data-file-height="32" height="32" width="32">';
 
+	var rtl = i18n[ '@dir' ] === 'rtl';
 	var htmlContent = {
 		abortbutton: '<button type="button" class="btn btn-danger btn-xs flip pull-right"><span class="glyphicon glyphicon-remove"></span> ' + Mustache.escape( i18n.abort ) + '</button>',
 		removebutton: '<button type="button" class="btn btn-danger btn-xs flip pull-right"><span class="glyphicon glyphicon-trash"></span> ' + Mustache.escape( i18n.remove ) + '</button>',
@@ -14,7 +15,10 @@
 		yourTasks: '<h4>' + Mustache.escape( i18n.yourTasks ) + '</h4><table id="tasktable" class="table"><tbody></tbody></table>',
 		addTask: '<input class="btn btn-primary btn-success btn-md" type="button" accesskey="n" value="' + Mustache.escape( i18n.addTask ) + '">',
 		requestServerSide: '<a class="btn btn-primary btn-success btn-md flip pull-right disabled" id="ssubtn">' + Mustache.escape( i18n.createServerSide ) + '</a>',
-		progressbar: '<div class="progress"><div class="progress-bar" role="progressbar"></div></div>'
+		progressbar: '<div class="progress"><div class="progress-bar" role="progressbar"></div></div>',
+		prevbutton: '<span class="glyphicon glyphicon-chevron-' + ( rtl ? 'right' : 'left' ) + '"></span> ' + Mustache.escape( i18n.back ),
+		nextbutton: Mustache.escape( i18n.next ) + ' <span class="glyphicon glyphicon-chevron-' + ( rtl ? 'left' : 'right' ) + '"></span>',
+		confirmbutton: Mustache.escape( i18n.confirm ) + ' <span class="glyphicon glyphicon-ok"></span>'
 	};
 
 	var csrf_token = '';
@@ -277,6 +281,11 @@
 					$( 'body' )
 						.append( window.addTaskDialog );
 
+					window.addTaskDialog.find( '#btn-prev' )
+						.html( htmlContent.prevbutton );
+					window.addTaskDialog.find( '#btn-next' )
+						.html( htmlContent.nextbutton );
+
 					// HACK
 					window.addTaskDialog.find( '.modal-body' )
 						.keypress( function( e ) {
@@ -424,14 +433,14 @@
 					.off();
 
 				window.addTaskDialog.find( '#btn-next' )
-					.html( Mustache.escape( i18n.next ) + ' <span class="glyphicon glyphicon-chevron-right"></span>' );
+					.html( htmlContent.nextbutton );
 				video2commons.setPrevNextButton( 'next' );
 				break;
 			case 'target':
 				video2commons.setPrevNextButton( 'prev' );
 
 				window.addTaskDialog.find( '#btn-next' )
-					.html( Mustache.escape( i18n.next ) + ' <span class="glyphicon glyphicon-chevron-right"></span>' );
+					.html( htmlContent.nextbutton );
 				video2commons.setPrevNextButton( 'next' );
 				break;
 			case 'confirm':
@@ -439,7 +448,7 @@
 
 				window.addTaskDialog.find( '#btn-next' )
 					.removeClass( 'disabled' )
-					.html( Mustache.escape( i18n.confirm ) + ' <span class="glyphicon glyphicon-ok"></span>' )
+					.html( htmlContent.confirmbutton )
 					.off()
 					.click( function() {
 						video2commons.disablePrevNext( false );
