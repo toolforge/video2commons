@@ -1,5 +1,9 @@
 {
-	"@metadata": [],
+	"@metadata": {
+		"authors": [
+			"Zhuyifei1999"
+		]
+	},
 	"abort": "取消",
 	"remove": "删除",
 	"restart": "重试",
