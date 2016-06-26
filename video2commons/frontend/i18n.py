@@ -68,7 +68,7 @@ def get(lang):
                 data[key] = datafiles[code][key]
                 # <'s and >'s aren't supposed to be here;
                 # if the translation breaks due to double escaping,
-                # oh well, why are are you hacking this tool?
+                # oh well, why are you hacking this tool?
                 # --XSS prevention
                 data[key] = data[key].replace('<', '&lt;')
                 data[key] = data[key].replace('>', '&gt;')
