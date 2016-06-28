@@ -1,5 +1,9 @@
 {
-	"@metadata": [],
+	"@metadata": {
+		"authors": [
+			"Wilfredor"
+		]
+	},
 	"abort": "Abortar",
 	"remove": "Remover",
 	"restart": "Reiniciar",

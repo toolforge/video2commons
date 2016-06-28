@@ -4,7 +4,7 @@
 # Copyright (C) 2011-2015 Krinkle
 # Originally from intuition scripts/getLangData.php under CC-BY 3.0
 # Copyright (C) 2016 Zhuyifei1999
-# Tranlation to Python and re-licensed to GPL
+# Translation to Python and re-licensed to GPL
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
