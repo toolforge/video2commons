@@ -1,6 +1,7 @@
 {
 	"@metadata": [],
 	"loginOnCommons": "Login on Wikimedia Commons",
+	"help": "Help",
 	"logout": "Logout",
 	"forkOnGitHub": "Fork me on GitHub",
 	"JavascriptRequired": "JavaScript is required to use this tool!",
@@ -38,6 +39,5 @@
 	"notesown": "What if I need to convert and upload a file on my computer? Well, while NFS and Grid engine are still available in Tool Labs, you can use {{#a}}#vc|videoconvert{{/a}} tool.",
 	"noteslicensing": "Only upload {{#a}}#fl|freely licensed{{/a}} or {{#a}}#pd|public domain{{/a}} content. {{#a}}#fu|Fair use{{/a}} is not allowed on Wikimedia Commons.",
 	"extensionmsg": "The file extension set above is used if and only if the video is in a non-free format, which requires transcoding. Videos in free formats will keep their extensions.",
-	"confirmmsg": "Please confirm the task or click 'Back' to change the parameters. By clicking 'Confirm', the task will be submitted and executed. Due to technical restrictions, a task cannot be easily aborted once it is submitted.",
-	"help": "Help"
+	"confirmmsg": "Please confirm the task or click 'Back' to change the parameters. By clicking 'Confirm', the task will be submitted and executed. Due to technical restrictions, a task cannot be easily aborted once it is submitted."
 }
