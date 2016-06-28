@@ -2,6 +2,7 @@
 	"@metadata": [],
 	"loginOnCommons": "Login on Wikimedia Commons",
 	"logout": "Logout",
+	"help": "Help",
 	"forkOnGitHub": "Fork me on GitHub",
 	"JavascriptRequired": "JavaScript is required to use this tool!",
 	"abort": "Abort",
