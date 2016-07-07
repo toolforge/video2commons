@@ -35,7 +35,7 @@ from video2commons.frontend.redisession import RedisSessionInterface
 from video2commons.frontend.shared import redisconnection, check_banned
 from video2commons.frontend.api import api
 from video2commons.frontend.i18n import (
-    i18nblueprint, translate as _, getlanguage
+    i18nblueprint, translate as _, getlanguage, is_rtl
 )
 
 consumer_token = ConsumerToken(consumer_key, consumer_secret)
@@ -48,6 +48,8 @@ app.session_interface = RedisSessionInterface(redisconnection)
 app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 3600
 
 app.jinja_env.globals['_'] = _
+app.jinja_env.globals['lang'] = getlanguage
+app.jinja_env.tests['rtl'] = is_rtl
 
 app.register_blueprint(api, url_prefix='/api')
 app.register_blueprint(i18nblueprint, url_prefix='/i18n')
@@ -67,6 +69,7 @@ def all_exception_handler(e):
             'Please file an issue in GitHub.'
         )
         loggedin = False
+
     try:
         return render_template(
             'error.min.html',
@@ -74,7 +77,7 @@ def all_exception_handler(e):
             loggedin=loggedin
         ), 500
     except:
-        return 500
+        return message, 500
 
 
 @app.before_request
@@ -94,8 +97,7 @@ def main():
         return render_template(
             'error.min.html',
             message='You are banned from using this tool! Reason: ' + banned,
-            loggedin=False,
-            lang=getlanguage()
+            loggedin=False
         )
 
     try:
@@ -104,14 +106,12 @@ def main():
     except:
         return render_template(
             'main.min.html',
-            loggedin=False,
-            lang=getlanguage()
+            loggedin=False
         )
 
     return render_template(
         'main.min.html',
-        loggedin=True,
-        lang=getlanguage()
+        loggedin=True
     )
 
 
@@ -194,8 +194,7 @@ def logincallback():
             'error.min.html',
             message='Due to ongoing abuse, you must be autoconfirmed '
                     'with at least 50 edits on Commons to use this tool.',
-            loggedin=True,
-            lang=getlanguage()
+            loggedin=True
         )
 
     session['access_token_key'], session['access_token_secret'] = \

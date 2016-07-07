@@ -29,7 +29,7 @@ from video2commons.frontend.shared import redisconnection
 
 i18nblueprint = Blueprint('i18n', __name__)
 
-_dir = os.path.dirname(os.path.realpath(__file__))
+_d = os.path.dirname(os.path.realpath(__file__))
 
 
 @i18nblueprint.after_request
@@ -73,6 +73,7 @@ def get(lang):
                 data[key] = data[key].replace('<', '&lt;')
                 data[key] = data[key].replace('>', '&gt;')
                 break
+    data['@dir'] = _dir(lang)
 
     setattr(g, i18nkey, data)
     redisconnection.setex(i18nkey, json.dumps(data), 60)
@@ -83,7 +84,7 @@ def _loadi18nfiles(fallbacklist):
     datafiles = {}
     for code in fallbacklist:
         if code not in datafiles:
-            path = _dir + '/i18n/' + code + '.json'
+            path = _d + '/i18n/' + code + '.json'
             if os.path.isfile(path):
                 with open(path, 'r') as f:
                     datafiles[code] = json.load(f)
@@ -129,7 +130,7 @@ def _loadmetadatafile(metadata):
     if gval:
         return gval
 
-    path = _dir + '/i18n-metadata/' + metadata + '.json'
+    path = _d + '/i18n-metadata/' + metadata + '.json'
     with open(path, 'r') as f:
         data = json.load(f)
 
@@ -139,3 +140,12 @@ def _loadmetadatafile(metadata):
 
 def _islang(lang):
     return lang in _loadmetadatafile('alllangs')
+
+
+def _dir(lang):
+    return 'rtl' if lang in _loadmetadatafile('rtl') else 'ltr'
+
+
+def is_rtl(lang):
+    """Jinja2 test for rtl-ness."""
+    return get(lang).get('@dir') == 'rtl'
