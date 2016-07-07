@@ -1,0 +1,25 @@
+{
+	"@metadata": {
+		"authors": [
+			"Green Zero"
+		]
+	},
+	"loginOnCommons": "Увійти на Вікісховище",
+	"logout": "Вийти",
+	"remove": "Вилучити",
+	"restart": "Перезапустити",
+	"next": "Наступний",
+	"loading": "Завантаження...",
+	"confirm": "Підтвердити",
+	"addTask": "Додати завдання...",
+	"yourTasks": "Ваші завдання:",
+	"cancel": "Скасувати",
+	"back": "Назад",
+	"filename": "Назва файлу",
+	"video": "відео",
+	"audio": "аудіо",
+	"subtitles": "субтитри",
+	"importsubtitles": "Імпорт субтитрів",
+	"note": "Примітка:",
+	"importantnote": "Важлива примітка:"
+}

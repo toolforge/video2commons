@@ -1,0 +1,36 @@
+{
+	"@metadata": {
+		"authors": [
+			"Chrumps"
+		]
+	},
+	"loginOnCommons": "Zaloguj się na Wikimedia Commons",
+	"logout": "Wyloguj",
+	"help": "Pomoc",
+	"JavascriptRequired": "Do korzystania z tego narzędzia wymagany jest JavaScript!",
+	"abort": "Przerwij",
+	"remove": "Usuń",
+	"restart": "Uruchom ponownie",
+	"next": "Następne",
+	"loading": "Ładowanie...",
+	"confirm": "Potwierdź",
+	"addTask": "Dodaj zadanie...",
+	"yourTasks": "Twoje zadania:",
+	"cancel": "Anuluj",
+	"back": "Wstecz",
+	"extractor": "Ekstraktor",
+	"keep": "Zachowaj",
+	"filetarget": "Nazwa pliku docelowego",
+	"transcoding": "Format transkodowania",
+	"filedescription": "Strona opisu pliku",
+	"filename": "Nazwa pliku",
+	"video": "wideo",
+	"audio": "audio",
+	"subtitles": "napisy",
+	"keepvideo": "Zachowaj wideo",
+	"keepaudio": "Zachowaj audio",
+	"importsubtitles": "Importuj napisy",
+	"note": "Uwaga:",
+	"importantnote": "Ważna uwaga:",
+	"notessubtitles": "Jeśli zaznaczona jest opcja 'Importuj napisy', napisy będą importowane, z wyłączeniem generowanych automatycznie."
+}

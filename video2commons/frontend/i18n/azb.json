@@ -1,0 +1,34 @@
+{
+	"@metadata": {
+		"authors": [
+			"Alp Er Tunqa",
+			"Ilğım"
+		]
+	},
+	"loginOnCommons": "ویکی‌آنبارا گیریش",
+	"logout": "چیخیش",
+	"help": "کؤمک",
+	"JavascriptRequired": "بۇ آلتی ایشلتمک اۆچون جاوا ایسکیریپت گرکدیر.",
+	"abort": "وازگئچ",
+	"remove": "سیل",
+	"restart": "یئنیدن باشلات",
+	"next": "سوْنراکی",
+	"loading": "یۆکلنیر...",
+	"confirm": "دوْغرولا",
+	"errorDisconnect": "سروره باغلانمادینیز. لوطفا بو صفحه‌‌نی یئنیله یین یوخسا بیر ایستک گیت هابدا آچین.",
+	"addTask": "وظیفه آرتیریلیر...",
+	"yourTasks": "وظیفه‌لرینیز：",
+	"cancel": "وازگئچ",
+	"back": "قاییت",
+	"extractor": "ایستیخراچجی",
+	"keep": "ساخلا",
+	"filetarget": "مقصد فایلین آدی",
+	"filedescription": "فایل توضیحات صفحه‌‌سی",
+	"filename": "فایل آدی",
+	"video": "ویدیو",
+	"audio": "سس",
+	"keepvideo": "ویدیونو ساخلا",
+	"keepaudio": "سسی ساخلا",
+	"note": "نوْت：",
+	"importantnote": "اهمیتلی نوْت："
+}

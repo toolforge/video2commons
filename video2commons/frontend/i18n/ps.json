@@ -1,0 +1,24 @@
+{
+	"@metadata": {
+		"authors": [
+			"Ahmed-Najib-Biabani-Ibrahimkhel"
+		]
+	},
+	"logout": "وتل",
+	"help": "لارښود",
+	"remove": "غورځول",
+	"restart": "بياپيلول",
+	"next": "راتلونکی",
+	"loading": "رابرسېرېږي...",
+	"confirm": "تاييدول",
+	"cancel": "ناگارل",
+	"keep": "ساتل",
+	"filename": "د دوتنې نوم",
+	"video": "ويډيو",
+	"audio": "غږ",
+	"subtitles": "لمنليکونه",
+	"keepvideo": "ويډيو ساتل",
+	"keepaudio": "غږ ساتل",
+	"note": "يادښت:",
+	"importantnote": "اهم يادښت:"
+}

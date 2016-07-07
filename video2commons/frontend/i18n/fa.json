@@ -1,0 +1,33 @@
+{
+	"@metadata": {
+		"authors": [
+			"Namo"
+		]
+	},
+	"loginOnCommons": "ورود به ویکی‌انبار",
+	"logout": "خروج از سامانه",
+	"JavascriptRequired": "برای استفاده از این ابزار جاوا اسکریپت نیاز دارید!",
+	"abort": "لغو",
+	"remove": "حذف",
+	"restart": "راه‌اندازی مجدد",
+	"next": "بعدی",
+	"loading": "در حال بارگیری...",
+	"confirm": "تأیید",
+	"addTask": "افزودن وظیفه...",
+	"yourTasks": "وظیفه‌های شما:",
+	"cancel": "انصراف",
+	"back": "بازگشت",
+	"keep": "نگه‌داشتن",
+	"filetarget": "نام پرونده مقصد",
+	"transcoding": "قالب فراکدگذاری",
+	"filedescription": "صفحه توضیحات پرونده",
+	"filename": "نام پرونده",
+	"video": "ویدئو",
+	"audio": "صوتی",
+	"subtitles": "زیرنویس‌ها",
+	"keepvideo": "نگه‌داشتن ویدئو",
+	"keepaudio": "نگه‌داشتن صدا",
+	"importsubtitles": "درون‌ریزی زیرنویس‌ها",
+	"note": "یادداشت:",
+	"importantnote": "یادداشت مهم:"
+}

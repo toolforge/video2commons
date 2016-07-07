@@ -1,0 +1,36 @@
+{
+	"@metadata": {
+		"authors": [
+			"Dvorapa"
+		]
+	},
+	"loginOnCommons": "Přihlásit se na Wikimedia Commons",
+	"logout": "Odhlásit",
+	"help": "Nápověda",
+	"forkOnGitHub": "Forkuj mě na GitHubu",
+	"JavascriptRequired": "K použití tohoto nástroje je vyžadován JavaScript!",
+	"abort": "Zrušit",
+	"remove": "Odstranit",
+	"restart": "Spustit znovu",
+	"next": "Dále",
+	"loading": "Načítání...",
+	"confirm": "Potvrdit",
+	"addTask": "Přidat úkol...",
+	"yourTasks": "Vaše úkoly:",
+	"taskDone": "Hotovo. Váš nahraný soubor naleznete na stránce {{#a}}{{/a}}.",
+	"cancel": "Storno",
+	"back": "Zpět",
+	"keep": "Ponechat",
+	"filetarget": "Cílový název souboru",
+	"transcoding": "Formát překódování",
+	"filedescription": "Stránka s popisem souboru",
+	"filename": "Jméno souboru",
+	"video": "video",
+	"audio": "zvuk",
+	"subtitles": "titulky",
+	"keepvideo": "Ponechat video",
+	"keepaudio": "Ponechat zvuk",
+	"importsubtitles": "Nahrát titulky",
+	"note": "Poznámka:",
+	"importantnote": "Důležité:"
+}

@@ -1,0 +1,24 @@
+{
+	"@metadata": {
+		"authors": [
+			"Zygimantus"
+		]
+	},
+	"loginOnCommons": "Prisijungti prie Vikitekos",
+	"logout": "Atsijungti",
+	"help": "Pagalba",
+	"abort": "Nutraukti",
+	"remove": "Pašalinti",
+	"restart": "Paleisti iš naujo",
+	"next": "Kitas",
+	"loading": "Įkeliama…",
+	"confirm": "Patvirtinti",
+	"addTask": "Pridėti užduotį...",
+	"yourTasks": "Jūsų užduotys:",
+	"cancel": "Atšaukti",
+	"back": "Atgal",
+	"filename": "Failo pavadinimas",
+	"video": "Vaizdo įrašas",
+	"audio": "garso įrašas",
+	"subtitles": "subtitrai"
+}

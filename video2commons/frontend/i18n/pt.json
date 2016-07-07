@@ -1,0 +1,37 @@
+{
+	"@metadata": {
+		"authors": [
+			"Vitorvicentevalente"
+		]
+	},
+	"loginOnCommons": "Entrar no Wikimedia Commons",
+	"logout": "Sair",
+	"help": "Ajuda",
+	"JavascriptRequired": "É necessário o JavaScript para utilizar esta ferramenta!",
+	"abort": "Abortar",
+	"remove": "Remover",
+	"restart": "Reiniciar",
+	"next": "Seguinte",
+	"loading": "A carregar...",
+	"confirm": "Confirmar",
+	"addTask": "Adicionar tarefa...",
+	"yourTasks": "As suas tarefas:",
+	"taskDone": "A sua tarefa está concluída. Pode encontrar o carregamento em {{#a}}{{/a}}.",
+	"cancel": "Cancelar",
+	"back": "Voltar",
+	"keep": "Manter",
+	"filetarget": "Nome da página de destino",
+	"transcoding": "Formato de transcodificação",
+	"filedescription": "Página de descrição do ficheiro",
+	"filename": "Nome do ficheiro",
+	"video": "vídeo",
+	"audio": "áudio",
+	"subtitles": "legendas",
+	"keepvideo": "Manter vídeo",
+	"keepaudio": "Manter áudio",
+	"importsubtitles": "Importar legendas",
+	"note": "Nota:",
+	"importantnote": "Nota importante:",
+	"noteslicensing": "Carregar apenas {{#a}}#fl|conteúdo livre{{/a}} ou de {{#a}}#pd|domínio público{{/a}}. {{#a}}#fu|Ficheiros protegidos por direitos de autor{{/a}} não são permitidos Wikimedia Commons.",
+	"extensionmsg": "A extensão do ficheiro definido acima é usado, se e somente se, o formato do vídeo não for de código livre, requerendo assim uma transcodificação. Vídeos em formatos abertos mantém as suas extensões."
+}

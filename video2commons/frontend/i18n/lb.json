@@ -1,0 +1,32 @@
+{
+	"@metadata": {
+		"authors": [
+			"Robby"
+		]
+	},
+	"loginOnCommons": "Aloggen op Wikimedia Commons",
+	"logout": "Ausloggen",
+	"help": "Hëllef",
+	"JavascriptRequired": "JavaSCript gëtt fir dësen Tool gebraucht!",
+	"abort": "Ofbriechen",
+	"remove": "Ewechhuelen",
+	"restart": "Neistarten",
+	"next": "Nächst",
+	"loading": "Lueden...",
+	"confirm": "Confirméieren",
+	"addTask": "Aufgab derbäisetzen...",
+	"yourTasks": "Är Aufgaben:",
+	"cancel": "Ofbriechen",
+	"back": "Zréck",
+	"keep": "Halen",
+	"filedescription": "Beschreiwungssäit vum Fichier",
+	"filename": "Numm vum Fichier",
+	"video": "Video",
+	"audio": "audio",
+	"subtitles": "Ënnertitelen",
+	"keepvideo": "Video halen",
+	"keepaudio": "Audio halen",
+	"importsubtitles": "Ënnertitelen importéieren",
+	"note": "Notiz:",
+	"importantnote": "Wichteg Notiz:"
+}

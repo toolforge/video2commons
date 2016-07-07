@@ -1,0 +1,24 @@
+{
+	"@metadata": {
+		"authors": [
+			"Beta16"
+		]
+	},
+	"loginOnCommons": "Accedi a Wikimedia Commons",
+	"logout": "Esci",
+	"help": "Aiuto",
+	"remove": "Rimuovi",
+	"next": "Avanti",
+	"loading": "Caricamento...",
+	"confirm": "Conferma",
+	"addTask": "Aggiungi attività...",
+	"cancel": "Annulla",
+	"transcoding": "Formato transcodifica",
+	"filedescription": "Pagina di descrizione del file",
+	"filename": "Nome del file",
+	"video": "video",
+	"audio": "audio",
+	"subtitles": "sottotitoli",
+	"importsubtitles": "Importa sottotitoli",
+	"note": "Nota:"
+}

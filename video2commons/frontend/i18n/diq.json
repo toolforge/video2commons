@@ -1,0 +1,42 @@
+{
+	"@metadata": {
+		"authors": [
+			"Kumkumuk"
+		]
+	},
+	"loginOnCommons": "Wikimedia Commonsi ya dekewten",
+	"logout": "Veciyayış",
+	"help": "Peşti",
+	"forkOnGitHub": "Degoşê mınê GitHubi",
+	"JavascriptRequired": "Ena halet de javascript icab krno",
+	"abort": "Kurtaj",
+	"remove": "Hewad",
+	"restart": "Neustart",
+	"next": "Bahdoyên",
+	"loading": "BAR BENO...",
+	"confirm": "Tesdiq ke",
+	"errorDisconnect": "Arderiya grebıyayiş nê bı. Reca kem ena pela anewe kerê yana GitHub de sebeba dosya bıvinê",
+	"errorTooLarge": "Dosya barkerdışi rê zaf gırd a,  wazenê se {{#a}}server ra barkerdış bıwaz{{/a}}",
+	"addTask": "Taslağ dek...",
+	"yourTasks": "Taslağ a to",
+	"createServerSide": "Yu Şiyayışi rê bilat barkerdış  kışt-ardoğ de vıraz",
+	"taskDone": "Wezife bı qeyd. Şıma şenê barkerdışanê xo bıvinê {{#a}}{{/a}}",
+	"cancel": "Peyd ke",
+	"back": "Peyser",
+	"extractor": "Extractor",
+	"keep": "Tepışten",
+	"filetarget": "Etiketa namey dosya",
+	"transcoding": "Formata transcoding",
+	"filedescription": "Pela şınasiya dosya",
+	"filename": "Namey Dosya",
+	"video": "Vidyo",
+	"audio": "Veng",
+	"subtitles": "Sernuştey bıni",
+	"keepvideo": "Vidyo tepêş",
+	"keepaudio": "Veng tepêş",
+	"importsubtitles": "Bınnuşte defi de",
+	"note": "Not:",
+	"importantnote": "Not definayış:",
+	"notessubtitles": "Eger ke weyniya 'bınnuşte dekerê' se,  bınnuşte do debiyo,  yu teberra otomatik vırazi yo.",
+	"noteslicensing": "Teyna {{#a}}#fl|brlaş lisansa{{/a}} yana {{#a}}#pd|domain şara {{/a}} zerrek de bar ke. {{#a}}#fu|Adil kar finayış{{/a}} Wikimedia Commons de mısade deya yo"
+}

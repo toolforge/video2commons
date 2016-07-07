@@ -1,0 +1,34 @@
+{
+	"@metadata": {
+		"authors": [
+			"Purodha"
+		]
+	},
+	"loginOnCommons": "Op Wikkimehdija <i lang=\"en\" xml:lang=\"en\" dir=\"ltr\" title=\"„Jemeinsamm“ - e Wikki med en Sammlong vun freije Datteije.\">Commons</i> ennlogge",
+	"logout": "Ußlogge",
+	"help": "Hölp",
+	"JavascriptRequired": "Öm heh dat Wärkzüsch bruche ze künne, weed JavaSkepp jebruch",
+	"abort": "Afbräsche",
+	"remove": "Fottnämme",
+	"restart": "Neu Aanfange",
+	"next": "Nächs",
+	"loading": "Aam Lahde&nbsp;&hellip;",
+	"confirm": "Beschtähtejje",
+	"errorTooLarge": "Di Dattei_j_es zoh gruhß, öm se tiräk huhzelahe. Doh moß mer om {{#a}}ẞööver öm et Huhlahde frohre{{/a}}.",
+	"addTask": "Aufjahb derbei donn&nbsp;&hellip;",
+	"yourTasks": "Ding Aufjahb:",
+	"cancel": "Ophühre",
+	"back": "Retuhr",
+	"keep": "Faßhallde",
+	"filetarget": "Zihl-Datteijnahme.",
+	"filedescription": "Övver di Dateij",
+	"filename": "Dä Dattei iere Nahme",
+	"video": "Viddejo",
+	"audio": "Tohndatteij",
+	"subtitles": "Ongertittelle",
+	"keepvideo": "Der Viddejo belohße",
+	"keepaudio": "De Datteij met de Töhn belohße",
+	"importsubtitles": "Ongertittele emmpottehre",
+	"note": "Aanmerkonge:",
+	"importantnote": "En weschtejje Aanmärkong:"
+}

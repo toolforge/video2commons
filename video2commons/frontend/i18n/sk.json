@@ -1,0 +1,33 @@
+{
+	"@metadata": {
+		"authors": [
+			"Kusavica"
+		]
+	},
+	"loginOnCommons": "Prihlásiť sa na Wikimedia Commons",
+	"logout": "Odhlásiť sa",
+	"help": "Pomocník",
+	"forkOnGitHub": "Forkni ma na GitHube",
+	"JavascriptRequired": "Na použitie tohto nástroja je potrebný JavaScript!",
+	"abort": "Prerušiť",
+	"remove": "Odstrániť",
+	"restart": "Reštartovať",
+	"next": "Ďalej",
+	"loading": "Načítava sa...",
+	"confirm": "Potvrdiť",
+	"errorDisconnect": "Pripojenie k serveru zlyhalo. Prosím, obnovte túto stránku alebo nahláste problém na GitHube.",
+	"addTask": "Pridať úlohu...",
+	"yourTasks": "Vaše úlohy:",
+	"cancel": "Zrušiť",
+	"back": "Späť",
+	"keep": "Ponechať",
+	"filename": "Názov súboru",
+	"video": "video",
+	"audio": "zvuk",
+	"subtitles": "titulky",
+	"keepvideo": "Ponechať video",
+	"keepaudio": "Ponechať zvuk",
+	"importsubtitles": "Importovať titulky",
+	"note": "Poznámka",
+	"importantnote": "Dôležitá poznámka:"
+}

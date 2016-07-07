@@ -1,0 +1,41 @@
+{
+	"@metadata": {
+		"authors": [
+			"Otokoume",
+			"Takot"
+		]
+	},
+	"loginOnCommons": "ウィキメディア・コモンズでログイン",
+	"logout": "ログアウト",
+	"help": "ヘルプ",
+	"forkOnGitHub": "GitHubでフォーク",
+	"JavascriptRequired": "このツールを使用するにはJavaScriptが必須です！",
+	"abort": "中止",
+	"remove": "除去",
+	"restart": "再起動",
+	"next": "次へ",
+	"loading": "読み込み中...",
+	"confirm": "確認",
+	"errorDisconnect": "サーバーへの接続に失敗しました。このページを更新するか、GitHub上で問題として起案してください。",
+	"errorTooLarge": "直接アップロードするにはファイルが大きすぎます！　{{#a}}サーバー側でのアップロードをリクエスト{{/a}}することもできます。",
+	"addTask": "タスクを追加…",
+	"yourTasks": "あなたのタスク:",
+	"createServerSide": "サーバー側でのアップロードチケットを一括で作成 (推奨)",
+	"taskDone": "タスクが完了しました。アップロード内容は{{#a}}{{/a}}で確認することができます。",
+	"cancel": "キャンセル",
+	"back": "戻る",
+	"extractor": "情報抽出",
+	"keep": "キープ",
+	"filetarget": "転送先のファイル名",
+	"transcoding": "トランスコードのフォーマット",
+	"filename": "ファイル名",
+	"video": "動画",
+	"audio": "音声",
+	"subtitles": "字幕",
+	"keepvideo": "動画をキープ",
+	"keepaudio": "音声をキープ",
+	"importsubtitles": "字幕をインポート",
+	"notesplaylists": "プレイリストは正しく処理されません。一部のサイト (例えばyoukuやComedy Central) ではマルチパートの動画を扱えますが、これはプレイリストとして解釈されます。したがってこれも正しく処理されません。",
+	"notesuncheck": "メディアが動画もしくは音声トラックを含んでいない場合には、対応するチェックボックスのチェックを外してください。そうしない場合には、フォーマットがフリーであっても、変換に失敗することがあります。",
+	"notessubtitles": "「字幕をインポート」にチェックが入っている場合には、字幕がインポートされます。ただし自動生成のものは除きます。"
+}
