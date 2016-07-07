@@ -554,7 +554,7 @@
 			var deferred;
 			switch ( newTaskData.step ) {
 				case 'source':
-					deferred = $.when( function() {
+					deferred = $.when( ( function() {
 						var video = addTaskDialog.find( '#video' )
 							.is( ":checked" ),
 							audio = addTaskDialog.find( '#audio' )
@@ -569,7 +569,7 @@
 						} else {
 							return resolved;
 						}
-					}(), function() {
+					}() ), ( function() {
 						var url = addTaskDialog.find( '#url' )
 							.val();
 
@@ -586,10 +586,10 @@
 						} else {
 							return resolved;
 						}
-					}() );
+					}() ) );
 					break;
 				case 'target':
-					deferred = function() {
+					deferred = ( function() {
 						var filename = addTaskDialog.find( '#filename' )
 							.val();
 						newTaskData.filedesc = addTaskDialog.find( '#filedesc' )
@@ -613,7 +613,7 @@
 						} else {
 							return resolved;
 						}
-					}();
+					}() );
 					break;
 				case 'confirm':
 					// nothing to do in confirm screen
