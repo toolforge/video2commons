@@ -56,6 +56,7 @@
 				} );
 		},
 
+		// Functions related to showing running/finished tasks
 		checkStatus: function() {
 			if ( window.lastStatusCheck )
 				clearTimeout( window.lastStatusCheck );
@@ -85,31 +86,6 @@
 			var ssuButton = $( htmlContent.requestServerSide );
 			$( '#content' )
 				.append( ssuButton.hide() );
-		},
-
-		setProgressBar: function( item, progress ) {
-			var bar = item.find( '.progress-bar' );
-			if ( progress < 0 ) {
-				bar.addClass( 'progress-bar-striped active' )
-					.addClass( 'active' )
-					.text( '' );
-				progress = 100;
-			} else {
-				bar.removeClass( 'progress-bar-striped active' )
-					.text( progress + '%' );
-			}
-
-			bar.attr( {
-				"aria-valuenow": progress,
-				"aria-valuemin": "0",
-				"aria-valuemax": "100",
-				style: "width:" + progress + "%"
-			} );
-		},
-
-		getTaskIDFromDOMID: function( id ) {
-			var result = /^(?:task-)?(.+?)(?:-(?:title|statustext|progress|abortbutton|removebutton|restartbutton))?$/.exec( id );
-			return result[ 1 ];
 		},
 
 		populateResults: function( data ) {
@@ -264,6 +240,86 @@
 				window.scrollTo( 0, document.body.scrollHeight );
 		},
 
+		setProgressBar: function( item, progress ) {
+			var bar = item.find( '.progress-bar' );
+			if ( progress < 0 ) {
+				bar.addClass( 'progress-bar-striped active' )
+					.addClass( 'active' )
+					.text( '' );
+				progress = 100;
+			} else {
+				bar.removeClass( 'progress-bar-striped active' )
+					.text( progress + '%' );
+			}
+
+			bar.attr( {
+				"aria-valuenow": progress,
+				"aria-valuemin": "0",
+				"aria-valuemax": "100",
+				style: "width:" + progress + "%"
+			} );
+		},
+
+		getTaskIDFromDOMID: function( id ) {
+			var result = /^(?:task-)?(.+?)(?:-(?:title|statustext|progress|abortbutton|removebutton|restartbutton))?$/.exec( id );
+			return result[ 1 ];
+		},
+
+		eventTask: function( obj, eventName ) {
+			obj = $( obj );
+			if ( obj.is( '.disabled' ) ) return;
+			obj.off()
+				.addClass( 'disabled' );
+
+			video2commons.apiPost( 'task/' + eventName, {
+					id: video2commons.getTaskIDFromDOMID( obj.attr( 'id' ) )
+				} )
+				.done( function( data ) {
+					if ( data.error )
+						window.alert( data.error );
+					video2commons.checkStatus();
+				} );
+		},
+
+		setText: function( arr, data ) {
+			for ( var i = 0; i < arr.length; i++ )
+				addTaskDialog.find( '#' + arr[ i ] )
+				.text( data[ arr[ i ] ] );
+		},
+
+		eventButton: function( id, eventName ) {
+			return $( htmlContent[ eventName + 'button' ] )
+				.attr( 'id', id + '-' + eventName + 'button' )
+				.off()
+				.click( function() {
+					video2commons.eventTask( this, eventName );
+				} );
+		},
+
+		appendButtons: function( buttonArray, row, type, id ) {
+			row.append( $( '<td />' )
+				.attr( 'id', id + '-title' )
+				.attr( 'width', '30%' ) );
+
+			var buttons = $( '<td />' )
+				.attr( 'id', id + '-status' )
+				.attr( 'width', '70%' )
+				.attr( 'colspan', '2' )
+				.append( $( '<span />' )
+					.attr( 'id', id + '-statustext' ) );
+
+			if ( buttonArray.length )
+				buttons.append( buttonArray[ 0 ] );
+
+			for ( var i = 1; i < buttonArray.length; i++ )
+				buttons.append( buttonArray[ i ] );
+
+			row.append( buttons )
+				.removeClass( type[ 0 ] )
+				.addClass( type[ 1 ] );
+		},
+
+		// Functions related to adding new tasks
 		addTask: function() {
 			if ( !addTaskDialog ) {
 				//addTask.html
@@ -303,6 +359,24 @@
 
 			} else // It's not redundant because Ajax load
 				video2commons.openTaskModal();
+		},
+
+		openTaskModal: function() {
+			addTaskDialog.find( '#dialog-spinner' )
+				.hide();
+			addTaskDialog.find( '.modal-body' )
+				.html( '<center>' + loaderImage + '</center>' );
+
+			video2commons.newTask();
+			addTaskDialog.modal();
+
+			// HACK
+			addTaskDialog.on( 'shown.bs.modal', function() {
+				addTaskDialog.find( '#url' )
+					.focus();
+			} );
+
+			video2commons.reactivatePrevNextButtons();
 		},
 
 		newTask: function() {
@@ -403,22 +477,6 @@
 								.focus();
 						} );
 			}
-			video2commons.reactivatePrevNextButtons();
-		},
-
-		showFormError: function( error ) {
-			if ( !addTaskDialog.find( '.modal-body #dialog-errorbox' )
-				.length ) {
-				addTaskDialog.find( '.modal-body' )
-					.append(
-						$( '<div class="alert alert-danger" id="dialog-errorbox"></div>' )
-					);
-			}
-			addTaskDialog.find( '.modal-body #dialog-errorbox' )
-				.text( 'Error: ' + error )
-				.show();
-
-			video2commons.reactivatePrevNextButtons();
 		},
 
 		reactivatePrevNextButtons: function() {
@@ -491,172 +549,119 @@
 		},
 
 		processInput: function( button ) {
-			var nextStep = function() {
-				var action = {
-					'prev': -1,
-					'next': 1
-				}[ button ];
-				var steps = [ 'source', 'target', 'confirm' ];
-				newTaskData.step = steps[ steps.indexOf( newTaskData.step ) + action ];
-				video2commons.setupAddTaskDialog();
-			};
+			var resolved = $.when(); // A resolved jQuery promise
 
+			var deferred;
 			switch ( newTaskData.step ) {
 				case 'source':
-					var url = addTaskDialog.find( '#url' )
-						.val(),
-						video = addTaskDialog.find( '#video' )
-						.is( ":checked" ),
-						audio = addTaskDialog.find( '#audio' )
-						.is( ":checked" );
-					newTaskData.subtitles = addTaskDialog.find( '#subtitles' )
-						.is( ":checked" );
-
-					if ( !url ) {
-						video2commons.showFormError( 'URL cannot be empty!' );
-						return;
-					}
-
-					var ask2 = function() {
+					deferred = $.when( function() {
+						var video = addTaskDialog.find( '#video' )
+							.is( ":checked" ),
+							audio = addTaskDialog.find( '#audio' )
+							.is( ":checked" );
+						newTaskData.subtitles = addTaskDialog.find( '#subtitles' )
+							.is( ":checked" );
 						if ( !newTaskData.formats.length || video !== newTaskData.video || audio !== newTaskData.audio ) {
-							video2commons.askAPI( 'listformats', {
+							return video2commons.askAPI( 'listformats', {
 								video: video,
 								audio: audio
-							}, [ 'video', 'audio', 'format', 'formats' ], nextStep );
+							}, [ 'video', 'audio', 'format', 'formats' ] );
 						} else {
-							nextStep();
+							return resolved;
 						}
-					};
+					}(), function() {
+						var url = addTaskDialog.find( '#url' )
+							.val();
 
-					var ask1 = function() {
+						if ( !url ) {
+							return $.Deferred()
+								.reject( 'URL cannot be empty!' )
+								.promise();
+						}
 						if ( url !== newTaskData.url ) {
 							newTaskData.filenamechecked = false;
-							video2commons.askAPI( 'extracturl', {
+							return video2commons.askAPI( 'extracturl', {
 								url: url
-							}, [ 'url', 'extractor', 'filedesc', 'filename' ], ask2 );
+							}, [ 'url', 'extractor', 'filedesc', 'filename' ] );
 						} else {
-							ask2();
+							return resolved;
 						}
-					};
-
-					ask1();
+					}() );
 					break;
 				case 'target':
-					var filename = addTaskDialog.find( '#filename' )
-						.val();
-					newTaskData.filedesc = addTaskDialog.find( '#filedesc' )
-						.val();
-					newTaskData.format = addTaskDialog.find( '#format' )
-						.val();
+					deferred = function() {
+						var filename = addTaskDialog.find( '#filename' )
+							.val();
+						newTaskData.filedesc = addTaskDialog.find( '#filedesc' )
+							.val();
+						newTaskData.format = addTaskDialog.find( '#format' )
+							.val();
 
-					if ( !filename || !newTaskData.filedesc ) {
-						video2commons.showFormError( 'Filename and file description cannot be empty!' );
-						return;
-					}
+						if ( !filename || !newTaskData.filedesc ) {
+							return $.Deferred()
+								.reject( 'Filename and file description cannot be empty!' )
+								.promise();
+						}
 
-					if ( !newTaskData.filenamechecked || filename !== newTaskData.filename ) {
-						video2commons.askAPI( 'validatefilename', {
-							filename: filename
-						}, [ 'filename' ], function() {
-							newTaskData.filenamechecked = true;
-							nextStep();
-						} );
-					} else {
-						nextStep();
-					}
+						if ( !newTaskData.filenamechecked || filename !== newTaskData.filename ) {
+							return video2commons.askAPI( 'validatefilename', {
+									filename: filename
+								}, [ 'filename' ] )
+								.done( function() {
+									newTaskData.filenamechecked = true;
+								} );
+						} else {
+							return resolved;
+						}
+					}();
 					break;
 				case 'confirm':
 					// nothing to do in confirm screen
-					nextStep();
+					deferred = resolved;
 			}
+
+			deferred.done( function() {
+					var action = {
+						'prev': -1,
+						'next': 1
+					}[ button ];
+					var steps = [ 'source', 'target', 'confirm' ];
+					newTaskData.step = steps[ steps.indexOf( newTaskData.step ) + action ];
+					video2commons.setupAddTaskDialog();
+				} )
+				.fail( function( error ) {
+					if ( !addTaskDialog.find( '.modal-body #dialog-errorbox' )
+						.length ) {
+						addTaskDialog.find( '.modal-body' )
+							.append(
+								$( '<div class="alert alert-danger" id="dialog-errorbox"></div>' )
+							);
+					}
+					addTaskDialog.find( '.modal-body #dialog-errorbox' )
+						.text( 'Error: ' + error )
+						.show();
+				} )
+				.always( video2commons.reactivatePrevNextButtons );
 		},
 
-
-		askAPI: function( url, datain, dataout, cb ) {
+		askAPI: function( url, datain, dataout ) {
+			var deferred = $.Deferred();
 			video2commons.apiPost( url, datain )
 				.done( function( data ) {
 					if ( data.error ) {
-						video2commons.showFormError( data.error );
+						deferred.reject( data.error );
 						return;
 					}
 					for ( var i = 0; i < dataout.length; i++ )
 						newTaskData[ dataout[ i ] ] = data[ dataout[ i ] ];
-					if ( cb )
-						return cb();
+
+					deferred.resolve( data );
 				} )
 				.fail( function() {
-					video2commons.showFormError( 'Something weird happened. Please try again.' );
+					deferred.reject( 'Something weird happened. Please try again.' );
 				} );
-		},
 
-		eventTask: function( obj, eventName ) {
-			obj = $( obj );
-			if ( obj.is( '.disabled' ) ) return;
-			obj.off()
-				.addClass( 'disabled' );
-
-			video2commons.apiPost( 'task/' + eventName, {
-					id: video2commons.getTaskIDFromDOMID( obj.attr( 'id' ) )
-				} )
-				.done( function( data ) {
-					if ( data.error )
-						window.alert( data.error );
-					video2commons.checkStatus();
-				} );
-		},
-
-		setText: function( arr, data ) {
-			for ( var i = 0; i < arr.length; i++ )
-				addTaskDialog.find( '#' + arr[ i ] )
-				.text( data[ arr[ i ] ] );
-		},
-
-		eventButton: function( id, eventName ) {
-			return $( htmlContent[ eventName + 'button' ] )
-				.attr( 'id', id + '-' + eventName + 'button' )
-				.off()
-				.click( function() {
-					video2commons.eventTask( this, eventName );
-				} );
-		},
-
-		appendButtons: function( buttonArray, row, type, id ) {
-			row.append( $( '<td />' )
-				.attr( 'id', id + '-title' )
-				.attr( 'width', '30%' ) );
-
-			var buttons = $( '<td />' )
-				.attr( 'id', id + '-status' )
-				.attr( 'width', '70%' )
-				.attr( 'colspan', '2' )
-				.append( $( '<span />' )
-					.attr( 'id', id + '-statustext' ) );
-
-			if ( buttonArray.length )
-				buttons.append( buttonArray[ 0 ] );
-
-			for ( var i = 1; i < buttonArray.length; i++ )
-				buttons.append( buttonArray[ i ] );
-
-			row.append( buttons )
-				.removeClass( type[ 0 ] )
-				.addClass( type[ 1 ] );
-		},
-
-		openTaskModal: function() {
-			addTaskDialog.find( '#dialog-spinner' )
-				.hide();
-			addTaskDialog.find( '.modal-body' )
-				.html( '<center>' + loaderImage + '</center>' );
-
-			video2commons.newTask();
-			addTaskDialog.modal();
-
-			// HACK
-			addTaskDialog.on( 'shown.bs.modal', function() {
-				addTaskDialog.find( '#url' )
-					.focus();
-			} );
+			return deferred.promise();
 		},
 
 		apiPost: function( endpoint, data ) {
