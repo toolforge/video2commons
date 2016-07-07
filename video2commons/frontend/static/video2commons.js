@@ -40,6 +40,7 @@
 		};
 	};
 
+	var addTaskDialog, newTaskData;
 	var video2commons = window.video2commons = {
 		init: function() {
 			$( '#content' )
@@ -264,34 +265,34 @@
 		},
 
 		addTask: function() {
-			if ( !window.addTaskDialog ) {
+			if ( !addTaskDialog ) {
 				//addTask.html
 				$.get( 'static/html/addTask.min.html' )
 					.success( function( data ) {
 
-						window.addTaskDialog = $( '<div>' )
+						addTaskDialog = $( '<div>' )
 							.html( Mustache.render( data, i18n ) );
 
-						window.addTaskDialog.addClass( 'modal fade' )
+						addTaskDialog.addClass( 'modal fade' )
 							.attr( {
 								id: 'addTaskDialog',
 								role: 'dialog'
 							} );
 						$( 'body' )
-							.append( window.addTaskDialog );
+							.append( addTaskDialog );
 
-						window.addTaskDialog.find( '#btn-prev' )
+						addTaskDialog.find( '#btn-prev' )
 							.html( htmlContent.prevbutton );
-						window.addTaskDialog.find( '#btn-next' )
+						addTaskDialog.find( '#btn-next' )
 							.html( htmlContent.nextbutton );
 
 						// HACK
-						window.addTaskDialog.find( '.modal-body' )
+						addTaskDialog.find( '.modal-body' )
 							.keypress( function( e ) {
 								if ( ( e.which || e.keyCode ) === 13 &&
 									!( $( ':focus' )
 										.is( 'textarea' ) ) ) {
-									window.addTaskDialog.find( '.modal-footer #btn-next' )
+									addTaskDialog.find( '.modal-footer #btn-next' )
 										.click();
 									e.preventDefault();
 								}
@@ -305,7 +306,7 @@
 		},
 
 		newTask: function() {
-			window.newTaskData = {
+			newTaskData = {
 				step: 'source',
 				url: '',
 				extractor: '',
@@ -322,33 +323,33 @@
 		},
 
 		setupAddTaskDialog: function() {
-			switch ( window.newTaskData.step ) {
+			switch ( newTaskData.step ) {
 				case 'source':
 					//sourceForm.html
 					$.get( 'static/html/sourceForm.min.html' )
 						.success( function( dataHtml ) {
 							dataHtml = Mustache.render( dataHtml, i18n, i18n );
-							window.addTaskDialog.find( '.modal-body' )
+							addTaskDialog.find( '.modal-body' )
 								.html( dataHtml );
 
-							window.addTaskDialog.find( 'a#vc' )
+							addTaskDialog.find( 'a#vc' )
 								.attr( 'href', '//tools.wmflabs.org/videoconvert/' );
-							window.addTaskDialog.find( 'a#fl' )
+							addTaskDialog.find( 'a#fl' )
 								.attr( 'href', '//commons.wikimedia.org/wiki/Commons:Licensing#Acceptable_licenses' );
-							window.addTaskDialog.find( 'a#pd' )
+							addTaskDialog.find( 'a#pd' )
 								.attr( 'href', '//commons.wikimedia.org/wiki/Commons:Licensing#Material_in_the_public_domain' );
-							window.addTaskDialog.find( 'a#fu' )
+							addTaskDialog.find( 'a#fu' )
 								.attr( 'href', '//commons.wikimedia.org/wiki/Commons:FU' );
 
-							window.addTaskDialog.find( '#url' )
-								.val( window.newTaskData.url )
+							addTaskDialog.find( '#url' )
+								.val( newTaskData.url )
 								.focus();
-							window.addTaskDialog.find( '#video' )
-								.prop( 'checked', window.newTaskData.video );
-							window.addTaskDialog.find( '#audio' )
-								.prop( 'checked', window.newTaskData.audio );
-							window.addTaskDialog.find( '#subtitles' )
-								.prop( 'checked', window.newTaskData.subtitles );
+							addTaskDialog.find( '#video' )
+								.prop( 'checked', newTaskData.video );
+							addTaskDialog.find( '#audio' )
+								.prop( 'checked', newTaskData.audio );
+							addTaskDialog.find( '#subtitles' )
+								.prop( 'checked', newTaskData.subtitles );
 						} );
 					break;
 				case 'target':
@@ -356,21 +357,21 @@
 					$.get( 'static/html/targetForm.min.html' )
 						.success( function( dataHtml ) {
 							dataHtml = Mustache.render( dataHtml, i18n );
-							window.addTaskDialog.find( '.modal-body' )
+							addTaskDialog.find( '.modal-body' )
 								.html( dataHtml );
 
-							window.addTaskDialog.find( '#filename' )
-								.val( window.newTaskData.filename )
+							addTaskDialog.find( '#filename' )
+								.val( newTaskData.filename )
 								.focus();
-							$.each( window.newTaskData.formats, function( i, desc ) {
-								window.addTaskDialog.find( '#format' )
+							$.each( newTaskData.formats, function( i, desc ) {
+								addTaskDialog.find( '#format' )
 									.append( $( '<option></option>' )
 										.text( desc ) );
 							} );
-							window.addTaskDialog.find( '#format' )
-								.val( window.newTaskData.format );
-							window.addTaskDialog.find( '#filedesc' )
-								.val( window.newTaskData.filedesc );
+							addTaskDialog.find( '#format' )
+								.val( newTaskData.format );
+							addTaskDialog.find( '#filedesc' )
+								.val( newTaskData.filedesc );
 						} );
 					break;
 				case 'confirm':
@@ -378,14 +379,14 @@
 					$.get( 'static/html/confirmForm.min.html' )
 						.success( function( dataHtml ) {
 							dataHtml = Mustache.render( dataHtml, i18n );
-							window.addTaskDialog.find( '.modal-body' )
+							addTaskDialog.find( '.modal-body' )
 								.html( dataHtml );
 
 							var keep = [];
-							if ( window.newTaskData.video ) keep.push( i18n.video );
-							if ( window.newTaskData.audio ) keep.push( i18n.audio );
-							if ( window.newTaskData.subtitles ) keep.push( i18n.subtitles );
-							window.addTaskDialog.find( '#keep' )
+							if ( newTaskData.video ) keep.push( i18n.video );
+							if ( newTaskData.audio ) keep.push( i18n.audio );
+							if ( newTaskData.subtitles ) keep.push( i18n.subtitles );
+							addTaskDialog.find( '#keep' )
 								.text( keep.join( ', ' ) );
 
 							video2commons.setText( [
@@ -393,12 +394,12 @@
 								'extractor',
 								'filename',
 								'format'
-							], window.newTaskData );
+							], newTaskData );
 
-							window.addTaskDialog.find( '#filedesc' )
-								.val( window.newTaskData.filedesc );
+							addTaskDialog.find( '#filedesc' )
+								.val( newTaskData.filedesc );
 
-							window.addTaskDialog.find( '#btn-next' )
+							addTaskDialog.find( '#btn-next' )
 								.focus();
 						} );
 			}
@@ -406,14 +407,14 @@
 		},
 
 		showFormError: function( error ) {
-			if ( !window.addTaskDialog.find( '.modal-body #dialog-errorbox' )
+			if ( !addTaskDialog.find( '.modal-body #dialog-errorbox' )
 				.length ) {
-				window.addTaskDialog.find( '.modal-body' )
+				addTaskDialog.find( '.modal-body' )
 					.append(
 						$( '<div class="alert alert-danger" id="dialog-errorbox"></div>' )
 					);
 			}
-			window.addTaskDialog.find( '.modal-body #dialog-errorbox' )
+			addTaskDialog.find( '.modal-body #dialog-errorbox' )
 				.text( 'Error: ' + error )
 				.show();
 
@@ -421,41 +422,41 @@
 		},
 
 		reactivatePrevNextButtons: function() {
-			window.addTaskDialog.find( '#dialog-spinner' )
+			addTaskDialog.find( '#dialog-spinner' )
 				.hide();
-			switch ( window.newTaskData.step ) {
+			switch ( newTaskData.step ) {
 				case 'source':
-					window.addTaskDialog.find( '#btn-prev' )
+					addTaskDialog.find( '#btn-prev' )
 						.addClass( 'disabled' )
 						.off();
 
-					window.addTaskDialog.find( '#btn-next' )
+					addTaskDialog.find( '#btn-next' )
 						.html( htmlContent.nextbutton );
 					video2commons.setPrevNextButton( 'next' );
 					break;
 				case 'target':
 					video2commons.setPrevNextButton( 'prev' );
 
-					window.addTaskDialog.find( '#btn-next' )
+					addTaskDialog.find( '#btn-next' )
 						.html( htmlContent.nextbutton );
 					video2commons.setPrevNextButton( 'next' );
 					break;
 				case 'confirm':
 					video2commons.setPrevNextButton( 'prev' );
 
-					window.addTaskDialog.find( '#btn-next' )
+					addTaskDialog.find( '#btn-next' )
 						.removeClass( 'disabled' )
 						.html( htmlContent.confirmbutton )
 						.off()
 						.click( function() {
 							video2commons.disablePrevNext( false );
 
-							window.addTaskDialog.modal( "hide" );
+							addTaskDialog.modal( "hide" );
 							$( '#tasktable > tbody' )
 								.append( '<tr id="task-new"><td colspan="3">' + loaderImage + '</td></tr>' );
 							window.scrollTo( 0, document.body.scrollHeight );
 
-							video2commons.apiPost( 'task/run', window.newTaskData )
+							video2commons.apiPost( 'task/run', newTaskData )
 								.done( function( data ) {
 									if ( data.error )
 										window.alert( data.error );
@@ -466,7 +467,7 @@
 		},
 
 		setPrevNextButton: function( button ) {
-			window.addTaskDialog.find( '#btn-' + button )
+			addTaskDialog.find( '#btn-' + button )
 				.removeClass( 'disabled' )
 				.off()
 				.click( function() {
@@ -476,16 +477,16 @@
 		},
 
 		disablePrevNext: function( spin ) {
-			window.addTaskDialog.find( '.modal-body #dialog-errorbox' )
+			addTaskDialog.find( '.modal-body #dialog-errorbox' )
 				.hide();
-			window.addTaskDialog.find( '#btn-prev' )
+			addTaskDialog.find( '#btn-prev' )
 				.addClass( 'disabled' )
 				.off();
-			window.addTaskDialog.find( '#btn-next' )
+			addTaskDialog.find( '#btn-next' )
 				.addClass( 'disabled' )
 				.off();
 			if ( spin )
-				window.addTaskDialog.find( '#dialog-spinner' )
+				addTaskDialog.find( '#dialog-spinner' )
 				.show();
 		},
 
@@ -496,19 +497,19 @@
 					'next': 1
 				}[ button ];
 				var steps = [ 'source', 'target', 'confirm' ];
-				window.newTaskData.step = steps[ steps.indexOf( window.newTaskData.step ) + action ];
+				newTaskData.step = steps[ steps.indexOf( newTaskData.step ) + action ];
 				video2commons.setupAddTaskDialog();
 			};
 
-			switch ( window.newTaskData.step ) {
+			switch ( newTaskData.step ) {
 				case 'source':
-					var url = window.addTaskDialog.find( '#url' )
+					var url = addTaskDialog.find( '#url' )
 						.val(),
-						video = window.addTaskDialog.find( '#video' )
+						video = addTaskDialog.find( '#video' )
 						.is( ":checked" ),
-						audio = window.addTaskDialog.find( '#audio' )
+						audio = addTaskDialog.find( '#audio' )
 						.is( ":checked" );
-					window.newTaskData.subtitles = window.addTaskDialog.find( '#subtitles' )
+					newTaskData.subtitles = addTaskDialog.find( '#subtitles' )
 						.is( ":checked" );
 
 					if ( !url ) {
@@ -517,7 +518,7 @@
 					}
 
 					var ask2 = function() {
-						if ( !window.newTaskData.formats.length || video !== window.newTaskData.video || audio !== window.newTaskData.audio ) {
+						if ( !newTaskData.formats.length || video !== newTaskData.video || audio !== newTaskData.audio ) {
 							video2commons.askAPI( 'listformats', {
 								video: video,
 								audio: audio
@@ -528,8 +529,8 @@
 					};
 
 					var ask1 = function() {
-						if ( url !== window.newTaskData.url ) {
-							window.newTaskData.filenamechecked = false;
+						if ( url !== newTaskData.url ) {
+							newTaskData.filenamechecked = false;
 							video2commons.askAPI( 'extracturl', {
 								url: url
 							}, [ 'url', 'extractor', 'filedesc', 'filename' ], ask2 );
@@ -541,23 +542,23 @@
 					ask1();
 					break;
 				case 'target':
-					var filename = window.addTaskDialog.find( '#filename' )
+					var filename = addTaskDialog.find( '#filename' )
 						.val();
-					window.newTaskData.filedesc = window.addTaskDialog.find( '#filedesc' )
+					newTaskData.filedesc = addTaskDialog.find( '#filedesc' )
 						.val();
-					window.newTaskData.format = window.addTaskDialog.find( '#format' )
+					newTaskData.format = addTaskDialog.find( '#format' )
 						.val();
 
-					if ( !filename || !window.newTaskData.filedesc ) {
+					if ( !filename || !newTaskData.filedesc ) {
 						video2commons.showFormError( 'Filename and file description cannot be empty!' );
 						return;
 					}
 
-					if ( !window.newTaskData.filenamechecked || filename !== window.newTaskData.filename ) {
+					if ( !newTaskData.filenamechecked || filename !== newTaskData.filename ) {
 						video2commons.askAPI( 'validatefilename', {
 							filename: filename
 						}, [ 'filename' ], function() {
-							window.newTaskData.filenamechecked = true;
+							newTaskData.filenamechecked = true;
 							nextStep();
 						} );
 					} else {
@@ -579,7 +580,7 @@
 						return;
 					}
 					for ( var i = 0; i < dataout.length; i++ )
-						window.newTaskData[ dataout[ i ] ] = data[ dataout[ i ] ];
+						newTaskData[ dataout[ i ] ] = data[ dataout[ i ] ];
 					if ( cb )
 						return cb();
 				} )
@@ -606,7 +607,7 @@
 
 		setText: function( arr, data ) {
 			for ( var i = 0; i < arr.length; i++ )
-				window.addTaskDialog.find( '#' + arr[ i ] )
+				addTaskDialog.find( '#' + arr[ i ] )
 				.text( data[ arr[ i ] ] );
 		},
 
@@ -643,17 +644,17 @@
 		},
 
 		openTaskModal: function() {
-			window.addTaskDialog.find( '#dialog-spinner' )
+			addTaskDialog.find( '#dialog-spinner' )
 				.hide();
-			window.addTaskDialog.find( '.modal-body' )
+			addTaskDialog.find( '.modal-body' )
 				.html( '<center>' + loaderImage + '</center>' );
 
 			video2commons.newTask();
-			window.addTaskDialog.modal();
+			addTaskDialog.modal();
 
 			// HACK
-			window.addTaskDialog.on( 'shown.bs.modal', function() {
-				window.addTaskDialog.find( '#url' )
+			addTaskDialog.on( 'shown.bs.modal', function() {
+				addTaskDialog.find( '#url' )
 					.focus();
 			} );
 		},
