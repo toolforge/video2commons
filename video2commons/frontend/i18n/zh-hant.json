@@ -1,0 +1,42 @@
+{
+	"@metadata": {
+		"authors": [
+			"Kly",
+			"Liuxinyu970226"
+		]
+	},
+	"loginOnCommons": "從維基共享資源登入",
+	"logout": "登出",
+	"help": "說明",
+	"forkOnGitHub": "在GitHub上分支此套件",
+	"JavascriptRequired": "此工具需要JavaScript才可使用！",
+	"abort": "中止",
+	"remove": "移除",
+	"restart": "重新啟用",
+	"next": "下一步",
+	"loading": "載入中…",
+	"confirm": "確認",
+	"errorDisconnect": "伺服器無法連結，請重整此頁面或在GitHub上反應情況。",
+	"errorTooLarge": "檔案過大無法上傳！試試{{#a}}請求伺服器端上傳{{/a}}。",
+	"addTask": "新增項目",
+	"yourTasks": "您的項目：",
+	"taskDone": "您的項目已完成。您可在{{#a}}{{/a}}找尋您的上傳。",
+	"cancel": "取消",
+	"back": "上一步驟",
+	"keep": "保留",
+	"filetarget": "目標檔名",
+	"transcoding": "轉碼格式",
+	"filedescription": "檔案描述頁面",
+	"filename": "檔案名稱",
+	"video": "影片",
+	"audio": "音訊",
+	"subtitles": "副標題",
+	"keepvideo": "保留視訊",
+	"keepaudio": "保留音訊",
+	"importsubtitles": "匯入字幕",
+	"note": "備註：",
+	"importantnote": "重要提醒：",
+	"notesuncheck": "如果此媒體不包含影像或音軌內容，請取消勾選對應相關功能的複選框；否則轉碼過程可能出現錯誤，即使是自由檔案格式也會如此。",
+	"notessubtitles": "如果了勾選「匯入字幕」功能，除了自動產生的字幕外將會被匯入。",
+	"confirmmsg": "請確認項目內容、或按「上一步」來改變參數。按下「確認」後項目將會被提交並執行。出於技術因素，一個提交項目是難以被撤銷掉的。"
+}

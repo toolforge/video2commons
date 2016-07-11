@@ -1,0 +1,33 @@
+{
+	"@metadata": {
+		"authors": [
+			"Gwenn-Ael"
+		]
+	},
+	"loginOnCommons": "Kevreañ ouzh Wikimedia Commons",
+	"logout": "Digevreañ",
+	"help": "Skoazell",
+	"JavascriptRequired": "Ezhomm zo eus JavaScript evit implijout ar benveg-mañ !",
+	"abort": "Dilezel",
+	"remove": "Dilemel",
+	"restart": "Adloc'hañ",
+	"next": "War-lerc'h",
+	"loading": "O kargañ...",
+	"confirm": "Kadarnaat",
+	"addTask": "Ouzhpennañ un trevell...",
+	"yourTasks": "Ho trevelloù:",
+	"back": "Distreiñ",
+	"keep": "Mirout",
+	"filetarget": "Anv ar restr da dizhout",
+	"transcoding": "Furmad treuzkodañ",
+	"filedescription": "Pajennad deskrivañ ar restr",
+	"filename": "Anv ar restr",
+	"video": "Video",
+	"audio": "Kleved",
+	"subtitles": "Istitloù",
+	"keepvideo": "Mirout ar video",
+	"keepaudio": "Mirout ar c'hleved",
+	"importsubtitles": "Enporzhiañ istitloù",
+	"note": "Notenn :",
+	"importantnote": "Evezhiadenn bouezus :"
+}
