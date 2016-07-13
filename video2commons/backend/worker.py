@@ -21,11 +21,14 @@ from __future__ import absolute_import
 
 import os
 import sys
+import shutil
+
 import celery
 from celery.contrib.abortable import AbortableTask
+from celery.exceptions import Ignore
 from redis import Redis
-import shutil
 import pywikibot
+
 from video2commons.exceptions import TaskError, TaskAbort
 from video2commons.backend import download
 from video2commons.backend import encode
@@ -62,7 +65,7 @@ def main(
     # Get a lock to prevent double-running with same task ID
     lockkey = 'tasklock:' + self.request.id
     if redisconnection.exists(lockkey):
-        raise TaskError("Task has already been run")
+        raise Ignore
     else:
         redisconnection.setex(lockkey, 'T', 7 * 24 * 3600)
 
