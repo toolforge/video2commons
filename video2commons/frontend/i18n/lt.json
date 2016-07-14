@@ -1,7 +1,8 @@
 {
 	"@metadata": {
 		"authors": [
-			"Zygimantus"
+			"Zygimantus",
+			"Eitvys200"
 		]
 	},
 	"loginOnCommons": "Prisijungti prie Vikitekos",
@@ -18,7 +19,7 @@
 	"cancel": "Atšaukti",
 	"back": "Atgal",
 	"filename": "Failo pavadinimas",
-	"video": "Vaizdo įrašas",
+	"video": "vaizdo įrašas",
 	"audio": "garso įrašas",
-	"subtitles": "subtitrai"
+	"subtitles": "titrai"
 }

@@ -1,18 +1,21 @@
 {
 	"@metadata": {
 		"authors": [
-			"Beta16"
+			"Beta16",
+			"Macofe"
 		]
 	},
 	"loginOnCommons": "Accedi a Wikimedia Commons",
 	"logout": "Esci",
 	"help": "Aiuto",
 	"remove": "Rimuovi",
+	"restart": "Riavvia",
 	"next": "Avanti",
 	"loading": "Caricamento...",
 	"confirm": "Conferma",
 	"addTask": "Aggiungi attività...",
 	"cancel": "Annulla",
+	"back": "Indietro",
 	"transcoding": "Formato transcodifica",
 	"filedescription": "Pagina di descrizione del file",
 	"filename": "Nome del file",
@@ -20,5 +23,6 @@
 	"audio": "audio",
 	"subtitles": "sottotitoli",
 	"importsubtitles": "Importa sottotitoli",
-	"note": "Nota:"
+	"note": "Nota:",
+	"importantnote": "Nota importante:"
 }
