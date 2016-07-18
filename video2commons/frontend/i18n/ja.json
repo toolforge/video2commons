@@ -2,7 +2,8 @@
 	"@metadata": {
 		"authors": [
 			"Otokoume",
-			"Takot"
+			"Takot",
+			"組曲師"
 		]
 	},
 	"loginOnCommons": "ウィキメディア・コモンズでログイン",
@@ -32,8 +33,8 @@
 	"video": "動画",
 	"audio": "音声",
 	"subtitles": "字幕",
-	"keepvideo": "動画をキープ",
-	"keepaudio": "音声をキープ",
+	"keepvideo": "動画を保持",
+	"keepaudio": "音声を保持",
 	"importsubtitles": "字幕をインポート",
 	"notesplaylists": "プレイリストは正しく処理されません。一部のサイト (例えばyoukuやComedy Central) ではマルチパートの動画を扱えますが、これはプレイリストとして解釈されます。したがってこれも正しく処理されません。",
 	"notesuncheck": "メディアが動画もしくは音声トラックを含んでいない場合には、対応するチェックボックスのチェックを外してください。そうしない場合には、フォーマットがフリーであっても、変換に失敗することがあります。",

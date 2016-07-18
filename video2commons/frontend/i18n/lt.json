@@ -18,8 +18,15 @@
 	"yourTasks": "Jūsų užduotys:",
 	"cancel": "Atšaukti",
 	"back": "Atgal",
+	"keep": "Laikyti",
+	"filedescription": "Failo aprašymo puslapis",
 	"filename": "Failo pavadinimas",
 	"video": "vaizdo įrašas",
 	"audio": "garso įrašas",
-	"subtitles": "titrai"
+	"subtitles": "titrai",
+	"keepvideo": "Palikti vaizdą",
+	"keepaudio": "Palikti garsą",
+	"importsubtitles": "Importuoti titrus",
+	"note": "Pastaba:",
+	"importantnote": "Svarbi pastaba:"
 }
