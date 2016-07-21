@@ -1,11 +1,13 @@
 {
 	"@metadata": {
 		"authors": [
-			"Namo"
+			"Namo",
+			"Reza1615"
 		]
 	},
 	"loginOnCommons": "ورود به ویکی‌انبار",
 	"logout": "خروج از سامانه",
+	"help": "راهنما",
 	"JavascriptRequired": "برای استفاده از این ابزار جاوا اسکریپت نیاز دارید!",
 	"abort": "لغو",
 	"remove": "حذف",

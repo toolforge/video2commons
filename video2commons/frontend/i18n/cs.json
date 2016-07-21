@@ -1,7 +1,8 @@
 {
 	"@metadata": {
 		"authors": [
-			"Dvorapa"
+			"Dvorapa",
+			"Walter Klosse"
 		]
 	},
 	"loginOnCommons": "Přihlásit se na Wikimedia Commons",
@@ -15,11 +16,14 @@
 	"next": "Dále",
 	"loading": "Načítání...",
 	"confirm": "Potvrdit",
+	"errorDisconnect": "Připojení k serveru se nezdařilo. Prosím obnovte tuto stránku nebo soubor problém je v GitHub.",
+	"errorTooLarge": "Soubor je příliš velký, aby se nahrát přímo! Možná budete chtít {{#a}} požadavek na nahrávací server{{/a}}.",
 	"addTask": "Přidat úkol...",
 	"yourTasks": "Vaše úkoly:",
 	"taskDone": "Hotovo. Váš nahraný soubor naleznete na stránce {{#a}}{{/a}}.",
 	"cancel": "Storno",
 	"back": "Zpět",
+	"extractor": "Extraktor",
 	"keep": "Ponechat",
 	"filetarget": "Cílový název souboru",
 	"transcoding": "Formát překódování",
@@ -32,5 +36,8 @@
 	"keepaudio": "Ponechat zvuk",
 	"importsubtitles": "Nahrát titulky",
 	"note": "Poznámka:",
-	"importantnote": "Důležité:"
+	"importantnote": "Důležité:",
+	"notessubtitles": "Pokud 'Import subtitles' je zaškrtnuto, titulky budou importovány, s výjimkou auto-generovaných.",
+	"notesown": "Co když budu potřebovat převést a nahrát soubor na mém počítači? No, zatímco NFS a Grid engine jsou stále k dispozici v Tool Labs, můžete použít {{#a}}#vc|videoconvert{{/a}} nástroj.",
+	"noteslicensing": "Nahrát pouze {{#}}#fl|volně licencované{{/a}} nebo {{#a}}#pd|public domain{{/a}} obsah. {{#a}}#fu|Volné užití{{/a}} není povoleno na Wikimedia Commons."
 }
