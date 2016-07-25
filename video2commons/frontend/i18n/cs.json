@@ -16,10 +16,11 @@
 	"next": "Dále",
 	"loading": "Načítání...",
 	"confirm": "Potvrdit",
-	"errorDisconnect": "Připojení k serveru se nezdařilo. Prosím obnovte tuto stránku nebo soubor problém je v GitHub.",
-	"errorTooLarge": "Soubor je příliš velký, aby se nahrát přímo! Možná budete chtít {{#a}} požadavek na nahrávací server{{/a}}.",
+	"errorDisconnect": "Připojení k serveru se nezdařilo. Prosím, obnovte tuto stránku nebo nahlaste chybu na GitHubu.",
+	"errorTooLarge": "Soubor je příliš velký, aby se dal nahrát přímo! Možná budete chtít {{#a}}požádat o nahrání skrze server{{/a}}.",
 	"addTask": "Přidat úkol...",
 	"yourTasks": "Vaše úkoly:",
+	"createServerSide": "Vytvořit úlohu pro nahrání skrze server na jeden zátah (doporučeno)",
 	"taskDone": "Hotovo. Váš nahraný soubor naleznete na stránce {{#a}}{{/a}}.",
 	"cancel": "Storno",
 	"back": "Zpět",
@@ -37,7 +38,7 @@
 	"importsubtitles": "Nahrát titulky",
 	"note": "Poznámka:",
 	"importantnote": "Důležité:",
-	"notessubtitles": "Pokud 'Import subtitles' je zaškrtnuto, titulky budou importovány, s výjimkou auto-generovaných.",
-	"notesown": "Co když budu potřebovat převést a nahrát soubor na mém počítači? No, zatímco NFS a Grid engine jsou stále k dispozici v Tool Labs, můžete použít {{#a}}#vc|videoconvert{{/a}} nástroj.",
-	"noteslicensing": "Nahrát pouze {{#}}#fl|volně licencované{{/a}} nebo {{#a}}#pd|public domain{{/a}} obsah. {{#a}}#fu|Volné užití{{/a}} není povoleno na Wikimedia Commons."
+	"notessubtitles": "Pokud je zaškrtnuto „Nahrát titulky“, titulky budou nahrány, s výjimkou automaticky vytvořených.",
+	"notesown": "Co když budu potřebovat převést a nahrát soubor na mém počítači? No, zatímco NFS a Grid engine jsou stále k dispozici v Tool Labs, můžete použít nástroj {{#a}}#vc|videoconvert{{/a}}.",
+	"noteslicensing": "Nahrejte pouze {{#}}#fl|volně licencovaný{{/a}} nebo {{#a}}#pd|public domain{{/a}} obsah. {{#a}}#fu|Volné užití{{/a}} není na Wikimedia Commons povoleno."
 }
