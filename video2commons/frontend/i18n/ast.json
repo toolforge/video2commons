@@ -1,0 +1,37 @@
+{
+	"@metadata": {
+		"authors": [
+			"Xuacu"
+		]
+	},
+	"loginOnCommons": "Aniciar sesión en Wikimedia Commons",
+	"logout": "Salir",
+	"help": "Ayuda",
+	"forkOnGitHub": "Fai un fork en GitHub",
+	"JavascriptRequired": "Ríquese JavaScript pa utilizar esta ferramienta.",
+	"abort": "Albortar",
+	"remove": "Desaniciar",
+	"restart": "Reaniciar",
+	"next": "Siguiente",
+	"loading": "Cargando...",
+	"confirm": "Confirmar",
+	"errorDisconnect": "La conexón col servidor falló. Actualiza esta páxina o informa d'un problema en GitHub.",
+	"errorTooLarge": "El ficheru ye grande enforma pa xubilu direutamente. Seique quieras {{#a}}pidir una xubida del llau del sirvidor{{/a}}.",
+	"addTask": "Amestar xera...",
+	"cancel": "Encaboxar",
+	"back": "Anterior",
+	"extractor": "Estractor",
+	"keep": "Caltener",
+	"filetarget": "Nome del ficheru de destín",
+	"transcoding": "Formatu de trescodificación",
+	"filedescription": "Páxina de descripción del ficheru",
+	"filename": "Nome del ficheru",
+	"video": "videu",
+	"audio": "soníu",
+	"subtitles": "subtítulos",
+	"keepvideo": "Caltener videu",
+	"keepaudio": "Caltener soníu",
+	"importsubtitles": "Importar subtítulos",
+	"note": "Nota:",
+	"importantnote": "Nota importante:"
+}

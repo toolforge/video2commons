@@ -22,6 +22,7 @@
 	"taskDone": "Dinge Opdracht es älehdesch. De huhjelahde Dahte sin ze fenge op: {{#a}}{{/a}}",
 	"cancel": "Ophühre",
 	"back": "Retuhr",
+	"extractor": "Et Projramm zom Ätrahehre",
 	"keep": "Faßhallde",
 	"filetarget": "Zihl-Datteijnahme.",
 	"transcoding": "Fommaht zom Ömwandelle",
@@ -35,5 +36,6 @@
 	"importsubtitles": "Ongertittele emmpottehre",
 	"note": "Aanmerkonge:",
 	"importantnote": "En weschtejje Aanmärkong:",
-	"confirmmsg": "Donn die Aufjahb beschtähtejje udder klegg op "
+	"notesuncheck": "Wann en dä Mehdijedattei kein Viddejo- udder Tohnschpure dren sein, maach kein Krüzje en di Käßje derför, söns jeihd et Ömwanndelle velleisch nit johd, uch wann dat jannze en enem freije Fommahd es.",
+	"confirmmsg": "Donn die Aufjahb beschtähtejje udder klegg op  'Back' to change the parameters. By clicking 'Confirm', the task will be submitted and executed. Due to technical restrictions, a task cannot be easily aborted once it is submitted."
 }
