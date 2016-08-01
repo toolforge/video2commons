@@ -1,0 +1,31 @@
+{
+	"@metadata": {
+		"authors": [
+			"Tow"
+		]
+	},
+	"help": "ਮਦਦ",
+	"abort": "ਰੋਕੋ",
+	"remove": "ਹਟਾਓ",
+	"restart": "ਮੁੜ ਚਾਲੂ ਕਰੋ",
+	"next": "ਅੱਗੇ",
+	"loading": "ਲੋਡ ਕੀਤਾ ਜਾ ਰਿਹਾ ਹੈ...",
+	"confirm": "ਪੁਸ਼ਟੀ",
+	"addTask": "ਕੰਮ ਜੋੜੋ...",
+	"yourTasks": "ਤੁਹਾਡੇ ਕੰਮ:",
+	"cancel": "ਰੱਦ ਕਰੋ",
+	"back": "ਪਿੱਛੇ",
+	"extractor": "ਐੱਕਸਟਰੈਕਟਰ",
+	"keep": "ਸਾੰਭੋ",
+	"transcoding": "ਟ੍ਰਾੰਸਕੋਡਿੰਗ ਫਾਰਮੈਟ",
+	"filedescription": "ਫਾਈਲ ਵੇਰਵਾ ਸਫਾ",
+	"filename": "ਫ਼ਾਈਲ ਦਾ ਨਾਂ",
+	"video": "ਵਿਡੀਓ",
+	"audio": "ਆਡੀਓ",
+	"subtitles": "ਉਪਸਿਰਲੇਖ",
+	"keepvideo": "ਵਿਡੀਓ ਸਾੰਭੋ",
+	"keepaudio": "ਆਡੀਓ ਸਾੰਭੋ",
+	"importsubtitles": "ਉਪਸਿਰਲੇਖ ਆਯਾਤ ਕਰੋ",
+	"note": "ਟਿੱਪਣੀ:",
+	"importantnote": "ਜਰੂਰੀ ਟਿੱਪਣੀ"
+}
