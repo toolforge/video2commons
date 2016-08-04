@@ -1,7 +1,8 @@
 {
 	"@metadata": {
 		"authors": [
-			"Kumkumuk"
+			"Kumkumuk",
+			"Mirzali"
 		]
 	},
 	"loginOnCommons": "Wikimedia Commonsi ya dekewten",
@@ -21,7 +22,7 @@
 	"yourTasks": "Taslağ a to",
 	"createServerSide": "Yu Şiyayışi rê bilat barkerdış  kışt-ardoğ de vıraz",
 	"taskDone": "Wezife bı qeyd. Şıma şenê barkerdışanê xo bıvinê {{#a}}{{/a}}",
-	"cancel": "Peyd ke",
+	"cancel": "Bıtexelne",
 	"back": "Peyser",
 	"extractor": "Extractor",
 	"keep": "Tepışten",
