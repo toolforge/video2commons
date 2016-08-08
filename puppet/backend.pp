@@ -189,14 +189,24 @@ file { '/etc/default/v2ccelery':
 
 }
 
+$tmpfiles_config = '# THIS FILE IS MANAGED BY MANUAL PUPPET
+d /var/run/v2ccelery 0755 v2ccelery v2ccelery -
+d /var/log/v2ccelery 0755 v2ccelery v2ccelery -'
+
+file { '/usr/lib/tmpfiles.d/v2ccelery.conf':
+    ensure => file,
+    content => $tmpfiles_config,
+}
+
 file { [
     '/var/run/v2ccelery',
     '/var/log/v2ccelery',
 ]:
-    ensure => directory,
-    owner  => 'v2ccelery',
-    group  => 'v2ccelery',
-    before => Service['v2ccelery'],
+    ensure  => directory,
+    owner   => 'v2ccelery',
+    group   => 'v2ccelery',
+    before  => Service['v2ccelery'],
+    require => File['/usr/lib/tmpfiles.d/v2ccelery.conf'],
 }
 
 service { 'v2ccelery':
