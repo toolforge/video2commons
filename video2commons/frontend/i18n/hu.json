@@ -1,0 +1,33 @@
+{
+	"@metadata": {
+		"authors": [
+			"Dj"
+		]
+	},
+	"loginOnCommons": "Belépés a Wikimédia Commonsba",
+	"logout": "Kijelentkezés",
+	"help": "Segítség",
+	"JavascriptRequired": "JavaScript szükséges az eszköz használatához!",
+	"abort": "Névjegy",
+	"remove": "Törlés",
+	"restart": "Újraindítás",
+	"next": "Következő",
+	"loading": "Betöltés…",
+	"confirm": "Megerősítés",
+	"addTask": "Feladat hozzáadása...",
+	"yourTasks": "Feladataid:",
+	"cancel": "Mégse",
+	"back": "Vissza",
+	"keep": "Megtart",
+	"filetarget": "Cél fájlnév",
+	"transcoding": "Átkódolási formátum",
+	"filename": "Fájlnév",
+	"video": "videó",
+	"audio": "audio",
+	"subtitles": "feliratok",
+	"keepvideo": "Video megtartása",
+	"keepaudio": "Hang megtartása",
+	"importsubtitles": "Feliratok importálása",
+	"note": "Megjegyzés:",
+	"importantnote": "Fontos megjegyzés:"
+}
