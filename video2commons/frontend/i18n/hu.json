@@ -1,14 +1,15 @@
 {
 	"@metadata": {
 		"authors": [
-			"Dj"
+			"Dj",
+			"R-Joe"
 		]
 	},
 	"loginOnCommons": "Belépés a Wikimédia Commonsba",
 	"logout": "Kijelentkezés",
 	"help": "Segítség",
 	"JavascriptRequired": "JavaScript szükséges az eszköz használatához!",
-	"abort": "Névjegy",
+	"abort": "Megszakítás",
 	"remove": "Törlés",
 	"restart": "Újraindítás",
 	"next": "Következő",
