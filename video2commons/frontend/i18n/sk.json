@@ -1,7 +1,8 @@
 {
 	"@metadata": {
 		"authors": [
-			"Kusavica"
+			"Kusavica",
+			"TomášPolonec"
 		]
 	},
 	"loginOnCommons": "Prihlásiť sa na Wikimedia Commons",
@@ -16,11 +17,18 @@
 	"loading": "Načítava sa...",
 	"confirm": "Potvrdiť",
 	"errorDisconnect": "Pripojenie k serveru zlyhalo. Prosím, obnovte túto stránku alebo nahláste problém na GitHube.",
+	"errorTooLarge": "Súbor je priveľký na to, aby sa dal nahrať priamo! Môžete {{#a}}požiadať o nahranie cez server{{/a}}.",
 	"addTask": "Pridať úlohu...",
 	"yourTasks": "Vaše úlohy:",
+	"createServerSide": "Vytvoriť úlohu pre nahranie naraz cez server (odporúčané)",
+	"taskDone": "Hotovo. Váš nahraný súbor nájdete na stránke {{#a}}{{/a}}.",
 	"cancel": "Zrušiť",
 	"back": "Späť",
+	"extractor": "Extraktor",
 	"keep": "Ponechať",
+	"filetarget": "Cieľový názov súboru",
+	"transcoding": "Formát prekódovania",
+	"filedescription": "Stránka s popisom súboru",
 	"filename": "Názov súboru",
 	"video": "video",
 	"audio": "zvuk",
@@ -29,5 +37,6 @@
 	"keepaudio": "Ponechať zvuk",
 	"importsubtitles": "Importovať titulky",
 	"note": "Poznámka",
-	"importantnote": "Dôležitá poznámka:"
+	"importantnote": "Dôležitá poznámka:",
+	"notesplaylists": "Playlisty nebudú správne spracované. Niektoré webové stránky (napr. Youku alebo Comedy Central) používajú zložené videá interpretované ako playlisty a nebudú spracované správne."
 }

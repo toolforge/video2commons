@@ -1,0 +1,33 @@
+{
+	"@metadata": {
+		"authors": [
+			"Cedric31"
+		]
+	},
+	"loginOnCommons": "Connexion sus Wikimedia Commons",
+	"logout": "Desconnexion",
+	"help": "Ajuda",
+	"forkOnGitHub": "Derivar la version sus GitHub",
+	"JavascriptRequired": "JavaScript es necessari per utilizar aquesta aisina !",
+	"abort": "Abandonar",
+	"remove": "Suprimir",
+	"restart": "Reaviar",
+	"next": "Seguent",
+	"loading": "Cargament…",
+	"confirm": "Confirmar",
+	"addTask": "Apondre un prètzfait...",
+	"yourTasks": "Vòstres prètzfaits :",
+	"cancel": "Anullar",
+	"back": "Retorn",
+	"extractor": "Extractor",
+	"keep": "Gardar",
+	"filename": "Nom del fichièr",
+	"video": "vidèo",
+	"audio": "àudio",
+	"subtitles": "sostítols",
+	"keepvideo": "Gardar la vidèo",
+	"keepaudio": "Gardar l'àudio",
+	"importsubtitles": "Importar de sostítols",
+	"note": "Nòta :",
+	"importantnote": "Nòta importanta :"
+}

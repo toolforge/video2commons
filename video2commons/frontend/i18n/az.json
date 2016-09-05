@@ -1,0 +1,29 @@
+{
+	"@metadata": {
+		"authors": [
+			"Şeyx Şamil"
+		]
+	},
+	"loginOnCommons": "Vikipediya Commons-a daxil ol",
+	"logout": "Çıxış",
+	"help": "Kömək",
+	"JavascriptRequired": "Bu alətdən istifadə etmək üçün JavaScript tələb olunur!",
+	"abort": "İmtina",
+	"remove": "Sil",
+	"restart": "YEnidən başlat",
+	"next": "Növbəti",
+	"loading": "Yüklənir…",
+	"confirm": "Təsdiq et",
+	"cancel": "Ləğv et",
+	"back": "Geri",
+	"keep": "Saxla",
+	"filetarget": "Hədəf fayl adı",
+	"filename": "Fayl adı",
+	"video": "video",
+	"audio": "audio",
+	"subtitles": "altyazı",
+	"keepvideo": "Videonu saxla",
+	"keepaudio": "Audionu saxla",
+	"note": "Qeyd:",
+	"importantnote": "Vacib qeyd:"
+}
