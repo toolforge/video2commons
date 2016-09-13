@@ -1,0 +1,34 @@
+{
+	"@metadata": {
+		"authors": [
+			"Renessaince"
+		]
+	},
+	"loginOnCommons": "Увайсьці на Вікісховішча",
+	"logout": "Выйсьці",
+	"help": "Дапамога",
+	"abort": "Скасаваць",
+	"remove": "Выдаліць",
+	"restart": "Перазапусьціць",
+	"next": "Далей",
+	"loading": "Загрузка…",
+	"confirm": "Пацьвердзіць",
+	"addTask": "Дадаць заданьне…",
+	"yourTasks": "Вашыя заданьні:",
+	"cancel": "Скасаваць",
+	"back": "Назад",
+	"extractor": "Экстрактар",
+	"keep": "Пакінуць",
+	"filetarget": "Назва мэтавага файлу",
+	"transcoding": "Фармат транскадаваньня",
+	"filedescription": "Старонка апісаньня файлу",
+	"filename": "Назва файла",
+	"video": "відэа",
+	"audio": "аўдыё",
+	"subtitles": "субтытры",
+	"keepvideo": "Пакінуць відэа",
+	"keepaudio": "Пакінуць аўдыё",
+	"importsubtitles": "Імпартаваць субтытры",
+	"note": "Заўвага:",
+	"importantnote": "Важная заўвага:"
+}
