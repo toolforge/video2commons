@@ -1,18 +1,23 @@
 {
 	"@metadata": {
 		"authors": [
-			"Renessaince"
+			"Renessaince",
+			"Red Winged Duck"
 		]
 	},
 	"loginOnCommons": "Увайсьці на Вікісховішча",
 	"logout": "Выйсьці",
 	"help": "Дапамога",
+	"forkOnGitHub": "Зрабіць адгалінаваньне на GitHub",
+	"JavascriptRequired": "Для гэтага інструмэнту патрэбны JavaScript!",
 	"abort": "Скасаваць",
 	"remove": "Выдаліць",
 	"restart": "Перазапусьціць",
 	"next": "Далей",
 	"loading": "Загрузка…",
 	"confirm": "Пацьвердзіць",
+	"errorDisconnect": "Не атрымалася злучыцца з сэрвэрам. Калі ласка, абнавіце гэтую старонку або апішыце праблему на GitHub.",
+	"errorTooLarge": "Файл завялікі для загрузкі наўпрост! Магчыма, вы захочаце {{#a}}запытаць загрузку з боку сэрвэра{{/a}}.",
 	"addTask": "Дадаць заданьне…",
 	"yourTasks": "Вашыя заданьні:",
 	"cancel": "Скасаваць",
