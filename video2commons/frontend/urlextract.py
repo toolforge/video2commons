@@ -44,6 +44,7 @@ def do_extract_url(url):
 
     ie_key = info['extractor_key']
     title = info.get('title', '').strip()
+    url = info.get('webpage_url') or url
 
     filedesc = """
 =={{int:filedesc}}==
