@@ -6,8 +6,8 @@ dist: trusty
 before_install:
     - sudo apt-get install -q python python-pip
     - sudo pip install -q flake8
-    - sudo apt-get install -q nodejs-legacy npm
-    - sudo npm install -q -g eslint eslint-config-wikimedia
+    - nvm install stable
+    - npm install -q -g eslint eslint-config-wikimedia
 
 script:
     - find . -name \*.py -exec flake8 {} \;
