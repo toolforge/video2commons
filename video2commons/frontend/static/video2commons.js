@@ -1,27 +1,24 @@
 ( function( $ ) {
 	'use strict';
 
-	var i18n = window.i18n;
-
-	var loaderImage = '<img alt="File:Ajax-loader.gif" src="//upload.wikimedia.org/wikipedia/commons/d/de/Ajax-loader.gif" data-file-width="32" data-file-height="32" height="32" width="32">';
-
-	var rtl = i18n[ '@dir' ] === 'rtl';
-	var htmlContent = {
-		abortbutton: '<button type="button" class="btn btn-danger btn-xs flip pull-right"><span class="glyphicon glyphicon-remove"></span> ' + Mustache.escape( i18n.abort ) + '</button>',
-		removebutton: '<button type="button" class="btn btn-danger btn-xs flip pull-right"><span class="glyphicon glyphicon-trash"></span> ' + Mustache.escape( i18n.remove ) + '</button>',
-		restartbutton: '<button type="button" class="btn btn-warning btn-xs flip pull-right"><span class="glyphicon glyphicon-repeat"></span> ' + Mustache.escape( i18n.restart ) + '</button>',
-		loading: '<center>' + loaderImage + '&nbsp;&nbsp;' + Mustache.escape( i18n.loading ) + '</center>',
-		errorDisconnect: '<div class="alert alert-danger">' + Mustache.escape( i18n.errorDisconnect ) + '</div>',
-		yourTasks: '<h4>' + Mustache.escape( i18n.yourTasks ) + '</h4><table id="tasktable" class="table"><tbody></tbody></table>',
-		addTask: '<input class="btn btn-primary btn-success btn-md" type="button" accesskey="n" value="' + Mustache.escape( i18n.addTask ) + '">',
-		requestServerSide: '<a class="btn btn-primary btn-success btn-md flip pull-right disabled" id="ssubtn">' + Mustache.escape( i18n.createServerSide ) + '</a>',
-		progressbar: '<div class="progress"><div class="progress-bar" role="progressbar"></div></div>',
-		prevbutton: '<span class="glyphicon glyphicon-chevron-' + ( rtl ? 'right' : 'left' ) + '"></span> ' + Mustache.escape( i18n.back ),
-		nextbutton: Mustache.escape( i18n.next ) + ' <span class="glyphicon glyphicon-chevron-' + ( rtl ? 'left' : 'right' ) + '"></span>',
-		confirmbutton: Mustache.escape( i18n.confirm ) + ' <span class="glyphicon glyphicon-ok"></span>'
-	};
-
-	var csrf_token = '';
+	var i18n = window.i18n,
+		loaderImage = '<img alt="File:Ajax-loader.gif" src="//upload.wikimedia.org/wikipedia/commons/d/de/Ajax-loader.gif" data-file-width="32" data-file-height="32" height="32" width="32">',
+		rtl = i18n[ '@dir' ] === 'rtl',
+		htmlContent = {
+			abortbutton: '<button type="button" class="btn btn-danger btn-xs flip pull-right"><span class="glyphicon glyphicon-remove"></span> ' + Mustache.escape( i18n.abort ) + '</button>',
+			removebutton: '<button type="button" class="btn btn-danger btn-xs flip pull-right"><span class="glyphicon glyphicon-trash"></span> ' + Mustache.escape( i18n.remove ) + '</button>',
+			restartbutton: '<button type="button" class="btn btn-warning btn-xs flip pull-right"><span class="glyphicon glyphicon-repeat"></span> ' + Mustache.escape( i18n.restart ) + '</button>',
+			loading: '<center>' + loaderImage + '&nbsp;&nbsp;' + Mustache.escape( i18n.loading ) + '</center>',
+			errorDisconnect: '<div class="alert alert-danger">' + Mustache.escape( i18n.errorDisconnect ) + '</div>',
+			yourTasks: '<h4>' + Mustache.escape( i18n.yourTasks ) + '</h4><table id="tasktable" class="table"><tbody></tbody></table>',
+			addTask: '<input class="btn btn-primary btn-success btn-md" type="button" accesskey="n" value="' + Mustache.escape( i18n.addTask ) + '">',
+			requestServerSide: '<a class="btn btn-primary btn-success btn-md flip pull-right disabled" id="ssubtn">' + Mustache.escape( i18n.createServerSide ) + '</a>',
+			progressbar: '<div class="progress"><div class="progress-bar" role="progressbar"></div></div>',
+			prevbutton: '<span class="glyphicon glyphicon-chevron-' + ( rtl ? 'right' : 'left' ) + '"></span> ' + Mustache.escape( i18n.back ),
+			nextbutton: Mustache.escape( i18n.next ) + ' <span class="glyphicon glyphicon-chevron-' + ( rtl ? 'left' : 'right' ) + '"></span>',
+			confirmbutton: Mustache.escape( i18n.confirm ) + ' <span class="glyphicon glyphicon-ok"></span>'
+		},
+		csrfToken = '';
 
 	i18n.a = function() {
 		return function( text, render ) {
@@ -29,11 +26,13 @@
 				var splitloc = text.indexOf( '|' );
 				if ( splitloc < 0 ) {
 					// XSS prevention: Nasty attribute escaping -- allow alphanumerics and hyphens only here
-					if ( /^[a-z0-9\-]+$/i.test( text.slice( 1 ) ) )
+					if ( /^[a-z0-9\-]+$/i.test( text.slice( 1 ) ) ) {
 						return '<a id="' + text.slice( 1 ) + '"></a>';
+					}
 				} else {
-					if ( /^[a-z0-9\-]+$/i.test( text.substring( 1, splitloc ) ) )
+					if ( /^[a-z0-9\-]+$/i.test( text.substring( 1, splitloc ) ) ) {
 						return '<a id="' + text.substring( 1, splitloc ) + '">' + render( text.slice( splitloc + 1 ) ) + '</a>';
+					}
 				}
 			}
 			return '<a>' + render( text ) + '</a>';
@@ -52,19 +51,21 @@
 		loadCsrf: function() {
 			$.get( 'api/csrf' )
 				.done( function( data ) {
-					csrf_token = data.csrf;
+					csrfToken = data.csrf;
 				} );
 		},
 
 		// Functions related to showing running/finished tasks
 		checkStatus: function() {
-			if ( window.lastStatusCheck )
+			if ( window.lastStatusCheck ) {
 				clearTimeout( window.lastStatusCheck );
+			}
 			var url = 'api/status';
 			$.get( url )
 				.done( function( data ) {
-					if ( !$( '#tasktable' )
-						.length ) video2commons.setupTables();
+					if ( !$( '#tasktable' ).length ) {
+						video2commons.setupTables();
+					}
 					video2commons.populateResults( data );
 					window.lastStatusCheck = setTimeout( video2commons.checkStatus, ( data.hasrunning ) ? 5000 : 60000 );
 				} )
@@ -194,8 +195,9 @@
 						var link = e.html( htmlortext )
 							.find( 'a' )
 							.attr( 'href', href );
-						if ( text )
+						if ( text ) {
 							link.text( text );
+						}
 					}
 				};
 				if ( val.status === 'done' ) {
@@ -236,8 +238,9 @@
 					.hide();
 			}
 
-			if ( isatbottom )
+			if ( isatbottom ) {
 				window.scrollTo( 0, document.body.scrollHeight );
+			}
 		},
 
 		setProgressBar: function( item, progress ) {
@@ -253,10 +256,10 @@
 			}
 
 			bar.attr( {
-				"aria-valuenow": progress,
-				"aria-valuemin": "0",
-				"aria-valuemax": "100",
-				style: "width:" + progress + "%"
+				'aria-valuenow': progress,
+				'aria-valuemin': '0',
+				'aria-valuemax': '100',
+				style: 'width:' + progress + '%'
 			} );
 		},
 
@@ -267,24 +270,28 @@
 
 		eventTask: function( obj, eventName ) {
 			obj = $( obj );
-			if ( obj.is( '.disabled' ) ) return;
+			if ( obj.is( '.disabled' ) ) {
+				return;
+			}
 			obj.off()
 				.addClass( 'disabled' );
 
 			video2commons.apiPost( 'task/' + eventName, {
-					id: video2commons.getTaskIDFromDOMID( obj.attr( 'id' ) )
-				} )
+				id: video2commons.getTaskIDFromDOMID( obj.attr( 'id' ) )
+			} )
 				.done( function( data ) {
-					if ( data.error )
+					if ( data.error ) {
 						window.alert( data.error );
+					}
 					video2commons.checkStatus();
 				} );
 		},
 
 		setText: function( arr, data ) {
-			for ( var i = 0; i < arr.length; i++ )
+			for ( var i = 0; i < arr.length; i++ ) {
 				addTaskDialog.find( '#' + arr[ i ] )
-				.text( data[ arr[ i ] ] );
+					.text( data[ arr[ i ] ] );
+			}
 		},
 
 		eventButton: function( id, eventName ) {
@@ -308,11 +315,13 @@
 				.append( $( '<span />' )
 					.attr( 'id', id + '-statustext' ) );
 
-			if ( buttonArray.length )
+			if ( buttonArray.length ) {
 				buttons.append( buttonArray[ 0 ] );
+			}
 
-			for ( var i = 1; i < buttonArray.length; i++ )
+			for ( var i = 1; i < buttonArray.length; i++ ) {
 				buttons.append( buttonArray[ i ] );
+			}
 
 			row.append( buttons )
 				.removeClass( type[ 0 ] )
@@ -322,7 +331,7 @@
 		// Functions related to adding new tasks
 		addTask: function() {
 			if ( !addTaskDialog ) {
-				//addTask.html
+				// addTask.html
 				$.get( 'static/html/addTask.min.html' )
 					.success( function( data ) {
 
@@ -357,8 +366,9 @@
 						video2commons.openTaskModal();
 					} );
 
-			} else // It's not redundant because Ajax load
+			} else { // It's not redundant because Ajax load
 				video2commons.openTaskModal();
+			}
 		},
 
 		openTaskModal: function() {
@@ -399,7 +409,7 @@
 		setupAddTaskDialog: function() {
 			switch ( newTaskData.step ) {
 				case 'source':
-					//sourceForm.html
+					// sourceForm.html
 					$.get( 'static/html/sourceForm.min.html' )
 						.success( function( dataHtml ) {
 							dataHtml = Mustache.render( dataHtml, i18n, i18n );
@@ -427,7 +437,7 @@
 						} );
 					break;
 				case 'target':
-					//targetForm.html
+					// targetForm.html
 					$.get( 'static/html/targetForm.min.html' )
 						.success( function( dataHtml ) {
 							dataHtml = Mustache.render( dataHtml, i18n );
@@ -449,7 +459,7 @@
 						} );
 					break;
 				case 'confirm':
-					//confirmForm.html
+					// confirmForm.html
 					$.get( 'static/html/confirmForm.min.html' )
 						.success( function( dataHtml ) {
 							dataHtml = Mustache.render( dataHtml, i18n );
@@ -457,9 +467,15 @@
 								.html( dataHtml );
 
 							var keep = [];
-							if ( newTaskData.video ) keep.push( i18n.video );
-							if ( newTaskData.audio ) keep.push( i18n.audio );
-							if ( newTaskData.subtitles ) keep.push( i18n.subtitles );
+							if ( newTaskData.video ) {
+								keep.push( i18n.video );
+							}
+							if ( newTaskData.audio ) {
+								keep.push( i18n.audio );
+							}
+							if ( newTaskData.subtitles ) {
+								keep.push( i18n.subtitles );
+							}
 							addTaskDialog.find( '#keep' )
 								.text( keep.join( ', ' ) );
 
@@ -509,15 +525,16 @@
 						.click( function() {
 							video2commons.disablePrevNext( false );
 
-							addTaskDialog.modal( "hide" );
+							addTaskDialog.modal( 'hide' );
 							$( '#tasktable > tbody' )
 								.append( '<tr id="task-new"><td colspan="3">' + loaderImage + '</td></tr>' );
 							window.scrollTo( 0, document.body.scrollHeight );
 
 							video2commons.apiPost( 'task/run', newTaskData )
 								.done( function( data ) {
-									if ( data.error )
+									if ( data.error ) {
 										window.alert( data.error );
+									}
 									video2commons.checkStatus();
 								} );
 						} );
@@ -543,9 +560,10 @@
 			addTaskDialog.find( '#btn-next' )
 				.addClass( 'disabled' )
 				.off();
-			if ( spin )
+			if ( spin ) {
 				addTaskDialog.find( '#dialog-spinner' )
-				.show();
+					.show();
+			}
 		},
 
 		processInput: function( button ) {
@@ -556,11 +574,11 @@
 				case 'source':
 					deferred = $.when( ( function() {
 						var video = addTaskDialog.find( '#video' )
-							.is( ":checked" ),
+							.is( ':checked' ),
 							audio = addTaskDialog.find( '#audio' )
-							.is( ":checked" );
+							.is( ':checked' );
 						newTaskData.subtitles = addTaskDialog.find( '#subtitles' )
-							.is( ":checked" );
+							.is( ':checked' );
 						if ( !newTaskData.formats.length || video !== newTaskData.video || audio !== newTaskData.audio ) {
 							return video2commons.askAPI( 'listformats', {
 								video: video,
@@ -605,8 +623,8 @@
 
 						if ( !newTaskData.filenamechecked || filename !== newTaskData.filename ) {
 							return video2commons.askAPI( 'validatefilename', {
-									filename: filename
-								}, [ 'filename' ] )
+								filename: filename
+							}, [ 'filename' ] )
 								.done( function() {
 									newTaskData.filenamechecked = true;
 								} );
@@ -621,14 +639,14 @@
 			}
 
 			deferred.done( function() {
-					var action = {
-						'prev': -1,
-						'next': 1
-					}[ button ];
-					var steps = [ 'source', 'target', 'confirm' ];
-					newTaskData.step = steps[ steps.indexOf( newTaskData.step ) + action ];
-					video2commons.setupAddTaskDialog();
-				} )
+				var action = {
+					prev: -1,
+					next: 1
+				}[ button ];
+				var steps = [ 'source', 'target', 'confirm' ];
+				newTaskData.step = steps[ steps.indexOf( newTaskData.step ) + action ];
+				video2commons.setupAddTaskDialog();
+			} )
 				.fail( function( error ) {
 					if ( !addTaskDialog.find( '.modal-body #dialog-errorbox' )
 						.length ) {
@@ -652,8 +670,9 @@
 						deferred.reject( data.error );
 						return;
 					}
-					for ( var i = 0; i < dataout.length; i++ )
+					for ( var i = 0; i < dataout.length; i++ ) {
 						newTaskData[ dataout[ i ] ] = data[ dataout[ i ] ];
+					}
 
 					deferred.resolve( data );
 				} )
@@ -665,7 +684,7 @@
 		},
 
 		apiPost: function( endpoint, data ) {
-			data._csrf_token = csrf_token;
+			data._csrf_token = csrfToken; // eslint-disable-line no-underscore-dangle
 			return $.post( 'api/' + endpoint, data );
 		}
 	};

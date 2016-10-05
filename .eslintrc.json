@@ -1,0 +1,13 @@
+{
+    "env": {
+        "browser": true,
+        "jquery": true
+    },
+    "extends": "wikimedia",
+    "rules": {
+        "one-var": 0 // https://github.com/eslint/eslint/issues/4680
+    },
+    "globals": {
+        "Mustache": false
+    }
+}
