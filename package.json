@@ -1,0 +1,24 @@
+{
+  "name": "video2commons",
+  "version": "1.0.0",
+  "description": "Transfer video and audio from external sites to Commons. Video2commons is available for everyone (uses OAuth) via Wikimedia Commons.",
+  "main": "",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Toollabs/video2commons.git"
+  },
+  "author": "",
+  "license": "GPL-3.0",
+  "bugs": {
+    "url": "https://github.com/Toollabs/video2commons/issues"
+  },
+  "homepage": "https://github.com/Toollabs/video2commons#readme",
+  "devDependencies": {
+    "gulp": "^3.9.1",
+    "gulp-rename": "^1.2.2",
+    "gulp-uglify": "^2.0.0"
+  }
+}
