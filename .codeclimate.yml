@@ -8,8 +8,8 @@ engines:
       - javascript
       - python
       - php
-  eslint:
-    enabled: true
+  # eslint:
+  #   enabled: true
   fixme:
     enabled: true
     config:

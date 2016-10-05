@@ -7,8 +7,8 @@ before_install:
     - sudo apt-get install -q python python-pip
     - sudo pip install -q flake8
     - sudo apt-get install -q nodejs-legacy npm
-    - sudo npm install -q -g jshint
+    - sudo npm install -q -g eslint eslint-config-wikimedia
 
 script:
     - find . -name \*.py -exec flake8 {} \;
-    - find . -name \*.js | grep -v min.js | xargs jshint
+    - find . -name \*.js | grep -v min.js | xargs eslint
