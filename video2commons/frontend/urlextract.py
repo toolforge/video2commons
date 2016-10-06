@@ -43,7 +43,7 @@ def do_extract_url(url):
     assert 'formats' in info, 'Your url cannot be processed correctly'
 
     ie_key = info['extractor_key']
-    title = info.get('title', '').strip()
+    title = (info.get('title') or '').strip()
     url = info.get('webpage_url') or url
 
     filedesc = """
@@ -80,7 +80,7 @@ def do_extract_url(url):
 
 
 def _date(url, ie_key, title, info):
-    date = info.get('upload_date', '').strip()
+    date = (info.get('upload_date') or '').strip()
     if re.match(r'^[0-9]{8}$', date):
         date = '%s-%s-%s' % (date[0:4], date[4:6], date[6:8])
     return date
@@ -103,7 +103,7 @@ def _source(url, ie_key, title, info):
 
 
 def _desc(url, ie_key, title, info):
-    desc_orig = desc = info.get('description', '').strip() or title
+    desc_orig = desc = (info.get('description') or '').strip() or title
     desc = escape_wikitext(desc)
     if len(desc_orig) > 100:
         lang = guess_language.guessLanguage(desc_orig)
@@ -113,16 +113,18 @@ def _desc(url, ie_key, title, info):
 
 
 def _uploader(url, ie_key, title, info):
-    uploader = escape_wikitext(info.get('uploader', '').strip())
-    uploader_url = info.get('uploader_url', '')
+    uploader = escape_wikitext((info.get('uploader') or '').strip())
+    uploader_url = info.get('uploader_url') or ''
     if uploader_url:
         uploader = u'[%s %s]' % (uploader_url, uploader)
     return uploader
 
 
 def _license(url, ie_key, title, info):
-    uploader_param = '|' + escape_wikitext(info.get('uploader', '').strip()) \
-        if 'uploader' in info else ''
+    uploader = info.get('uploader')
+    uploader_param = ''
+    if uploader:
+        uploader_param = '|' + escape_wikitext(uploader.strip())
 
     default = '{{subst:nld}}'
     if ie_key == 'Youtube' and info.get('license') == \
