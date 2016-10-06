@@ -21,6 +21,7 @@
 	"errorTooLarge": "Filen är för stor att ladda upp direkt! Du kanske behöver {{#a}}begära att servern sköter uppladdningen{{/a}}.",
 	"addTask": "Lägg till uppgift...",
 	"yourTasks": "Dina uppgifter:",
+	"createServerSide": "Skapa en uppladdningsnyckel via servern på en gång (rekommenderas)",
 	"taskDone": "Din uppgift är färdig. Du kan hitta din uppladdning på {{#a}}{{/a}}.",
 	"cancel": "Avbryt",
 	"back": "Tillbaka",

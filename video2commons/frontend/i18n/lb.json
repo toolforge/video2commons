@@ -21,6 +21,7 @@
 	"back": "Zréck",
 	"keep": "Halen",
 	"filetarget": "Zilfichiersnumm",
+	"transcoding": "Transcoding-Format",
 	"filedescription": "Beschreiwungssäit vum Fichier",
 	"filename": "Numm vum Fichier",
 	"video": "Video",
@@ -30,5 +31,6 @@
 	"keepaudio": "Audio halen",
 	"importsubtitles": "Ënnertitelen importéieren",
 	"note": "Notiz:",
-	"importantnote": "Wichteg Notiz:"
+	"importantnote": "Wichteg Notiz:",
+	"confirmmsg": "Confirméiert d'Aufgab oder klickt op 'Zréck' fir d'Parameteren z'änneren. Mam Klick op 'Confirméieren' gëtt d'Aufgab gestart an exekutéiert. Aus technesche Grënn kann eng Aufgab net méi ofgebrach ginn, wa se bis gestart gouf."
 }
