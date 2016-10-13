@@ -2,10 +2,11 @@
 	"@metadata": {
 		"authors": [
 			"Mailman",
-			"Okras"
+			"Okras",
+			"Kaganer"
 		]
 	},
-	"loginOnCommons": "Войти на Wikimedia Commons",
+	"loginOnCommons": "Войти на Викисклад",
 	"logout": "Выйти",
 	"help": "Помощь",
 	"forkOnGitHub": "Сделать форк на GitHub",
