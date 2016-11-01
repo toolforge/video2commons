@@ -1,0 +1,24 @@
+{
+	"@metadata": {
+		"authors": [
+			"Silvonen"
+		]
+	},
+	"loginOnCommons": "Kirjaudu Wikimedia Commonsiin",
+	"logout": "Kirjaudu ulos",
+	"help": "Ohje",
+	"abort": "Keskeytä",
+	"remove": "Poista",
+	"restart": "Käynnistä uudelleen",
+	"next": "Seuraava",
+	"loading": "Ladataan...",
+	"confirm": "Vahvista",
+	"addTask": "Lisää tehtävä...",
+	"yourTasks": "Tehtäväsi:",
+	"back": "Takaisin",
+	"keep": "Säilytä",
+	"filedescription": "Tiedoston kuvaussivu",
+	"filename": "Tiedostonimi",
+	"subtitles": "tekstitys",
+	"importsubtitles": "Tuo tekstitys"
+}
