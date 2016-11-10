@@ -14,6 +14,7 @@
 	"next": "Nächst",
 	"loading": "Lueden...",
 	"confirm": "Confirméieren",
+	"errorTooLarge": "De Fichier ass ze grouss fir direkt eropzelueden! Dir kënnt awer ufroe fir {{#a}}d'Eroplueden vun der Serversäit{{/a}} ze benotzen.",
 	"addTask": "Aufgab derbäisetzen...",
 	"yourTasks": "Är Aufgaben:",
 	"taskDone": "Är Aufgab ass fäerdeg. Dir fannt Ären eropgeluedene Fichier op {{#a}}{{/a}}.",
