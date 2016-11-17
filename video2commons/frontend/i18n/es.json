@@ -2,11 +2,12 @@
 	"@metadata": {
 		"authors": [
 			"Wilfredor",
-			"Macofe"
+			"Macofe",
+			"Fitoschido"
 		]
 	},
-	"loginOnCommons": "Inicia sesión en Wikimedia Commons",
-	"logout": "Cerrar sesión",
+	"loginOnCommons": "Acceder a Wikimedia Commons",
+	"logout": "Salir",
 	"help": "Ayuda",
 	"forkOnGitHub": "Clóname en GitHub",
 	"JavascriptRequired": "JavaScript es necesario para utilizar esta herramienta.",
