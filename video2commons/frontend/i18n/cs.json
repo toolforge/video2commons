@@ -40,5 +40,5 @@
 	"importantnote": "Důležité:",
 	"notessubtitles": "Pokud je zaškrtnuto „Nahrát titulky“, titulky budou nahrány, s výjimkou automaticky vytvořených.",
 	"notesown": "Co když budu potřebovat převést a nahrát soubor na mém počítači? No, zatímco NFS a Grid engine jsou stále k dispozici v Tool Labs, můžete použít nástroj {{#a}}#vc|videoconvert{{/a}}.",
-	"noteslicensing": "Nahrejte pouze {{#}}#fl|volně licencovaný{{/a}} nebo {{#a}}#pd|public domain{{/a}} obsah. {{#a}}#fu|Volné užití{{/a}} není na Wikimedia Commons povoleno."
+	"noteslicensing": "Nahrejte pouze {{#a}}#fl|volně licencovaný{{/a}} nebo {{#a}}#pd|public domain{{/a}} obsah. {{#a}}#fu|Volné užití{{/a}} není na Wikimedia Commons povoleno."
 }
