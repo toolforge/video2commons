@@ -1,12 +1,14 @@
 {
 	"@metadata": {
 		"authors": [
-			"Rodrigo codignoli"
+			"Rodrigo codignoli",
+			"!Silent"
 		]
 	},
 	"loginOnCommons": "Entrar no Wikimedia Commons",
 	"logout": "Sair",
 	"help": "Ajuda",
+	"forkOnGitHub": "Clone-me no GitHub",
 	"JavascriptRequired": "Javacript é necessário para usar esta ferramenta!",
 	"abort": "Abortar",
 	"remove": "Remover",
