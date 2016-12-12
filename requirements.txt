@@ -1,7 +1,7 @@
 youtube-dl
 flask
 guess-language
-celery[redis]
+celery[redis]<4
 pycountry
 chardet
 mwoauth
