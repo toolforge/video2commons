@@ -57,13 +57,6 @@ service { 'nginx':
 
 ## V2C BACKEND SETUP
 
-user { 'v2ccelery':
-    ensure  => present,
-    comment => 'video2commons celery service user',
-    home    => '/srv/v2c',
-    shell   => '/usr/sbin/nologin',
-}
-
 exec { 'check-srv-mounted':
     command => '/bin/mount | /bin/grep /srv',
 }
@@ -83,16 +76,16 @@ file { [
     '/srv/v2c/apicache',
 ]:
     ensure  => directory,
-    owner   => 'v2ccelery',
-    group   => 'v2ccelery',
+    owner   => 'tools.video2commons',
+    group   => 'tools.video2commons',
     require => Exec['git-clone-v2c'],
     before  => Service['v2ccelery'],
 }
 
 file { '/srv/v2c/throttle.ctrl':
     ensure  => present, # content managed by pywikibot
-    owner   => 'v2ccelery',
-    group   => 'v2ccelery',
+    owner   => 'tools.video2commons',
+    group   => 'tools.video2commons',
     require => Exec['git-clone-v2c'],
     before  => Service['v2ccelery'],
 }
@@ -137,8 +130,8 @@ After=network.target
 
 [Service]
 Type=forking
-User=v2ccelery
-Group=v2ccelery
+User=tools.video2commons
+Group=tools.video2commons
 EnvironmentFile=-/etc/default/v2ccelery
 WorkingDirectory=/srv/v2c
 ExecStart=/bin/sh -c \'${CELERY_BIN} multi start $CELERYD_NODES \
@@ -158,10 +151,7 @@ WantedBy=multi-user.target
 file { '/lib/systemd/system/v2ccelery.service':
     ensure  => file,
     content => $celeryd_service,
-    require => [
-        File['/etc/default/v2ccelery'],
-        User['v2ccelery'],
-    ],
+    require => File['/etc/default/v2ccelery'],
     notify  => Service['v2ccelery'],
 }
 
@@ -172,8 +162,8 @@ CELERY_APP="video2commons.backend.worker"
 CELERYD_MULTI="multi"
 CELERYD_LOG_FILE="/var/log/v2ccelery/%N.log"
 CELERYD_PID_FILE="/var/run/v2ccelery/%N.pid"
-CELERYD_USER="v2ccelery"
-CELERYD_GROUP="v2ccelery"
+CELERYD_USER="tools.video2commons"
+CELERYD_GROUP="tools.video2commons"
 CELERY_CREATE_DIRS=1
 '
 
@@ -181,7 +171,6 @@ file { '/etc/default/v2ccelery':
     ensure  => file,
     content => $celeryd_config,
     require => [
-        User['v2ccelery'],
         File['/var/run/v2ccelery'],
         File['/var/log/v2ccelery'],
     ],
@@ -194,7 +183,7 @@ d /var/run/v2ccelery 0755 v2ccelery v2ccelery -
 d /var/log/v2ccelery 0755 v2ccelery v2ccelery -'
 
 file { '/usr/lib/tmpfiles.d/v2ccelery.conf':
-    ensure => file,
+    ensure  => file,
     content => $tmpfiles_config,
 }
 
@@ -203,8 +192,8 @@ file { [
     '/var/log/v2ccelery',
 ]:
     ensure  => directory,
-    owner   => 'v2ccelery',
-    group   => 'v2ccelery',
+    owner   => 'tools.video2commons',
+    group   => 'tools.video2commons',
     before  => Service['v2ccelery'],
     require => File['/usr/lib/tmpfiles.d/v2ccelery.conf'],
 }
@@ -267,7 +256,7 @@ file { '/etc/nginx/sites-enabled/video2commons':
 
 cron { 'v2ccleanup':
     command => '/bin/sh /srv/v2c/video2commons/backend/cleanup.sh',
-    user    => 'v2ccelery',
+    user    => 'tools.video2commons',
     minute  => '48',
     require => Service['v2ccelery'],
 }
