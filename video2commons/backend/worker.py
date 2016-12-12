@@ -46,6 +46,8 @@ app = celery.Celery(
 )
 app.conf.CELERY_TASK_RESULT_EXPIRES = 30 * 24 * 3600  # 1 month
 
+app.conf.CELERY_ACCEPT_CONTENT = ['json', 'pickle']
+
 redisconnection = Redis(host=redis_host, db=3, password=redis_pw)
 
 
