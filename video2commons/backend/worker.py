@@ -56,7 +56,7 @@ class Stats:
     percent = 0
 
 
-@app.task(bind=True, track_started=True, base=AbortableTask)
+@app.task(bind=True, track_started=False, base=AbortableTask)
 def main(
     self, url, ie_key, subtitles, filename, filedesc,
     downloadkey, convertkey, username, oauth
