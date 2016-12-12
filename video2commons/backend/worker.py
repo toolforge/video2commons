@@ -126,7 +126,7 @@ def main(
 
         statuscallback('Configuring Pywikibot...', -1)
         pywikibot.config.authenticate['commons.wikimedia.org'] = \
-            (consumer_key, consumer_secret) + oauth
+            (consumer_key, consumer_secret) + tuple(oauth)
         pywikibot.config.usernames['commons']['commons'] = username
         pywikibot.Site('commons', 'commons', user=username).login()
 
