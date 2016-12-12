@@ -62,6 +62,11 @@ def main(
     downloadkey, convertkey, username, oauth
 ):
     """Main worker code."""
+    # Check for 15G of disk space, refuse to run if it is unavailable
+    st = os.statvfs('/srv')
+    if st.f_frsize * st.f_bavail < 15 << 30:
+        self.retry(max_retries=20, countdown=5*60)
+
     # Get a lock to prevent double-running with same task ID
     lockkey = 'tasklock:' + self.request.id
     if redisconnection.exists(lockkey):

@@ -188,6 +188,13 @@ def status():
                             redisconnection.exists('params:' + id)
                         )
                     })
+            elif state == 'RETRY':
+                task.update({
+                    'status': 'progress',
+                    'text': 'Your task is being rescheduled...',
+                    'progress': -1
+                })
+                hasrunning = True
             elif state == 'ABORTED':
                 task.update({
                     'status': 'abort',
