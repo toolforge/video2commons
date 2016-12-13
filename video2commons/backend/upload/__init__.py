@@ -117,6 +117,15 @@ def upload_ss(
     """Prepare for server-side upload."""
     statuscallback('Preparing for server-side upload...', -1)
 
+    # Get hash
+    md5 = hashlib.md5()
+    with open(filename, 'rb') as f:
+        while True:
+            data = f.read(65536)
+            if not data:
+                break
+            md5.update(data)
+
     # file name check
     wikifilename = wikifilename.replace('/', '-').replace(' ', '_')
     wikifilename = wikifilename.replace('\r\n', '_')
@@ -133,14 +142,5 @@ def upload_ss(
         filedescfile.write(filedesc.encode('utf-8'))
 
     fileurl = 'http://' + http_host + '/' + wikifilename
-
-    # Get hash
-    md5 = hashlib.md5()
-    with open(newfilename, 'rb') as f:
-        while True:
-            data = f.read(65536)
-            if not data:
-                break
-            md5.update(data)
 
     raise NeedServerSideUpload(fileurl, 'md5: ' + md5.hexdigest())

@@ -30,7 +30,6 @@ from flask import (
 )
 
 from video2commons.backend import worker
-from video2commons.exceptions import NeedServerSideUpload
 
 from video2commons.frontend.shared import (
     redisconnection, check_banned, generate_csrf_token
@@ -159,12 +158,26 @@ def status():
                 })
                 hasrunning = True
             elif state == 'SUCCESS':
-                filename, wikifileurl = res.result
-                task.update({
-                    'status': 'done',
-                    'url': wikifileurl,
-                    'text': filename
-                })
+                if isinstance(res.result, (list, tuple)):
+                    filename, wikifileurl = res.result
+                    task.update({
+                        'status': 'done',
+                        'url': wikifileurl,
+                        'text': filename
+                    })
+                elif isinstance(res.result, dict):
+                    if res.result['type'] == 'done':
+                        task.update({
+                            'status': 'done',
+                            'url': res.result['url'],
+                            'text': res.result['filename']
+                        })
+                    elif res.result['type'] == 'ssu':
+                        task.update({
+                            'status': 'needssu',
+                            'url': create_phab_url([res.result])
+                        })
+                        ssus.append(res.result)
             elif state == 'FAILURE':
                 e = res.result
                 if e is False:
@@ -173,12 +186,6 @@ def status():
                         'text': res.traceback,
                         'restartable': True
                     })
-                elif isinstance(e, NeedServerSideUpload):
-                    task.update({
-                        'status': 'needssu',
-                        'url': create_phab_url([e])
-                    })
-                    ssus.append(e)
                 else:
                     task.update({
                         'status': 'fail',

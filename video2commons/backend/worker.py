@@ -29,7 +29,7 @@ from celery.exceptions import Ignore
 from redis import Redis
 import pywikibot
 
-from video2commons.exceptions import TaskError, TaskAbort
+from video2commons.exceptions import TaskError, TaskAbort, NeedServerSideUpload
 from video2commons.backend import download
 from video2commons.backend import encode
 from video2commons.backend import upload
@@ -153,6 +153,10 @@ def main(
                 print e
                 pass
 
+    except NeedServerSideUpload as e:
+        # json serializer cannot properly serialize an exception
+        # without losing data, so we change the exception into a dict.
+        return {'type': 'ssu', 'hashsum': e.hashsum, 'url': e.url}
     except pywikibot.Error:  # T124922 workaround
         exc_info = sys.exc_info()
         raise TaskError(
@@ -163,7 +167,7 @@ def main(
             ).encode('utf-8')), None, exc_info[2]
     else:
         statuscallback('Done!', 100)
-        return filename, wikifileurl
+        return {'type': 'done', 'filename': filename, 'url': wikifileurl}
     finally:
         statuscallback('Cleaning up...', -1)
         pywikibot.config.authenticate.clear()
