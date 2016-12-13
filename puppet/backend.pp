@@ -72,12 +72,18 @@ exec { 'git-clone-v2c':
 
 file { [
     '/srv/v2c/output',
-    '/srv/v2c/ssu',
     '/srv/v2c/apicache',
 ]:
     ensure  => directory,
     owner   => 'tools.video2commons',
     group   => 'tools.video2commons',
+    require => Exec['git-clone-v2c'],
+    before  => Service['v2ccelery'],
+}
+
+file { '/srv/v2c/ssu':
+    ensure  => link,
+    target  => '/data/scratch/video2commons/ssu/',
     require => Exec['git-clone-v2c'],
     before  => Service['v2ccelery'],
 }
