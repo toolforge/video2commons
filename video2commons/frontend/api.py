@@ -256,9 +256,9 @@ def create_phab_url(es):
     wgetlinks = []
 
     for e in es:
-        wgetlink = 'wget ' + pipes.quote(e.url) + '{,.txt}'
-        if e.hashsum:
-            wgetlink += ' # ' + e.hashsum
+        wgetlink = 'wget ' + pipes.quote(e['url']) + '{,.txt}'
+        if e['hashsum']:
+            wgetlink += ' # ' + e['hashsum']
         wgetlinks.append(wgetlink)
 
     wgetlinks = '\n'.join(wgetlinks)
