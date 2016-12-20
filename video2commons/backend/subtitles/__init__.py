@@ -44,7 +44,8 @@ def subtitles(
 
     for langcode, filename in subtitles.items():
         try:
-            lang = pycountry.languages.get(iso639_1_code=langcode)
+            lang = (pycountry.languages.get(alpha_2=langcode) or
+                    pycountry.languages.get(alpha_3=langcode))
             langname = lang and lang.name
             if langname:
                 statuscallback('Loading subtitle in ' + langname, int(percent))
