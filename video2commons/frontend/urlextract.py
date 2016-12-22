@@ -23,7 +23,10 @@ import re
 from collections import OrderedDict
 
 import youtube_dl
+import pywikibot
 import guess_language
+
+SITE = pywikibot.Site()
 
 
 def do_extract_url(url):
@@ -252,3 +255,26 @@ def do_validate_filename(filename):
             'Your filename contains an illegal part: %r' % reobj.group(0)
 
     return filename.replace('_', ' ')
+
+
+def do_validate_filedesc(filedesc):
+    """Validate filename for invalid characters/parts."""
+    parse = SITE._simple_request(
+        action='parse',
+        text=filedesc,
+        prop='externallinks'
+    ).submit()
+
+    externallinks = parse.get('parse', {}).get('externallinks', [])
+
+    if externallinks:
+        spam = SITE._simple_request(
+            action='spamblacklist',
+            url=externallinks
+        ).submit()
+
+        assert spam.get('spamblacklist', {}).get('result') != 'blacklisted', \
+            ('Your file description matches spam blacklist! Matches: %s' %
+             ', '.join(spam.get('spamblacklist', {}).get('matches', [])))
+
+    return filedesc

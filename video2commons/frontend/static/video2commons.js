@@ -398,10 +398,11 @@
 				video: true,
 				subtitles: true,
 				filename: true,
-				filenamechecked: false,
 				formats: [],
 				format: '',
-				filedesc: ''
+				filedesc: '',
+				filenamechecked: false,
+				filedescchecked: false
 			};
 			video2commons.setupAddTaskDialog();
 		},
@@ -573,10 +574,8 @@
 			switch ( newTaskData.step ) {
 				case 'source':
 					deferred = $.when( ( function() {
-						var video = addTaskDialog.find( '#video' )
-							.is( ':checked' ),
-							audio = addTaskDialog.find( '#audio' )
-							.is( ':checked' );
+						var video = addTaskDialog.find( '#video' ).is( ':checked' ),
+							audio = addTaskDialog.find( '#audio' ).is( ':checked' );
 						newTaskData.subtitles = addTaskDialog.find( '#subtitles' )
 							.is( ':checked' );
 						if ( !newTaskData.formats.length || video !== newTaskData.video || audio !== newTaskData.audio ) {
@@ -598,6 +597,7 @@
 						}
 						if ( url !== newTaskData.url ) {
 							newTaskData.filenamechecked = false;
+							newTaskData.filedescchecked = false;
 							return video2commons.askAPI( 'extracturl', {
 								url: url
 							}, [ 'url', 'extractor', 'filedesc', 'filename' ] );
@@ -607,17 +607,13 @@
 					}() ) );
 					break;
 				case 'target':
-					deferred = ( function() {
-						var filename = addTaskDialog.find( '#filename' )
-							.val();
-						newTaskData.filedesc = addTaskDialog.find( '#filedesc' )
-							.val();
-						newTaskData.format = addTaskDialog.find( '#format' )
-							.val();
+					deferred = $.when( ( function() {
+						var filename = addTaskDialog.find( '#filename' ).val();
+						newTaskData.format = addTaskDialog.find( '#format' ).val();
 
-						if ( !filename || !newTaskData.filedesc ) {
+						if ( !filename ) {
 							return $.Deferred()
-								.reject( 'Filename and file description cannot be empty!' )
+								.reject( 'Filename cannot be empty!' )
 								.promise();
 						}
 
@@ -631,7 +627,26 @@
 						} else {
 							return resolved;
 						}
-					}() );
+					}() ), ( function() {
+						var filedesc = addTaskDialog.find( '#filedesc' ).val();
+
+						if ( !filedesc ) {
+							return $.Deferred()
+								.reject( 'File description cannot be empty!' )
+								.promise();
+						}
+
+						if ( !newTaskData.filedescchecked || filedesc !== newTaskData.filedesc ) {
+							return video2commons.askAPI( 'validatefiledesc', {
+								filedesc: filedesc
+							}, [ 'filedesc' ] )
+								.done( function() {
+									newTaskData.filedescchecked = true;
+								} );
+						} else {
+							return resolved;
+						}
+					}() ) );
 					break;
 				case 'confirm':
 					// nothing to do in confirm screen
@@ -684,7 +699,7 @@
 		},
 
 		apiPost: function( endpoint, data ) {
-			data._csrf_token = csrfToken; // eslint-disable-line no-underscore-dangle
+			data._csrf_token = csrfToken; // eslint-disable-line no-underscore-dangle,camelcase
 			return $.post( 'api/' + endpoint, data );
 		}
 	};

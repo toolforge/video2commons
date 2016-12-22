@@ -35,7 +35,7 @@ from video2commons.frontend.shared import (
     redisconnection, check_banned, generate_csrf_token
 )
 from video2commons.frontend.urlextract import (
-    do_extract_url, do_validate_filename, sanitize
+    do_extract_url, do_validate_filename, do_validate_filedesc, sanitize
 )
 
 api = Blueprint('api', __name__)
@@ -325,6 +325,14 @@ def validate_filename():
     """Validate filename for invalid characters/parts."""
     return jsonify(
         filename=do_validate_filename(request.form['filename'])
+    )
+
+
+@api.route('/validatefiledesc', methods=['POST'])
+def validate_filedesc():
+    """Validate filename for invalid characters/parts."""
+    return jsonify(
+        filedesc=do_validate_filedesc(request.form['filedesc'])
     )
 
 
