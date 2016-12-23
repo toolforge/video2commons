@@ -143,4 +143,4 @@ def upload_ss(
 
     fileurl = 'https://' + http_host + '/' + wikifilename
 
-    raise NeedServerSideUpload(fileurl, 'md5: ' + md5.hexdigest())
+    raise NeedServerSideUpload(fileurl, md5.hexdigest())

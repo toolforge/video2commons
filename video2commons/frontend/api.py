@@ -251,23 +251,28 @@ def get_title_from_task(id):
 
 def create_phab_url(es):
     """Create a server side upload Phabricator URL."""
-    import pipes
+    urls = '\n'.join(['* ' + e['url'] for e in es])
 
-    wgetlinks = []
+    # TODO: Remove ".replace('md5: ', '')" after workers are good
+    checksums = '\n'.join(['| %s | %s |' %
+                           (e['url'].rsplit('/', 1)[-1],
+                            e['hashsum'].replace('md5: ', ''))
+                           for e in es])
 
-    for e in es:
-        wgetlink = 'wget ' + pipes.quote(e['url']) + '{,.txt}'
-        if e['hashsum']:
-            wgetlink += ' # ' + e['hashsum']
-        wgetlinks.append(wgetlink)
-
-    wgetlinks = '\n'.join(wgetlinks)
-    # Partial Source: videoconverter tool
     phabdesc = """Please upload these file(s) to Wikimedia Commons:
-```
+
+**URLs**
+
 %s
-```
-Thank you!""" % (wgetlinks)
+
+//Description files are available too: append `.txt` to the URLs.//
+
+**Checksums**
+
+| **File** | **MD5** |
+%s
+
+Thank you!""" % (urls, checksums)
 
     phaburl = \
         'https://phabricator.wikimedia.org/maniphest/task/edit/form/1/?' + \
