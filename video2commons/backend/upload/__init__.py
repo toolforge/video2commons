@@ -141,6 +141,6 @@ def upload_ss(
         )
         filedescfile.write(filedesc.encode('utf-8'))
 
-    fileurl = 'http://' + http_host + '/' + wikifilename
+    fileurl = 'https://' + http_host + '/' + wikifilename
 
     raise NeedServerSideUpload(fileurl, 'md5: ' + md5.hexdigest())
