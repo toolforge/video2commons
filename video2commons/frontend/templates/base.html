@@ -27,6 +27,7 @@
         (degrading due to <a href="https://phabricator.wikimedia.org/T153488">T153488</a>)
       </div>
         <ul class="nav navbar-nav navbar-{% if lang() is rtl %}left{% else %}right{% endif %}">
+          <li><a href="https://phabricator.wikimedia.org/T153488"><span class="glyphicon glyphicon-remove"></span> Degrading (T153488)</a></li>
           <li><a href="https://commons.wikimedia.org/w/index.php?title=Special:MyLanguage/Commons:Video2commons&amp;uselang={{ lang() }}"><span class="glyphicon glyphicon-book"></span> {{ _('help') }}</a></li>
 {% if loggedin %}
           <li><a href="{{ url_for('logout') }}"><span class="glyphicon glyphicon-log-out"></span> {{ _('logout') }}</a></li>
