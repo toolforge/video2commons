@@ -22,6 +22,7 @@ from __future__ import absolute_import
 import os
 from urlparse import urlparse
 
+from celery.utils.log import get_logger
 import youtube_dl
 
 from video2commons.exceptions import TaskError
@@ -58,7 +59,8 @@ def download(
         'retries': 10,
         'fragment_retries': 10,
         'prefer_ffmpeg': True,  # avconv do not have srt encoder
-        'prefer_free_formats': True
+        'prefer_free_formats': True,
+        'logger': get_logger('celery.task.v2c.main.youtube-dl')
     }
 
     def progresshook(d):

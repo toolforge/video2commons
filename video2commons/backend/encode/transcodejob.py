@@ -206,7 +206,7 @@ class WebVideoTranscodeJob(object):
                 ". Encoding failed."
 
         # Set up the base command
-        cmd = escape_shellarg(ffmpeg_location) + ' -y -i ' + \
+        cmd = escape_shellarg(ffmpeg_location) + ' -loglevel warning -y -i ' +\
             escape_shellarg(self.get_source_path())
 
         if 'vpre' in options:
