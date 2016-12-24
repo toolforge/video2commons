@@ -430,7 +430,6 @@ class WebVideoTranscodeJob(object):
         cmd = 'ulimit -f ' + escape_shellarg(background_size_limit) + ';' + \
             'ulimit -v ' + escape_shellarg(background_memory_limit) + ';' + \
             'ulimit -t ' + escape_shellarg(background_time_limit) + ';' + \
-            'ulimit -a;' + \
             'nice -n ' + escape_shellarg(background_priority) + ' ' + cmd + \
             ' 2>&1'
 

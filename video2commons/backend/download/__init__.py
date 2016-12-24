@@ -38,7 +38,7 @@ def download(
     outputdir = os.path.abspath(outputdir)
     statuscallback = statuscallback or (lambda text, percent: None)
     errorcallback = errorcallback or (lambda text: None)
-    outtmpl = outputdir + '/dl.%(ext)s'
+    outtmpl = outputdir + u'/dl.%(ext)s'
 
     params = {
         'format': formats,
