@@ -436,7 +436,7 @@ class WebVideoTranscodeJob(object):
 
         # Adapted from https://gist.github.com/marazmiki/3015621
         process = subprocess.Popen(
-            cmd, stdin=None, stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
+            cmd, stdin=None, stdout=subprocess.PIPE, stderr=None,
             universal_newlines=True, shell=True, preexec_fn=os.setsid
         )
 
@@ -480,4 +480,5 @@ class WebVideoTranscodeJob(object):
 
             time.sleep(2)
 
+        process.stdout.close()
         return process.returncode, ''
