@@ -91,7 +91,7 @@ def upload_pwb(
         errorcallback('File already exists. Please choose another name.')
 
     comment = u'Imported media from ' + sourceurl
-    chunked = (4 * (1 << 20)) if size >= 100000000 else 0
+    chunked = (16 * (1 << 20)) if size >= 100000000 else 0
 
     statuscallback('Uploading...', -1)
     try:
