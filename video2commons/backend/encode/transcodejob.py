@@ -28,7 +28,6 @@ WebVideoTranscode/WebVideoTranscodeJob.php under GPLv2
 """
 
 import os
-import sys
 import re
 import math
 import time
@@ -436,7 +435,7 @@ class WebVideoTranscodeJob(object):
 
         # Adapted from https://gist.github.com/marazmiki/3015621
         process = subprocess.Popen(
-            cmd, stdin=None, stdout=subprocess.PIPE, stderr=sys.stderr,
+            cmd, stdin=None, stdout=subprocess.PIPE, stderr=None,
             universal_newlines=True, shell=True, preexec_fn=os.setsid
         )
 
