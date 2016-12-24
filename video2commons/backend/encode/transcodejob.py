@@ -28,6 +28,7 @@ WebVideoTranscode/WebVideoTranscodeJob.php under GPLv2
 """
 
 import os
+import sys
 import re
 import math
 import time
@@ -206,7 +207,7 @@ class WebVideoTranscodeJob(object):
                 ". Encoding failed."
 
         # Set up the base command
-        cmd = escape_shellarg(ffmpeg_location) + ' -loglevel warning -y -i ' +\
+        cmd = escape_shellarg(ffmpeg_location) + ' -y -i ' + \
             escape_shellarg(self.get_source_path())
 
         if 'vpre' in options:
@@ -435,7 +436,7 @@ class WebVideoTranscodeJob(object):
 
         # Adapted from https://gist.github.com/marazmiki/3015621
         process = subprocess.Popen(
-            cmd, stdin=None, stdout=subprocess.PIPE, stderr=None,
+            cmd, stdin=None, stdout=subprocess.PIPE, stderr=sys.stderr,
             universal_newlines=True, shell=True, preexec_fn=os.setsid
         )
 
@@ -453,7 +454,6 @@ class WebVideoTranscodeJob(object):
                 line = process.stdout.readline()
                 if not line:
                     break
-                print line,
 
                 if track:
                     if duration is None:
