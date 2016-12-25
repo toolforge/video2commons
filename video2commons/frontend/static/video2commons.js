@@ -669,7 +669,7 @@
 					deferred = resolved;
 			}
 
-			video2commons.promiseWorkingOn( deferred ).done( function() {
+			video2commons.promiseWorkingOn( deferred.done( function() {
 				var action = {
 					prev: -1,
 					next: 1
@@ -677,7 +677,7 @@
 				var steps = [ 'source', 'target', 'confirm' ];
 				newTaskData.step = steps[ steps.indexOf( newTaskData.step ) + action ];
 				video2commons.setupAddTaskDialog();
-			} );
+			} ) );
 		},
 
 		promiseWorkingOn: function( promise ) {
