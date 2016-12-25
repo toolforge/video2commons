@@ -30,7 +30,9 @@ RE_CONTENT_RANGE = re.compile(r'^bytes (\d+)-(\d+)/(\d+)$')
 
 
 class WrongOffset(Exception):
-    pass
+    def __init__(self, offset):
+        super(WrongOffset, self).__init__(str(offset))
+        self.offset = offset
 
 
 def getpath(digest):
@@ -84,17 +86,19 @@ def handle_chunked(f, permpath, content_range):
 
         if os.path.isfile(permpath):
             size = stat(permpath)
-            if size != cr1:
-                raise WrongOffset
-
-            with open(permpath, 'ab') as dest:
-                shutil.copyfileobj(f, dest)
         else:
-            f.save(permpath)
-    except WrongOffset:
-        pass
+            size = 0
 
-    size = stat(permpath)
+        if size != cr1:
+            raise WrongOffset(size)
+
+        with open(permpath, 'ab') as dest:
+            shutil.copyfileobj(f, dest)
+
+    except WrongOffset as e:
+        size = e.offset
+    else:
+        size = stat(permpath)
     if size < cr3:
         return 'Continue', {'offset': size}
     elif size > cr3:
