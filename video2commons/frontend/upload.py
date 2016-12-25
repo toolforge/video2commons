@@ -47,7 +47,7 @@ def upload():
     f = request.files['file']
     assert f, "Where's my file?"
 
-    filekey = request.form.get('filekey') or uuid.uuid1()
+    filekey = request.form.get('filekey') or str(uuid.uuid1())
 
     permpath = getpath(filekey)
 
