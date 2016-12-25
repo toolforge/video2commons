@@ -423,8 +423,6 @@
 							addTaskDialog.find( '.modal-body' )
 								.html( dataHtml );
 
-							addTaskDialog.find( 'a#vc' )
-								.attr( 'href', '//tools.wmflabs.org/videoconvert/' );
 							addTaskDialog.find( 'a#fl' )
 								.attr( 'href', '//commons.wikimedia.org/wiki/Commons:Licensing#Acceptable_licenses' );
 							addTaskDialog.find( 'a#pd' )
