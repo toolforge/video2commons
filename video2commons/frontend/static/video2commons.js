@@ -604,7 +604,7 @@
 						if ( url !== newTaskData.url ) {
 							newTaskData.filenamechecked = false;
 							newTaskData.filedescchecked = false;
-							var uploadedFile = newTaskData.uploadedFile[url];
+							var uploadedFile = newTaskData.uploadedFile[ url ];
 							if ( uploadedFile ) {
 								newTaskData.url = url;
 								return video2commons.askAPI( 'makedesc', {
@@ -759,7 +759,7 @@
 				} )
 				.on( 'fileuploaddone', function( e, data ) {
 					var url = 'uploads:' + data.result.filekey;
-					newTaskData.uploadedFile[url] = data.files[0];
+					newTaskData.uploadedFile[ url ] = data.files[ 0 ];
 					addTaskDialog.find( '#url' )
 						.val( url );
 					deferred.resolve();
