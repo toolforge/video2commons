@@ -711,6 +711,9 @@
 					addTaskDialog.find( '#upload-abort' )
 						.off()
 						.click( function() {
+							if ( window.jqXHR ) {
+								window.jqXHR.abort();
+							}
 							deferred.reject( 'Upload aborted.' );
 						} );
 				} )
@@ -731,7 +734,7 @@
 						deferred.reject( data.result.error );
 					}
 				} )
-				.on( 'fileuploadprogress', function ( e, data ) {
+				.on( 'fileuploadprogressall', function ( e, data ) {
 					video2commons.setProgressBar(
 						addTaskDialog.find( '#upload-progress' ),
 						data.loaded / data.total * 100
