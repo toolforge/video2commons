@@ -21,10 +21,10 @@ from __future__ import absolute_import
 
 import os
 import re
-import hashlib
+import uuid
 import shutil
 
-from flask import request, session, jsonify
+from flask import request, jsonify
 
 RE_CONTENT_RANGE = re.compile(r'^bytes (\d+)-(\d+)/(\d+)$')
 
@@ -38,13 +38,6 @@ def getpath(digest):
                         'static/uploads', digest)
 
 
-def getdigest(filename):
-    md5 = hashlib.md5()
-    md5.update(session['username'])
-    md5.update(filename)
-    return md5.hexdigest()
-
-
 def stat(permpath):
     return os.path.getsize(permpath)
 
@@ -54,9 +47,9 @@ def upload():
     f = request.files['file']
     assert f, "Where's my file?"
 
-    digest = getdigest(f.filename)
+    filekey = request.form.get('filekey') or uuid.uuid1()
 
-    permpath = getpath(digest)
+    permpath = getpath(filekey)
 
     content_range = (f.headers.get('Content-Range') or
                      request.headers.get('Content-Range'))
@@ -66,15 +59,14 @@ def upload():
     else:
         result, kwargs = handle_full(f, permpath)
 
-    if result == 'Success':
-        kwargs['digest'] = digest
+    kwargs['filekey'] = filekey
 
     return jsonify(result=result, **kwargs)
 
 
 # Flask endpoint
 def status():
-    permpath = getpath(getdigest(request.form['file']))
+    permpath = getpath(request.form['filekey'])
     return jsonify(offset=stat(permpath))
 
 
