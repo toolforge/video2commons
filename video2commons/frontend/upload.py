@@ -40,7 +40,7 @@ def getpath(digest):
 
 def getdigest(filename):
     md5 = hashlib.md5()
-    md5.update(session.username)
+    md5.update(session['username'])
     md5.update(filename)
     return md5.hexdigest()
 
