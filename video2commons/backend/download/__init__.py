@@ -38,6 +38,8 @@ def download(
         # FIXME; this should be a configuration variable
         url.replace('uploads:', 'https://tools.wmflabs.org/video2commmons/'
                                 'static/uploads/', 1)
+        ie_key = None
+
     url_blacklisted(url)
 
     outputdir = os.path.abspath(outputdir)
