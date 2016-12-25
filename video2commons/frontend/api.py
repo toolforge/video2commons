@@ -37,8 +37,10 @@ from video2commons.frontend.shared import (
 from video2commons.frontend.urlextract import (
     do_extract_url, do_validate_filename, do_validate_filedesc, sanitize
 )
+from video2commons.frontend.upload import uploadblueprint
 
 api = Blueprint('api', __name__)
+api.register_blueprint(uploadblueprint, url_prefix='/upload')
 
 
 @api.errorhandler(Exception)
