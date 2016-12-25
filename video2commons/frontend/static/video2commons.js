@@ -353,9 +353,7 @@
 
 						addTaskDialog.find( '#btn-cancel' )
 							.click( function() {
-								if ( window.jqXHR ) {
-									window.jqXHR.abort();
-								}
+								video2commons.abortUpload();
 							} );
 
 						// HACK
@@ -699,6 +697,15 @@
 			.always( video2commons.reactivatePrevNextButtons );
 		},
 
+		abortUpload: function( deferred, abortReason ) {
+			if ( deferred && deferred.state() === 'pending' ) {
+				deferred.reject( abortReason );
+			}
+			if ( window.jqXHR ) {
+				window.jqXHR.abort();
+			}
+		},
+
 		initUpload: function() {
 			var deferred;
 
@@ -720,10 +727,7 @@
 					addTaskDialog.find( '#upload-abort' )
 						.off()
 						.click( function() {
-							if ( window.jqXHR ) {
-								window.jqXHR.abort();
-							}
-							deferred.reject( 'Upload aborted.' );
+							video2commons.abortUpload( deferred, 'Upload aborted.' );
 						} );
 				} )
 				.on( 'fileuploadchunkdone', function( e, data ) {
@@ -737,10 +741,7 @@
 						}
 					}
 					if ( data.result.error ) {
-						if ( window.jqXHR ) {
-							window.jqXHR.abort();
-						}
-						deferred.reject( data.result.error );
+						video2commons.abortUpload( deferred, data.result.error );
 					}
 				} )
 				.on( 'fileuploadprogressall', function ( e, data ) {
@@ -755,7 +756,7 @@
 					addTaskDialog.find( '#src-uploading' ).hide();
 				} )
 				.on( 'fileuploadfail', function() {
-					deferred.reject( 'Something went wrong while uploading... try again?' );
+					video2commons.abortUpload( deferred, 'Something went wrong while uploading... try again?' );
 				} )
 				.on( 'fileuploaddone', function( e, data ) {
 					var url = 'uploads:' + data.result.filekey;
