@@ -28,6 +28,49 @@ import guess_language
 
 SITE = pywikibot.Site()
 
+DEFAULT_LICENSE = '{{subst:nld|<!--replace this template with the license-->}}'
+FILEDESC_TEMPLATE = """
+=={{int:filedesc}}==
+{{Information
+|description=%(desc)s
+|date=%(date)s
+|source=%(source)s
+|author=%(uploader)s
+|permission=
+|other_versions=
+|other_fields=
+}}
+
+=={{int:license-header}}==
+%(license)s
+{{LicenseReview}}
+
+[[Category:Uploaded with video2commons]]
+"""
+
+
+def make_dummy_desc(filename):
+    filedesc = FILEDESC_TEMPLATE % {
+        'desc': '',
+        'date': '',
+        'source': '',
+        'uploader': '',
+        'license': DEFAULT_LICENSE
+    }
+
+    # Remove the extension
+    filename = filename.rsplit('.', 1)
+    if len(filename) == 1 or len(filename[1]) <= 3:  # no or short extension
+        filename = filename[0]
+    else:  # long extension?
+        filename = '.'.join(filename)
+
+    return {
+        'extractor': '(uploads)',
+        'filedesc': filedesc.strip(),
+        'filename': sanitize(filename)
+    }
+
 
 def do_extract_url(url):
     """Extract a video url."""
@@ -49,24 +92,7 @@ def do_extract_url(url):
     title = (info.get('title') or '').strip()
     url = info.get('webpage_url') or url
 
-    filedesc = """
-=={{int:filedesc}}==
-{{Information
-|description=%(desc)s
-|date=%(date)s
-|source=%(source)s
-|author=%(uploader)s
-|permission=
-|other_versions=
-|other_fields=
-}}
-
-=={{int:license-header}}==
-%(license)s
-{{LicenseReview}}
-
-[[Category:Uploaded with video2commons]]
-""" % {
+    filedesc = FILEDESC_TEMPLATE % {
         'desc': _desc(url, ie_key, title, info),
         'date': _date(url, ie_key, title, info),
         'source': _source(url, ie_key, title, info),
@@ -129,7 +155,7 @@ def _license(url, ie_key, title, info):
     if uploader:
         uploader_param = '|' + escape_wikitext(uploader.strip())
 
-    default = '{{subst:nld}}'
+    default = DEFAULT_LICENSE
     if ie_key == 'Youtube' and info.get('license') == \
             'Creative Commons Attribution license (reuse allowed)':
         return '{{YouTube CC-BY%s}}' % uploader_param

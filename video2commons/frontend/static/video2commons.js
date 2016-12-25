@@ -408,6 +408,7 @@
 				formats: [],
 				format: '',
 				filedesc: '',
+				uploadedFile: {},
 				filenamechecked: false,
 				filedescchecked: false
 			};
@@ -606,9 +607,16 @@
 						if ( url !== newTaskData.url ) {
 							newTaskData.filenamechecked = false;
 							newTaskData.filedescchecked = false;
-							return video2commons.askAPI( 'extracturl', {
-								url: url
-							}, [ 'url', 'extractor', 'filedesc', 'filename' ] );
+							var uploadedFile = newTaskData.uploadedFile[url];
+							if ( uploadedFile ) {
+								return video2commons.askAPI( 'makedesc', {
+									filename: uploadedFile.name || ''
+								}, [ 'extractor', 'filedesc', 'filename' ] );
+							} else {
+								return video2commons.askAPI( 'extracturl', {
+									url: url
+								}, [ 'url', 'extractor', 'filedesc', 'filename' ] );
+							}
 						} else {
 							return resolved;
 						}
@@ -749,8 +757,10 @@
 					deferred.reject( 'Something went wrong while uploading... try again?' );
 				} )
 				.on( 'fileuploaddone', function( e, data ) {
+					var url = 'uploads:' + data.result.filekey;
+					newTaskData.uploadedFile[url] = data.files[0];
 					addTaskDialog.find( '#url' )
-						.val( 'uploads:' + data.result.filekey );
+						.val( url );
 					deferred.resolve();
 				} );
 		},
