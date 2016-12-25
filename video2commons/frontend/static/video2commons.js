@@ -351,6 +351,13 @@
 						addTaskDialog.find( '#btn-next' )
 							.html( htmlContent.nextbutton );
 
+						addTaskDialog.find( '#btn-cancel' )
+							.click( function() {
+								if ( window.jqXHR ) {
+									window.jqXHR.abort();
+								}
+							} );
+
 						// HACK
 						addTaskDialog.find( '.modal-body' )
 							.keypress( function( e ) {
@@ -435,6 +442,8 @@
 								.prop( 'checked', newTaskData.audio );
 							addTaskDialog.find( '#subtitles' )
 								.prop( 'checked', newTaskData.subtitles );
+
+							video2commons.initUpload();
 						} );
 					break;
 				case 'target':
@@ -547,7 +556,6 @@
 				.removeClass( 'disabled' )
 				.off()
 				.click( function() {
-					video2commons.disablePrevNext( true );
 					video2commons.processInput( button );
 				} );
 		},
@@ -653,7 +661,7 @@
 					deferred = resolved;
 			}
 
-			deferred.done( function() {
+			video2commons.promiseWorkingOn( deferred ).done( function() {
 				var action = {
 					prev: -1,
 					next: 1
@@ -661,20 +669,81 @@
 				var steps = [ 'source', 'target', 'confirm' ];
 				newTaskData.step = steps[ steps.indexOf( newTaskData.step ) + action ];
 				video2commons.setupAddTaskDialog();
+			} );
+		},
+
+		promiseWorkingOn: function( promise ) {
+			video2commons.disablePrevNext( true );
+
+			return promise.fail( function( error ) {
+				if ( !addTaskDialog.find( '.modal-body #dialog-errorbox' )
+					.length ) {
+					addTaskDialog.find( '.modal-body' )
+						.append(
+							$( '<div class="alert alert-danger" id="dialog-errorbox"></div>' )
+						);
+				}
+				addTaskDialog.find( '.modal-body #dialog-errorbox' )
+					.text( 'Error: ' + error )
+					.show();
 			} )
-				.fail( function( error ) {
-					if ( !addTaskDialog.find( '.modal-body #dialog-errorbox' )
-						.length ) {
-						addTaskDialog.find( '.modal-body' )
-							.append(
-								$( '<div class="alert alert-danger" id="dialog-errorbox"></div>' )
-							);
-					}
-					addTaskDialog.find( '.modal-body #dialog-errorbox' )
-						.text( 'Error: ' + error )
-						.show();
+			.always( video2commons.reactivatePrevNextButtons );
+		},
+
+		initUpload: function() {
+			var deferred;
+
+			window.jqXHR = addTaskDialog.find( '#fileupload' ).fileupload( {
+				dataType: 'json',
+				formData: {
+					_csrf_token: csrfToken // eslint-disable-line no-underscore-dangle,camelcase
+				},
+				maxChunkSize: 4 << 20, // eslint-disable-line no-bitwise
+				sequentialUploads: true
+			} )
+				.on( 'fileuploadadd', function( e, data ) {
+					window.jqXHR = data.submit();
+					deferred = $.Deferred();
+					video2commons.promiseWorkingOn( deferred.promise() );
+					addTaskDialog.find( '#src-url' ).hide();
+					addTaskDialog.find( '#src-uploading' ).show();
 				} )
-				.always( video2commons.reactivatePrevNextButtons );
+				.on( 'fileuploadchunkdone', function( e, data ) {
+					if ( data.formData.filekey ) {
+						data.formData.filekey = data.result.filekey;
+					}
+					if ( data.result.result === 'Continue' ) {
+						if ( data.result.offset !== data.uploadedBytes ) {
+							// console.log( 'Unexpected offset! Expected: ' + data.uploadedBytes + ' Returned: ' + data.result.offset );
+							data.uploadedBytes = data.result.offset;
+						}
+					}
+					if ( data.result.error ) {
+						if ( window.jqXHR ) {
+							window.jqXHR.abort();
+						}
+						deferred.reject( data.result.error );
+					}
+				} )
+				.on( 'fileuploadprogress', function ( e, data ) {
+					video2commons.setProgressBar(
+						addTaskDialog.find( '#upload-progress' ),
+						data.loaded / data.total * 100
+					);
+				} )
+				.on( 'fileuploadalways', function() {
+					video2commons.reactivatePrevNextButtons();
+					addTaskDialog.find( '#src-url' ).show();
+					addTaskDialog.find( '#src-uploading' ).hide();
+				} )
+				.on( 'fileuploadfail', function() {
+					deferred.reject( 'Something went wrong while uploading... try again?' );
+				} )
+				.on( 'fileuploaddone', function( e, data ) {
+					addTaskDialog.find( '#url' )
+						.val( 'uploads:' + data.result.filekey );
+					deferred.resolve();
+				} );
 		},
 
 		askAPI: function( url, datain, dataout ) {
