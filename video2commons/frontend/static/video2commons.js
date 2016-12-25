@@ -707,6 +707,12 @@
 					video2commons.promiseWorkingOn( deferred.promise() );
 					addTaskDialog.find( '#src-url' ).hide();
 					addTaskDialog.find( '#src-uploading' ).show();
+
+					addTaskDialog.find( '#upload-abort' )
+						.off()
+						.click( function() {
+							deferred.reject( 'Upload aborted.' );
+						} );
 				} )
 				.on( 'fileuploadchunkdone', function( e, data ) {
 					if ( data.formData.filekey ) {
