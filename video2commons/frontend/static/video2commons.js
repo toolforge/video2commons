@@ -252,7 +252,7 @@
 				progress = 100;
 			} else {
 				bar.removeClass( 'progress-bar-striped active' )
-					.text( progress + '%' );
+					.text( Math.round( progress ) + '%' );
 			}
 
 			bar.attr( {
