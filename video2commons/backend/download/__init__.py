@@ -36,8 +36,8 @@ def download(
 
     if url.startswith('uploads:'):
         # FIXME; this should be a configuration variable
-        url.replace('uploads:', 'https://tools.wmflabs.org/video2commmons/'
-                                'static/uploads/', 1)
+        url = url.replace('uploads:', 'https://tools.wmflabs.org/'
+                                      'video2commmons/static/uploads/', 1)
         ie_key = None
 
     url_blacklisted(url)
