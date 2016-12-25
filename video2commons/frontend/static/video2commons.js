@@ -609,6 +609,7 @@
 							newTaskData.filedescchecked = false;
 							var uploadedFile = newTaskData.uploadedFile[url];
 							if ( uploadedFile ) {
+								newTaskData.url = url;
 								return video2commons.askAPI( 'makedesc', {
 									filename: uploadedFile.name || ''
 								}, [ 'extractor', 'filedesc', 'filename' ] );
