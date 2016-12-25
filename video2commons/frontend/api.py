@@ -37,10 +37,11 @@ from video2commons.frontend.shared import (
 from video2commons.frontend.urlextract import (
     do_extract_url, do_validate_filename, do_validate_filedesc, sanitize
 )
-from video2commons.frontend.upload import uploadblueprint
+from video2commons.frontend.upload import (
+    upload as _upload, status as _uploadstatus
+)
 
 api = Blueprint('api', __name__)
-api.register_blueprint(uploadblueprint, url_prefix='/upload')
 
 
 @api.errorhandler(Exception)
@@ -455,3 +456,14 @@ def abort_task():
         'Task must belong to you.'
     worker.main.AsyncResult(id).abort()
     return jsonify(remove='success', id=id)
+
+
+# No nested blueprints in flask; we have to do this :(
+@api.route('/upload/upload', methods=['POST'])
+def upload():
+    return _upload()
+
+
+@api.route('/upload/status', methods=['POST'])
+def uploadstatus():
+    return _uploadstatus()

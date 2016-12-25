@@ -24,9 +24,7 @@ import re
 import hashlib
 import shutil
 
-from flask import Blueprint, request, session, jsonify
-
-uploadblueprint = Blueprint('upload', __name__)
+from flask import request, session, jsonify
 
 RE_CONTENT_RANGE = re.compile(r'^bytes (\d+)-(\d+)/(\d+)$')
 
@@ -51,7 +49,7 @@ def stat(permpath):
     return os.path.getsize(permpath)
 
 
-@uploadblueprint.route('/upload/upload', methods=['POST'])
+# Flask endpoint
 def upload():
     f = request.files['file']
     assert f, "Where's my file?"
@@ -74,7 +72,7 @@ def upload():
     return jsonify(result=result, **kwargs)
 
 
-@uploadblueprint.route('/upload/status', methods=['POST'])
+# Flask endpoint
 def status():
     permpath = getpath(getdigest(request.form['file']))
     return jsonify(offset=stat(permpath))
