@@ -730,7 +730,7 @@
 						} );
 				} )
 				.on( 'fileuploadchunkdone', function( e, data ) {
-					if ( data.formData.filekey ) {
+					if ( data.result.filekey ) {
 						data.formData.filekey = data.result.filekey;
 					}
 					if ( data.result.result === 'Continue' ) {
