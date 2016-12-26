@@ -27,6 +27,7 @@ import shutil
 from flask import request, jsonify
 
 RE_CONTENT_RANGE = re.compile(r'^bytes (\d+)-(\d+)/(\d+)$')
+RE_ALLOWED_FILEKEYS = re.compile(r'^[a-zA-Z0-9-]+$')
 
 
 class WrongOffset(Exception):
@@ -50,6 +51,7 @@ def upload():
     assert f, "Where's my file?"
 
     filekey = request.form.get('filekey') or str(uuid.uuid1())
+    assert RE_ALLOWED_FILEKEYS.match('filekey'), 'Unacceptable file key'
 
     permpath = getpath(filekey)
 
