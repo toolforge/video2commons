@@ -749,7 +749,8 @@
 						data.loaded / data.total * 100
 					);
 				} )
-				.on( 'fileuploadalways', function() {
+				.on( 'fileuploadalways', function( e, data ) {
+					delete data.formData.filekey; // Reset
 					video2commons.reactivatePrevNextButtons();
 					addTaskDialog.find( '#src-url' ).show();
 					addTaskDialog.find( '#src-uploading' ).hide();
