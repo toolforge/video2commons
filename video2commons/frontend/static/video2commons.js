@@ -252,7 +252,7 @@
 				progress = 100;
 			} else {
 				bar.removeClass( 'progress-bar-striped active' )
-					.text( progress + '%' );
+					.text( Math.round( progress ) + '%' );
 			}
 
 			bar.attr( {
@@ -351,6 +351,11 @@
 						addTaskDialog.find( '#btn-next' )
 							.html( htmlContent.nextbutton );
 
+						addTaskDialog.find( '#btn-cancel' )
+							.click( function() {
+								video2commons.abortUpload();
+							} );
+
 						// HACK
 						addTaskDialog.find( '.modal-body' )
 							.keypress( function( e ) {
@@ -401,6 +406,7 @@
 				formats: [],
 				format: '',
 				filedesc: '',
+				uploadedFile: {},
 				filenamechecked: false,
 				filedescchecked: false
 			};
@@ -417,8 +423,6 @@
 							addTaskDialog.find( '.modal-body' )
 								.html( dataHtml );
 
-							addTaskDialog.find( 'a#vc' )
-								.attr( 'href', '//tools.wmflabs.org/videoconvert/' );
 							addTaskDialog.find( 'a#fl' )
 								.attr( 'href', '//commons.wikimedia.org/wiki/Commons:Licensing#Acceptable_licenses' );
 							addTaskDialog.find( 'a#pd' )
@@ -435,6 +439,8 @@
 								.prop( 'checked', newTaskData.audio );
 							addTaskDialog.find( '#subtitles' )
 								.prop( 'checked', newTaskData.subtitles );
+
+							video2commons.initUpload();
 						} );
 					break;
 				case 'target':
@@ -531,6 +537,7 @@
 								.append( '<tr id="task-new"><td colspan="3">' + loaderImage + '</td></tr>' );
 							window.scrollTo( 0, document.body.scrollHeight );
 
+							newTaskData.uploadedFile = {}; // FIXME
 							video2commons.apiPost( 'task/run', newTaskData )
 								.done( function( data ) {
 									if ( data.error ) {
@@ -547,7 +554,6 @@
 				.removeClass( 'disabled' )
 				.off()
 				.click( function() {
-					video2commons.disablePrevNext( true );
 					video2commons.processInput( button );
 				} );
 		},
@@ -598,9 +604,17 @@
 						if ( url !== newTaskData.url ) {
 							newTaskData.filenamechecked = false;
 							newTaskData.filedescchecked = false;
-							return video2commons.askAPI( 'extracturl', {
-								url: url
-							}, [ 'url', 'extractor', 'filedesc', 'filename' ] );
+							var uploadedFile = newTaskData.uploadedFile[ url ];
+							if ( uploadedFile ) {
+								newTaskData.url = url;
+								return video2commons.askAPI( 'makedesc', {
+									filename: uploadedFile.name || ''
+								}, [ 'extractor', 'filedesc', 'filename' ] );
+							} else {
+								return video2commons.askAPI( 'extracturl', {
+									url: url
+								}, [ 'url', 'extractor', 'filedesc', 'filename' ] );
+							}
 						} else {
 							return resolved;
 						}
@@ -653,7 +667,7 @@
 					deferred = resolved;
 			}
 
-			deferred.done( function() {
+			video2commons.promiseWorkingOn( deferred.done( function() {
 				var action = {
 					prev: -1,
 					next: 1
@@ -661,20 +675,101 @@
 				var steps = [ 'source', 'target', 'confirm' ];
 				newTaskData.step = steps[ steps.indexOf( newTaskData.step ) + action ];
 				video2commons.setupAddTaskDialog();
+			} ) );
+		},
+
+		promiseWorkingOn: function( promise ) {
+			video2commons.disablePrevNext( true );
+
+			return promise.fail( function( error ) {
+				if ( !addTaskDialog.find( '.modal-body #dialog-errorbox' )
+					.length ) {
+					addTaskDialog.find( '.modal-body' )
+						.append(
+							$( '<div class="alert alert-danger" id="dialog-errorbox"></div>' )
+						);
+				}
+				addTaskDialog.find( '.modal-body #dialog-errorbox' )
+					.text( 'Error: ' + error )
+					.show();
 			} )
-				.fail( function( error ) {
-					if ( !addTaskDialog.find( '.modal-body #dialog-errorbox' )
-						.length ) {
-						addTaskDialog.find( '.modal-body' )
-							.append(
-								$( '<div class="alert alert-danger" id="dialog-errorbox"></div>' )
-							);
-					}
-					addTaskDialog.find( '.modal-body #dialog-errorbox' )
-						.text( 'Error: ' + error )
-						.show();
+			.always( video2commons.reactivatePrevNextButtons );
+		},
+
+		abortUpload: function( deferred, abortReason ) {
+			if ( deferred && deferred.state() === 'pending' ) {
+				deferred.reject( abortReason );
+			}
+			if ( window.jqXHR ) {
+				window.jqXHR.abort();
+			}
+		},
+
+		initUpload: function() {
+			var deferred;
+
+			window.jqXHR = addTaskDialog.find( '#fileupload' ).fileupload( {
+				dataType: 'json',
+				formData: {
+					_csrf_token: csrfToken // eslint-disable-line no-underscore-dangle,camelcase
+				},
+				maxChunkSize: 4 << 20, // eslint-disable-line no-bitwise
+				sequentialUploads: true
+			} )
+				.on( 'fileuploadadd', function( e, data ) {
+					window.jqXHR = data.submit();
+					deferred = $.Deferred();
+					video2commons.promiseWorkingOn( deferred.promise() );
+					addTaskDialog.find( '#src-url' ).hide();
+					addTaskDialog.find( '#src-uploading' ).show();
+
+					addTaskDialog.find( '#upload-abort' )
+						.off()
+						.click( function() {
+							video2commons.abortUpload( deferred, 'Upload aborted.' );
+						} );
 				} )
-				.always( video2commons.reactivatePrevNextButtons );
+				.on( 'fileuploadchunkdone', function( e, data ) {
+					if ( data.result.filekey ) {
+						data.formData.filekey = data.result.filekey;
+					}
+					if ( data.result.result === 'Continue' ) {
+						if ( data.result.offset !== data.uploadedBytes ) {
+							video2commons.abortUpload( deferred, 'Unexpected offset! Expected: ' + data.uploadedBytes + ' Returned: ' + data.result.offset );
+							// data.uploadedBytes = data.result.offset; // FIXME: Doesn't work, so we have to abort it
+						}
+					} else if ( data.result.error ) {
+						video2commons.abortUpload( deferred, data.result.error );
+					} else {
+						video2commons.abortUpload();
+					}
+				} )
+				.on( 'fileuploadprogressall', function ( e, data ) {
+					video2commons.setProgressBar(
+						addTaskDialog.find( '#upload-progress' ),
+						data.loaded / data.total * 100
+					);
+				} )
+				.on( 'fileuploadalways', function( e, data ) {
+					delete data.formData.filekey; // Reset
+					video2commons.reactivatePrevNextButtons();
+					addTaskDialog.find( '#src-url' ).show();
+					addTaskDialog.find( '#src-uploading' ).hide();
+				} )
+				.on( 'fileuploadfail', function() {
+					video2commons.abortUpload( deferred, 'Something went wrong while uploading... try again?' );
+				} )
+				.on( 'fileuploaddone', function( e, data ) {
+					if ( data.result.result === 'Success' ) {
+						var url = 'uploads:' + data.result.filekey;
+						newTaskData.uploadedFile[ url ] = data.files[ 0 ];
+						addTaskDialog.find( '#url' )
+							.val( url );
+						deferred.resolve();
+					} else {
+						video2commons.abortUpload( deferred, 'Upload does not seem to be successful.' );
+					}
+				} );
 		},
 
 		askAPI: function( url, datain, dataout ) {

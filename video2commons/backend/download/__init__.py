@@ -33,6 +33,13 @@ def download(
     statuscallback=None, errorcallback=None
 ):
     """Download a video from url to outputdir."""
+
+    if url.startswith('uploads:'):
+        # FIXME; this should be a configuration variable
+        url = url.replace('uploads:', 'https://tools.wmflabs.org/'
+                                      'video2commons/static/uploads/', 1)
+        ie_key = None
+
     url_blacklisted(url)
 
     outputdir = os.path.abspath(outputdir)

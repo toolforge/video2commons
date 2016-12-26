@@ -35,7 +35,11 @@ from video2commons.frontend.shared import (
     redisconnection, check_banned, generate_csrf_token
 )
 from video2commons.frontend.urlextract import (
-    do_extract_url, do_validate_filename, do_validate_filedesc, sanitize
+    do_extract_url, make_dummy_desc, do_validate_filename,
+    do_validate_filedesc, sanitize
+)
+from video2commons.frontend.upload import (
+    upload as _upload, status as _uploadstatus
 )
 
 api = Blueprint('api', __name__)
@@ -290,6 +294,14 @@ def extract_url():
     return jsonify(**do_extract_url(url))
 
 
+@api.route('/makedesc', methods=['POST'])
+def make_desc():
+    """Create a (mostly-empty) description."""
+    filename = request.form['filename']
+
+    return jsonify(**make_dummy_desc(filename))
+
+
 @api.route('/listformats', methods=['POST'])
 def list_formats():
     """List the possible convert formats from a given audio/video pair."""
@@ -453,3 +465,14 @@ def abort_task():
         'Task must belong to you.'
     worker.main.AsyncResult(id).abort()
     return jsonify(remove='success', id=id)
+
+
+# No nested blueprints in flask; we have to do this :(
+@api.route('/upload/upload', methods=['POST'])
+def upload():
+    return _upload()
+
+
+@api.route('/upload/status', methods=['POST'])
+def uploadstatus():
+    return _uploadstatus()
