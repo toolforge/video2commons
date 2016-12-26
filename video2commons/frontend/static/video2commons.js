@@ -735,12 +735,13 @@
 					}
 					if ( data.result.result === 'Continue' ) {
 						if ( data.result.offset !== data.uploadedBytes ) {
-							// console.log( 'Unexpected offset! Expected: ' + data.uploadedBytes + ' Returned: ' + data.result.offset );
-							data.uploadedBytes = data.result.offset;
+							video2commons.abortUpload( deferred, 'Unexpected offset! Expected: ' + data.uploadedBytes + ' Returned: ' + data.result.offset );
+							// data.uploadedBytes = data.result.offset; // FIXME: Doesn't work, so we have to abort it
 						}
-					}
-					if ( data.result.error ) {
+					} else if ( data.result.error ) {
 						video2commons.abortUpload( deferred, data.result.error );
+					} else {
+						video2commons.abortUpload();
 					}
 				} )
 				.on( 'fileuploadprogressall', function ( e, data ) {
@@ -759,11 +760,15 @@
 					video2commons.abortUpload( deferred, 'Something went wrong while uploading... try again?' );
 				} )
 				.on( 'fileuploaddone', function( e, data ) {
-					var url = 'uploads:' + data.result.filekey;
-					newTaskData.uploadedFile[ url ] = data.files[ 0 ];
-					addTaskDialog.find( '#url' )
-						.val( url );
-					deferred.resolve();
+					if ( data.result.result === 'Success' ) {
+						var url = 'uploads:' + data.result.filekey;
+						newTaskData.uploadedFile[ url ] = data.files[ 0 ];
+						addTaskDialog.find( '#url' )
+							.val( url );
+						deferred.resolve();
+					} else {
+						video2commons.abortUpload( deferred, 'Upload does not seem to be successful.' );
+					}
 				} );
 		},
 
