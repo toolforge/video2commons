@@ -170,6 +170,7 @@ def main(
         return {'type': 'done', 'filename': filename, 'url': wikifileurl}
     finally:
         statuscallback('Cleaning up...', -1)
+        pywikibot.stopme()
         pywikibot.config.authenticate.clear()
         pywikibot.config.usernames['commons'].clear()
         pywikibot._sites.clear()
