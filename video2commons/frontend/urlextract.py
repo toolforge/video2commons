@@ -28,6 +28,9 @@ import guess_language
 
 SITE = pywikibot.Site()
 
+# File extensions are probably alphanumeric with 0 to 4 chars
+RE_EXTENSION = re.compile(r'^[a-z0-9]{0,4}$', re.IGNORECASE)
+
 DEFAULT_LICENSE = '{{subst:nld|<!--replace this template with the license-->}}'
 FILEDESC_TEMPLATE = """
 =={{int:filedesc}}==
@@ -60,9 +63,9 @@ def make_dummy_desc(filename):
 
     # Remove the extension
     filename = filename.rsplit('.', 1)
-    if len(filename) == 1 or len(filename[1]) <= 3:  # no or short extension
+    if len(filename) == 1 or RE_EXTENSION.match(filename[1]):
         filename = filename[0]
-    else:  # long extension?
+    else:
         filename = '.'.join(filename)
 
     return {
