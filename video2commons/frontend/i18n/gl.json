@@ -40,7 +40,6 @@
 	"notesplaylists": "As listas de reproducción non se procesarán correctamente. Algúns sitios web (como Youku e Comedy Central) utilizan vídeos divididos en varias partes, interpretados como unha lista de reproducción, e tampoco se procesarán correctamente.",
 	"notesuncheck": "Se o ficheiro multimedia non inclúe pistas de son ou de vídeo, desactive as caixas correspondentes. Do contrario a conversión pode fallar, incluso se o formato é libre.",
 	"notessubtitles": "Se se marca 'Importar subtítulos', importaranse os subtítulos, a excepción dos autoxerados.",
-	"notesown": "E se necesito converter e subir un ficheiro no meu ordenador? Mentras NFS e o motor Grid estean todavía dispoñibeis en Tool Labs, pode usar a ferramenta {{#a}}#vc|videoconvert{{/a}}.",
 	"noteslicensing": "Só sube contido {{#a}}#fl|con licenza libre{{/a}} ou {{#a}}#pd|en dominio público{{/a}}. Non se permite {{#a}}#fu|o ''Fair use''{{/a}} en Wikimedia Commons.",
 	"extensionmsg": "A extensión de ficheiro seleccionada arriba úsase se e só se o vídeo está en formato non libre, o cal require transcodificación. Os vídeos en formatos libres manterán as súas extensións.",
 	"confirmmsg": "Por favor, confirme a tarefa ou prema 'Atrás' para cambiar os parámetros. Ó premer en 'Confirmar', a tarefa será enviada e executada. Debido a restriccións técnicas, a tarefa non se pode interrumpir con facilidade unha vez que comeza."

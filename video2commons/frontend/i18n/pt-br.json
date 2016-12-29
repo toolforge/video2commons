@@ -2,7 +2,8 @@
 	"@metadata": {
 		"authors": [
 			"Rodrigo codignoli",
-			"!Silent"
+			"!Silent",
+			"Iagocds"
 		]
 	},
 	"loginOnCommons": "Entrar no Wikimedia Commons",
@@ -36,12 +37,13 @@
 	"keepvideo": "Manter vídeo",
 	"keepaudio": "Manter áudio",
 	"importsubtitles": "Importar legendas",
+	"uploadFile": "Ou envie um arquivo...",
+	"uploading": "Enviando...",
 	"note": "Nota:",
 	"importantnote": "Nota importante:",
 	"notesplaylists": "As playlists nao vão ser processadas corretamente. Alguns sites (como Youku e Comedy Central) fazem uso de videos em varias partes, interpretados como playlists, e não serão corretamente processados.",
 	"notesuncheck": "Se a media não incluir arquivos de vídeo ou faias de áudio, por favor, remova a seleção das caixas correspondentes, ou a conversão poderá falhar, mesmo se o formato for livre.",
 	"notessubtitles": "Se 'Importar legendas' estiver selecionado, as legendas serão importadas, excluindo-se as auto geradas.",
-	"notesown": "E se eu precisar converter e fazer o upload de arquivos do meu computador? Bom, enquanto as ferramentas NFS e Grid estiverem habilitadas em Tool Labs, você conseguira usar a ferramenta {{#a}}#vc|videoconvert{{/a}}.",
 	"noteslicensing": "Carregar apenas {{#a}}#fl|conteúdo livre{{/a}} ou de {{#a}}#pd|domínio público{{/a}}. {{#a}}#fu|Ficheiros protegidos por direitos de autor{{/a}} não são permitidos Wikimedia Commons.",
 	"extensionmsg": "A extensão do arquivo definido acima é usada, se e somente se, o formato do vídeo não for de código livre, requerendo assim uma transcodificação. Vídeos em formatos abertos mantém as suas extensões.",
 	"confirmmsg": "Por favor, confirme a tarefa ou clique no botão \"Voltar\" para mudar os parâmetros. Clicando em \"confirmar\", a tarefa será enviada e realizada. Devido a restrições técnicas, a tarefa não poderá ser facilmente abortada quando enviada."

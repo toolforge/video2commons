@@ -42,7 +42,6 @@
 	"notesplaylists": "Spellistor inte kommer att behandlas på rätt sätt. Vissa webbplatser (som Youku och Comedy Central) använder sig av videor med flera delar, vilket tolkas som spellistor och kommer inte heller att behandlas på rätt sätt.",
 	"notesuncheck": "Avmarkera motsvarande kryssruta om mediafilen inte innehåller video eller ljudspår. Annars kan konverteringen misslyckas även om formatet är fritt.",
 	"notessubtitles": "Om 'Importera undertexter' är markerat kommer undertexter att importeras, förutom de som är automatiskt genererade.",
-	"notesown": "Vad gör jag om jag behöver konvertera och ladda upp en fil från min dator? Nå, medan NFS och Grid-motorn fortfarande är tillgängliga i Tool Labs kan du använda {{#a}}#vc|videoconvert{{/a}}-verktyg.",
 	"noteslicensing": "Ladda bara upp innehåll som är {{#a}}#fl|fritt licenserat{{/a}} eller {{#a}}#pd|public domain{{/a}}. {{#a}}#fu|Fair use{{/a}} tillåts inte på Wikimedia Commons.",
 	"extensionmsg": "Den filändelse som satts ovan används om, och endast om, videon är i ett icke-fritt format, som kräver omkodning. Videoklipp i fritt format kommer att behålla sin ändelse.",
 	"confirmmsg": "Godkänn uppgiften eller klicka på 'Tillbaka' för att ändra parametrarna. Uppgiften kommer att skickas och utföras när du klickar på 'Bekräfta'. P.g.a. tekniska begränsningar kan inte en uppgift avbrytas lika enkelt när den har skickats in."

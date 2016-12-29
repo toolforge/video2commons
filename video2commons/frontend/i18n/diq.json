@@ -2,7 +2,9 @@
 	"@metadata": {
 		"authors": [
 			"Kumkumuk",
-			"Mirzali"
+			"Mirzali",
+			"1917 Ekim Devrimi",
+			"Gambollar"
 		]
 	},
 	"loginOnCommons": "Wikimedia Commonsi ya dekewten",
@@ -28,7 +30,7 @@
 	"keep": "Tepışten",
 	"filetarget": "Etiketa namey dosya",
 	"transcoding": "Formata transcoding",
-	"filedescription": "Pela şınasiya dosya",
+	"filedescription": "Selasnayışé pera dosye",
 	"filename": "Namey Dosya",
 	"video": "Vidyo",
 	"audio": "Veng",
@@ -36,12 +38,13 @@
 	"keepvideo": "Vidyo tepêş",
 	"keepaudio": "Veng tepêş",
 	"importsubtitles": "Bınnuşte defi de",
+	"uploadFile": "Ya na ju dosye bar kerê...",
+	"uploading": "Bar beno...",
 	"note": "Not:",
 	"importantnote": "Not definayış:",
 	"notesplaylists": "Listeyê cınayışan de raşt kar nefiyê. (mesela zey  Youku u Comedy Central) Tay sitey  zey listandê cınayışa mane benê,  zafın videoy feyde dayış u raşt xebetnayışê cı do nêbo.",
 	"notesuncheck": "Trak yana videoy  tede demedya çınê bo se,  nışananê cı wedarnê. Zewbi zi çerx bıyayış de veng bo zi faydê nêkeno",
 	"notessubtitles": "Eger ke weyniya 'bınnuşte dekerê' se,  bınnuşte do debiyo,  yu teberra otomatik vırazi yo.",
-	"notesown": "Komputer de kes Dosya çarx kerdış yana barkerdış ke seni keno? İşte hendık mayê tıya,  NFS yana makina da Gridi ra haleta ra mumkun beno., tı şenê  {{#a}}vc|Videoconverter{{/a}} ra haleter bıkarnê",
 	"noteslicensing": "Teyna {{#a}}#fl|brlaş lisansa{{/a}} yana {{#a}}#pd|domain şara {{/a}} zerrek de bar ke. {{#a}}#fu|Adil kar finayış{{/a}} Wikimedia Commons de mısade deya yo",
 	"extensionmsg": "Ena derganiya dosya,  kod kerdış wazeyen yu format de cor de karêna.  Serbest stil dr zi dosyay derganiya xoya xebtênê",
 	"confirmmsg": "Wezifab u parametreyan vurnayışi re peyd ke bıploğnê. 'tesdiq ke'  ra zi şıma şenê araşt kerê.  Rışayışi dıma kes nêşeno ena hereketer peyaer bıgiro"

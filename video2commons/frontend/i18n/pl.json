@@ -1,7 +1,8 @@
 {
 	"@metadata": {
 		"authors": [
-			"Chrumps"
+			"Chrumps",
+			"Woytecr"
 		]
 	},
 	"loginOnCommons": "Zaloguj się na Wikimedia Commons",
@@ -14,6 +15,7 @@
 	"next": "Następne",
 	"loading": "Ładowanie...",
 	"confirm": "Potwierdź",
+	"errorDisconnect": "Nie udało się połączyć z serwerem. Proszę odświeżyć tę stronę lub napisać zgłoszenie na GitHubie.",
 	"addTask": "Dodaj zadanie...",
 	"yourTasks": "Twoje zadania:",
 	"cancel": "Anuluj",
@@ -30,6 +32,8 @@
 	"keepvideo": "Zachowaj wideo",
 	"keepaudio": "Zachowaj audio",
 	"importsubtitles": "Importuj napisy",
+	"uploadFile": "Lub prześlij plik...",
+	"uploading": "Przesyłanie...",
 	"note": "Uwaga:",
 	"importantnote": "Ważna uwaga:",
 	"notessubtitles": "Jeśli zaznaczona jest opcja 'Importuj napisy', napisy będą importowane, z wyłączeniem generowanych automatycznie."

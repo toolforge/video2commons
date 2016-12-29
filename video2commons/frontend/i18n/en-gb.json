@@ -40,7 +40,6 @@
 	"notesplaylists": "Playlists will not be processed correctly. Some sites (such as Youku and Comedy Central) make use of multi-part videos, interpreted as playlists, and will not be processed correctly either.",
 	"notesuncheck": "If the media does not include video or audio tracks, please uncheck the corresponding checkboxes; otherwise conversion may fail, even if the format is free.",
 	"notessubtitles": "If 'Import subtitles' is checked, subtitles will be imported, excluding auto-generated ones.",
-	"notesown": "What if I need to convert and upload a file on my computer? Well, while NFS and Grid engine are still available in Tool Labs, you can use {{#a}}#vc|videoconvert{{/a}} tool.",
 	"noteslicensing": "Only upload {{#a}}#fl|freely licensed{{/a}} or {{#a}}#pd|public domain{{/a}} content. {{#a}}#fu|Fair use{{/a}} is not allowed on Wikimedia Commons.",
 	"extensionmsg": "The file extension set above is used if and only if the video is in a non-free format, which requires transcoding. Videos in free formats will keep their extensions.",
 	"confirmmsg": "Please confirm the task or click 'Back' to change the parameters. By clicking 'Confirm', the task will be submitted and executed. Due to technical restrictions, a task cannot be easily stopped once submitted."

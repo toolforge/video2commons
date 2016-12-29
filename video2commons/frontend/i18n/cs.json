@@ -42,7 +42,6 @@
 	"notesplaylists": "Playlisty nebudou správně zpracováné. Některé weby (například Youku a Comedy Central) využívají vícedílné videa, interpretované jako playlisty. Tyto také nebudou správně zpracováné.",
 	"notesuncheck": "V případě, že médium neobsahuje video nebo audio stopy, zrušte prosím zaškrtnutí odpovídajících políček; v opačném případě může konverze selhat, a to i v případě, že se jedná o volný formát.",
 	"notessubtitles": "Pokud je zaškrtnuto „Nahrát titulky“, titulky budou nahrány, s výjimkou automaticky vytvořených.",
-	"notesown": "Co když budu potřebovat převést a nahrát soubor na mém počítači? No, zatímco NFS a Grid engine jsou stále k dispozici v Tool Labs, můžete použít nástroj {{#a}}#vc|videoconvert{{/a}}.",
 	"noteslicensing": "Nahrejte pouze {{#a}}#fl|volně licencovaný{{/a}} nebo {{#a}}#pd|public domain{{/a}} obsah. {{#a}}#fu|Volné užití{{/a}} není na Wikimedia Commons povoleno.",
 	"extensionmsg": "Nastavený formát souboru se použije pouze v případě, že video není ve volném formátu, který vyžaduje překódování. U videí ve volných formátech bude formát zachován.",
 	"confirmmsg": "Potvrďte úlohu nebo klikněte na tlačítko \"Zpět\" pro změnu parametrů. Kliknutím na tlačítko \"Potvrdit\" bude úkol zadán a proveden. Vzhledem k technickým omezením úloha nemůže být snadno přerušená po jejím zadání."

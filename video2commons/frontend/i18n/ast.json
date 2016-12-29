@@ -40,7 +40,6 @@
 	"notesplaylists": "Les llistes de reproducción nun se procesarán correchamente. Dellos sitios web (como Youku y Comedy Central) utilicen videos xebraos en delles partes, interpretaos como llistes de reproducción, y tampoco se procesarán correchamente.",
 	"notesuncheck": "Si'l ficheru multimedia nun inclui pistes de soníu o de videu, desactiva les caxelles correspondientes; d'otra manera la conversión puede fallar, inclusive si'l formatu ye llibre.",
 	"notessubtitles": "Si ta marcao 'Importar subtítulos', van importase los subtítulos, sacante los autoxeneraos.",
-	"notesown": "¿Y si preciso convertir y xubir un ficheru nel mio ordenador? Mentanto NFS ya'l motor Grid inda tean disponibles en Tool Labs, puedes usar la ferramienta {{#a}}#vc|videoconvert{{/a}}.",
 	"noteslicensing": "Namái xube conteníu {{#a}}#fl|con llicencia llibre{{/a}} o {{#a}}#pd|en dominiu públicu{{/a}}. Nun se permite conteníu d'{{#a}}#fu|usu xustu{{/a}} en Wikimedia Commons.",
 	"extensionmsg": "La estensión de ficheru escoyida enriba úsase sólo cuando'l videu ta en formatu non llibre, que rique trescodificación. Los videos en formatos llibres van caltener les estensiones.",
 	"confirmmsg": "Confirma la xera o fai clic en 'Volver' pa camudar los parámetros. Al faer clic en 'Confirmar', la xera va unviase y executase. Por cuenta de restricciones técniques, la xera nun puede atayase con facilidá después d'unviala."

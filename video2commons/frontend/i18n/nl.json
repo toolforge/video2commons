@@ -40,7 +40,6 @@
 	"notesplaylists": "Afspeellijsten worden niet correct verwerkt. Sommige sites (zoals Youku en Comedy Central) maken gebruik van multipart-video's, geïnterpreteerd als afspeellijsten, en deze worden niet correct verwerkt.",
 	"notesuncheck": "Als de mediabestanden geen video- of audiosporen bevatten, vink de selectievakjes dan af, anders mislukt het omzetten, zelfs als het een open bestand is.",
 	"notessubtitles": "Als \"ondertitels importeren\" is aangevinkt, dan worden ondertitels geïmporteerd, met uitzondering van automatisch gegenereerde ondertitels.",
-	"notesown": "Wat als ik een besatand wil omzetten en uploaden vanaf mijn computer? Zolang NFS en Grid engine nog steeds beschikbaar zijn, kunt u gebruik maken van {{#a}}#vc|videoconvert{{/a}}.",
 	"noteslicensing": "Upload alleen inhoud die {{#a}}#fl|vrij gelicenseerd{{/a}} is of zich in het {{#a}}#pd|publieke domein{{/a}} bevindt. {{#a}}#fu|Fair use{{/a}} is niet toegestaan op Wikimedia Commons.",
 	"extensionmsg": "De hierboven ingestelde bestandsextensie wordt alleen gebruikt als de video een niet vrije opmaak heeft, waardoor er transcoderen nodig is. Video's in vrij opmaak houden hun extensies.",
 	"confirmmsg": "Bevestig de taak of klik op \"Terug\" om de instellingen aan te passen. Door te klikken op \"Bevestigen\", wordt de taak ingediend en uitgevoerd. Vanwege technische beperkingen, kan een taak niet eenvoudig worden afgebroken als die eenmaal is ingediend."
