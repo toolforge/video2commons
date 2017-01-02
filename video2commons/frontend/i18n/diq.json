@@ -4,7 +4,8 @@
 			"Kumkumuk",
 			"Mirzali",
 			"1917 Ekim Devrimi",
-			"Gambollar"
+			"Gambollar",
+			"Dılmıc"
 		]
 	},
 	"loginOnCommons": "Wikimedia Commonsi ya dekewten",
@@ -38,7 +39,7 @@
 	"keepvideo": "Vidyo tepêş",
 	"keepaudio": "Veng tepêş",
 	"importsubtitles": "Bınnuşte defi de",
-	"uploadFile": "Ya na ju dosye bar kerê...",
+	"uploadFile": "Ya ki jû dosya bar kerên...",
 	"uploading": "Bar beno...",
 	"note": "Not:",
 	"importantnote": "Not definayış:",
