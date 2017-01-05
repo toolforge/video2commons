@@ -2,7 +2,8 @@
 	"@metadata": {
 		"authors": [
 			"Ykhwong",
-			"아라"
+			"아라",
+			"Jerrykim306"
 		]
 	},
 	"loginOnCommons": "위키미디어 공용에 로그인",
@@ -36,6 +37,7 @@
 	"keepvideo": "동영상 유지",
 	"keepaudio": "소리 유지",
 	"importsubtitles": "자막 가져오기",
+	"uploadFile": "또는 파일 업로드하기...",
 	"uploading": "올리는 중...",
 	"note": "참고:",
 	"importantnote": "중요한 참고:",

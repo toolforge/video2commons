@@ -1,7 +1,8 @@
 {
 	"@metadata": {
 		"authors": [
-			"Gwenn-Ael"
+			"Gwenn-Ael",
+			"Fulup"
 		]
 	},
 	"loginOnCommons": "Kevreañ ouzh Wikimedia Commons",
@@ -16,7 +17,9 @@
 	"confirm": "Kadarnaat",
 	"addTask": "Ouzhpennañ un trevell...",
 	"yourTasks": "Ho trevelloù:",
+	"cancel": "Nullañ",
 	"back": "Distreiñ",
+	"extractor": "Eztenner",
 	"keep": "Mirout",
 	"filetarget": "Anv ar restr da dizhout",
 	"transcoding": "Furmad treuzkodañ",
@@ -28,6 +31,8 @@
 	"keepvideo": "Mirout ar video",
 	"keepaudio": "Mirout ar c'hleved",
 	"importsubtitles": "Enporzhiañ istitloù",
+	"uploadFile": "Pe enporzhiañ ur restr...",
+	"uploading": "Oc'h enporzhiañ...",
 	"note": "Notenn :",
 	"importantnote": "Evezhiadenn bouezus :"
 }

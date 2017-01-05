@@ -35,6 +35,8 @@
 	"keepvideo": "Manter vídeo",
 	"keepaudio": "Manter son",
 	"importsubtitles": "Importar subtítulos",
+	"uploadFile": "Ou suba un ficheiro...",
+	"uploading": "Subindo...",
 	"note": "Nota:",
 	"importantnote": "Nota importante:",
 	"notesplaylists": "As listas de reproducción non se procesarán correctamente. Algúns sitios web (como Youku e Comedy Central) utilizan vídeos divididos en varias partes, interpretados como unha lista de reproducción, e tampoco se procesarán correctamente.",

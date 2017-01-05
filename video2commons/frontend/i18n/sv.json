@@ -37,6 +37,8 @@
 	"keepvideo": "Behåll video",
 	"keepaudio": "Behåll ljud",
 	"importsubtitles": "Importera undertexter",
+	"uploadFile": "Eller ladda upp en fil...",
+	"uploading": "Laddar upp...",
 	"note": "OBS:",
 	"importantnote": "Viktigt att notera:",
 	"notesplaylists": "Spellistor inte kommer att behandlas på rätt sätt. Vissa webbplatser (som Youku och Comedy Central) använder sig av videor med flera delar, vilket tolkas som spellistor och kommer inte heller att behandlas på rätt sätt.",
