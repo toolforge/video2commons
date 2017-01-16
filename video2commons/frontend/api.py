@@ -257,10 +257,8 @@ def create_phab_url(es):
     """Create a server side upload Phabricator URL."""
     urls = '\n'.join(['* ' + e['url'] for e in es])
 
-    # TODO: Remove ".replace('md5: ', '')" after workers are good
     checksums = '\n'.join(['| %s | %s |' %
-                           (e['url'].rsplit('/', 1)[-1],
-                            e['hashsum'].replace('md5: ', ''))
+                           (e['url'].rsplit('/', 1)[-1], e['hashsum'])
                            for e in es])
 
     phabdesc = """Please upload these file(s) to Wikimedia Commons:
@@ -278,11 +276,15 @@ def create_phab_url(es):
 
 Thank you!""" % (urls, checksums)
 
+    phabtitle = "Server side upload for %s" % session['username']
+
     phaburl = \
         'https://phabricator.wikimedia.org/maniphest/task/edit/form/1/?' + \
-        'title=Please%20upload%20large%20file%20to%20Wikimedia%20Commons&' + \
-        'projects=Wikimedia-Site-requests,commons&description=' + \
-        urllib.quote(phabdesc.encode('utf-8'))
+        urllib.urlencode({
+            'title': phabtitle.encode('utf-8'),
+            'projects': 'Wikimedia-Site-requests,commons,video2commons',
+            'description': phabdesc.encode('utf-8')
+        })
     return phaburl
 
 
