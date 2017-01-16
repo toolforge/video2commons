@@ -69,9 +69,9 @@ def main(
     if redisconnection.exists(lockkey):
         raise Ignore
 
-    # Check for 15G of disk space, refuse to run if it is unavailable
+    # Check for 10G of disk space, refuse to run if it is unavailable
     st = os.statvfs('/srv')
-    if st.f_frsize * st.f_bavail < 15 << 30:
+    if st.f_frsize * st.f_bavail < 10 << 30:
         self.retry(max_retries=20, countdown=5*60)
         assert False  # should never reach here
 
