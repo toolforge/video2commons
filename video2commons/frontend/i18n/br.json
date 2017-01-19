@@ -17,8 +17,11 @@
 	"loading": "O kargañ...",
 	"confirm": "Kadarnaat",
 	"errorDisconnect": "N'eus ket bet gall kevreañ ouzh ar servijer. Freskaat ar bajenn en-dro pe kas keloù diwar-benn ar gudenn e GitHub.",
+	"errorTooLarge": "Re vras eo ar restr evit bezañ enporzhiet war-eeun ! Gallout a rit {{#a}}goulenn ma vo sevenet an enporzhiañ gant ar servijer{{/a}}.",
 	"addTask": "Ouzhpennañ un trevell...",
 	"yourTasks": "Ho trevelloù:",
+	"createServerSide": "Krouiñ un tiked enporzhiañ dre ar servijer en ur wech (erbedet)",
+	"taskDone": "Kaset eo bet ho trevell da benn vat. An enporzhiadenn a gavot war {{#a}}{{/a}}.",
 	"cancel": "Nullañ",
 	"back": "Distreiñ",
 	"extractor": "Eztenner",
@@ -36,5 +39,11 @@
 	"uploadFile": "Pe enporzhiañ ur restr...",
 	"uploading": "Oc'h enporzhiañ...",
 	"note": "Notenn :",
-	"importantnote": "Evezhiadenn bouezus :"
+	"importantnote": "Evezhiadenn bouezus :",
+	"notesplaylists": "Ne vo ket pledet ent reizh gant rolladoù lenn zo. Lec'hiennoù zo (evel Youku ha Comedy Central) a ra gant videoioù rannet a-dammoù, komprenet evel rolladoù lenn. Ar re-mañ ne vo ket pledet ganto ent reizh kennebeut.",
+	"notesuncheck": "Ma ne ra ket ar media gant pistennoù video pe son eo gwelloc'h diaskañ al logoù ; a-hend-all e c'hallo an amdroadur c'hwitañ, ha pa vefe frank ar furmad.",
+	"notessubtitles": "M'eo asket al log 'enporzhiañ istitloù' e vint enporzhiet, nemet ar re ganet ent emgefre.",
+	"noteslicensing": "Enporzhiañ hepken danvez {{#a}}#fl|gant un aotre-implijout frank{{/a}} pe en {{#a}}#pd|domani foran{{/a}}. N'eo ket degemeret an {{#a}}#fu|aotre implij reizh (Fair use){{/a}} war Wikimedia Commons.",
+	"extensionmsg": "N'eo implijet an astenn restr termenet a-us nemet ma ne ra ket ar video gant ur furmad frank, da neuze eo rekis ober gant un treuzkodañ. Ar videoioù zo diouzh ur furmad frank a viro o astennoù",
+	"confirmmsg": "Kadarnaat an trevell pe klikañ war \"Kent\" evit cheñch an arventennoù. Ma klikit war 'Kadarnaat' e vo kaset an trevelloù hag erounet e vint. Abalamour da strishadurioù teknikel eo diaes nullañ un trevell ur wech m'eo bet kaset."
 }
