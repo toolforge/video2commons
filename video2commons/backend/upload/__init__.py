@@ -54,7 +54,7 @@ def upload(
                 size, statuscallback, errorcallback
             )
         except pywikibot.data.api.APIError, e:
-            if 'stash' in e.code:
+            if 'stash' in e.code or e.code == 'backend-fail-internal':
                 upload_ss(
                     filename, wikifilename, http_host, filedesc,
                     statuscallback, errorcallback
