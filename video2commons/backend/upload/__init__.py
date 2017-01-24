@@ -47,7 +47,7 @@ def upload(
             filename, wikifilename, sourceurl, filedesc, username,
             size, statuscallback, errorcallback
         )
-    elif size < 2000000000:
+    elif size < (4 << 30):
         try:
             return upload_pwb(
                 filename, wikifilename, sourceurl, filedesc, username,
@@ -61,12 +61,6 @@ def upload(
                 )
             else:
                 raise
-
-    elif size < (1 << 32):
-        upload_ss(
-            filename, wikifilename, http_host, filedesc,
-            statuscallback, errorcallback
-        )
     else:
         errorcallback(
             'Sorry, but files larger than 4GB can not be uploaded even ' +
@@ -94,7 +88,7 @@ def upload_pwb(
     try:
         if not site.upload(
             page, source_filename=filename, comment=comment, text=filedesc,
-            chunk_size=chunked  # , ignore_warnings=['exists-normalized']
+            chunk_size=chunked, async=True  # , ignore_warnings=['exists-normalized']
         ):
             errorcallback('Upload failed!')
     except pywikibot.data.api.APIError:
