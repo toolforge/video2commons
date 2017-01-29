@@ -148,6 +148,9 @@ def _uploader(url, ie_key, title, info):
     uploader = escape_wikitext((info.get('uploader') or '').strip())
     uploader_url = info.get('uploader_url') or ''
     if uploader_url:
+        # HACK: YouTube outputs http:// atm (issue #80)
+        if ie_key == 'Youtube':
+            uploader_url = uploader_url.replace('http://', 'https://')
         uploader = u'[%s %s]' % (uploader_url, uploader)
     return uploader
 
