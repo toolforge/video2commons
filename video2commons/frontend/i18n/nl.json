@@ -35,6 +35,8 @@
 	"keepvideo": "Video behouden",
 	"keepaudio": "Audio behouden",
 	"importsubtitles": "Ondertitels importeren",
+	"uploadFile": "Of upload een bestand...",
+	"uploading": "Bezig met uploaden...",
 	"note": "Opmerking:",
 	"importantnote": "Belangrijke opmerking:",
 	"notesplaylists": "Afspeellijsten worden niet correct verwerkt. Sommige sites (zoals Youku en Comedy Central) maken gebruik van multipart-video's, geïnterpreteerd als afspeellijsten, en deze worden niet correct verwerkt.",
