@@ -182,6 +182,15 @@ def _license(url, ie_key, title, info):
             'Public Domain Mark':
                 '{{safesubst:Flickr-public domain mark/subst}}',
         }.get(info.get('license'), default)
+    elif ie_key == 'Vimeo':
+        return {
+            'by':
+                '{{cc-by-3.0%s}}' % uploader_param,
+            'by-sa':
+                '{{cc-by-sa-3.0%s}}' % uploader_param,
+            'cc0':
+                '{{cc-zero}}',
+        }.get(info.get('license'), default)
 
     return default
 
