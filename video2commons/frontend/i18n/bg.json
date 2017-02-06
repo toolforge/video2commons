@@ -2,7 +2,8 @@
 	"@metadata": {
 		"authors": [
 			"StanProg",
-			"Spiritia"
+			"Spiritia",
+			"АдмиралАнимЕ"
 		]
 	},
 	"loginOnCommons": "Вход в Общомедия",
@@ -35,7 +36,7 @@
 	"subtitles": "субтитри",
 	"keepvideo": "Запази видео съдържанието",
 	"keepaudio": "Запази аудио съдържанието",
-	"importsubtitles": "Импортирай субтитрите",
+	"importsubtitles": "Внасяне на субтитри",
 	"uploadFile": "Или качи файл...",
 	"uploading": "Качване...",
 	"note": "Забележка:",
