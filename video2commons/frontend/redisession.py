@@ -99,3 +99,13 @@ class RedisSessionInterface(SessionInterface):
             response.set_cookie(app.session_cookie_name, session.sid,
                                 expires=cookie_exp, httponly=True,
                                 domain=domain, path=path, secure=True)
+
+    def abandon_session(self, app, session):
+        """Delete the session from redis, empty it, and reinit."""
+        session.clear()
+
+        if not session.new:
+            self.redis.delete(self.prefix + session.sid)
+
+            sid = self.generate_sid()
+            session.__init__(sid=sid, new=True)

@@ -105,9 +105,8 @@ def main():
         auth = dologin()
         session['language'] = querylanguage(auth)
     except:
-        # SECURITY: If we cannot login, the session is invalid. We clear it
-        # so that the session cookie ID is cleared and will be reset.
-        session.clear()
+        # SECURITY: If we cannot login, the session is invalid.
+        app.session_interface.abandon_session(app, session)
         return render_template(
             'main.min.html',
             loggedin=False
@@ -171,6 +170,8 @@ def querylanguage(auth):
 @app.route('/oauthinit')
 def loginredirect():
     """Initialize OAuth login."""
+    app.session_interface.abandon_session(app, session)
+
     redirecturl, request_token = handshaker.initiate()
     session['request_token_key'], session['request_token_secret'] = \
         request_token.key, request_token.secret
