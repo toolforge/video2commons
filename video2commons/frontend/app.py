@@ -105,6 +105,9 @@ def main():
         auth = dologin()
         session['language'] = querylanguage(auth)
     except:
+        # SECURITY: If we cannot login, the session is invalid. We clear it
+        # so that the session cookie ID is cleared and will be reset.
+        session.clear()
         return render_template(
             'main.min.html',
             loggedin=False

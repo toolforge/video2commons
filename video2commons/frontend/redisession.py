@@ -64,13 +64,16 @@ class RedisSessionInterface(SessionInterface):
     def open_session(self, app, request):
         """Get session from Redis / start a new session."""
         sid = request.cookies.get(app.session_cookie_name)
-        if not sid:
-            sid = self.generate_sid()
-            return self.session_class(sid=sid, new=True)
-        val = self.redis.get(self.prefix + sid)
-        if val is not None:
-            data = self.serializer.loads(val)
-            return self.session_class(data, sid=sid)
+        if sid:
+            val = self.redis.get(self.prefix + sid)
+            if val is not None:
+                data = self.serializer.loads(val)
+                return self.session_class(data, sid=sid)
+
+        # SECURITY: If the session id is invalid, we create a new one, to
+        # prevent cookie-injection.
+        # https://www.usenix.org/system/files/conference/usenixsecurity15/sec15-paper-zheng.pdf
+        sid = self.generate_sid()
         return self.session_class(sid=sid, new=True)
 
     def save_session(self, app, session, response):
