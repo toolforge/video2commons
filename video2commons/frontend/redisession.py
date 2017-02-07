@@ -95,4 +95,4 @@ class RedisSessionInterface(SessionInterface):
                                   int(redis_exp.total_seconds()))
             response.set_cookie(app.session_cookie_name, session.sid,
                                 expires=cookie_exp, httponly=True,
-                                domain=domain, path=path)
+                                domain=domain, path=path, secure=True)
