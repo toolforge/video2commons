@@ -43,6 +43,7 @@ handshaker = Handshaker(api_url, consumer_token)
 
 app = Flask(__name__)
 
+app.session_cookie_name = 'v2c-session'
 app.session_interface = RedisSessionInterface(redisconnection)
 
 app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 3600
