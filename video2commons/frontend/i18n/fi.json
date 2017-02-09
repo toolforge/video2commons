@@ -1,12 +1,14 @@
 {
 	"@metadata": {
 		"authors": [
-			"Silvonen"
+			"Silvonen",
+			"Pyscowicz"
 		]
 	},
 	"loginOnCommons": "Kirjaudu Wikimedia Commonsiin",
 	"logout": "Kirjaudu ulos",
 	"help": "Ohje",
+	"JavascriptRequired": "JavaScript edellytetään tämän työkalun käyttämiseen!",
 	"abort": "Keskeytä",
 	"remove": "Poista",
 	"restart": "Käynnistä uudelleen",
@@ -15,10 +17,13 @@
 	"confirm": "Vahvista",
 	"addTask": "Lisää tehtävä...",
 	"yourTasks": "Tehtäväsi:",
+	"cancel": "Peruuta",
 	"back": "Takaisin",
 	"keep": "Säilytä",
 	"filedescription": "Tiedoston kuvaussivu",
 	"filename": "Tiedostonimi",
 	"subtitles": "tekstitys",
-	"importsubtitles": "Tuo tekstitys"
+	"importsubtitles": "Tuo tekstitys",
+	"uploadFile": "Tai lataa tiedosto...",
+	"uploading": "Lähetetään..."
 }
