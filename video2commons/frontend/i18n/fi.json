@@ -15,6 +15,7 @@
 	"next": "Seuraava",
 	"loading": "Ladataan...",
 	"confirm": "Vahvista",
+	"errorTooLarge": "Tiedosto on liian suuri suoraan ladattavaksi! Voit halutessasi {{#a}} pyytää palvelinsisäistä latausta{{/a}}.",
 	"addTask": "Lisää tehtävä...",
 	"yourTasks": "Tehtäväsi:",
 	"cancel": "Peruuta",
@@ -22,8 +23,14 @@
 	"keep": "Säilytä",
 	"filedescription": "Tiedoston kuvaussivu",
 	"filename": "Tiedostonimi",
+	"video": "Video",
+	"audio": "ääni",
 	"subtitles": "tekstitys",
+	"keepvideo": "Pidä video",
+	"keepaudio": "Pidä ääni",
 	"importsubtitles": "Tuo tekstitys",
 	"uploadFile": "Tai lataa tiedosto...",
-	"uploading": "Lähetetään..."
+	"uploading": "Lähetetään...",
+	"note": "Huomautus:",
+	"importantnote": "Tärkeä huomautus:"
 }
