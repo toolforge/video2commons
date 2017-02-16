@@ -1,0 +1,32 @@
+{
+	"@metadata": {
+		"authors": [
+			"Jagwar"
+		]
+	},
+	"loginOnCommons": "Hiditra ao amin'i Wikimedia Commons",
+	"logout": "Hivoaka",
+	"help": "Fanoroana",
+	"forkOnGitHub": "Hanao fork ao amin'i GitHub",
+	"JavascriptRequired": "Mila JavaScript  raha hampiasa ity fitaovana ity!",
+	"abort": "Ajanona",
+	"remove": "Esorina",
+	"restart": "Averina alefa",
+	"next": "Manaraka",
+	"loading": "Am-pakàna…",
+	"confirm": "Marinana",
+	"errorDisconnect": "Tsy nahomby ny fifandraisana tamin'ny lohamilina. Havaozy ilay pejy na ampahafantaro an'i GitHub ilay olana.",
+	"errorTooLarge": "Lehibe loatra ilay rakitra ka tsy afaka alefa avy hatrany! Afaka {{#a}}mangataka fandefasana avy amin'ny lohamilina{{/a}} ianao.",
+	"addTask": "Hanampy asa...",
+	"yourTasks": "Ny asanao:",
+	"createServerSide": "Hangataka tapakilam-pandefasana avy amin'ny lafin'ny lohamilina indray manao (soso-kevitra)",
+	"taskDone": "Tapitra ny asanao. Ho hitanao ao amin'i {{#a}}{{/a}} ny zavatra nalefanao.",
+	"cancel": "Avela",
+	"back": "Hiverina",
+	"keep": "Tazonina",
+	"filetarget": "Anaran-drakitra tanjona",
+	"filename": "Anaran-drakitra",
+	"video": "horonantsary",
+	"audio": "feo",
+	"subtitles": "zana-dohateny"
+}
