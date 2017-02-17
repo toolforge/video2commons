@@ -46,6 +46,14 @@
 				.html( htmlContent.loading );
 			video2commons.loadCsrf();
 			video2commons.checkStatus();
+
+			// If location.hash matches, fire up a new task dialog
+			var rePrefill = /^#?!(https?:\/\/.+)/;
+			if ( rePrefill.test( window.location.hash ) ) {
+				video2commons.addTask( {
+					url: window.location.hash.match( rePrefill )[ 1 ]
+				} );
+			}
 		},
 
 		loadCsrf: function() {
@@ -329,7 +337,7 @@
 		},
 
 		// Functions related to adding new tasks
-		addTask: function() {
+		addTask: function( taskdata ) {
 			if ( !addTaskDialog ) {
 				// addTask.html
 				$.get( 'static/html/addTask.min.html' )
@@ -368,21 +376,21 @@
 								}
 							} );
 
-						video2commons.openTaskModal();
+						video2commons.openTaskModal( taskdata );
 					} );
 
 			} else { // It's not redundant because Ajax load
-				video2commons.openTaskModal();
+				video2commons.openTaskModal( taskdata );
 			}
 		},
 
-		openTaskModal: function() {
+		openTaskModal: function( taskdata ) {
 			addTaskDialog.find( '#dialog-spinner' )
 				.hide();
 			addTaskDialog.find( '.modal-body' )
 				.html( '<center>' + loaderImage + '</center>' );
 
-			video2commons.newTask();
+			video2commons.newTask( taskdata );
 			addTaskDialog.modal();
 
 			// HACK
@@ -394,7 +402,7 @@
 			video2commons.reactivatePrevNextButtons();
 		},
 
-		newTask: function() {
+		newTask: function( taskdata ) {
 			newTaskData = {
 				step: 'source',
 				url: '',
@@ -410,6 +418,8 @@
 				filenamechecked: false,
 				filedescchecked: false
 			};
+			$.extend( newTaskData, taskdata );
+
 			video2commons.setupAddTaskDialog();
 		},
 
@@ -601,7 +611,7 @@
 								.reject( 'URL cannot be empty!' )
 								.promise();
 						}
-						if ( url !== newTaskData.url ) {
+						if ( !newTaskData.filename || !newTaskData.filedesc || url !== newTaskData.url ) {
 							newTaskData.filenamechecked = false;
 							newTaskData.filedescchecked = false;
 							var uploadedFile = newTaskData.uploadedFile[ url ];
