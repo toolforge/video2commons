@@ -7,7 +7,7 @@
 		]
 	},
 	"loginOnCommons": "Přihlásit se na Wikimedia Commons",
-	"logout": "Odhlásit",
+	"logout": "Odhlásit se",
 	"help": "Nápověda",
 	"forkOnGitHub": "Forkuj mě na GitHubu",
 	"JavascriptRequired": "K použití tohoto nástroje je vyžadován JavaScript!",
@@ -37,6 +37,8 @@
 	"keepvideo": "Ponechat video",
 	"keepaudio": "Ponechat zvuk",
 	"importsubtitles": "Nahrát titulky",
+	"uploadFile": "Nebo nahrát soubor...",
+	"uploading": "Nahrávám…",
 	"note": "Poznámka:",
 	"importantnote": "Důležité:",
 	"notesplaylists": "Playlisty nebudou správně zpracováné. Některé weby (například Youku a Comedy Central) využívají vícedílné videa, interpretované jako playlisty. Tyto také nebudou správně zpracováné.",
