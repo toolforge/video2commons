@@ -21,6 +21,9 @@
 	"back": "Retorn",
 	"extractor": "Extractor",
 	"keep": "Gardar",
+	"filetarget": "Nom del fichièr cibla",
+	"transcoding": "Format de transcodatge",
+	"filedescription": "Pagina de descripcion del fichièr",
 	"filename": "Nom del fichièr",
 	"video": "vidèo",
 	"audio": "àudio",
@@ -28,6 +31,8 @@
 	"keepvideo": "Gardar la vidèo",
 	"keepaudio": "Gardar l'àudio",
 	"importsubtitles": "Importar de sostítols",
+	"uploadFile": "O telecargar un fichièr…",
+	"uploading": "Cargament…",
 	"note": "Nòta :",
 	"importantnote": "Nòta importanta :"
 }
