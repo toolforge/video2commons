@@ -5,7 +5,8 @@
 			"Mirzali",
 			"1917 Ekim Devrimi",
 			"Gambollar",
-			"Dılmıc"
+			"Dılmıc",
+			"Gırd"
 		]
 	},
 	"loginOnCommons": "Wikimedia Commonsi ya dekewten",
@@ -22,7 +23,7 @@
 	"errorDisconnect": "Arderiya grebıyayiş nê bı. Reca kem ena pela anewe kerê yana GitHub de sebeba dosya bıvinê",
 	"errorTooLarge": "Dosya barkerdışi rê zaf gırd a,  wazenê se {{#a}}server ra barkerdış bıwaz{{/a}}",
 	"addTask": "Taslağ dek...",
-	"yourTasks": "Taslağ a to",
+	"yourTasks": "Teslağê şıma:",
 	"createServerSide": "Yu Şiyayışi rê bilat barkerdış  kışt-ardoğ de vıraz",
 	"taskDone": "Wezife bı qeyd. Şıma şenê barkerdışanê xo bıvinê {{#a}}{{/a}}",
 	"cancel": "Bıtexelne",
