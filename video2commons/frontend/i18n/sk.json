@@ -2,7 +2,8 @@
 	"@metadata": {
 		"authors": [
 			"Kusavica",
-			"TomášPolonec"
+			"TomášPolonec",
+			"Lexected"
 		]
 	},
 	"loginOnCommons": "Prihlásiť sa na Wikimedia Commons",
@@ -36,7 +37,14 @@
 	"keepvideo": "Ponechať video",
 	"keepaudio": "Ponechať zvuk",
 	"importsubtitles": "Importovať titulky",
+	"uploadFile": "Alebo nahrať súbor...",
+	"uploading": "Nahráva sa...",
 	"note": "Poznámka",
 	"importantnote": "Dôležitá poznámka:",
-	"notesplaylists": "Playlisty nebudú správne spracované. Niektoré webové stránky (napr. Youku alebo Comedy Central) používajú zložené videá interpretované ako playlisty a nebudú spracované správne."
+	"notesplaylists": "Playlisty nebudú správne spracované. Niektoré webové stránky (napr. Youku alebo Comedy Central) používajú zložené videá interpretované ako playlisty a nebudú spracované správne.",
+	"notesuncheck": "V prípade, že médium neobsahuje video alebo audio stopy, zrušte prosím zaškrtnutie zodpovedajúcich políčok; v opačnom prípade môže konverzia zlyhať, a to i v prípade, že sa jedná o voľný formát.",
+	"notessubtitles": "Ak je zaškrtnuté 'Importovať titulky', titulky budú importované, okrem teda auto-generovaných",
+	"noteslicensing": "Nahrávajte iba {{#a}}#fl|voľne licencovaný{{/a}} alebo {{#a}}#pd|public domain{{/a}} obsah. {{#a}}#fu|Voľné použitie{{/a}} nie je na Wikimedia Commons povolené.",
+	"extensionmsg": "Formát súboru nastavený vyššie je používaný práve vtedy, keď je video nie voľne dostupného formátu, ktorý potrebuje prekódovanie. Videá vo voľne dostupných formátoch si zachovajú svoje formáty.",
+	"confirmmsg": "Potvrdte prosím úlohu alebo kliknite na 'Naspäť' za účelom zmeny parametrov. Kliknutím na 'Potvrdiť' bude úloha odoslaná na spracovanie a vykonaná. Kvôli technickým obmedzeniam vykonávanie úlohy nemôže byť jednoduchým spôsobom zastavené, pokým bola úloha už raz odoslaná na spracovanie."
 }
