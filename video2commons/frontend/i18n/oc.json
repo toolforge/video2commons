@@ -15,6 +15,7 @@
 	"next": "Seguent",
 	"loading": "Cargament…",
 	"confirm": "Confirmar",
+	"errorDisconnect": "La connexion al servidor a fracassat. Refrescatz aquesta pagina o senhalatz lo problèma dins GitHub.",
 	"addTask": "Apondre un prètzfait...",
 	"yourTasks": "Vòstres prètzfaits :",
 	"cancel": "Anullar",
