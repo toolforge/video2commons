@@ -1,0 +1,25 @@
+{
+	"@metadata": {
+		"authors": [
+			"Subi"
+		]
+	},
+	"loginOnCommons": "Saioa hasi Wikimedia Commons-en",
+	"logout": "Saioa itxi",
+	"help": "Laguntza",
+	"JavascriptRequired": "JavaScript behar da tresna hau erabili ahal izateko!",
+	"next": "Hurrengoa",
+	"loading": "Kargatzen...",
+	"filedescription": "Fitxategiaren deskribapen-orria",
+	"filename": "Fitxategiaren izena",
+	"video": "bideoa",
+	"audio": "soinua",
+	"subtitles": "azpitituluak",
+	"keepvideo": "Bideoa mantendu",
+	"keepaudio": "Soinua mantendu",
+	"importsubtitles": "Azpititulua inportatu",
+	"uploadFile": "Edo fitxategia igo...",
+	"uploading": "Igotzen...",
+	"note": "Oharra:",
+	"importantnote": "Ohar garrantzitsua:"
+}

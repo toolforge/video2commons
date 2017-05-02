@@ -1,0 +1,31 @@
+{
+	"@metadata": {
+		"authors": [
+			"Papuass"
+		]
+	},
+	"help": "Palīdzība",
+	"remove": "Noņemt",
+	"restart": "Sākt no jauna",
+	"next": "Tālāk",
+	"loading": "Ielādē…",
+	"confirm": "Apstiprināt",
+	"addTask": "Pievienot uzdevumu...",
+	"yourTasks": "Tavi uzdevumi:",
+	"cancel": "Atcelt",
+	"back": "Atpakaļ",
+	"keep": "Paturēt",
+	"filetarget": "Mērķa faila nosaukums",
+	"filedescription": "Faila apraksta lapa",
+	"filename": "Faila nosaukums",
+	"video": "video",
+	"audio": "audio",
+	"subtitles": "subtitri",
+	"keepvideo": "Paturēt video",
+	"keepaudio": "Paturēt audio",
+	"importsubtitles": "Importēt subtitrus",
+	"uploadFile": "Vai augšupielādēt failu...",
+	"uploading": "Augšupielādē...",
+	"note": "Piezīme:",
+	"importantnote": "Svarīga piezīme:"
+}
