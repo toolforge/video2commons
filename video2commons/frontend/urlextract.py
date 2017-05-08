@@ -89,7 +89,8 @@ def do_extract_url(url):
     }
     info = youtube_dl.YoutubeDL(params).extract_info(url, download=False)
 
-    assert 'formats' in info, 'Your url cannot be processed correctly'
+    assert 'formats' in info or info.get('direct'), \
+        'Your url cannot be processed correctly'
 
     ie_key = info['extractor_key']
     title = (info.get('title') or '').strip()
