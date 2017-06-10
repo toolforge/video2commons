@@ -96,18 +96,19 @@ file { '/srv/v2c/throttle.ctrl':
     before  => Service['v2ccelery'],
 }
 
-$config_py_template = '# THIS FILE IS MANAGED BY MANUAL PUPPET
-consumer_key = "<%= @consumer_key %>"
-consumer_secret = "<%= @consumer_secret %>"
-api_url = "https://commons.wikimedia.org/w/index.php"
-redis_pw = "<%= @redis_pw %>"
-redis_host = "<%= @redis_host %>"
-http_host = "<%= @http_host %>"
+$config_json_template = '{
+"consumer_key": "<%= @consumer_key %>",
+"consumer_secret": "<%= @consumer_secret %>",
+"api_url": "https://commons.wikimedia.org/w/index.php",
+"redis_pw": "<%= @redis_pw %>",
+"redis_host": "<%= @redis_host %>",
+"http_host": "<%= @http_host %>"
+}
 '
 
-file { '/srv/v2c/config.py':
+file { '/srv/v2c/config.json':
     ensure  => file,
-    content => inline_template($config_py_template),
+    content => inline_template($config_json_template),
     require => Exec['git-clone-v2c'],
     notify  => Service['v2ccelery'],
 }

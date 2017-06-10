@@ -1,6 +1,0 @@
-consumer_key = "abcdefg123456"
-consumer_secret = "abcdefghijklmn1234567890"
-api_url = "https://commons.wikimedia.org/w/index.php"
-redis_pw = "THISisNOTthePASSWORD@@@"
-redis_host = "encoding01.video.eqiad.wmflabs"
-http_host = "v2c.wmflabs.org"
