@@ -70,15 +70,19 @@ def download(
         'logger': get_logger('celery.task.v2c.main.youtube-dl')
     }
 
+    last_percentage = [Ellipsis]
+
     def progresshook(d):
         if d['status'] == 'downloading':
             total = d.get('total_bytes') or d.get('total_bytes_estimate')
             percentage = int(100.0 * d['downloaded_bytes'] / total)\
                 if total else None
-            statuscallback(
-                'Downloading to ' + (d['tmpfilename'] or d['filename']),
-                percentage
-            )
+            if percentage != last_percentage[0]:
+                last_percentage[0] = percentage
+                statuscallback(
+                    'Downloading to ' + (d['tmpfilename'] or d['filename']),
+                    percentage
+                )
         elif d['status'] == 'finished':
             statuscallback('Postprocessing...', -1)
         elif d['status'] == 'error':
