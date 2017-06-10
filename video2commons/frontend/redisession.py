@@ -67,8 +67,12 @@ class RedisSessionInterface(SessionInterface):
         if sid:
             val = self.redis.get(self.prefix + sid)
             if val is not None:
-                data = self.serializer.loads(val)
-                return self.session_class(data, sid=sid)
+                try:
+                    data = self.serializer.loads(val)
+                except ValueError:
+                    pass
+                else:
+                    return self.session_class(data, sid=sid)
 
         # SECURITY: If the session id is invalid, we create a new one, to
         # prevent cookie-injection.
