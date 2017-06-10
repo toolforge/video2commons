@@ -21,7 +21,7 @@
 
 from __future__ import absolute_import
 
-import pickle
+import json
 import traceback
 import urllib
 
@@ -412,7 +412,7 @@ def run_task_internal(filename, params):
     redisconnection.expire('tasks:' + session['username'], expire)
     redisconnection.set('titles:' + taskid, filename)
     redisconnection.expire('titles:' + taskid, expire)
-    redisconnection.set('params:' + taskid, pickle.dumps(params))
+    redisconnection.set('params:' + taskid, json.dumps(params))
     redisconnection.expire('params:' + taskid, expire)
 
     return taskid
@@ -435,7 +435,7 @@ def restart_task():
     params = redisconnection.get('params:' + id)
     assert params, 'Could not extract the task parameters.'
 
-    newid = run_task_internal(filename, pickle.loads(params))
+    newid = run_task_internal(filename, json.loads(params))
     redisconnection.set('restarted:' + id, newid)
 
     return jsonify(restart='success', id=id, taskid=newid)

@@ -6,7 +6,7 @@
 
 """Server side session on Redis."""
 
-import pickle
+import json
 from datetime import timedelta
 from uuid import uuid4
 from redis import Redis
@@ -25,23 +25,23 @@ class RedisSession(dict, SessionMixin):
         if initial:
             self.update(initial or {})
 
-        self._initials = pickle.dumps(dict(self))
+        self._initials = json.dumps(dict(self))
 
     @property
     def modified(self):
         """Check if this is modified recursively."""
-        return pickle.dumps(dict(self)) != self._initials
+        return json.dumps(dict(self)) != self._initials
 
     def rollback(self):
         """Rollback all changes."""
         self.clear()
-        self.update(pickle.loads(self._initials))
+        self.update(json.loads(self._initials))
 
 
 class RedisSessionInterface(SessionInterface):
     """Redis Session interface: provides methods dealing with sessions."""
 
-    serializer = pickle
+    serializer = json
     session_class = RedisSession
 
     def __init__(self, redis=None, prefix='session:'):

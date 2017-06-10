@@ -21,5 +21,9 @@
     "gulp-htmlmin": "^3.0.0",
     "gulp-rename": "^1.2.2",
     "gulp-uglify": "^2.0.0"
+  },
+  "dependencies": {
+    "express": "^4.15.3",
+    "socket.io": "^2.0.2"
   }
 }
