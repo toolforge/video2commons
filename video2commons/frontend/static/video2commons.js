@@ -70,7 +70,7 @@
 
 		// Functions related to showing running/finished tasks
 		checkStatus: function () {
-			if ( window.WebSocket ) {
+			if ( window.WebSocket && window.io ) {
 				video2commons.checkStatusSocket();
 			} else {
 				video2commons.checkStatusLegacy();
@@ -81,7 +81,7 @@
 			$.get( 'api/iosession' )
 				.done( function ( data ) {
 					var iosession = data.iosession,
-						socket = io( '//tools.wmflabs.org/video2commons-socketio' );
+						socket = io( '//tools.wmflabs.org/', { path: '/video2commons-socketio' } );
 
 					socket.on( 'connect', function () {
 						socket.emit( 'auth', {
