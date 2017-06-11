@@ -172,9 +172,6 @@
 			var table = $( '#tasktable > tbody' ),
 				ids = [];
 
-			$( '#task-new' )
-				.remove();
-
 			// add & update
 			$.each( data.values, function ( i, val ) {
 				video2commons.updateTask( val );
@@ -198,6 +195,7 @@
 			var id = 'task-' + val.id,
 				$row = $( '#' + id );
 			if ( !$row.length ) {
+				$( '#task-new' ).remove();
 				$row = $( '<tr />' );
 				$row.attr( {
 					id: id,
