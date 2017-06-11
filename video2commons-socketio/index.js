@@ -97,8 +97,8 @@ var forEachSocketInRoom = function ( room, cb ) {
 };
 
 var addtask = function ( taskid, user ) {
-		forEachSocketInRoom( 'tasks:' + user )( function ( socket ) { socket.join( taskid ); } );
-		forEachSocketInRoom( 'alltasks' )( function ( socket ) { socket.join( taskid ); } );
+		forEachSocketInRoom( 'tasks:' + user, function ( socket ) { socket.join( taskid ); } );
+		forEachSocketInRoom( 'alltasks', function ( socket ) { socket.join( taskid ); } );
 	},
 	updatetask = function ( taskid, data ) {
 		if ( data ) {
@@ -129,7 +129,7 @@ var addtask = function ( taskid, user ) {
 	},
 	removetask = function ( taskid ) {
 		io[ 'in' ]( taskid ).emit( 'remove', taskid );
-		forEachSocketInRoom( taskid )( function ( socket ) { socket.leave( taskid ); } );
+		forEachSocketInRoom( taskid, function ( socket ) { socket.leave( taskid ); } );
 	};
 
 redisconnection.on( 'error', function ( err ) {
