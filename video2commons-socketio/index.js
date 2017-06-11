@@ -84,9 +84,21 @@ io.listen( http.createServer( app ).listen( port ) );
 
 /* ===== Socket.io Client Notification ===== */
 
+var forEachSocketInRoom = function ( room, cb ) {
+	var ns = io[ 'in' ]( room );
+	ns.clients( function ( error, clients ) {
+		if ( error ) {
+			throw error;
+		}
+		for ( var clientId in clients ) {
+			cb( ns.connected[ clientId ] );
+		}
+	} );
+};
+
 var addtask = function ( taskid, user ) {
-		io[ 'in' ]( 'tasks:' + user ).join( taskid );
-		io[ 'in' ]( 'alltasks' ).join( taskid );
+		forEachSocketInRoom( 'tasks:' + user )( function ( socket ) { socket.join( taskid ); } );
+		forEachSocketInRoom( 'alltasks' )( function ( socket ) { socket.join( taskid ); } );
 	},
 	updatetask = function ( taskid, data ) {
 		if ( data ) {
@@ -117,7 +129,7 @@ var addtask = function ( taskid, user ) {
 	},
 	removetask = function ( taskid ) {
 		io[ 'in' ]( taskid ).emit( 'remove', taskid );
-		io[ 'in' ]( taskid ).leave( taskid );
+		forEachSocketInRoom( taskid )( function ( socket ) { socket.leave( taskid ); } );
 	};
 
 redisconnection.on( 'error', function ( err ) {
