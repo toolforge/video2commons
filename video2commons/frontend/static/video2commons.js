@@ -78,10 +78,13 @@
 		},
 
 		checkStatusSocket: function () {
+			if ( window.socket ) {
+				return;
+			}
 			$.get( 'api/iosession' )
 				.done( function ( data ) {
 					var iosession = data.iosession,
-						socket = io( '//tools.wmflabs.org/', { path: '/video2commons-socketio' } );
+						socket = window.socket = io( '//tools.wmflabs.org/', { path: '/video2commons-socketio' } );
 
 					socket.on( 'connect', function () {
 						socket.emit( 'auth', {

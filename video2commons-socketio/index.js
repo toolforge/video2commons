@@ -90,9 +90,9 @@ var forEachSocketInRoom = function ( room, cb ) {
 		if ( error ) {
 			throw error;
 		}
-		for ( var clientId in clients ) {
+		clients.forEach( function ( clientId ) {
 			cb( ns.connected[ clientId ] );
-		}
+		} );
 	} );
 };
 
