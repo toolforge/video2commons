@@ -201,10 +201,10 @@
 					status: val.status
 				} );
 				table.append( $row );
-				video2commons.setupTaskRow( $row, id, status );
+				video2commons.setupTaskRow( $row, id, val.status );
 			} else if ( $row.attr( 'status' ) !== val.status ) {
 				$row.html( '' );
-				video2commons.setupTaskRow( $row, id, status );
+				video2commons.setupTaskRow( $row, id, val.status );
 			}
 
 			$row.find( '#' + id + '-title' )
@@ -358,7 +358,7 @@
 
 		eventTask: function ( obj, eventName ) {
 			var $obj = $( obj );
-			if ( obj.is( '.disabled' ) ) {
+			if ( $obj.is( '.disabled' ) ) {
 				return;
 			}
 			$obj.off()
