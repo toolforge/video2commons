@@ -29,6 +29,7 @@ from flask import (
 from mwoauth import AccessToken, ConsumerToken, RequestToken, Handshaker
 from requests_oauthlib import OAuth1
 import requests
+
 from video2commons.config import consumer_key, consumer_secret, api_url
 
 from video2commons.frontend.redisession import RedisSessionInterface
