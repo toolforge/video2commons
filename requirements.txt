@@ -2,6 +2,7 @@ youtube-dl
 flask
 guess-language
 celery[redis]
+hiredis
 pycountry
 chardet
 mwoauth

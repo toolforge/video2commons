@@ -23,16 +23,18 @@ from __future__ import absolute_import
 
 import json
 import traceback
-import urllib
+from uuid import uuid4
 
 from flask import (
     Blueprint, request, session, jsonify
 )
 
+from video2commons.config import session_key
+
 from video2commons.backend import worker
 
 from video2commons.frontend.shared import (
-    redisconnection, check_banned, generate_csrf_token
+    redisconnection, check_banned, generate_csrf_token, redis_publish
 )
 from video2commons.frontend.urlextract import (
     do_extract_url, make_dummy_desc, do_validate_filename,
@@ -54,7 +56,8 @@ def all_exception_handler(e):
 @api.before_request
 def check_logged_in():
     """Error if a user is not logged in."""
-    if 'username' not in session:
+    if 'username' not in session and \
+            request.headers.get('X-V2C-Session-Bypass') != session_key:
         return error_json('Are you logged in?')
 
 
@@ -111,124 +114,131 @@ def get_csrf():
     )
 
 
+@api.route('/iosession')
+def get_iosession():
+    """Get a pointer to session for read-only socket.io notifications."""
+    iosession = str(uuid4())
+    redisconnection.set('iosession:' + iosession, session.sid)
+    redisconnection.expire('iosession:' + iosession, 60)
+    return jsonify(iosession=iosession)
+
+
 @api.route('/status')
 def status():
     """Get all visible task status for user."""
-    ids = get_tasks()
-    goodids = []
+    key, ids = get_tasks()
     values = []
-    ssus = []
-    hasrunning = False
     for id in ids:
-        title = get_title_from_task(id)
-        if not title:
-            # task has been forgotten -- results should have been expired
-            continue
-        goodids.append(id)
-        res = worker.main.AsyncResult(id)
-        task = {
-            'id': id,
-            'title': title
-        }
+        values.append(_status(id))
 
-        try:
-            state = res.state
-        except:
+    values = filter(None, values)
+    rooms = [t['id'] for t in values] + [key]
+    return jsonify(
+        values=values,
+        rooms=rooms,
+        username=session['username']
+    )
+
+
+@api.route('/status-single')
+def status_single():
+    """Get the status of one task."""
+    return jsonify(
+        value=_status(request.args['task'])
+    )
+
+
+def _status(id):
+    title = get_title_from_task(id)
+    if not title:
+        # task has been forgotten -- results should have been expired
+        return None
+
+    res = worker.main.AsyncResult(id)
+    task = {
+        'id': id,
+        'title': title
+    }
+
+    try:
+        state = res.state
+    except:
+        task.update({
+            'status': 'fail',
+            'text': 'The status of the task could not be retrieved.',
+            'traceback': traceback.format_exc()
+        })
+    else:
+        if state == 'PENDING':
             task.update({
-                'status': 'fail',
-                'text': 'The status of the task could not be retrieved.',
-                'traceback': traceback.format_exc()
+                'status': 'progress',
+                'text': 'Your task is pending...',
+                'progress': -1
             })
-        else:
-            if state == 'PENDING':
+        elif state == 'PROGRESS':
+            task.update({
+                'status': 'progress',
+                'text': res.result['text'],
+                'progress': res.result['percent']
+            })
+        elif state == 'SUCCESS':
+            if isinstance(res.result, (list, tuple)):
+                filename, wikifileurl = res.result
                 task.update({
-                    'status': 'progress',
-                    'text': 'Your task is pending...',
-                    'progress': -1
+                    'status': 'done',
+                    'url': wikifileurl,
+                    'text': filename
                 })
-                hasrunning = True
-            elif state == 'STARTED':
-                task.update({
-                    'status': 'progress',
-                    'text': 'Your task has been started; preprocessing...',
-                    'progress': -1
-                })
-                hasrunning = True
-            elif state == 'PROGRESS':
-                task.update({
-                    'status': 'progress',
-                    'text': res.result['text'],
-                    'progress': res.result['percent']
-                })
-                hasrunning = True
-            elif state == 'SUCCESS':
-                if isinstance(res.result, (list, tuple)):
-                    filename, wikifileurl = res.result
+            elif isinstance(res.result, dict):
+                if res.result['type'] == 'done':
                     task.update({
                         'status': 'done',
-                        'url': wikifileurl,
-                        'text': filename
+                        'url': res.result['url'],
+                        'text': res.result['filename']
                     })
-                elif isinstance(res.result, dict):
-                    if res.result['type'] == 'done':
-                        task.update({
-                            'status': 'done',
-                            'url': res.result['url'],
-                            'text': res.result['filename']
-                        })
-                    elif res.result['type'] == 'ssu':
-                        task.update({
-                            'status': 'needssu',
-                            'url': create_phab_url([res.result])
-                        })
-                        ssus.append(res.result)
-            elif state == 'FAILURE':
-                e = res.result
-                if e is False:
+                elif res.result['type'] == 'ssu':
                     task.update({
-                        'status': 'fail',
-                        'text': res.traceback,
-                        'restartable': True
+                        'status': 'needssu',
+                        'filename': res.result['url'].rsplit('/', 1)[-1],
+                        'url': res.result['url'],
+                        'hashsum': res.result['hashsum']
                     })
-                else:
-                    task.update({
-                        'status': 'fail',
-                        'text': format_exception(e),
-                        'restartable': (
-                            (not redisconnection.exists('restarted:' + id)) and
-                            redisconnection.exists('params:' + id)
-                        )
-                    })
-            elif state == 'RETRY':
+        elif state == 'FAILURE':
+            e = res.result
+            if e is False:
                 task.update({
-                    'status': 'progress',
-                    'text': 'Your task is being rescheduled...',
-                    'progress': -1
+                    'status': 'fail',
+                    'text': res.traceback,
+                    'restartable': True
                 })
-                hasrunning = True
-            elif state == 'ABORTED':
-                task.update({
-                    'status': 'abort',
-                    'text': 'Your task is being aborted...'
-                })
-                hasrunning = True
             else:
                 task.update({
                     'status': 'fail',
-                    'text': 'This task is in an unknown state. ' +
-                            'Please file an issue in GitHub.'
+                    'text': format_exception(e),
+                    'restartable': (
+                        (not redisconnection.exists('restarted:' + id)) and
+                        redisconnection.exists('params:' + id)
+                    )
                 })
+        elif state == 'RETRY':
+            task.update({
+                'status': 'progress',
+                'text': 'Your task is being rescheduled...',
+                'progress': -1
+            })
+        elif state == 'ABORTED':
+            task.update({
+                'status': 'abort',
+                'text': 'Your task is being aborted...'
+            })
+        else:
+            task.update({
+                'status': 'fail',
+                'text': 'This task is in an unknown state. ' +
+                        'Please file an issue in GitHub.'
+            })
 
-        values.append(task)
-
-    ssulink = create_phab_url(ssus) if ssus else ''
-
-    return jsonify(
-        ids=goodids,
-        values=values,
-        hasrunning=hasrunning,
-        ssulink=ssulink
-    )
+    return task
 
 
 def is_sudoer(username):
@@ -245,47 +255,12 @@ def get_tasks():
     else:
         key = 'tasks:' + username
 
-    return redisconnection.lrange(key, 0, -1)[::-1]
+    return key, redisconnection.lrange(key, 0, -1)[::-1]
 
 
 def get_title_from_task(id):
     """Get task title from task ID."""
     return redisconnection.get('titles:' + id)
-
-
-def create_phab_url(es):
-    """Create a server side upload Phabricator URL."""
-    urls = '\n'.join(['* ' + e['url'] for e in es])
-
-    checksums = '\n'.join(['| %s | %s |' %
-                           (e['url'].rsplit('/', 1)[-1], e['hashsum'])
-                           for e in es])
-
-    phabdesc = """Please upload these file(s) to Wikimedia Commons:
-
-**URLs**
-
-%s
-
-//Description files are available too: append `.txt` to the URLs.//
-
-**Checksums**
-
-| **File** | **MD5** |
-%s
-
-Thank you!""" % (urls, checksums)
-
-    phabtitle = "Server side upload for %s" % session['username']
-
-    phaburl = \
-        'https://phabricator.wikimedia.org/maniphest/task/edit/form/1/?' + \
-        urllib.urlencode({
-            'title': phabtitle.encode('utf-8'),
-            'projects': 'Wikimedia-Site-requests,commons,video2commons',
-            'description': phabdesc.encode('utf-8')
-        })
-    return phaburl
 
 
 @api.route('/extracturl', methods=['POST'])
@@ -415,6 +390,9 @@ def run_task_internal(filename, params):
     redisconnection.set('params:' + taskid, json.dumps(params))
     redisconnection.expire('params:' + taskid, expire)
 
+    redis_publish('add', {'taskid': taskid, 'user': session['username']})
+    redis_publish('update', {'taskid': taskid, 'data': _status(taskid)})
+
     return taskid
 
 
@@ -438,6 +416,8 @@ def restart_task():
     newid = run_task_internal(filename, json.loads(params))
     redisconnection.set('restarted:' + id, newid)
 
+    redis_publish('update', {'taskid': id, 'data': _status(id)})
+
     return jsonify(restart='success', id=id, taskid=newid)
 
 
@@ -454,6 +434,9 @@ def remove_task():
     redisconnection.delete('titles:' + id)
     redisconnection.delete('params:' + id)
     redisconnection.delete('restarted:' + id)
+
+    redis_publish('remove', {'taskid': id})
+
     return jsonify(remove='success', id=id)
 
 
@@ -466,6 +449,9 @@ def abort_task():
         redisconnection.lrange('tasks:' + username, 0, -1), \
         'Task must belong to you.'
     worker.main.AsyncResult(id).abort()
+
+    redis_publish('update', {'taskid': id, 'data': _status(id)})
+
     return jsonify(remove='success', id=id)
 
 
