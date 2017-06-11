@@ -131,6 +131,7 @@ def status():
     for id in ids:
         values.append(_status(id))
 
+    values = filter(None, values)
     rooms = [t['id'] for t in values] + [key]
     return jsonify(
         values=values,
