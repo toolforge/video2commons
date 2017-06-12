@@ -31,7 +31,7 @@ app.all( '*', function ( req, res /* , next */ ) {
 io.path( '/video2commons-socketio' );
 
 io.on( 'connection', function ( socket ) {
-	console.log( 'Connected: ' + socket );
+	console.log( 'Connected: ' + socket.id );
 	socket.on( 'auth', function ( data ) {
 		redisconnection.get( 'iosession:' + data.iosession, function ( err, sessionkey ) {
 			if ( sessionkey === null ) {
@@ -76,7 +76,7 @@ io.on( 'connection', function ( socket ) {
 	} );
 
 	socket.on( 'disconnect', function () {
-		console.log( 'Disconnected: ' + socket );
+		console.log( 'Disconnected: ' + socket.id );
 	} );
 } );
 
