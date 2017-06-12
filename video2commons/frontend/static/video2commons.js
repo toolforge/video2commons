@@ -207,17 +207,19 @@
 				video2commons.setupTaskRow( $row, id, val.status );
 			}
 
-			$row.find( '#' + id + '-title' )
-				.text( val.title );
+			var $title = $row.find( '#' + id + '-title' );
+			if ( $title.text() !== val.title ) {
+				$title.text( val.title );
+			}
 
 			var setStatusText = function ( htmlortext, href, text ) {
-				var e = $row.find( '#' + id + '-statustext' );
+				var $e = $row.find( '#' + id + '-statustext' );
 				if ( !href ) {
-					if ( e.text() !== htmlortext ) {
-						e.text( htmlortext );
+					if ( $e.text() !== htmlortext ) {
+						$e.text( htmlortext );
 					}
 				} else {
-					var link = e.html( htmlortext )
+					var link = $e.html( htmlortext )
 						.find( 'a' )
 						.attr( 'href', href );
 					if ( text ) {
