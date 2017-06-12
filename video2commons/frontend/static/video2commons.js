@@ -81,34 +81,33 @@
 			if ( window.socket ) {
 				return;
 			}
-			$.get( 'api/iosession' )
-				.done( function ( data ) {
-					var iosession = data.iosession,
-						socket = window.socket = io( '//tools.wmflabs.org/', { path: '/video2commons-socketio' } );
+			var socket = window.socket = io( '//tools.wmflabs.org/', { path: '/video2commons-socketio' } );
 
-					socket.on( 'connect', function () {
+			socket.on( 'connect', function () {
+				$.get( 'api/iosession' )
+					.done( function ( data ) {
 						socket.emit( 'auth', {
-							iosession: iosession,
+							iosession: data.iosession,
 							_csrf_token: csrfToken // eslint-disable-line camelcase
 						} );
 					} );
+			} );
 
-					socket.on( 'status', function ( data ) {
-						video2commons.alterTaskTableBoilerplate( function () {
-							video2commons.populateResults( data );
-						} );
-					} );
-					socket.on( 'update', function ( taskid, data ) {
-						video2commons.alterTaskTableBoilerplate( function () {
-							video2commons.updateTask( data );
-						} );
-					} );
-					socket.on( 'remove', function ( taskid ) {
-						video2commons.alterTaskTableBoilerplate( function () {
-							$( '#task-' + taskid ).remove();
-						} );
-					} );
+			socket.on( 'status', function ( data ) {
+				video2commons.alterTaskTableBoilerplate( function () {
+					video2commons.populateResults( data );
 				} );
+			} );
+			socket.on( 'update', function ( taskid, data ) {
+				video2commons.alterTaskTableBoilerplate( function () {
+					video2commons.updateTask( data );
+				} );
+			} );
+			socket.on( 'remove', function ( taskid ) {
+				video2commons.alterTaskTableBoilerplate( function () {
+					$( '#task-' + taskid ).remove();
+				} );
+			} );
 		},
 
 		checkStatusLegacy: function () {
