@@ -45,7 +45,8 @@ io.on( 'connection', function ( socket ) {
 				}
 
 				var session = JSON.parse( sessiondata );
-				if ( data._csrf_token !== session._csrf_token ) { // eslint-disable-line no-underscore-dangle
+				// eslint-disable-next-line no-underscore-dangle
+				if ( data._csrf_token !== session._csrf_token ) {
 					socket.disconnect();
 					return;
 				}

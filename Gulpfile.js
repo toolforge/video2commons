@@ -22,7 +22,8 @@ gulp.task( 'html', function () {
 
 gulp.task( 'watch', function () {
 	var changeevent = function ( event ) {
-		console.log( 'File ' + event.path + ' was ' + event.type + ', running tasks...' );  // eslint-disable-line no-console
+		// eslint-disable-next-line no-console
+		console.log( 'File ' + event.path + ' was ' + event.type + ', running tasks...' );
 	};
 	gulp.watch( [ './video2commons/frontend/static/*.js', '!./video2commons/frontend/static/*.min.js' ], [ 'scripts' ] )
 		.on( 'change', changeevent );

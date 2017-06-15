@@ -28,11 +28,11 @@
 				var splitloc = text.indexOf( '|' );
 				if ( splitloc < 0 ) {
 					// XSS prevention: Nasty attribute escaping -- allow alphanumerics and hyphens only here
-					if ( /^[a-z0-9\-]+$/i.test( text.slice( 1 ) ) ) {
+					if ( /^[a-z0-9-]+$/i.test( text.slice( 1 ) ) ) {
 						return '<a id="' + text.slice( 1 ) + '"></a>';
 					}
 				} else {
-					if ( /^[a-z0-9\-]+$/i.test( text.substring( 1, splitloc ) ) ) {
+					if ( /^[a-z0-9-]+$/i.test( text.substring( 1, splitloc ) ) ) {
 						return '<a id="' + text.substring( 1, splitloc ) + '">' + render( text.slice( splitloc + 1 ) ) + '</a>';
 					}
 				}
@@ -230,7 +230,7 @@
 			if ( val.status === 'done' ) {
 				setStatusText( Mustache.render( '{{> taskDone}}', i18n, i18n ), val.url, val.text );
 			} else if ( val.status === 'needssu' ) {
-				setStatusText( Mustache.render( '{{> errorTooLarge}}', i18n, i18n ), video2commons.makeSSULink( [ val ] ) );  // FIXME
+				setStatusText( Mustache.render( '{{> errorTooLarge}}', i18n, i18n ), video2commons.makeSSULink( [ val ] ) );
 			} else if ( val.status === 'fail' ) {
 				setStatusText( val.text );
 				if ( val.restartable ) {
@@ -263,6 +263,7 @@
 		setupTaskRow: function ( $row, id, status ) {
 			switch ( status ) {
 				case 'progress':
+					/* eslint-disable indent */
 					$row.append( $( '<td />' )
 							.attr( 'id', id + '-title' )
 							.attr( 'width', '30%' ) )
@@ -274,6 +275,7 @@
 						.append( $( '<td />' )
 							.attr( 'id', id + '-progress' )
 							.attr( 'width', '30%' ) );
+					/* eslint-enable indent */
 					var $abortbutton = video2commons.eventButton( id, 'abort' );
 					$row.find( '#' + id + '-status' )
 						.append( $abortbutton );
@@ -371,7 +373,8 @@
 			} )
 				.done( function ( data ) {
 					if ( data.error ) {
-						window.alert( data.error );  // eslint-disable-line no-alert
+						// eslint-disable-next-line no-alert
+						window.alert( data.error );
 					}
 					video2commons.checkStatus();
 				} );
@@ -633,7 +636,8 @@
 							video2commons.apiPost( 'task/run', newTaskData )
 								.done( function ( data ) {
 									if ( data.error ) {
-										window.alert( data.error ); // eslint-disable-line no-alert
+										// eslint-disable-next-line no-alert
+										window.alert( data.error );
 									}
 									video2commons.checkStatus();
 								} );
@@ -773,19 +777,20 @@
 		promiseWorkingOn: function ( promise ) {
 			video2commons.disablePrevNext( true );
 
-			return promise.fail( function ( error ) {
-				if ( !$addTaskDialog.find( '.modal-body #dialog-errorbox' )
-					.length ) {
-					$addTaskDialog.find( '.modal-body' )
-						.append(
-							$( '<div class="alert alert-danger" id="dialog-errorbox"></div>' )
-						);
-				}
-				$addTaskDialog.find( '.modal-body #dialog-errorbox' )
-					.text( 'Error: ' + error )
-					.show();
-			} )
-			.always( video2commons.reactivatePrevNextButtons );
+			return promise
+				.fail( function ( error ) {
+					if ( !$addTaskDialog.find( '.modal-body #dialog-errorbox' )
+						.length ) {
+						$addTaskDialog.find( '.modal-body' )
+							.append(
+								$( '<div class="alert alert-danger" id="dialog-errorbox"></div>' )
+							);
+					}
+					$addTaskDialog.find( '.modal-body #dialog-errorbox' )
+						.text( 'Error: ' + error )
+						.show();
+				} )
+				.always( video2commons.reactivatePrevNextButtons );
 		},
 
 		abortUpload: function ( deferred, abortReason ) {
@@ -803,7 +808,8 @@
 			window.jqXHR = $addTaskDialog.find( '#fileupload' ).fileupload( {
 				dataType: 'json',
 				formData: {
-					_csrf_token: csrfToken // eslint-disable-line no-underscore-dangle,camelcase
+					// eslint-disable-next-line no-underscore-dangle,camelcase
+					_csrf_token: csrfToken
 				},
 				maxChunkSize: 4 << 20, // eslint-disable-line no-bitwise
 				sequentialUploads: true
@@ -886,7 +892,8 @@
 		},
 
 		apiPost: function ( endpoint, data ) {
-			data._csrf_token = csrfToken; // eslint-disable-line no-underscore-dangle,camelcase
+			// eslint-disable-next-line no-underscore-dangle,camelcase
+			data._csrf_token = csrfToken;
 			return $.post( 'api/' + endpoint, data );
 		}
 	};
