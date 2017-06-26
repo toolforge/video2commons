@@ -186,8 +186,8 @@ file { '/etc/default/v2ccelery':
 }
 
 $tmpfiles_config = '# THIS FILE IS MANAGED BY MANUAL PUPPET
-d /var/run/v2ccelery 0755 tools.video2commons tools.video2commons -
-d /var/log/v2ccelery 0755 tools.video2commons tools.video2commons -'
+d /var/run/v2ccelery 1777 root root -
+d /var/log/v2ccelery 1777 root root -'
 
 file { '/usr/lib/tmpfiles.d/v2ccelery.conf':
     ensure  => file,
