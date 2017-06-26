@@ -141,6 +141,7 @@ User=tools.video2commons
 Group=tools.video2commons
 EnvironmentFile=-/etc/default/v2ccelery
 WorkingDirectory=/srv/v2c
+Restart=on-failure
 ExecStart=/bin/sh -c \'${CELERY_BIN} multi start $CELERYD_NODES \
     -A $CELERY_APP --logfile=${CELERYD_LOG_FILE} \
     --pidfile=${CELERYD_PID_FILE} $CELERYD_OPTS\'
