@@ -1,0 +1,38 @@
+{
+	"@metadata": {
+		"authors": [
+			"Kaszeba",
+			"Kirsan"
+		]
+	},
+	"loginOnCommons": "Wlogùjë sã na Wikimedia Commons",
+	"logout": "Wëlogùj",
+	"help": "Pòmòc",
+	"JavascriptRequired": "Do ùżëwaniô tegò nôrzãdza nót je JavaScript!",
+	"abort": "Przerwi",
+	"remove": "Rëmôj",
+	"restart": "Zrëszë znowa",
+	"next": "Nôslédné",
+	"loading": "Ladowanié...",
+	"confirm": "Pòcwierdzë",
+	"addTask": "Dodôj dzejanié ...",
+	"yourTasks": "Twòjé dzejania:",
+	"cancel": "Òprzestóń",
+	"back": "Nazôd",
+	"extractor": "Ekstraktora",
+	"keep": "Ùtrzëmôj",
+	"filetarget": "Miono docélowégò lopka",
+	"transcoding": "Fòrmat transkòdowaniô",
+	"filedescription": "Starna òpisënkù lopka",
+	"filename": "Miono lopka",
+	"video": "wideò",
+	"audio": "audio",
+	"subtitles": "nôpisë",
+	"keepvideo": "Ùtrzëmôj wideò",
+	"keepaudio": "Ùtrzëmôj audio",
+	"importsubtitles": "Impòrtëjë nôpisë",
+	"uploadFile": "Abò sélôj lopk...",
+	"uploading": "Sélanié...",
+	"note": "Bôczënk:",
+	"importantnote": "Wôżny bôczënk:"
+}
