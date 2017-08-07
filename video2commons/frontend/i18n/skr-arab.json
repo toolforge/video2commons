@@ -1,0 +1,28 @@
+{
+	"@metadata": {
+		"authors": [
+			"Saraiki"
+		]
+	},
+	"loginOnCommons": "وکیمیڈیا کامنز وچ لاگ ان تھیوو",
+	"logout": "لاگ آؤٹ",
+	"help": "مدد",
+	"remove": "ہٹاؤ",
+	"restart": "ولدا چلاؤ",
+	"next": "اڳلا",
+	"loading": "لوڈ تھیندا پئے۔۔۔",
+	"confirm": "تصدیق",
+	"addTask": "کم شامل کرو۔۔۔",
+	"yourTasks": "تہاݙے کم",
+	"cancel": "منسوخ",
+	"back": "پچھوں",
+	"keep": "رکھو",
+	"filename": "فائل دا ناں",
+	"video": "وڈیو",
+	"audio": "آڈیو",
+	"subtitles": "ذیلی عنوان",
+	"uploadFile": "یا فائل اپ لوڈ کرو۔۔۔",
+	"uploading": "اپ لوڈ تھیندا پئے۔۔۔",
+	"note": "نوٹ:",
+	"importantnote": "اہم نوٹ:"
+}
