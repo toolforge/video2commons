@@ -1,0 +1,37 @@
+{
+	"@metadata": {
+		"authors": [
+			"Belkacem77"
+		]
+	},
+	"loginOnCommons": "Tuqqna ar Wikimedia Commons",
+	"logout": "Tuffɣa",
+	"help": "Tallelt",
+	"forkOnGitHub": "Rnu afurk di GitHub",
+	"JavascriptRequired": "JavaScript ilaq i useqdec n ufecku-agi !",
+	"abort": "Eǧǧ",
+	"remove": "Kkes",
+	"restart": "Ales asenker",
+	"next": "Ar zdat",
+	"loading": "Asali...",
+	"confirm": "Sentem",
+	"addTask": "Rnu tawuri...",
+	"yourTasks": "Tiwuriwin-ik:",
+	"cancel": "Sefsex",
+	"back": "Uɣal",
+	"extractor": "Amsuffeɣ",
+	"keep": "Ḥrez",
+	"filetarget": "Isem n ufaylu asaḍas",
+	"filedescription": "Asebter n uglam n ufaylu",
+	"filename": "Isem n ufaylu",
+	"video": "tavidyut",
+	"audio": "ameslaw",
+	"subtitles": "azwel asnawan",
+	"keepvideo": "ḥrez tavidyut",
+	"keepaudio": "Ḥrez ameslaw",
+	"importsubtitles": "Kter izwal isnawanen",
+	"uploadFile": "Neɣ sali afaylu...",
+	"uploading": "Asali...",
+	"note": "Tazmilt:",
+	"importantnote": "Tazmilt taxatert:"
+}
