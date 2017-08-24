@@ -26,6 +26,7 @@
 	"extractor": "Amsuffeɣ",
 	"keep": "Ḥrez",
 	"filetarget": "Isem n ufaylu asaḍas",
+	"transcoding": "Amasal n usettengel",
 	"filedescription": "Asebter n uglam n ufaylu",
 	"filename": "Isem n ufaylu",
 	"video": "tavidyut",
@@ -37,5 +38,11 @@
 	"uploadFile": "Neɣ sali afaylu...",
 	"uploading": "Asali...",
 	"note": "Tazmilt:",
-	"importantnote": "Tazmilt taxatert:"
+	"importantnote": "Tazmilt taxatert:",
+	"notesplaylists": "Tibdarin n tɣuri ur ttwasefrakent ara akken iwata. Kra n yismal (am Youku akked Comedy Central) seqdacen tividyutin s ddews n yiḥricen, ttbanent amzun n tibdarin n tɣuri, ihi ur ttwasefrakent ara akken iwata.",
+	"notesuncheck": "Ma yella amidya ur iseddi ara tafuɣalt n tvidyut neɣ ameslaw, kkes aṛcam n texxamin ilaqen, neɣ, aselket yezmer ur iteddu ara, ɣas akken amasal d ilelli.",
+	"notessubtitles": "ma yell 'kter izwal isnawanen' yettwaṛcem, izwal isnawanen ad ttwaketren, ala wid yettwarnan s wudem awurman.",
+	"noteslicensing": "Sali kan agbur {{#a}}#fl|ddaw n turagt tilellit {{/a}} neɣ {{#a}}#pd|di taɣult tazayezt{{/a}}. Turagt n {{#a}}#fu|n seqdec amekdi{{/a}} ur tettwasireg ara di Wikimedia Commons",
+	"extensionmsg": "Asiɣzef n ufaylu n ddaw-a yettwaseqdec kan ma yella tavidyut tella deg umasal mačči d ilelli, ayen yesran asettengel. Tividyutin s umasal ilelli ad ḥerzen asiɣzef-nsent.",
+	"confirmmsg": "Sentem tawuri neɣ sit ɣef 'Uɣal' akken ad tesnifleḍ iɣewwaṛen. Ma tsiteḍ ɣef 'Sentem', tawuri ad tettwazen sakin ad tettwaselkem. Imi llan iɛekkiṛen itiknikanen, tawuri ur tezmir ara ad tettwasefsex s wudm afessas ticki tettwazen."
 }

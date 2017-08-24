@@ -1,0 +1,30 @@
+{
+	"@metadata": {
+		"authors": [
+			"Delim"
+		]
+	},
+	"logout": "탈퇴",
+	"help": "도움말",
+	"forkOnGitHub": "GitHub에서 갈래",
+	"JavascriptRequired": "이 도구를 사용하려면 쟈바각본이 필요합니다!",
+	"abort": "중단",
+	"remove": "제거",
+	"restart": "재시동",
+	"next": "다음",
+	"loading": "적재하는중...",
+	"confirm": "확인",
+	"yourTasks": "당신의 과제:",
+	"extractor": "추출기",
+	"keep": "유지",
+	"filename": "서류 이름",
+	"video": "영상",
+	"audio": "소리",
+	"subtitles": "자막",
+	"keepvideo": "영상 유지",
+	"keepaudio": "소리 유지",
+	"importsubtitles": "자막 반입",
+	"uploading": "올리적재중...",
+	"note": "참고:",
+	"importantnote": "중요한 참고:"
+}
