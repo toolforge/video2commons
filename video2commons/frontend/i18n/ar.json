@@ -7,13 +7,14 @@
 			"DRIHEM",
 			"ديفيد",
 			"Aboulouei1",
-			"Mido"
+			"Mido",
+			"Meno25"
 		]
 	},
 	"loginOnCommons": "تسجيل الدخول على ويكيميديا كومنز",
 	"logout": "خروج",
 	"help": "مساعدة",
-	"forkOnGitHub": "طورني على جيثب",
+	"forkOnGitHub": "طورني على جيت هب",
 	"JavascriptRequired": "مطلوب جافا سكريبت لاستخدام هذه الأداة!",
 	"abort": "إلغاء",
 	"remove": "حذف",

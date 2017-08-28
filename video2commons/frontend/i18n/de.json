@@ -4,7 +4,8 @@
 			"Steinsplitter",
 			"FDMS4",
 			"Metalhead64",
-			"Kghbln"
+			"Kghbln",
+			"Luke081515"
 		]
 	},
 	"loginOnCommons": "Bei Wikimedia Commons anmelden",
@@ -22,7 +23,7 @@
 	"errorTooLarge": "Die Datei ist für das direkte Hochladen zu groß! Du kannst indes das {{#a}}serverseitige Hochladen{{/a}} anfragen.",
 	"addTask": "Aufgabe hinzufügen …",
 	"yourTasks": "Deine Aufgaben:",
-	"createServerSide": "Erstellen eines Auftrags zum serverseitigen Hochladen in einem Schritt (empfohlen)",
+	"createServerSide": "Erstelle einen Auftrag zum serverseitigen Hochladen in einem Schritt (empfohlen)",
 	"taskDone": "Die Aufgabe wurde erledigt. Du findest die Datei unter {{#a}}{{/a}}.",
 	"cancel": "Abbrechen",
 	"back": "Zurück",
