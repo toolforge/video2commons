@@ -41,8 +41,7 @@
 		};
 	};
 
-	var $addTaskDialog, SSUs, username,
-		newTaskData = {};
+	var $addTaskDialog, newTaskData, SSUs, username;
 	var video2commons = window.video2commons = {
 		init: function () {
 			$( '#content' )
@@ -134,7 +133,7 @@
 			$( '#content' )
 				.append( addButton );
 			addButton.click( function () {
-				video2commons.addTask( newTaskData );
+				video2commons.addTask();
 			} );
 			var ssuButton = $( htmlContent.requestServerSide );
 			$( '#content' )
@@ -482,8 +481,7 @@
 			// HACK
 			$addTaskDialog.on( 'shown.bs.modal', function () {
 				$addTaskDialog.find( '#url' )
-					.focus()
-					.select();
+					.focus();
 			} );
 
 			video2commons.reactivatePrevNextButtons();
