@@ -1,15 +1,28 @@
 {
 	"@metadata": {
 		"authors": [
-			"Subi"
+			"Subi",
+			"Mikel Ibaiba"
 		]
 	},
 	"loginOnCommons": "Saioa hasi Wikimedia Commons-en",
 	"logout": "Saioa itxi",
 	"help": "Laguntza",
 	"JavascriptRequired": "JavaScript behar da tresna hau erabili ahal izateko!",
+	"abort": "Abortatu",
+	"remove": "Kendu",
+	"restart": "Berrabiatu",
 	"next": "Hurrengoa",
 	"loading": "Kargatzen...",
+	"confirm": "Baieztatu",
+	"addTask": "Zeregina gehitu...",
+	"yourTasks": "Zure zereginak:",
+	"cancel": "Bertan behera utzi",
+	"back": "Itzuli",
+	"extractor": "Extraktorea",
+	"keep": "Mantendu",
+	"filetarget": "Bilatzen den artxiboaren izena",
+	"transcoding": "Formatua transkodetzen",
 	"filedescription": "Fitxategiaren deskribapen-orria",
 	"filename": "Fitxategiaren izena",
 	"video": "bideoa",
