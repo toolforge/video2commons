@@ -8,6 +8,7 @@
 	"loginOnCommons": "Saioa hasi Wikimedia Commons-en",
 	"logout": "Saioa itxi",
 	"help": "Laguntza",
+	"forkOnGitHub": "GitHub-en zulatu nazazu",
 	"JavascriptRequired": "JavaScript behar da tresna hau erabili ahal izateko!",
 	"abort": "Abortatu",
 	"remove": "Kendu",
@@ -15,8 +16,12 @@
 	"next": "Hurrengoa",
 	"loading": "Kargatzen...",
 	"confirm": "Baieztatu",
+	"errorDisconnect": "Zerbitzarira konektatzean huts egin du. Freskatu orri hau edo bidali arazo bat GitHub-en.",
+	"errorTooLarge": "Fitxategia handiegia da zuzenean kargatzeko! Beharbada {{#a}} zerbitza-aldeko karga {{/a}} eskatzea hobeto zenuke.",
 	"addTask": "Zeregina gehitu...",
 	"yourTasks": "Zure zereginak:",
+	"createServerSide": "Sortu zerbitzariaren alboko karga txartela bat-batean (gomendatua)",
+	"taskDone": "Zure lana egin da. Zure igoera {{#a}}{{/a}} espazioan aurkituko duzu.",
 	"cancel": "Bertan behera utzi",
 	"back": "Itzuli",
 	"extractor": "Extraktorea",
@@ -34,5 +39,11 @@
 	"uploadFile": "Edo fitxategia igo...",
 	"uploading": "Igotzen...",
 	"note": "Oharra:",
-	"importantnote": "Ohar garrantzitsua:"
+	"importantnote": "Ohar garrantzitsua:",
+	"notesplaylists": "Erreprodukzio zerrendak ez dira behar bezala prozesatuko. Zenbait tokitan (Youku eta Comedy Central bezalakoak) hainbat erreprodukzio bideo erabiltzen dituzte, playlists gisa interpretatuak eta ez dira ondo prozesatuko.",
+	"notesuncheck": "Mediak bideo edo audiorik ez badute, desmarkatu dagokion kontrol-laukiak; bestela bihurketa huts egin dezake, nahiz eta formatua doakoa izan.",
+	"notessubtitles": "'Inportatu azpitituluak' hautatuta badago, azpitituluak inportatuko dira, berez-sortutakoak izan ezik.",
+	"noteslicensing": "Soilik igo {{#a}}#fl|doainik lizentziatua{{/a}} edo {{#a}}#pd|eremu publikoko{{/a}} edukia. {{#a}}#fu|Bidezko erabilera{{/a}} ez dago onartua Wikimedia Commons-en.",
+	"extensionmsg": "Goian dagoen fitxategi-luzapena bidezkoa bada eta bideoa formatu ez-librean badago soilik erabiliko da, eta horrek transcoding-a behar du. Formatu askeko bideoek beren luzapenak mantenduko dituzte.",
+	"confirmmsg": "Egiaztatu egitekoa edo egin klik 'Atzera' parametroak aldatzeko. 'Berretsi' botoian klik eginez, zeregina bidaliko da eta exekutatuko da. Murrizketen arau teknikoak direla-eta, egiteko bat bidali bada ezin da bertan behera utzi hain erraz."
 }
