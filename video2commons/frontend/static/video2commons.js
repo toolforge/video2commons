@@ -476,7 +476,9 @@
 				.html( '<center>' + loaderImage + '</center>' );
 
 			video2commons.newTask( taskdata );
-			$addTaskDialog.modal();
+			$addTaskDialog.modal( {
+				backdrop: 'static'
+			} );
 
 			// HACK
 			$addTaskDialog.on( 'shown.bs.modal', function () {
