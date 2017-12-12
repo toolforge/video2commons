@@ -1,4 +1,4 @@
-/* globals Mustache: false, io: false */
+/* globals nunjucks: false, io: false */
 ( function ( $ ) {
 	'use strict';
 
@@ -6,40 +6,55 @@
 		loaderImage = '<img alt="File:Ajax-loader.gif" src="//upload.wikimedia.org/wikipedia/commons/d/de/Ajax-loader.gif" data-file-width="32" data-file-height="32" height="32" width="32">',
 		rtl = i18n[ '@dir' ] === 'rtl',
 		htmlContent = {
-			abortbutton: '<button type="button" class="btn btn-danger btn-xs flip pull-right"><span class="glyphicon glyphicon-remove"></span> ' + Mustache.escape( i18n.abort ) + '</button>',
-			removebutton: '<button type="button" class="btn btn-danger btn-xs flip pull-right"><span class="glyphicon glyphicon-trash"></span> ' + Mustache.escape( i18n.remove ) + '</button>',
-			restartbutton: '<button type="button" class="btn btn-warning btn-xs flip pull-right"><span class="glyphicon glyphicon-repeat"></span> ' + Mustache.escape( i18n.restart ) + '</button>',
-			loading: '<center>' + loaderImage + '&nbsp;&nbsp;' + Mustache.escape( i18n.loading ) + '</center>',
-			errorDisconnect: '<div class="alert alert-danger">' + Mustache.escape( i18n.errorDisconnect ) + '</div>',
-			yourTasks: '<h4>' + Mustache.escape( i18n.yourTasks ) + '</h4><table id="tasktable" class="table"><tbody></tbody></table>',
-			addTask: '<input class="btn btn-primary btn-success btn-md" type="button" accesskey="n" value="' + Mustache.escape( i18n.addTask ) + '">',
-			requestServerSide: '<a class="btn btn-primary btn-success btn-md flip pull-right disabled" id="ssubtn">' + Mustache.escape( i18n.createServerSide ) + '</a>',
+			abortbutton: '<button type="button" class="btn btn-danger btn-xs flip pull-right"><span class="glyphicon glyphicon-remove"></span> ' + nunjucks.lib.escape( i18n.abort ) + '</button>',
+			removebutton: '<button type="button" class="btn btn-danger btn-xs flip pull-right"><span class="glyphicon glyphicon-trash"></span> ' + nunjucks.lib.escape( i18n.remove ) + '</button>',
+			restartbutton: '<button type="button" class="btn btn-warning btn-xs flip pull-right"><span class="glyphicon glyphicon-repeat"></span> ' + nunjucks.lib.escape( i18n.restart ) + '</button>',
+			loading: '<center>' + loaderImage + '&nbsp;&nbsp;' + nunjucks.lib.escape( i18n.loading ) + '</center>',
+			errorDisconnect: '<div class="alert alert-danger">' + nunjucks.lib.escape( i18n.errorDisconnect ) + '</div>',
+			yourTasks: '<h4>' + nunjucks.lib.escape( i18n.yourTasks ) + '</h4><table id="tasktable" class="table"><tbody></tbody></table>',
+			addTask: '<input class="btn btn-primary btn-success btn-md" type="button" accesskey="n" value="' + nunjucks.lib.escape( i18n.addTask ) + '">',
+			requestServerSide: '<a class="btn btn-primary btn-success btn-md flip pull-right disabled" id="ssubtn">' + nunjucks.lib.escape( i18n.createServerSide ) + '</a>',
 			progressbar: '<div class="progress"><div class="progress-bar" role="progressbar"></div></div>',
-			prevbutton: '<span class="glyphicon glyphicon-chevron-' + ( rtl ? 'right' : 'left' ) + '"></span> ' + Mustache.escape( i18n.back ),
-			nextbutton: Mustache.escape( i18n.next ) + ' <span class="glyphicon glyphicon-chevron-' + ( rtl ? 'left' : 'right' ) + '"></span>',
-			confirmbutton: Mustache.escape( i18n.confirm ) + ' <span class="glyphicon glyphicon-ok"></span>'
+			prevbutton: '<span class="glyphicon glyphicon-chevron-' + ( rtl ? 'right' : 'left' ) + '"></span> ' + nunjucks.lib.escape( i18n.back ),
+			nextbutton: nunjucks.lib.escape( i18n.next ) + ' <span class="glyphicon glyphicon-chevron-' + ( rtl ? 'left' : 'right' ) + '"></span>',
+			confirmbutton: nunjucks.lib.escape( i18n.confirm ) + ' <span class="glyphicon glyphicon-ok"></span>'
 		},
 		ssuTemplate = 'Please upload these file(s) to Wikimedia Commons:\n\n**URLs**\n\n{{{ urls }}}\n\n//Description files are available too: append `.txt` to the URLs.//\n\n**Checksums**\n\n| **File** | **MD5** |\n{{{ checksums }}}\n\nThank you!',
-		csrfToken = '';
+		csrfToken = '',
+		nunjucksEnv = new nunjucks.Environment()
+			.addGlobal( '_', function ( key ) { return i18n[ key ]; } )
+			.addFilter( 'process_link', function ( text ) {
+				var regex = /\{\{#a\}\}(.*?)\{\{\/a\}\}/g,
+					last = 0,
+					processed = '',
+					execResult,
+					a = function ( inner ) {
+						if ( inner[ 0 ] === '#' ) {
+							var splitloc = inner.indexOf( '|' );
+							if ( splitloc < 0 ) {
+								// XSS prevention: Nasty attribute escaping -- allow alphanumerics and hyphens only here
+								if ( /^[a-z0-9-]+$/i.test( inner.slice( 1 ) ) ) {
+									return '<a id="' + inner.slice( 1 ) + '"></a>';
+								}
+							} else {
+								if ( /^[a-z0-9-]+$/i.test( inner.substring( 1, splitloc ) ) ) {
+									return '<a id="' + inner.substring( 1, splitloc ) + '">' + nunjucks.lib.escape( inner.slice( splitloc + 1 ) ) + '</a>';
+								}
+							}
+						}
+						return '<a>' + nunjucks.lib.escape( inner ) + '</a>';
+					};
 
-	i18n.a = function () {
-		return function ( text, render ) {
-			if ( text[ 0 ] === '#' ) {
-				var splitloc = text.indexOf( '|' );
-				if ( splitloc < 0 ) {
-					// XSS prevention: Nasty attribute escaping -- allow alphanumerics and hyphens only here
-					if ( /^[a-z0-9-]+$/i.test( text.slice( 1 ) ) ) {
-						return '<a id="' + text.slice( 1 ) + '"></a>';
-					}
-				} else {
-					if ( /^[a-z0-9-]+$/i.test( text.substring( 1, splitloc ) ) ) {
-						return '<a id="' + text.substring( 1, splitloc ) + '">' + render( text.slice( splitloc + 1 ) ) + '</a>';
-					}
+				while ( ( execResult = regex.exec( text ) ) !== null ) {
+					processed += nunjucks.lib.escape( text.substring( last, execResult.index ) );
+					processed += a( execResult[ 1 ] );
+					last = regex.lastIndex;
 				}
-			}
-			return '<a>' + render( text ) + '</a>';
-		};
-	};
+
+				processed += nunjucks.lib.escape( text.slice( last ) );
+
+				return new nunjucks.runtime.SafeString( processed );
+			} );
 
 	var $addTaskDialog, newTaskData, SSUs, username;
 	var video2commons = window.video2commons = {
@@ -228,9 +243,9 @@
 				}
 			};
 			if ( val.status === 'done' ) {
-				setStatusText( Mustache.render( '{{> taskDone}}', i18n, i18n ), val.url, val.text );
+				setStatusText( nunjucksEnv.getFilter( 'process_link' )( i18n.taskDone ).toString(), val.url, val.text );
 			} else if ( val.status === 'needssu' ) {
-				setStatusText( Mustache.render( '{{> errorTooLarge}}', i18n, i18n ), video2commons.makeSSULink( [ val ] ) );
+				setStatusText( nunjucksEnv.getFilter( 'process_link' )( i18n.errorTooLarge ).toString(), video2commons.makeSSULink( [ val ] ) );
 			} else if ( val.status === 'fail' ) {
 				setStatusText( val.text );
 				if ( val.restartable ) {
@@ -331,7 +346,7 @@
 			return 'https://phabricator.wikimedia.org/maniphest/task/edit/form/1/?' + $.param( {
 				title: 'Server side upload for ' + username,
 				projects: 'Wikimedia-Site-requests,commons,video2commons',
-				description: Mustache.render( ssuTemplate, { urls: urls, checksums: checksums } )
+				description: ssuTemplate.replace( '{{{ urls }}}', urls ).replace( '{{{ checksums }}}', checksums )
 			} );
 		},
 
@@ -424,49 +439,42 @@
 		// Functions related to adding new tasks
 		addTask: function ( taskdata ) {
 			if ( !$addTaskDialog ) {
-				// addTask.html
-				$.get( 'static/html/addTask.min.html' )
-					.success( function ( data ) {
+				$addTaskDialog = $( '<div>' )
+					.html( nunjucksEnv.render( 'addTask.html' ) );
 
-						$addTaskDialog = $( '<div>' )
-							.html( Mustache.render( data, i18n ) );
+				$addTaskDialog.addClass( 'modal fade' )
+					.attr( {
+						id: 'addTaskDialog',
+						role: 'dialog'
+					} );
+				$( 'body' )
+					.append( $addTaskDialog );
 
-						$addTaskDialog.addClass( 'modal fade' )
-							.attr( {
-								id: 'addTaskDialog',
-								role: 'dialog'
-							} );
-						$( 'body' )
-							.append( $addTaskDialog );
+				$addTaskDialog.find( '#btn-prev' )
+					.html( htmlContent.prevbutton );
+				$addTaskDialog.find( '#btn-next' )
+					.html( htmlContent.nextbutton );
 
-						$addTaskDialog.find( '#btn-prev' )
-							.html( htmlContent.prevbutton );
-						$addTaskDialog.find( '#btn-next' )
-							.html( htmlContent.nextbutton );
-
-						$addTaskDialog.find( '#btn-cancel' )
-							.click( function () {
-								video2commons.abortUpload();
-							} );
-
-						// HACK
-						$addTaskDialog.find( '.modal-body' )
-							.keypress( function ( e ) {
-								if ( ( e.which || e.keyCode ) === 13 &&
-									!( $( ':focus' )
-										.is( 'textarea' ) ) ) {
-									$addTaskDialog.find( '.modal-footer #btn-next' )
-										.click();
-									e.preventDefault();
-								}
-							} );
-
-						video2commons.openTaskModal( taskdata );
+				$addTaskDialog.find( '#btn-cancel' )
+					.click( function () {
+						video2commons.abortUpload();
 					} );
 
-			} else { // It's not redundant because Ajax load
-				video2commons.openTaskModal( taskdata );
+				// HACK
+				$addTaskDialog.find( '.modal-body' )
+					.keypress( function ( e ) {
+						if ( ( e.which || e.keyCode ) === 13 &&
+							!( $( ':focus' )
+								.is( 'textarea' ) ) ) {
+							$addTaskDialog.find( '.modal-footer #btn-next' )
+								.click();
+							e.preventDefault();
+						}
+					} );
+
 			}
+
+			video2commons.openTaskModal( taskdata );
 		},
 
 		openTaskModal: function ( taskdata ) {
@@ -513,89 +521,74 @@
 		setupAddTaskDialog: function () {
 			switch ( newTaskData.step ) {
 				case 'source':
-					// sourceForm.html
-					$.get( 'static/html/sourceForm.min.html' )
-						.success( function ( dataHtml ) {
-							dataHtml = Mustache.render( dataHtml, i18n, i18n );
-							$addTaskDialog.find( '.modal-body' )
-								.html( dataHtml );
+					$addTaskDialog.find( '.modal-body' )
+						.html( nunjucksEnv.render( 'sourceForm.html' ) );
 
-							$addTaskDialog.find( 'a#fl' )
-								.attr( 'href', '//commons.wikimedia.org/wiki/Commons:Licensing#Acceptable_licenses' );
-							$addTaskDialog.find( 'a#pd' )
-								.attr( 'href', '//commons.wikimedia.org/wiki/Commons:Licensing#Material_in_the_public_domain' );
-							$addTaskDialog.find( 'a#fu' )
-								.attr( 'href', '//commons.wikimedia.org/wiki/Commons:FU' );
+					$addTaskDialog.find( 'a#fl' )
+						.attr( 'href', '//commons.wikimedia.org/wiki/Commons:Licensing#Acceptable_licenses' );
+					$addTaskDialog.find( 'a#pd' )
+						.attr( 'href', '//commons.wikimedia.org/wiki/Commons:Licensing#Material_in_the_public_domain' );
+					$addTaskDialog.find( 'a#fu' )
+						.attr( 'href', '//commons.wikimedia.org/wiki/Commons:FU' );
 
-							$addTaskDialog.find( '#url' )
-								.val( newTaskData.url )
-								.focus();
-							$addTaskDialog.find( '#video' )
-								.prop( 'checked', newTaskData.video );
-							$addTaskDialog.find( '#audio' )
-								.prop( 'checked', newTaskData.audio );
-							$addTaskDialog.find( '#subtitles' )
-								.prop( 'checked', newTaskData.subtitles );
+					$addTaskDialog.find( '#url' )
+						.val( newTaskData.url )
+						.focus();
+					$addTaskDialog.find( '#video' )
+						.prop( 'checked', newTaskData.video );
+					$addTaskDialog.find( '#audio' )
+						.prop( 'checked', newTaskData.audio );
+					$addTaskDialog.find( '#subtitles' )
+						.prop( 'checked', newTaskData.subtitles );
 
-							video2commons.initUpload();
-						} );
+					video2commons.initUpload();
 					break;
 				case 'target':
-					// targetForm.html
-					$.get( 'static/html/targetForm.min.html' )
-						.success( function ( dataHtml ) {
-							dataHtml = Mustache.render( dataHtml, i18n );
-							$addTaskDialog.find( '.modal-body' )
-								.html( dataHtml );
+					$addTaskDialog.find( '.modal-body' )
+						.html( nunjucksEnv.render( 'targetForm.html' ) );
 
-							$addTaskDialog.find( '#filename' )
-								.val( newTaskData.filename )
-								.focus();
-							$.each( newTaskData.formats, function ( i, desc ) {
-								$addTaskDialog.find( '#format' )
-									.append( $( '<option></option>' )
-										.text( desc ) );
-							} );
-							$addTaskDialog.find( '#format' )
-								.val( newTaskData.format );
-							$addTaskDialog.find( '#filedesc' )
-								.val( newTaskData.filedesc );
-						} );
+					$addTaskDialog.find( '#filename' )
+						.val( newTaskData.filename )
+						.focus();
+					$.each( newTaskData.formats, function ( i, desc ) {
+						$addTaskDialog.find( '#format' )
+							.append( $( '<option></option>' )
+								.text( desc ) );
+					} );
+					$addTaskDialog.find( '#format' )
+						.val( newTaskData.format );
+					$addTaskDialog.find( '#filedesc' )
+						.val( newTaskData.filedesc );
 					break;
 				case 'confirm':
-					// confirmForm.html
-					$.get( 'static/html/confirmForm.min.html' )
-						.success( function ( dataHtml ) {
-							dataHtml = Mustache.render( dataHtml, i18n );
-							$addTaskDialog.find( '.modal-body' )
-								.html( dataHtml );
+					$addTaskDialog.find( '.modal-body' )
+						.html( nunjucksEnv.render( 'confirmForm.html' ) );
 
-							var keep = [];
-							if ( newTaskData.video ) {
-								keep.push( i18n.video );
-							}
-							if ( newTaskData.audio ) {
-								keep.push( i18n.audio );
-							}
-							if ( newTaskData.subtitles ) {
-								keep.push( i18n.subtitles );
-							}
-							$addTaskDialog.find( '#keep' )
-								.text( keep.join( ', ' ) );
+					var keep = [];
+					if ( newTaskData.video ) {
+						keep.push( i18n.video );
+					}
+					if ( newTaskData.audio ) {
+						keep.push( i18n.audio );
+					}
+					if ( newTaskData.subtitles ) {
+						keep.push( i18n.subtitles );
+					}
+					$addTaskDialog.find( '#keep' )
+						.text( keep.join( ', ' ) );
 
-							video2commons.setText( [
-								'url',
-								'extractor',
-								'filename',
-								'format'
-							], newTaskData );
+					video2commons.setText( [
+						'url',
+						'extractor',
+						'filename',
+						'format'
+					], newTaskData );
 
-							$addTaskDialog.find( '#filedesc' )
-								.val( newTaskData.filedesc );
+					$addTaskDialog.find( '#filedesc' )
+						.val( newTaskData.filedesc );
 
-							$addTaskDialog.find( '#btn-next' )
-								.focus();
-						} );
+					$addTaskDialog.find( '#btn-next' )
+						.focus();
 			}
 		},
 
@@ -677,88 +670,94 @@
 			var deferred;
 			switch ( newTaskData.step ) {
 				case 'source':
-					deferred = $.when( ( function () {
-						var video = $addTaskDialog.find( '#video' ).is( ':checked' ),
-							audio = $addTaskDialog.find( '#audio' ).is( ':checked' );
-						newTaskData.subtitles = $addTaskDialog.find( '#subtitles' )
-							.is( ':checked' );
-						if ( !newTaskData.formats.length || video !== newTaskData.video || audio !== newTaskData.audio ) {
-							return video2commons.askAPI( 'listformats', {
-								video: video,
-								audio: audio
-							}, [ 'video', 'audio', 'format', 'formats' ] );
-						} else {
-							return resolved;
-						}
-					}() ), ( function () {
-						var url = $addTaskDialog.find( '#url' )
-							.val();
-
-						if ( !url ) {
-							return $.Deferred()
-								.reject( 'URL cannot be empty!' )
-								.promise();
-						}
-						if ( !newTaskData.filename || !newTaskData.filedesc || url !== newTaskData.url ) {
-							newTaskData.filenamechecked = false;
-							newTaskData.filedescchecked = false;
-							var uploadedFile = newTaskData.uploadedFile[ url ];
-							if ( uploadedFile ) {
-								newTaskData.url = url;
-								return video2commons.askAPI( 'makedesc', {
-									filename: uploadedFile.name || ''
-								}, [ 'extractor', 'filedesc', 'filename' ] );
+					deferred = $.when(
+						( function () {
+							var video = $addTaskDialog.find( '#video' ).is( ':checked' ),
+								audio = $addTaskDialog.find( '#audio' ).is( ':checked' );
+							newTaskData.subtitles = $addTaskDialog.find( '#subtitles' )
+								.is( ':checked' );
+							if ( !newTaskData.formats.length || video !== newTaskData.video || audio !== newTaskData.audio ) {
+								return video2commons.askAPI( 'listformats', {
+									video: video,
+									audio: audio
+								}, [ 'video', 'audio', 'format', 'formats' ] );
 							} else {
-								return video2commons.askAPI( 'extracturl', {
-									url: url
-								}, [ 'url', 'extractor', 'filedesc', 'filename' ] );
+								return resolved;
 							}
-						} else {
-							return resolved;
-						}
-					}() ) );
+						}() ),
+						( function () {
+							var url = $addTaskDialog.find( '#url' )
+								.val();
+
+							if ( !url ) {
+								return $.Deferred()
+									.reject( 'URL cannot be empty!' )
+									.promise();
+							}
+							if ( !newTaskData.filename || !newTaskData.filedesc || url !== newTaskData.url ) {
+								newTaskData.filenamechecked = false;
+								newTaskData.filedescchecked = false;
+								var uploadedFile = newTaskData.uploadedFile[ url ];
+								if ( uploadedFile ) {
+									newTaskData.url = url;
+									return video2commons.askAPI( 'makedesc', {
+										filename: uploadedFile.name || ''
+									}, [ 'extractor', 'filedesc', 'filename' ] );
+								} else {
+									return video2commons.askAPI( 'extracturl', {
+										url: url
+									}, [ 'url', 'extractor', 'filedesc', 'filename' ] );
+								}
+							} else {
+								return resolved;
+							}
+						}() )
+					);
 					break;
 				case 'target':
-					deferred = $.when( ( function () {
-						var filename = $addTaskDialog.find( '#filename' ).val();
-						newTaskData.format = $addTaskDialog.find( '#format' ).val();
+					deferred = $.when(
+						( function () {
+							var filename = $addTaskDialog.find( '#filename' ).val();
+							newTaskData.format = $addTaskDialog.find( '#format' ).val();
 
-						if ( !filename ) {
-							return $.Deferred()
-								.reject( 'Filename cannot be empty!' )
-								.promise();
-						}
+							if ( !filename ) {
+								return $.Deferred()
+									.reject( 'Filename cannot be empty!' )
+									.promise();
+							}
 
-						if ( !newTaskData.filenamechecked || filename !== newTaskData.filename ) {
-							return video2commons.askAPI( 'validatefilename', {
-								filename: filename
-							}, [ 'filename' ] )
-								.done( function () {
-									newTaskData.filenamechecked = true;
-								} );
-						} else {
-							return resolved;
-						}
-					}() ), ( function () {
-						var filedesc = $addTaskDialog.find( '#filedesc' ).val();
+							if ( !newTaskData.filenamechecked || filename !== newTaskData.filename ) {
+								return video2commons.askAPI( 'validatefilename', {
+									filename: filename
+								}, [ 'filename' ] )
+									.done( function () {
+										newTaskData.filenamechecked = true;
+									} );
+							} else {
+								return resolved;
+							}
+						}() ),
+						( function () {
+							var filedesc = $addTaskDialog.find( '#filedesc' ).val();
 
-						if ( !filedesc ) {
-							return $.Deferred()
-								.reject( 'File description cannot be empty!' )
-								.promise();
-						}
+							if ( !filedesc ) {
+								return $.Deferred()
+									.reject( 'File description cannot be empty!' )
+									.promise();
+							}
 
-						if ( !newTaskData.filedescchecked || filedesc !== newTaskData.filedesc ) {
-							return video2commons.askAPI( 'validatefiledesc', {
-								filedesc: filedesc
-							}, [ 'filedesc' ] )
-								.done( function () {
-									newTaskData.filedescchecked = true;
-								} );
-						} else {
-							return resolved;
-						}
-					}() ) );
+							if ( !newTaskData.filedescchecked || filedesc !== newTaskData.filedesc ) {
+								return video2commons.askAPI( 'validatefiledesc', {
+									filedesc: filedesc
+								}, [ 'filedesc' ] )
+									.done( function () {
+										newTaskData.filedescchecked = true;
+									} );
+							} else {
+								return resolved;
+							}
+						}() )
+					);
 					break;
 				case 'confirm':
 					// nothing to do in confirm screen
@@ -799,7 +798,7 @@
 			if ( deferred && deferred.state() === 'pending' ) {
 				deferred.reject( abortReason );
 			}
-			if ( window.jqXHR ) {
+			if ( window.jqXHR && window.jqXHR.abort ) {
 				window.jqXHR.abort();
 			}
 		},

@@ -1,0 +1,30 @@
+<form role="form">
+  <div class="form-group" id="src-url">
+    <label for="url"><span class="glyphicon glyphicon-import"></span> URL</label>
+    <input type="text" class="form-control" id="url" placeholder="http://example.com/examplevideo" dir="ltr">
+    <span class="btn btn-primary fileinput-button"><span class="glyphicon glyphicon-open"></span> {{ _('uploadFile') }}<input id="fileupload" name="file" data-url="api/upload/upload" type="file"></span>
+  </div>
+  <div class="form-group" id="src-uploading" style="display:none">
+    <label><span class="glyphicon glyphicon-cloud-upload"></span> {{ _('uploading') }}</label>
+    <div class="progress" id="upload-progress"><div class="progress-bar" role="progressbar"></div></div>
+    <span class="btn btn-danger fileinput-button" id="upload-abort"><span class="glyphicon glyphicon-remove"></span> {{ _('cancel') }}</span>
+  </div>
+  <div class="checkbox">
+    <label><input type="checkbox" value="" checked id="video">{{ _('keepvideo') }}</label>
+  </div>
+  <div class="checkbox">
+    <label><input type="checkbox" value="" checked id="audio">{{ _('keepaudio') }}</label>
+  </div>
+  <div class="checkbox">
+    <label><input type="checkbox" value="" checked id="subtitles">{{ _('importsubtitles') }}</label>
+  </div>
+  <div class="alert alert-info">
+    {{ _('note') }}
+    <ul>
+      <li>{{ _('notesplaylists') }}</li>
+      <li>{{ _('notesuncheck') }}</li>
+      <li>{{ _('notessubtitles') }}</li>
+    </ul>
+    <b>{{ _('importantnote') }}</b> {{ _('noteslicensing') | process_link }}
+  </div>
+</form>
