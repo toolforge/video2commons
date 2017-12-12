@@ -5,7 +5,7 @@
     },
     "extends": "wikimedia",
     "rules": {
-        "complexity": [ "warn", 6 ],
+        /*"complexity": [ "warn", 6 ],*/
         "one-var": 0,
         "vars-on-top": 0
     }

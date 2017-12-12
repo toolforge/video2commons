@@ -73,6 +73,7 @@ def get(lang):
                 data[key] = data[key].replace('<', '&lt;')
                 data[key] = data[key].replace('>', '&gt;')
                 break
+    data['@lang'] = lang
     data['@dir'] = _dir(lang)
 
     setattr(g, i18nkey, data)
