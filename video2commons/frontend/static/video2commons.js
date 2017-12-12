@@ -243,9 +243,16 @@
 				}
 			};
 			if ( val.status === 'done' ) {
-				setStatusText( nunjucksEnv.getFilter( 'process_link' )( i18n.taskDone ).toString(), val.url, val.text );
+				setStatusText(
+					nunjucksEnv.getFilter( 'process_link' )( i18n.taskDone ).toString(),
+					val.url.replace( '%3A', ':' ), // Ugly HACK for v2c issue #92
+					val.text
+				);
 			} else if ( val.status === 'needssu' ) {
-				setStatusText( nunjucksEnv.getFilter( 'process_link' )( i18n.errorTooLarge ).toString(), video2commons.makeSSULink( [ val ] ) );
+				setStatusText(
+					nunjucksEnv.getFilter( 'process_link' )( i18n.errorTooLarge ).toString(),
+					video2commons.makeSSULink( [ val ] )
+				);
 			} else if ( val.status === 'fail' ) {
 				setStatusText( val.text );
 				if ( val.restartable ) {
