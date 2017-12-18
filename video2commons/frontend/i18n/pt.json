@@ -1,12 +1,14 @@
 {
 	"@metadata": {
 		"authors": [
-			"Vitorvicentevalente"
+			"Vitorvicentevalente",
+			"MokaAkashiyaPT"
 		]
 	},
 	"loginOnCommons": "Entrar no Wikimedia Commons",
 	"logout": "Sair",
 	"help": "Ajuda",
+	"forkOnGitHub": "Clonar-me no GitHub",
 	"JavascriptRequired": "É necessário o JavaScript para utilizar esta ferramenta!",
 	"abort": "Abortar",
 	"remove": "Remover",
@@ -14,11 +16,15 @@
 	"next": "Seguinte",
 	"loading": "A carregar...",
 	"confirm": "Confirmar",
+	"errorDisconnect": "A ligação com o servidor falhou. Por favor, atualize esta pagina ou notifique sobre o problema no GitHub.",
+	"errorTooLarge": "O ficheiro é demasiado grande para ser carregado diretamente! Pode {{#a}}solicitar o envio ao servidor{{/a}}.",
 	"addTask": "Adicionar tarefa...",
 	"yourTasks": "As suas tarefas:",
+	"createServerSide": "Criar um bilhete para carregar ao servidor (recomendado)",
 	"taskDone": "A sua tarefa está concluída. Pode encontrar o carregamento em {{#a}}{{/a}}.",
 	"cancel": "Cancelar",
 	"back": "Voltar",
+	"extractor": "Extrator",
 	"keep": "Manter",
 	"filetarget": "Nome da página de destino",
 	"transcoding": "Formato de transcodificação",
@@ -30,8 +36,14 @@
 	"keepvideo": "Manter vídeo",
 	"keepaudio": "Manter áudio",
 	"importsubtitles": "Importar legendas",
+	"uploadFile": "Ou carregue um ficheiro...",
+	"uploading": "A carregar...",
 	"note": "Nota:",
 	"importantnote": "Nota importante:",
+	"notesplaylists": "As listas de reprodução não serão processadas corretamente. Alguns sítios (como Youku e Comedy Central) utilizam os vídeos divididos em várias partes, interpretados como uma lista de reprodução, e também não serão processados ​​corretamente.",
+	"notesuncheck": "Se o ficheiro multimédia não incluir faixas de áudio ou vídeo, por favor, desmarque as caixas correspondentes, ou a conversão poderá falhar, mesmo se o formato por livre.",
+	"notessubtitles": "Se a opção 'Importar legendas' estiver selecionada, as legendas serão importadas, com exceção das autogeradas.",
 	"noteslicensing": "Carregar apenas {{#a}}#fl|conteúdo livre{{/a}} ou de {{#a}}#pd|domínio público{{/a}}. {{#a}}#fu|Ficheiros protegidos por direitos de autor{{/a}} não são permitidos Wikimedia Commons.",
-	"extensionmsg": "A extensão do ficheiro definido acima é usado, se e somente se, o formato do vídeo não for de código livre, requerendo assim uma transcodificação. Vídeos em formatos abertos mantém as suas extensões."
+	"extensionmsg": "A extensão do ficheiro definido acima é usado, se e somente se, o formato do vídeo não for de código livre, requerendo assim uma transcodificação. Vídeos em formatos abertos mantém as suas extensões.",
+	"confirmmsg": "Por favor, confirme a tarefa ou clique em 'Voltar' para mudar os parâmetros. Ao clicar em 'Confirmar', a tarefa será enviada e executada. Devido a restrições técnicas, a tarefa não poderá ser interrompida com facilidade, depois de enviada."
 }
