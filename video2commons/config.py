@@ -9,8 +9,8 @@ import json as _json
 
 try:
     with open(_os.path.dirname(_os.path.realpath(__file__)) +
-              '/../config.json', 'r') as f:
-        _data = _json.load(f)
+              '/../config.json', 'r') as _f:
+        _data = _json.load(_f)
 except IOError as _e:
     __import__('logging').exception(_e)
     _data = {}
@@ -22,3 +22,5 @@ redis_pw = _data.get('redis_pw')
 redis_host = _data.get('redis_host')
 session_key = _data.get('session_key')
 http_host = _data.get('http_host')
+webfrontend_uri = _data.get('webfrontend_uri')
+socketio_uri = _data.get('socketio_uri')

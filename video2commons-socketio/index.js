@@ -25,10 +25,10 @@ var redisconnection = redis.createClient( redisparams ),
 /* ===== HTTP / Socket.io Request Handling ===== */
 
 app.all( '*', function ( req, res /* , next */ ) {
-	res.redirect( 'https://tools.wmflabs.org/video2commons/' );
+	res.redirect( config.webfrontend_uri );
 } );
 
-io.path( '/video2commons-socketio' );
+io.path( config.socketio_uri.match( /^(?:(?:https?:)?\/\/)?[^/]+(\/.*)$/ )[ 1 ] );
 
 io.on( 'connection', function ( socket ) {
 	console.log( '[' + new Date() + '] Connected: ' + socket.id );
@@ -53,7 +53,7 @@ io.on( 'connection', function ( socket ) {
 
 				var j = request.jar();
 				var cookie = request.cookie( 'v2c-session=' + sessionkey );
-				var url = 'https://tools.wmflabs.org/video2commons/api/status';
+				var url = 'https:' + config.webfrontend_uri + 'api/status';
 				j.setCookie( cookie, url );
 				request( {
 					url: url,
@@ -86,7 +86,7 @@ io.listen( http.createServer( app ).listen( port ) );
 /* ===== Socket.io Client Notification ===== */
 
 var forEachSocketInRoom = function ( room, cb ) {
-	var ns = io[ 'in' ]( room );
+	var ns = io.in( room );
 	ns.clients( function ( error, clients ) {
 		if ( error ) {
 			throw error;
@@ -103,15 +103,15 @@ var addtask = function ( taskid, user ) {
 	},
 	updatetask = function ( taskid, data ) {
 		if ( data ) {
-			io[ 'in' ]( taskid ).emit( 'update', taskid, data );
+			io.in( taskid ).emit( 'update', taskid, data );
 		} else {
 			// Do nothing if room is empty
-			io[ 'in' ]( taskid ).clients( function ( error, clients ) {
+			io.in( taskid ).clients( function ( error, clients ) {
 				if ( error ) {
 					throw error;
 				} else if ( clients ) {
 					request( {
-						url: 'https://tools.wmflabs.org/video2commons/api/status-single?task=' + taskid,
+						url: 'https:' + config.webfrontend_uri + 'api/status-single?task=' + taskid,
 						headers: {
 							'User-Agent': 'video2commons-socketio',
 							'X-V2C-Session-Bypass': config.session_key
@@ -122,14 +122,14 @@ var addtask = function ( taskid, user ) {
 							return;
 						}
 						var data = JSON.parse( body );
-						io[ 'in' ]( taskid ).emit( 'update', taskid, data.value );
+						io.in( taskid ).emit( 'update', taskid, data.value );
 					} );
 				}
 			} );
 		}
 	},
 	removetask = function ( taskid ) {
-		io[ 'in' ]( taskid ).emit( 'remove', taskid );
+		io.in( taskid ).emit( 'remove', taskid );
 		forEachSocketInRoom( taskid, function ( socket ) { socket.leave( taskid ); } );
 	};
 

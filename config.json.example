@@ -5,5 +5,7 @@
 "redis_pw": "THISisNOTthePASSWORD@@@",
 "redis_host": "video-redis.video.eqiad.wmflabs",
 "session_key": "BlahBlahBlah",
-"http_host": "tools.wmflabs.org/video2commons/static/ssu"
+"http_host": "tools.wmflabs.org/video2commons/static/ssu",
+"webfrontend_uri": "//tools.wmflabs.org/video2commons/",
+"socketio_uri": "//tools.wmflabs.org/video2commons-socketio"
 }
