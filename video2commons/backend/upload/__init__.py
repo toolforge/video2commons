@@ -29,84 +29,74 @@ import shutil
 import pywikibot
 import hashlib
 
+from video2commons.config import http_host
 from video2commons.exceptions import NeedServerSideUpload
 
 
-def upload(
-    filename, wikifilename, sourceurl, http_host, filedesc, username,
-    statuscallback=None, errorcallback=None
-):
+def upload(task):
     """Upload a file from filename to wikifilename."""
-    statuscallback = statuscallback or (lambda text, percent: None)
-    errorcallback = errorcallback or (lambda text: None)
+    filename = task.results['encode']
+    wikifilename = task.args.filename + u'.' + filename.split('.')[-1]
 
     size = os.path.getsize(filename)
 
-    if size < 1000000000:
-        return upload_pwb(
-            filename, wikifilename, sourceurl, filedesc, username,
-            size, statuscallback, errorcallback
-        )
+    if size < 10**9:
+        return upload_pwb(task, filename, wikifilename, size)
     elif size < (4 << 30):
         try:
-            return upload_pwb(
-                filename, wikifilename, sourceurl, filedesc, username,
-                size, statuscallback, errorcallback
-            )
-        except pywikibot.data.api.APIError, e:
+            return upload_pwb(task, filename, wikifilename, size)
+        except pywikibot.data.api.APIError as e:
             if 'stash' in e.code or e.code == 'backend-fail-internal':
-                upload_ss(
-                    filename, wikifilename, http_host, filedesc,
-                    statuscallback, errorcallback
-                )
+                upload_ss(task, filename, wikifilename)
             else:
                 raise
     else:
-        errorcallback(
+        task.error(
             'Sorry, but files larger than 4GB can not be uploaded even ' +
             'with server-side uploading. This task may need manual ' +
             ' intervention.'
         )
 
 
-def upload_pwb(
-    filename, wikifilename, sourceurl, filedesc, username,
-    size, statuscallback, errorcallback
-):
+def upload_pwb(task, filename, wikifilename, size):
     """Upload with pywikibot."""
     # ENSURE PYWIKIBOT OAUTH PROPERLY CONFIGURED!
-    site = pywikibot.Site('commons', 'commons', user=username)
+    site = pywikibot.Site('commons', 'commons', user=task.args.username)
     page = pywikibot.FilePage(site, wikifilename)
 
     if page.exists():
-        errorcallback('File already exists. Please choose another name.')
+        task.error('File already exists. Please choose another name.')
 
-    comment = u'Imported media from ' + sourceurl
+    comment = u'Imported media from ' + task.args.url
     chunked = (16 * (1 << 20)) if size >= 100000000 else 0
 
-    statuscallback('Uploading...', -1)
+    with task.status._pause():
+        task.status.text = 'Uploading with pywikibot...'
+        task.status.percent = -1
     try:
         if not site.upload(
-            page, source_filename=filename, comment=comment, text=filedesc,
-            chunk_size=chunked, async=bool(chunked)  # , ignore_warnings=['exists-normalized']
+            page, source_filename=filename, comment=comment,
+            text=task.args.filedesc, chunk_size=chunked, async=bool(chunked)
+            # , ignore_warnings=['exists-normalized']
         ):
-            errorcallback('Upload failed!')
+            task.error('Upload failed!')
     except pywikibot.data.api.APIError:
         # recheck
         site.loadpageinfo(page)
         if not page.exists():
             raise
 
-    statuscallback('Upload success!', 100)
+    with task.status._pause():
+        task.status.text = 'Upload success!'
+        task.status.percent = 100
     return page.title(withNamespace=False), page.full_url()
 
 
-def upload_ss(
-    filename, wikifilename, http_host, filedesc,
-    statuscallback, errorcallback
-):
+def upload_ss(task, filename, wikifilename):
     """Prepare for server-side upload."""
-    statuscallback('Preparing for server-side upload...', -1)
+    with task.status._pause():
+        task.status.text = 'Preparing for server-side upload...'
+        task.status.percent = -1
 
     # Get hash
     md5 = hashlib.md5()
@@ -126,7 +116,7 @@ def upload_ss(
     shutil.move(filename, newfilename)
 
     with open(newfilename + '.txt', 'w') as filedescfile:
-        filedesc = filedesc.replace(
+        filedesc = task.args.filedesc.replace(
             '[[Category:Uploaded with video2commons]]',
             '[[Category:Uploaded with video2commons/Server-side uploads]]'
         )

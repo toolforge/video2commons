@@ -27,6 +27,8 @@ Support two modes
 WebVideoTranscode/WebVideoTranscodeJob.php under GPLv2
 """
 
+from __future__ import print_function
+
 import os
 import re
 import math
@@ -43,12 +45,17 @@ from globals import (
 from video2commons.exceptions import TaskAbort
 
 
+try:
+    basestring
+except NameError:
+    basestring = str
+
+
 class WebVideoTranscodeJob(object):
     """Job class."""
 
     def __init__(
-        self, source, target, key, preserve={},
-        statuscallback=None, errorcallback=None
+        self, source, target, key, preserve, statuscb, errorcb
     ):
         """Initialize the instance."""
         self.source = os.path.abspath(source)
@@ -56,19 +63,19 @@ class WebVideoTranscodeJob(object):
         self.key = key
         self.preserve = {'video': False, 'audio': False}
         self.preserve.update(preserve)
-        self.statuscallback = statuscallback or (lambda text, percent: None)
-        self.errorcallback = errorcallback or (lambda text: None)
+        self.statuscb = statuscb
+        self.errorcb = errorcb
         self.removeDuplicates = True
 
     def output(self, msg):
         """
-        Output to statuscallback and stdout.
+        Output to statuscb and stdout.
 
         @param msg string
         """
         msg = msg.strip()
-        self.statuscallback(msg, None)
-        print msg
+        self.statuscb.text = msg
+        print(msg)
 
     def get_file(self):
         """
@@ -112,7 +119,7 @@ class WebVideoTranscodeJob(object):
         @param transcode_key string
         @param error string
         """
-        self.errorcallback(error)
+        self.errorcb(error)
 
     def run(self):
         """
@@ -471,7 +478,7 @@ class WebVideoTranscodeJob(object):
                     if newpercentage != percentage:
                         percentage = newpercentage
                         try:
-                            self.statuscallback(None, percentage)
+                            self.statuscb.percent = percentage
                         except TaskAbort:
                             os.killpg(os.getpgid(process.pid), signal.SIGTERM)
                             raise

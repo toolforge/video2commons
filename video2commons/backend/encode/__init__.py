@@ -17,7 +17,6 @@
 
 """Main encode module."""
 
-import os
 from transcodejob import WebVideoTranscodeJob
 from transcode import WebVideoTranscode
 from globals import ffmpeg_location, ffprobe_location
@@ -25,9 +24,11 @@ from globals import ffmpeg_location, ffprobe_location
 from converter import Converter
 
 
-def encode(source, origkey, statuscallback=None, errorcallback=None):
+def encode(task):
     """Main encode function."""
-    source = os.path.abspath(source)
+    source = task.results['download']['target']
+    origkey = task.args.convertkey
+
     preserve = {'video': False, 'audio': False}
 
     c = Converter(ffmpeg_path=ffmpeg_location, ffprobe_path=ffprobe_location)
@@ -45,7 +46,7 @@ def encode(source, origkey, statuscallback=None, errorcallback=None):
 
     target = source + '.' + key
     job = WebVideoTranscodeJob(
-        source, target, key, preserve, statuscallback, errorcallback
+        source, target, key, preserve, task.status, task.error
     )
 
     return target if job.run() else None

@@ -1,10 +1,10 @@
-youtube-dl
+celery[redis]
+chardet
 flask
 guess-language
-celery[redis]
 hiredis
 pycountry
-chardet
 mwoauth
+youtube-dl
 https://github.com/senko/python-video-converter/zipball/master#egg=videoconverter
 https://github.com/wikimedia/pywikibot-core/zipball/master#egg=pywikibot

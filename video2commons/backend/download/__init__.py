@@ -25,34 +25,26 @@ from urlparse import urlparse
 from celery.utils.log import get_logger
 import youtube_dl
 
-from video2commons.exceptions import TaskError
 
+def download(task):
+    """Download a video from url."""
 
-def download(
-    url, ie_key, formats, subtitles, outputdir,
-    statuscallback=None, errorcallback=None
-):
-    """Download a video from url to outputdir."""
-
+    url, ie_key = task.args.url, task.args.ie_key
     if url.startswith('uploads:'):
         # FIXME; this should be a configuration variable
         url = url.replace('uploads:', 'https://tools.wmflabs.org/'
                                       'video2commons/static/uploads/', 1)
         ie_key = None
 
-    url_blacklisted(url)
-
-    outputdir = os.path.abspath(outputdir)
-    statuscallback = statuscallback or (lambda text, percent: None)
-    errorcallback = errorcallback or (lambda text: None)
-    outtmpl = outputdir + u'/dl.%(ext)s'
+    url_blacklisted(url, task.error)
+    outtmpl = u'./dl.%(ext)s'
 
     params = {
-        'format': formats,
+        'format': task.args.downloadkey,
         'outtmpl': outtmpl,
         'writedescription': True,
         'writeinfojson': True,
-        'writesubtitles': subtitles,
+        'writesubtitles': task.args.subtitles,
         'writeautomaticsub': False,
         'allsubtitles': True,
         'subtitlesformat': 'srt/ass/vtt/best',
@@ -70,33 +62,34 @@ def download(
         'logger': get_logger('celery.task.v2c.main.youtube-dl')
     }
 
-    last_percentage = [Ellipsis]
-
     def progresshook(d):
         if d['status'] == 'downloading':
             total = d.get('total_bytes') or d.get('total_bytes_estimate')
             percentage = int(100.0 * d['downloaded_bytes'] / total)\
                 if total else None
-            if percentage != last_percentage[0]:
-                last_percentage[0] = percentage
-                statuscallback(
-                    'Downloading to ' + (d['tmpfilename'] or d['filename']),
-                    percentage
-                )
+            with task.status._pause():
+                task.status.text = (
+                    'Downloading to ' + (d['tmpfilename'] or d['filename']))
+                task.status.percent = percentage
         elif d['status'] == 'finished':
-            statuscallback('Postprocessing...', -1)
+            with task.status._pause():
+                task.status.text = 'Postprocessing...'
+                task.status.percent = -1
         elif d['status'] == 'error':
-            errorcallback('Error raised by YoutubeDL')
+            task.error('Error raised by YoutubeDL')
 
-    statuscallback('Creating YoutubeDL instance', -1)
+    with task.status._pause():
+        task.status.text = 'Creating YoutubeDL instance'
+        task.status.percent = -1
+
     dl = youtube_dl.YoutubeDL(params)
     dl.add_progress_hook(progresshook)
 
-    statuscallback('Preprocessing...', -1)
+    task.status.text = 'Preprocessing...'
     info = dl.extract_info(url, download=True, ie_key=ie_key)
 
     if info.get('webpage_url'):
-        url_blacklisted(info['webpage_url'])
+        url_blacklisted(info['webpage_url'], task.error)
 
     filename = outtmpl % {'ext': info['ext']}
     if not os.path.isfile(filename):
@@ -121,9 +114,9 @@ def download(
     return ret
 
 
-def url_blacklisted(url):
+def url_blacklisted(url, cb):
     """Define download url blacklist."""
     parseresult = urlparse(url)
     if parseresult.scheme in ['http', 'https']:
         if parseresult.netloc.endswith('.googlevideo.com'):
-            raise TaskError('Your downloading URL has been blacklisted.')
+            cb('Your downloading URL has been blacklisted.')
