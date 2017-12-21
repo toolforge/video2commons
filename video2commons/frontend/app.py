@@ -21,16 +21,19 @@
 
 from __future__ import absolute_import
 
+import json
 import traceback
 
 from flask import (
-    Flask, request, session, render_template, redirect, url_for
+    Flask, request, Response, session, render_template, redirect, url_for
 )
 from mwoauth import AccessToken, ConsumerToken, RequestToken, Handshaker
 from requests_oauthlib import OAuth1
 import requests
 
-from video2commons.config import consumer_key, consumer_secret, api_url
+from video2commons.config import (
+    consumer_key, consumer_secret, api_url, webfrontend_uri, socketio_uri
+)
 
 from video2commons.frontend.redisession import RedisSessionInterface
 from video2commons.frontend.shared import redisconnection, check_banned
@@ -49,6 +52,12 @@ app.session_interface = RedisSessionInterface(redisconnection)
 
 app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 3600
 
+config_p = {
+    'webfrontend_uri': webfrontend_uri,
+    'socketio_uri': socketio_uri,
+}
+
+app.jinja_env.globals['config'] = config_p
 app.jinja_env.globals['_'] = _
 app.jinja_env.globals['lang'] = getlanguage
 app.jinja_env.tests['rtl'] = is_rtl
@@ -89,6 +98,13 @@ def force_https():
         return redirect('https://' + request.headers['Host'] +
                         request.headers['X-Original-URI'],
                         code=301)
+
+
+@app.route('/config')
+def get_config():
+    """Get the current config as a dict and output Javascript."""
+    data = 'window.config=' + json.dumps(config_p) + ';'
+    return Response(data, mimetype='application/javascript; charset=utf-8')
 
 
 @app.route('/')

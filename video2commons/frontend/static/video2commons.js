@@ -2,7 +2,8 @@
 ( function ( $ ) {
 	'use strict';
 
-	var i18n = window.i18n,
+	var config = window.config,
+		i18n = window.i18n,
 		loaderImage = '<img alt="File:Ajax-loader.gif" src="//upload.wikimedia.org/wikipedia/commons/d/de/Ajax-loader.gif" data-file-width="32" data-file-height="32" height="32" width="32">',
 		rtl = i18n[ '@dir' ] === 'rtl',
 		htmlContent = {
@@ -22,6 +23,7 @@
 		ssuTemplate = 'Please upload these file(s) to Wikimedia Commons:\n\n**URLs**\n\n{{{ urls }}}\n\n//Description files are available too: append `.txt` to the URLs.//\n\n**Checksums**\n\n| **File** | **MD5** |\n{{{ checksums }}}\n\nThank you!',
 		csrfToken = '',
 		nunjucksEnv = new nunjucks.Environment()
+			.addGlobal( 'config', config )
 			.addGlobal( '_', function ( key ) { return i18n[ key ]; } )
 			.addFilter( 'process_link', function ( text ) {
 				var regex = /\{\{#a\}\}(.*?)\{\{\/a\}\}/g,
@@ -85,7 +87,7 @@
 
 		// Functions related to showing running/finished tasks
 		checkStatus: function () {
-			if ( window.WebSocket && window.io ) {
+			if ( config.socketio_uri && window.WebSocket && window.io ) {
 				video2commons.checkStatusSocket();
 			} else {
 				video2commons.checkStatusLegacy();
@@ -96,7 +98,11 @@
 			if ( window.socket ) {
 				return;
 			}
-			var socket = window.socket = io( '//tools.wmflabs.org/', { path: '/video2commons-socketio' } );
+
+			var socketmatch = config.socketio_uri.match( /^((?:(?:https?:)?\/\/)?[^/]+)(\/.*)$/ ),
+				sockethost = socketmatch[ 1 ],
+				socketpath = socketmatch[ 2 ],
+				socket = window.socket = io( sockethost, { path: socketpath } );
 
 			socket.on( 'connect', function () {
 				$.get( 'api/iosession' )

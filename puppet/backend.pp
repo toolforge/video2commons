@@ -102,7 +102,9 @@ $config_json_template = '{
 "api_url": "https://commons.wikimedia.org/w/index.php",
 "redis_pw": "<%= @redis_pw %>",
 "redis_host": "<%= @redis_host %>",
-"http_host": "<%= @http_host %>"
+"http_host": "tools.wmflabs.org/video2commons/static/ssu",
+"webfrontend_uri": "//tools.wmflabs.org/video2commons/",
+"socketio_uri": "//tools.wmflabs.org/video2commons-socketio"
 }
 '
 
