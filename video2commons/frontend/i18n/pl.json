@@ -16,6 +16,7 @@
 	"loading": "Ładowanie...",
 	"confirm": "Potwierdź",
 	"errorDisconnect": "Nie udało się połączyć z serwerem. Proszę odświeżyć tę stronę lub napisać zgłoszenie na GitHubie.",
+	"errorTooLarge": "Plik jest zbyt duży, aby można go było przesłać bezpośrednio! Możesz {{#a}}poprosić o przesłanie strony po stronie serwera{{/a}}.",
 	"addTask": "Dodaj zadanie...",
 	"yourTasks": "Twoje zadania:",
 	"cancel": "Anuluj",
@@ -36,5 +37,6 @@
 	"uploading": "Przesyłanie...",
 	"note": "Uwaga:",
 	"importantnote": "Ważna uwaga:",
-	"notessubtitles": "Jeśli zaznaczona jest opcja 'Importuj napisy', napisy będą importowane, z wyłączeniem generowanych automatycznie."
+	"notessubtitles": "Jeśli zaznaczona jest opcja 'Importuj napisy', napisy będą importowane, z wyłączeniem generowanych automatycznie.",
+	"extensionmsg": "Powyższy zestaw plików rozszerzeń jest stosowany wtedy i tylko wtedy, gdy wideo jest w niewolnym formacie, który wymaga transkodowania. Filmy mające wolne formaty zachowają swoje rozszerzenia."
 }
