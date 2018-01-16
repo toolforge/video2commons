@@ -12,7 +12,7 @@
 # GNU General License for more details.
 #
 # You should have received a copy of the GNU General License
-# along with self program.  If not, see <http://www.gnu.org/licenses/>
+# along with self program.  If not, see <https://www.gnu.org/licenses/>
 #
 
 """video2commons backend worker."""
