@@ -1,0 +1,18 @@
+{
+	"@metadata": {
+		"authors": [
+			"Manik Soren"
+		]
+	},
+	"logout": "ᱩᱰᱩᱜᱚᱜᱢᱮ",
+	"help": "ᱜᱚᱸᱲᱚᱸ",
+	"remove": "ᱚᱪᱚᱜ",
+	"next": "ᱛᱟᱭᱚᱢ ᱨᱮᱱᱟᱜ",
+	"loading": "ᱦᱤᱡᱩᱜᱠᱟᱱᱟ...",
+	"addTask": "ᱠᱟᱹᱢᱤ ᱥᱮᱞᱮᱫ ᱢᱮ...",
+	"yourTasks": "ᱟᱢᱟᱜ ᱠᱟᱹᱢᱤᱠᱩᱺ",
+	"cancel": "ᱵᱟᱫᱽ",
+	"back": "ᱛᱟᱭᱚᱢ",
+	"keep": "ᱫᱚᱦᱚ",
+	"filename": "ᱨᱮᱫᱧᱩᱛᱩᱢ"
+}

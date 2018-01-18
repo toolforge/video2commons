@@ -1,0 +1,20 @@
+{
+	"@metadata": {
+		"authors": [
+			"V.narsikar"
+		]
+	},
+	"logout": "सनोंद-निर्गम",
+	"help": "साहाय्य",
+	"remove": "हटवा",
+	"next": "पुढील",
+	"loading": "प्रभारण करीत आहे",
+	"confirm": "निश्चित करा",
+	"addTask": "कार्य जोडा...",
+	"yourTasks": "आपली कार्ये",
+	"cancel": "रद्द करा",
+	"back": "परत जा",
+	"filename": "संचिकानाम",
+	"subtitles": "उपशीर्षके",
+	"importsubtitles": "उपशीर्षके आयात करा"
+}

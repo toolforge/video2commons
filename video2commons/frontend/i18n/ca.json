@@ -1,0 +1,21 @@
+{
+	"@metadata": {
+		"authors": [
+			"Fitoschido"
+		]
+	},
+	"logout": "Finalitza la sessió",
+	"help": "Ajuda",
+	"abort": "Interromp",
+	"next": "Següent",
+	"loading": "S’està carregant…",
+	"confirm": "Confirma",
+	"addTask": "Afegeix una tasca…",
+	"yourTasks": "Les vostres tasques:",
+	"cancel": "Cancel·la",
+	"back": "Enrere",
+	"filename": "Nom de fitxer",
+	"video": "vídeo",
+	"audio": "àudio",
+	"subtitles": "subtítols"
+}
