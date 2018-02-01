@@ -228,6 +228,11 @@ sanitationRules = [
                               ur'\u2028\u2029\u202F\u205F\u3000\s]+'),
         'replace': ' '
     },
+    # issue #96
+    {
+        'pattern': re.compile(ur'\u200B'),
+        'replace': ''
+    },
     # unicode bidi override characters: Implicit, Embeds, Overrides
     {
         'pattern': re.compile(ur'[\u200E\u200F\u202A-\u202E]'),
