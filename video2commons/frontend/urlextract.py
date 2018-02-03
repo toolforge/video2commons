@@ -281,6 +281,11 @@ sanitationRules = [
         'pattern': re.compile(ur'[|#+?:/\\\u0000-\u001f\u007f]'),
         'replace': '-'
     },
+    # titleblacklist-custom-double-apostrophe
+    {
+        'pattern': re.compile(ur"'{2,}"),
+        'replace': '"'
+    },
 ]
 
 
