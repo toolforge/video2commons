@@ -2,13 +2,14 @@
 	"@metadata": {
 		"authors": [
 			"Zoranzoki21",
-			"Acamicamacaraca"
+			"Acamicamacaraca",
+			"Obsuser"
 		]
 	},
 	"loginOnCommons": "Пријави ме на Викимедијину Оставу",
 	"logout": "Одјави ме",
 	"help": "Помоћ",
-	"forkOnGitHub": "Запрати ме на GitHub-у.",
+	"forkOnGitHub": "Запрати ме на GitHub-у",
 	"JavascriptRequired": "ЈаваСкрипт је потребан за коришћење ове алатке!",
 	"abort": "Заустави",
 	"remove": "Уклони",
