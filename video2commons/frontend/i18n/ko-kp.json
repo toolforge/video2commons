@@ -4,6 +4,7 @@
 			"Delim"
 		]
 	},
+	"loginOnCommons": "위키매체공용에 가입",
 	"logout": "탈퇴",
 	"help": "도움말",
 	"forkOnGitHub": "GitHub에서 갈래",
@@ -14,9 +15,14 @@
 	"next": "다음",
 	"loading": "적재하는중...",
 	"confirm": "확인",
+	"errorDisconnect": "봉사기 련결에 실패했습니다. 이 페지를 새로 재적재하거나 GitHub에 문제를 제기해주세요.",
+	"addTask": "작업 추가...",
 	"yourTasks": "당신의 과제:",
+	"cancel": "취소",
+	"back": "뒤로",
 	"extractor": "추출기",
 	"keep": "유지",
+	"filetarget": "대상 서류이름",
 	"filename": "서류 이름",
 	"video": "영상",
 	"audio": "소리",
