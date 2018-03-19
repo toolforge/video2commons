@@ -1,0 +1,21 @@
+{
+	"@metadata": {
+		"authors": [
+			"Armeniki"
+		]
+	},
+	"logout": "Դուրս գալ",
+	"help": "Օգնութիւն",
+	"forkOnGitHub": "Բովանդակէ՛ ինծ GitHub-ի վրայ:",
+	"JavascriptRequired": "JavaScript-ը պէտք է այս գործիքը գործածելու համար:",
+	"abort": "Վիժիլ",
+	"remove": "Հանել",
+	"restart": "Վերասկսիլ",
+	"next": "Յաջորդ",
+	"loading": "Բեռնաւորութիւն",
+	"confirm": "Հաստատել",
+	"errorDisconnect": "Կապը ծառայող-համակարգիչին հետ ձախողեցաւ:  Հաճեցէք այս էջը թարմացնել կամ հարցը տեղեկացնել GitHub-ին:",
+	"cancel": "Չեղարկել",
+	"back": "Ետ",
+	"keep": "Պահել"
+}
