@@ -1,10 +1,11 @@
 {
 	"@metadata": {
 		"authors": [
-			"Pon44695"
+			"Pon44695",
+			"Ans"
 		]
 	},
-	"loginOnCommons": "เข้าสู่ระบบวิกิมีเดียคอมมอนส์",
+	"loginOnCommons": "ลงชื่อเข้าระบบวิกิมีเดียคอมมอนส์",
 	"logout": "ออกจากระบบ",
 	"help": "วิธีใช้",
 	"forkOnGitHub": "Fork ฉันบน GitHub",
