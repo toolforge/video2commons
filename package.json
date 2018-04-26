@@ -20,15 +20,15 @@
     "gulp": "^3.9.1",
     "gulp-concat": "^2.6.1",
     "gulp-htmlmin": "^3.0.0",
-    "gulp-nunjucks": "^3.0.0",
+    "gulp-nunjucks": "^3.1.1",
     "gulp-rename": "^1.2.2",
     "gulp-uglify": "^2.1.2"
   },
   "dependencies": {
-    "express": "^4.15.3",
+    "express": "^4.16.3",
     "hiredis": "^0.5.0",
-    "redis": "^2.7.1",
-    "request": "^2.81.0",
-    "socket.io": "^2.0.2"
+    "redis": "^2.8.0",
+    "request": "^2.85.0",
+    "socket.io": "^2.1.0"
   }
 }
