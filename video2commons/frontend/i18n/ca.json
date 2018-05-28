@@ -14,8 +14,11 @@
 	"yourTasks": "Les vostres tasques:",
 	"cancel": "Cancel·la",
 	"back": "Enrere",
+	"filedescription": "Pàgina de descripció del fitxer",
 	"filename": "Nom de fitxer",
 	"video": "vídeo",
 	"audio": "àudio",
-	"subtitles": "subtítols"
+	"subtitles": "subtítols",
+	"note": "Nota:",
+	"importantnote": "Nota important:"
 }
