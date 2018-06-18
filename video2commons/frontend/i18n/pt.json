@@ -3,10 +3,11 @@
 		"authors": [
 			"Vitorvicentevalente",
 			"MokaAkashiyaPT",
-			"Athena in Wonderland"
+			"Athena in Wonderland",
+			"Hamilton Abreu"
 		]
 	},
-	"loginOnCommons": "Entrar no Wikimedia Commons",
+	"loginOnCommons": "Entrar na wiki Wikimedia Commons",
 	"logout": "Sair",
 	"help": "Ajuda",
 	"forkOnGitHub": "Clonar-me no GitHub",
@@ -44,7 +45,7 @@
 	"notesplaylists": "As listas de reprodução não serão processadas corretamente. Alguns sítios (como Youku e Comedy Central) utilizam os vídeos divididos em várias partes, interpretados como uma lista de reprodução, e também não serão processados ​​corretamente.",
 	"notesuncheck": "Se o ficheiro multimédia não incluir faixas de áudio ou vídeo, por favor, desmarque as caixas correspondentes, ou a conversão poderá falhar, mesmo se o formato por livre.",
 	"notessubtitles": "Se a opção 'Importar legendas' estiver selecionada, as legendas serão importadas, com exceção das autogeradas.",
-	"noteslicensing": "Carregar apenas {{#a}}#fl|conteúdo livre{{/a}} ou de {{#a}}#pd|domínio público{{/a}}. {{#a}}#fu|Ficheiros protegidos por direitos de autor{{/a}} não são permitidos Wikimedia Commons.",
+	"noteslicensing": "Carregar apenas {{#a}}#fl|conteúdo livre{{/a}} ou de {{#a}}#pd|domínio público{{/a}}. {{#a}}#fu|Ficheiros protegidos por direitos de autor{{/a}} não são permitidos na wiki Wikimedia Commons.",
 	"extensionmsg": "A extensão do ficheiro definido acima é usado, se e somente se, o formato do vídeo não for de código livre, requerendo assim uma transcodificação. Vídeos em formatos abertos mantém as suas extensões.",
 	"confirmmsg": "Por favor, confirme a tarefa ou clique em 'Voltar' para mudar os parâmetros. Ao clicar em 'Confirmar', a tarefa será enviada e executada. Devido a restrições técnicas, a tarefa não poderá ser interrompida com facilidade, depois de enviada."
 }
