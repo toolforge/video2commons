@@ -1,0 +1,38 @@
+{
+	"@metadata": {
+		"authors": [
+			"P. S. F. Freitas"
+		]
+	},
+	"loginOnCommons": "Wikimedia Commons Jeikeha",
+	"logout": "Ñesẽ",
+	"help": "Pytyvõhára",
+	"JavascriptRequired": "Tekotevẽ JavaScript ojeipuru hag̃ua ko tembiporu!",
+	"abort": "Ñemombyta",
+	"remove": "Tojeipe'a",
+	"restart": "Toñepyrũ jey",
+	"next": "Rire",
+	"loading": "Omba'apo hína...",
+	"confirm": "Oĩma",
+	"errorDisconnect": "Jeikekatu mohendahavusúpe ndoikói. Embohekopyahumína ko kuatiarogue térã emomamarandumi ko apañuái rehegua GitHub rendápe.",
+	"errorTooLarge": "Jeihai'aty ipukueterei ojehupi hag̃ua pepete! Nde ikatu {{#a}}rejerurese jehupi mohendahavusúpe{{/a}}.",
+	"addTask": "Emoĩ tembiaporã...",
+	"yourTasks": "Ne rembiaporãː",
+	"cancel": "Heja",
+	"back": "Tapykue",
+	"extractor": "Marandu nohẽha",
+	"keep": "Ñongatu",
+	"transcoding": "Transcoding ysaja",
+	"filedescription": "Jehai'aty myesakãha kuatiarogue",
+	"filename": "Jehai'aty réra",
+	"video": "techarã",
+	"audio": "mba'epu",
+	"keepvideo": "Techarã ñongatu",
+	"keepaudio": "Mba'epu ñongatu",
+	"uploadFile": "Térã ehupi peteĩ jehai'aty...",
+	"uploading": "Omba'apo hína...",
+	"note": "Kuatia'iː",
+	"importantnote": "Kuatia'i tenondeguaː",
+	"notesplaylists": "Tysýi oñemboikóta noñemomba'apo hekopete mo'ãi. Oĩ tenda Interne-pe (Youku ha Comedy Central techapyrãme) oipurúva techarã mboja'opyre heta pehẽnguére, kóva hína tysýi oñemboikóta ramóicha chupekuéra, ha noñemomba'apo hekopete mo'ãi avei.",
+	"notesuncheck": "Jehai'aty momaranduha ndorekóiramo techarã térã mba'epu, emongurusu'omína umi korapy heseguáva. Péicha ndoikóiramo, ikatu osẽ vai ku ñembohasa, jepémo ijyasja hekosãsóva."
+}
