@@ -4,10 +4,11 @@
 			"Vitorvicentevalente",
 			"MokaAkashiyaPT",
 			"Athena in Wonderland",
-			"Hamilton Abreu"
+			"Hamilton Abreu",
+			"Ldacosta"
 		]
 	},
-	"loginOnCommons": "Entrar na wiki Wikimedia Commons",
+	"loginOnCommons": "Iniciar sessão em Wikimedia Commons",
 	"logout": "Sair",
 	"help": "Ajuda",
 	"forkOnGitHub": "Clonar-me no GitHub",
