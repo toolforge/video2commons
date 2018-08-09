@@ -1,14 +1,15 @@
 {
 	"@metadata": {
 		"authors": [
-			"ArslanX"
+			"ArslanX",
+			"Arsenekoumyk"
 		]
 	},
 	"logout": "Чыкъмакъ",
 	"help": "Ярдым",
 	"abort": "Гери алмакъ",
 	"remove": "Тайдырмакъ",
-	"next": "Гелеген",
+	"next": "Сонггъу",
 	"loading": "Юклев...",
 	"confirm": "Гертилемек",
 	"cancel": "Гери алыв",
