@@ -3,12 +3,14 @@
 		"authors": [
 			"Beta16",
 			"Macofe",
-			"Selven"
+			"Selven",
+			"Ontsed"
 		]
 	},
 	"loginOnCommons": "Accedi a Wikimedia Commons",
 	"logout": "Esci",
 	"help": "Aiuto",
+	"forkOnGitHub": "Effettua il fork su GitHub",
 	"JavascriptRequired": "JavaScript è necessario per utilizzare questo strumento!",
 	"abort": "Interrompi",
 	"remove": "Rimuovi",
@@ -20,6 +22,7 @@
 	"errorTooLarge": "Il file è troppo grande per caricarlo direttamente! Puoi richiedere un {{#a}}caricamento da lato server{{/a}}.",
 	"addTask": "Aggiungi attività...",
 	"yourTasks": "I tuoi compiti:",
+	"createServerSide": "Crea un ticket di caricamento lato-server in un solo passo (consigliato)",
 	"taskDone": "Attività completata. Puoi trovare il tuo caricamento a {{#a}}{{/a}}.",
 	"cancel": "Annulla",
 	"back": "Indietro",
@@ -36,6 +39,13 @@
 	"keepaudio": "Mantieni audio",
 	"importsubtitles": "Importa sottotitoli",
 	"uploadFile": "O carica un file...",
+	"uploading": "Caricamento in corso...",
 	"note": "Nota:",
-	"importantnote": "Nota importante:"
+	"importantnote": "Nota importante:",
+	"notesplaylists": "Le playlist non saranno elaborate correttamente. Nemmeno i video multifunzione di alcuni siti (come Youku oppure Comedy Central), interpretati come playlist, verranno elaborati correttamente.",
+	"notesuncheck": "Se il media non include tracce video o audio, togliere la spunta dalle caselle corrispondenti; altrimenti la conversione potrebbe fallire anche se il formato è libero.",
+	"notessubtitles": "Se ‘Importa sottotitoli’ è spuntata, i sottotitoli, eccetto quelli generati automaticamente, verranno importati.",
+	"noteslicensing": "Carica solamente contenuto con {{#a}}#fl|licenza libera{{/a}} oppure di {{#a}}#pd|pubblico dominio{{/a}}. Il {{#a}}#fu|“fair use”{{/a/} non è consentito su Wikimedia Commons.",
+	"extensionmsg": "L’estensione file impostata sopra verrà usata solo nel caso in cui il video sia in un formato non libero, cosa che richiederà la sua transcodifica. I video in formato libero manterranno la loro estensione.",
+	"confirmmsg": "Confermare l’attività oppure cliccare ‘Indietro’ per modificare i parametri. Cliccando ‘Conferma’, l’attività verrà consegnata ed eseguita. A causa di limitazioni tecniche, un’attività non può essere facilmente annullata una volta che è stata consegnata."
 }
