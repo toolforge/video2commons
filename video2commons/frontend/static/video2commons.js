@@ -899,7 +899,7 @@
 					}
 					for ( var i = 0; i < dataout.length; i++ ) {
 						var name = dataout[ i ];
-						if ( newTaskDataQS[ name ] ) {
+						if ( newTaskDataQS && newTaskDataQS[ name ] ) {
 							newTaskData[ name ] = newTaskDataQS[ name ];
 						} else {
 							newTaskData[ name ] = data[ name ];
