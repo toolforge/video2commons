@@ -1,4 +1,4 @@
-/* globals nunjucks: false, io: false */
+/* globals nunjucks: false, io: false, qs: false */
 ( function ( $ ) {
 	'use strict';
 
@@ -58,7 +58,7 @@
 				return new nunjucks.runtime.SafeString( processed );
 			} );
 
-	var $addTaskDialog, newTaskData, SSUs, username;
+	var $addTaskDialog, newTaskData, newTaskDataQS, SSUs, username;
 	var video2commons = window.video2commons = {
 		init: function () {
 			$( '#content' )
@@ -73,6 +73,13 @@
 			if ( rePrefill.test( window.location.hash ) ) {
 				video2commons.addTask( {
 					url: window.location.hash.match( rePrefill )[ 1 ]
+				} );
+			}
+
+			if ( window.location.search ) {
+				newTaskDataQS = qs.parse( window.location.search );
+				video2commons.addTask( {
+					url: newTaskDataQS.url
 				} );
 			}
 		},
@@ -893,7 +900,12 @@
 						return;
 					}
 					for ( var i = 0; i < dataout.length; i++ ) {
-						newTaskData[ dataout[ i ] ] = data[ dataout[ i ] ];
+						var name = dataout[ i ];
+						if ( newTaskDataQS[ name ] ) {
+							newTaskData[ name ] = newTaskDataQS[ name ];
+						} else {
+							newTaskData[ name ] = data[ name ];
+						}
 					}
 
 					deferred.resolve( data );
