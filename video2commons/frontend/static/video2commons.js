@@ -1,4 +1,4 @@
-/* globals nunjucks: false, io: false, qs: false */
+/* globals nunjucks: false, io: false, Qs: false */
 ( function ( $ ) {
 	'use strict';
 
@@ -76,8 +76,8 @@
 				} );
 			}
 
-			if ( window.location.search ) {
-				newTaskDataQS = qs.parse( window.location.search );
+			if ( window.location.search.slice( 1 ) ) {
+				newTaskDataQS = Qs.parse( window.location.search.slice( 1 ) );
 				video2commons.addTask( {
 					url: newTaskDataQS.url
 				} );
