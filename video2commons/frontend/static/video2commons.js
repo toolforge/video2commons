@@ -74,9 +74,7 @@
 				video2commons.addTask( {
 					url: window.location.hash.match( rePrefill )[ 1 ]
 				} );
-			}
-
-			if ( window.location.search.slice( 1 ) ) {
+			} else if ( window.location.search.slice( 1 ) ) {
 				newTaskDataQS = Qs.parse( window.location.search.slice( 1 ) );
 				video2commons.addTask( {
 					url: newTaskDataQS.url
