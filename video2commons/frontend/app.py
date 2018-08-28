@@ -198,7 +198,7 @@ def loginredirect():
 
     returnto = request.args.get('returnto')
     if returnto:
-        ref_url = urlparse(request.base_url)
+        ref_url = urlparse(request.url_root)
         test_url = urlparse(urljoin(request.host_url, returnto))
         if (
             test_url.scheme == ref_url.scheme and
