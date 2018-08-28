@@ -128,8 +128,7 @@ def main():
         app.session_interface.abandon_session(app, session)
         return render_template(
             'main.min.html',
-            loggedin=False,
-            returnto=urlquote(request.url.encode('utf-8'))
+            loggedin=False
         )
 
     return render_template(
