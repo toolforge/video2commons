@@ -23,7 +23,8 @@ from __future__ import absolute_import
 
 import json
 import traceback
-from urlparse import urlparse, urljoin, quote as urlquote
+from urllib import quote as urlquote
+from urlparse import urlparse, urljoin
 
 from flask import (
     Flask, request, Response, session, render_template, redirect, url_for
@@ -57,8 +58,6 @@ config_p = {
     'webfrontend_uri': webfrontend_uri,
     'socketio_uri': socketio_uri,
 }
-
-app.jinja_env.globals['urlquote'] = urlquote
 
 app.jinja_env.globals['config'] = config_p
 app.jinja_env.globals['_'] = _
@@ -129,7 +128,8 @@ def main():
         app.session_interface.abandon_session(app, session)
         return render_template(
             'main.min.html',
-            loggedin=False
+            loggedin=False,
+            returnto=urlquote(request.url.encode('utf-8'))
         )
 
     return render_template(
