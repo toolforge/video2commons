@@ -21,7 +21,7 @@
 {% if loggedin %}
 <noscript>{{ _('JavascriptRequired') }}</noscript>
 {% else %}
-<form method="get" action="{{ url_for('loginredirect') }}">
+<form method="get" action="{{ url_for('loginredirect') }}?returnto={{ returnto }}">
   <center>
     <input class="btn btn-primary btn-success btn-lg" value="{{ _('loginOnCommons') }}" type="submit">
   </center>

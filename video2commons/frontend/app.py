@@ -23,6 +23,8 @@ from __future__ import absolute_import
 
 import json
 import traceback
+from urllib import quote as urlquote
+from urlparse import urlparse, urljoin
 
 from flask import (
     Flask, request, Response, session, render_template, redirect, url_for
@@ -126,7 +128,8 @@ def main():
         app.session_interface.abandon_session(app, session)
         return render_template(
             'main.min.html',
-            loggedin=False
+            loggedin=False,
+            returnto=urlquote(request.url.encode('utf-8'))
         )
 
     return render_template(
@@ -192,6 +195,18 @@ def loginredirect():
     redirecturl, request_token = handshaker.initiate()
     session['request_token_key'], session['request_token_secret'] = \
         request_token.key, request_token.secret
+    session['return_to_url'] = url_for('main')
+
+    returnto = request.args.get('returnto')
+    if returnto:
+        ref_url = urlparse(request.base_url)
+        test_url = urlparse(urljoin(request.host_url, returnto))
+        if (
+            test_url.scheme == ref_url.scheme and
+            test_url.netloc == ref_url.netloc and
+            test_url.path.startswith(ref_url.path)
+        ):
+            session['return_to_url'] = returnto
 
     return redirect(redirecturl)
 
@@ -224,7 +239,7 @@ def logincallback():
 
     session['username'] = identify['username']
 
-    return redirect(url_for('main'))
+    return redirect(session.get('return_to_url', url_for('main')))
 
 
 @app.route('/logout')
