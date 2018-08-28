@@ -112,4 +112,4 @@ class RedisSessionInterface(SessionInterface):
             self.redis.delete(self.prefix + session.sid)
 
             sid = self.generate_sid()
-            session.__init__(sid=sid, new=True)
+            session._get_current_object().__init__(sid=sid, new=True)
