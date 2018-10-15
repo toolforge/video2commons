@@ -1,0 +1,26 @@
+{
+	"@metadata": {
+		"authors": [
+			"Orikrin1998",
+			"Robin van der Vliet"
+		]
+	},
+	"loginOnCommons": "Ensalutu ĉe Vikimedia Komunejo",
+	"logout": "Elsaluti",
+	"help": "Helpo",
+	"JavascriptRequired": "JavaScript necesas por uzi ĉi tiun ilon!",
+	"remove": "Forigi",
+	"restart": "Restarti",
+	"next": "Sekva",
+	"loading": "Ŝarĝante...",
+	"confirm": "Konfirmi",
+	"addTask": "Aldoni taskon...",
+	"yourTasks": "Viaj taskoj:",
+	"cancel": "Nuligi",
+	"back": "Reen",
+	"keep": "Konservi",
+	"filename": "Dosiernomo",
+	"uploadFile": "Aŭ alŝutu dosieron...",
+	"note": "Rimarko:",
+	"importantnote": "Grava rimarko:"
+}

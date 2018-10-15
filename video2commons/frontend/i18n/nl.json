@@ -1,7 +1,8 @@
 {
 	"@metadata": {
 		"authors": [
-			"Siebrand"
+			"Siebrand",
+			"Robin van der Vliet"
 		]
 	},
 	"loginOnCommons": "Aanmelden bij Wikimedia Commons",
@@ -15,7 +16,7 @@
 	"next": "Volgende",
 	"loading": "Bezig met laden...",
 	"confirm": "Bevestigen",
-	"errorDisconnect": "Verbinden met de server is mislukt. Vernieuw deze pagina of rapporteer een probleem in GitHub.",
+	"errorDisconnect": "Verbinden met de server is mislukt. Vernieuw deze pagina of rapporteer een probleem op GitHub.",
 	"errorTooLarge": "Het bestand is te groot om direct te uploaden. Wellicht wilt u een {{#a}}upload via de server aanvragen{{/a}}.",
 	"addTask": "Taak toevoegen...",
 	"yourTasks": "Uw taken:",
