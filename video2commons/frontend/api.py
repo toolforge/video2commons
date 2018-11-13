@@ -332,48 +332,23 @@ def validate_filedesc():
 
 def get_backend_keys(format):
     """Get the youtube-dl download format key."""
-
-    MAXSIZE = 4 << 30
-    COMBINED_FMT = (
-        'bestvideo[vcodec={{vcodec}}][filesize<{max}]+'
-        'bestaudio[acodec={{acodec}}]/'
-        'bestvideo[ext={{vext}}][filesize<{max}]+'
-        'bestaudio[ext={{aext}}]/'
-        'bestvideo+bestaudio/best'
-    ).format(max=MAXSIZE)
-    VIDEO_FMT = (
-        'bestvideo[vcodec={{vcodec}}][filesize<{max}]/'
-        'bestvideo[ext={{vext}}][filesize<{max}]/'
-        'bestvideo/best'
-    ).format(max=MAXSIZE)
-    AUDIO_FMT = (
-        'bestaudio[acodec={{acodec}}]/'
-        'bestaudio[ext={{aext}}]/'
-        'bestaudio/best'
-    ).format(max=MAXSIZE)
     return {
         'ogv (Theora)':
-            (VIDEO_FMT.format(vcodec='theora', vext='ogv'), 'an.ogv'),
+            ('bestvideo/best', 'an.ogv'),
         'webm (VP8)':
-            (VIDEO_FMT.format(vcodec='vp8', vext='webm'), 'an.webm'),
+            ('bestvideo/best', 'an.webm'),
         'webm (VP9, experimental)':
-            (VIDEO_FMT.format(vcodec='vp9', vext='webm'), 'an.vp9.webm'),
+            ('bestvideo/best', 'an.vp9.webm'),
         'ogg (Vorbis)':
-            (AUDIO_FMT.format(acodec='vorbis', aext='ogg'), 'ogg'),
+            ('bestaudio/best', 'ogg'),
         'opus (Opus, experimental)':
-            (AUDIO_FMT.format(acodec='opus', aext='opus'), 'opus'),
+            ('bestaudio/best', 'opus'),
         'ogv (Theora/Vorbis)':
-            (COMBINED_FMT.format(
-                vcodec='theora', vext='ogv', acodec='vorbis', aext='ogg'),
-             'ogv'),
+            ('bestvideo+bestaudio/best', 'ogv'),
         'webm (VP8/Vorbis)':
-            (COMBINED_FMT.format(
-                vcodec='vp8', vext='webm', acodec='vorbis', aext='ogg'),
-             'webm'),
+            ('bestvideo+bestaudio/best', 'webm'),
         'webm (VP9/Opus, experimental)':
-            (COMBINED_FMT.format(
-                vcodec='vp9', vext='webm', acodec='opus', aext='webm'),
-             'vp9.webm'),
+            ('bestvideo+bestaudio/best', 'vp9.webm'),
     }[format]
 
 
