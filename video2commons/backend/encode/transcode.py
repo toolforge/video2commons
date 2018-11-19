@@ -85,10 +85,11 @@ class WebVideoTranscode:
         'vp9.webm':
             {
                 'videoQuality': 7,
-                'audioQuality': 6,
+                'audioBitrate': '128',
                 'samplerate': '48000',
                 'noUpscaling': 'True',
                 'twopass': 'True',
+                'altref': 'True',
                 'videoCodec': 'vp9',
                 'audioCodec': 'opus',
                 'tileColumns': '4',
@@ -99,6 +100,7 @@ class WebVideoTranscode:
                 'videoQuality': 7,
                 'noUpscaling': 'True',
                 'twopass': 'True',
+                'altref': 'True',
                 'videoCodec': 'vp9',
                 'noaudio': 'True',
                 'tileColumns': '4',

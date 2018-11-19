@@ -299,11 +299,8 @@ class WebVideoTranscodeJob(object):
             elif options['preset'] == "1080p":
                 cmd += " -vpre libvpx-1080p"
 
-        # Add the boiler plate vp8 ffmpeg command:
-        cmd += " -skip_threshold 0 -bufsize 6000k -rc_init_occupancy 4000"
-
         # Check for video quality:
-        if 'videoQuality' in options and options['videoQuality'] >= 0:
+        if 'videoQuality' in options and int(options['videoQuality']) >= 0:
             # Map 0-10 to 63-0, higher values worse quality
             quality = 63 - int(int(options['videoQuality']) / 10.0 * 63)
             cmd += " -qmin " + escape_shellarg(quality)
@@ -312,7 +309,7 @@ class WebVideoTranscodeJob(object):
         # Check for video bitrate:
         if 'videoBitrate' in options:
             cmd += " -qmin 1 -qmax 51"
-            cmd += " -vb " + escape_shellarg(options['videoBitrate'] * 1000)
+            cmd += " -vb " + escape_shellarg(int(options['videoBitrate']) * 1000)
 
         # Set the codec:
         if options['videoCodec'] == 'vp9':
@@ -323,6 +320,10 @@ class WebVideoTranscodeJob(object):
         else:
             cmd += " -vcodec libvpx"
 
+        if 'altref' in options:
+            $cmd += ' -auto-alt-ref 1'
+            $cmd += ' -lag-in-frames 25'
+
         # Check for keyframeInterval
         if 'keyframeInterval' in options:
             cmd += ' -g ' + escape_shellarg(options['keyframeInterval'])
@@ -331,6 +332,12 @@ class WebVideoTranscodeJob(object):
 
         if 'deinterlace' in options:
             cmd += ' -deinterlace'
+
+        if pass == 1:
+            # Make first pass faster...
+            cmd += ' -speed 4'
+        else if 'speed' in options:
+            cmd += ' -speed ' + escape_shellarg(options['speed'])
 
         # Output WebM
         cmd += " -f webm"
@@ -350,13 +357,13 @@ class WebVideoTranscodeJob(object):
         cmd = ' -threads ' + str(ffmpeg_threads)
 
         # Check for video quality:
-        if 'videoQuality' in options and options['videoQuality'] >= 0:
+        if 'videoQuality' in options and int(options['videoQuality']) >= 0:
             cmd += " -q:v " + escape_shellarg(options['videoQuality'])
 
         # Check for video bitrate:
         if 'videoBitrate' in options:
             cmd += " -qmin 1 -qmax 51"
-            cmd += " -vb " + escape_shellarg(options['videoBitrate'] * 1000)
+            cmd += " -vb " + escape_shellarg(int(options['videoBitrate']) * 1000)
 
         # Set the codec:
         cmd += " -vcodec theora"
@@ -391,7 +398,7 @@ class WebVideoTranscodeJob(object):
             cmd += " -aq " + escape_shellarg(options['audioQuality'])
 
         if 'audioBitrate' in options:
-            cmd += ' -ab ' + str(options['audioBitrate']) * 1000
+            cmd += ' -ab ' + int(options['audioBitrate']) * 1000
 
         if 'samplerate' in options:
             cmd += " -ar " + escape_shellarg(options['samplerate'])
