@@ -333,7 +333,7 @@ class WebVideoTranscodeJob(object):
         if 'deinterlace' in options:
             cmd += ' -deinterlace'
 
-        if pass == 1:
+        if p == 1:
             # Make first pass faster...
             cmd += ' -speed 4'
         else if 'speed' in options:
