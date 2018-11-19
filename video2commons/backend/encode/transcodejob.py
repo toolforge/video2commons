@@ -398,7 +398,7 @@ class WebVideoTranscodeJob(object):
             cmd += " -aq " + escape_shellarg(options['audioQuality'])
 
         if 'audioBitrate' in options:
-            cmd += ' -ab ' + int(options['audioBitrate']) * 1000
+            cmd += ' -ab ' + str(int(options['audioBitrate']) * 1000)
 
         if 'samplerate' in options:
             cmd += " -ar " + escape_shellarg(options['samplerate'])
