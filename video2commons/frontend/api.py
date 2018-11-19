@@ -332,23 +332,48 @@ def validate_filedesc():
 
 def get_backend_keys(format):
     """Get the youtube-dl download format key."""
+
+    MAXSIZE = 4 << 30
+    COMBINED_FMT = (
+        'bestvideo[vcodec={{vcodec}}][filesize<{max}]+'
+        'bestaudio[acodec={{acodec}}]/'
+        'bestvideo[ext={{vext}}][filesize<{max}]+'
+        'bestaudio[ext={{aext}}]/'
+        'bestvideo+bestaudio/best'
+    ).format(max=MAXSIZE)
+    VIDEO_FMT = (
+        'bestvideo[vcodec={{vcodec}}][filesize<{max}]/'
+        'bestvideo[ext={{vext}}][filesize<{max}]/'
+        'bestvideo/best'
+    ).format(max=MAXSIZE)
+    AUDIO_FMT = (
+        'bestaudio[acodec={{acodec}}]/'
+        'bestaudio[ext={{aext}}]/'
+        'bestaudio/best'
+    ).format(max=MAXSIZE)
     return {
         'ogv (Theora)':
-            ('bestvideo/best', 'an.ogv'),
+            (VIDEO_FMT.format(vcodec='theora', vext='ogv'), 'an.ogv'),
         'webm (VP8)':
-            ('bestvideo/best', 'an.webm'),
+            (VIDEO_FMT.format(vcodec='vp8', vext='webm'), 'an.webm'),
         'webm (VP9, experimental)':
-            ('bestvideo/best', 'an.vp9.webm'),
+            (VIDEO_FMT.format(vcodec='vp9', vext='webm'), 'an.vp9.webm'),
         'ogg (Vorbis)':
-            ('bestaudio/best', 'ogg'),
+            (AUDIO_FMT.format(acodec='vorbis', aext='ogg'), 'ogg'),
         'opus (Opus, experimental)':
-            ('bestaudio/best', 'opus'),
+            (AUDIO_FMT.format(acodec='opus', aext='opus'), 'opus'),
         'ogv (Theora/Vorbis)':
-            ('bestvideo+bestaudio/best', 'ogv'),
+            (COMBINED_FMT.format(
+                vcodec='theora', vext='ogv', acodec='vorbis', aext='ogg'),
+             'ogv'),
         'webm (VP8/Vorbis)':
-            ('bestvideo+bestaudio/best', 'webm'),
+            (COMBINED_FMT.format(
+                vcodec='vp8', vext='webm', acodec='vorbis', aext='ogg'),
+             'webm'),
         'webm (VP9/Opus, experimental)':
-            ('bestvideo+bestaudio/best', 'vp9.webm'),
+            (COMBINED_FMT.format(
+                vcodec='vp9', vext='webm', acodec='opus', aext='webm'),
+             'vp9.webm'),
     }[format]
 
 
