@@ -321,8 +321,8 @@ class WebVideoTranscodeJob(object):
             cmd += " -vcodec libvpx"
 
         if 'altref' in options:
-            $cmd += ' -auto-alt-ref 1'
-            $cmd += ' -lag-in-frames 25'
+            cmd += ' -auto-alt-ref 1'
+            cmd += ' -lag-in-frames 25'
 
         # Check for keyframeInterval
         if 'keyframeInterval' in options:
