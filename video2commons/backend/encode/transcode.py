@@ -121,7 +121,7 @@ class WebVideoTranscode:
         'opus':
             {
                 'audioCodec': 'opus',
-                'audioQuality': '1',
+                'audioBitrate': '128',
                 'samplerate': '48000',
                 'channels': '2',
                 'noUpscaling': 'True',

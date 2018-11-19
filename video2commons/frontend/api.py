@@ -289,15 +289,15 @@ def list_formats():
     if video:
         if audio:
             formats = ['ogv (Theora/Vorbis)', 'webm (VP8/Vorbis)',
-                       'webm (VP9/Opus, experimental)']
-            prefer = 'webm (VP8/Vorbis)'
+                       'webm (VP9/Opus)']
+            prefer = 'webm (VP9/Opus)'
         else:
             formats = ['ogv (Theora)', 'webm (VP8)',
-                       'webm (VP9, experimental)']
-            prefer = 'webm (VP8)'
+                       'webm (VP9)']
+            prefer = 'webm (VP9)'
     else:
         if audio:
-            formats = ['ogg (Vorbis)', 'opus (Opus, experimental)']
+            formats = ['ogg (Vorbis)', 'opus (Opus)']
             prefer = 'ogg (Vorbis)'
         else:
             raise RuntimeError('Either video or audio must be kept')
