@@ -356,11 +356,11 @@ def get_backend_keys(format):
             (VIDEO_FMT.format(vcodec='theora', vext='ogv'), 'an.ogv'),
         'webm (VP8)':
             (VIDEO_FMT.format(vcodec='vp8', vext='webm'), 'an.webm'),
-        'webm (VP9, experimental)':
+        'webm (VP9)':
             (VIDEO_FMT.format(vcodec='vp9', vext='webm'), 'an.vp9.webm'),
         'ogg (Vorbis)':
             (AUDIO_FMT.format(acodec='vorbis', aext='ogg'), 'ogg'),
-        'opus (Opus, experimental)':
+        'opus (Opus)':
             (AUDIO_FMT.format(acodec='opus', aext='opus'), 'opus'),
         'ogv (Theora/Vorbis)':
             (COMBINED_FMT.format(
@@ -370,7 +370,7 @@ def get_backend_keys(format):
             (COMBINED_FMT.format(
                 vcodec='vp8', vext='webm', acodec='vorbis', aext='ogg'),
              'webm'),
-        'webm (VP9/Opus, experimental)':
+        'webm (VP9/Opus)':
             (COMBINED_FMT.format(
                 vcodec='vp9', vext='webm', acodec='opus', aext='webm'),
              'vp9.webm'),
