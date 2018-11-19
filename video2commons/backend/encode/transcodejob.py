@@ -336,7 +336,7 @@ class WebVideoTranscodeJob(object):
         if p == 1:
             # Make first pass faster...
             cmd += ' -speed 4'
-        else if 'speed' in options:
+        elif 'speed' in options:
             cmd += ' -speed ' + escape_shellarg(options['speed'])
 
         # Output WebM
