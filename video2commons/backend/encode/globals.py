@@ -32,7 +32,7 @@ background_memory_limit = 8 * 1024 * 1024  # 8GB
 # Maximum file size transcoding processes can create, in KB
 background_size_limit = 10 * 1024 * 1024  # 10GB
 # Number of threads to use in avconv for transcoding
-ffmpeg_threads = 0  # optimal
+ffmpeg_threads = __import__('multiprocessing').cpu_count()
 # Location of the avconv/ffmpeg binary (used to encode WebM and for thumbnails)
 ffmpeg_location = '/usr/bin/ffmpeg'
 ffprobe_location = '/usr/bin/ffprobe'
