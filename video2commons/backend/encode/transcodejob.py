@@ -289,6 +289,8 @@ class WebVideoTranscodeJob(object):
         @return string
         """
         cmd = ' -threads ' + str(ffmpeg_threads)
+        if options['videoCodec'] === 'vp9':
+            cmd += ' -row-mt 1'
 
         # check for presets:
         if 'preset' in options:
