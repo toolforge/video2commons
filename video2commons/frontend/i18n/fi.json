@@ -36,5 +36,6 @@
 	"uploadFile": "Tai lataa tiedosto...",
 	"uploading": "Lähetetään...",
 	"note": "Huomautus:",
-	"importantnote": "Tärkeä huomautus:"
+	"importantnote": "Tärkeä huomautus:",
+	"noteslicensing": "Tallenna vain {{#a}}#fl|vapaasti lisensoitua{{/a}} tai {{#a}}#pd|tekijänoikeudetonta{{/a}} sisältöä. {{#a}}#fu|Fair use{{/a}} ei ole sallittua Wikimedia Commonsissa."
 }
