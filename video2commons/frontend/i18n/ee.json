@@ -1,0 +1,20 @@
+{
+	"@metadata": {
+		"authors": [
+			"Aguve"
+		]
+	},
+	"loginOnCommons": "Ge Ɖe Wikimedia Hahotɔ Me",
+	"logout": "Doleme",
+	"help": "Kpekpeɖeŋu",
+	"forkOnGitHub": "Kplɔm yi GitHub",
+	"JavascriptRequired": "Ehiã YavaSkript hafi ate ŋu azã dɔwɔnu sia!",
+	"abort": "Netasii",
+	"remove": "Ɖee Ɖa",
+	"restart": "Trɔ Dze Egɔme",
+	"next": "Ŋgɔgbe",
+	"loading": "Ele dɔ dzi...",
+	"confirm": "Ɖo Kpe Edzi",
+	"errorDisconnect": "Kadodo si le eya kple sɛva dome tso. Taflatsɛ gate axa sia kpɔ alo na nyanya tso kuxia le GitHub.",
+	"errorTooLarge": "Nyatakaba lolo ta mate ŋu adae ɖi tẽe o! Anyo be {{#a}}nàto sɛva-godzi {{/a}} dzi aɖoe ɖa boŋ."
+}
