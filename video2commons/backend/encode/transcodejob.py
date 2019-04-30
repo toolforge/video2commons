@@ -438,8 +438,9 @@ class WebVideoTranscodeJob(object):
         """
         cmd = 'ulimit -f ' + escape_shellarg(background_size_limit) + ';' + \
             'ulimit -v ' + escape_shellarg(background_memory_limit) + ';' + \
-            'ulimit -t ' + escape_shellarg(background_time_limit) + ';' + \
-            'nice -n ' + escape_shellarg(background_priority) + ' ' + cmd + \
+            'nice -n ' + escape_shellarg(background_priority) + ' ' + \
+            'timeout ' + escape_shellarg(background_time_limit) + ' ' + \
+            cmd + \
             ' 2>&1'
 
         # Adapted from https://gist.github.com/marazmiki/3015621
