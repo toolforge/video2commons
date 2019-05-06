@@ -2,7 +2,8 @@
 	"@metadata": {
 		"authors": [
 			"Orikrin1998",
-			"Robin van der Vliet"
+			"Robin van der Vliet",
+			"Mirin"
 		]
 	},
 	"loginOnCommons": "Ensalutu ĉe Vikimedia Komunejo",
@@ -20,7 +21,11 @@
 	"back": "Reen",
 	"keep": "Konservi",
 	"filename": "Dosiernomo",
+	"video": "videaĵo",
+	"audio": "sono",
+	"subtitles": "subtitoloj",
 	"uploadFile": "Aŭ alŝutu dosieron...",
+	"uploading": "Alŝutanta...",
 	"note": "Rimarko:",
 	"importantnote": "Grava rimarko:"
 }
