@@ -19,12 +19,13 @@
 
 """video2commons url extracter."""
 
-import re
 from collections import OrderedDict
+import re
 
-import youtube_dl
-import pywikibot
+import emoji
 import guess_language
+import pywikibot
+import youtube_dl
 
 SITE = pywikibot.Site()
 
@@ -217,6 +218,11 @@ def escape_wikitext(wikitext):
 
 # Source: mediawiki.Title.js@9df363d
 sanitationRules = [
+    # issue #101
+    {
+        'pattern': emoji.get_emoji_regexp(),
+        'replace': ''
+    },
     # "signature"
     {
         'pattern': re.compile(ur'~{3}'),
