@@ -24,6 +24,7 @@ from urlparse import urlparse
 
 from celery.utils.log import get_logger
 import youtube_dl
+from youtube_dl.utils import std_headers
 
 from video2commons.exceptions import TaskError
 
@@ -70,6 +71,11 @@ def download(
         'logger': get_logger('celery.task.v2c.main.youtube-dl')
     }
 
+    old_ua = std_headers['User-Agent']
+    if ie_key == 'Youtube':
+        # HACK: Get equirectangular for 360° videos (ytdl-org/youtube-dl#15267)
+        std_headers['User-Agent'] = ''
+
     last_percentage = [Ellipsis]
 
     def progresshook(d):
@@ -93,7 +99,10 @@ def download(
     dl.add_progress_hook(progresshook)
 
     statuscallback('Preprocessing...', -1)
-    info = dl.extract_info(url, download=True, ie_key=ie_key)
+    try:
+        info = dl.extract_info(url, download=True, ie_key=ie_key)
+    finally:
+        std_headers['User-Agent'] = old_ua
 
     if info.get('webpage_url'):
         url_blacklisted(info['webpage_url'])
