@@ -21,7 +21,7 @@ from __future__ import absolute_import
 
 import subprocess
 import pywikibot
-import pycountry
+import langcodes
 from converter import Converter
 import chardet
 
@@ -44,69 +44,74 @@ def subtitles(
 
     for langcode, filename in subtitles.items():
         try:
-            lang = (pycountry.languages.get(alpha_2=langcode) or
-                    pycountry.languages.get(alpha_3=langcode))
-            langname = lang and lang.name
-            if langname:
-                statuscallback('Loading subtitle in ' + langname, int(percent))
-                subtitletext = ''
+            lang = langcodes.get(langcode)
+            langcode = str(lang).lower()
 
-                info = c.probe(filename)
-                if not info:
-                    continue
-                if len(info.streams) != 1:
-                    continue
-                if info.streams[0].type != 'subtitle':
-                    continue
-                format = info.streams[0].codec
+            langdesc = lang.describe()
+            langname = langdesc['language']
+            del langdesc['language']
+            if langdesc:
+                langname += u' (%s)' % ', '.join(langdesc.values())
 
-                if format.lower() != 'srt':
-                    target = filename + '.srt'
-                    cmd = [
-                        '/usr/bin/ffmpeg',
-                        '-i', filename,
-                        '-f', 'srt',
-                        target
-                    ]
-                    statuscallback("Running cmd: %s" % cmd, None)
-                    subprocess.check_call(cmd, stderr=None)
-                    filename = target
+            statuscallback(u'Loading subtitle in ' + langname, int(percent))
+            subtitletext = ''
 
-                f = open(filename)
-                subtitletext = f.read()
-                f.close()
-                subtitletext = subtitletext.decode(
-                    chardet.detect(subtitletext)['encoding']
+            info = c.probe(filename)
+            if not info:
+                continue
+            if len(info.streams) != 1:
+                continue
+            if info.streams[0].type != 'subtitle':
+                continue
+            format = info.streams[0].codec
+
+            if format.lower() != 'srt':
+                target = filename + '.srt'
+                cmd = [
+                    '/usr/bin/ffmpeg',
+                    '-i', filename,
+                    '-f', 'srt',
+                    target
+                ]
+                statuscallback("Running cmd: %s" % cmd, None)
+                subprocess.check_call(cmd, stderr=None)
+                filename = target
+
+            f = open(filename)
+            subtitletext = f.read()
+            f.close()
+            subtitletext = subtitletext.decode(
+                chardet.detect(subtitletext)['encoding']
+            )
+
+            percent += 50.0 / len(subtitles)
+            statuscallback(
+                'Uploading subtitle in ' + langname,
+                int(percent)
+            )
+
+            # ENSURE PYWIKIBOT OAUTH PROPERLY CONFIGURED!
+            site = pywikibot.Site('commons', 'commons', user=username)
+            page = pywikibot.Page(
+                site,
+                u'TimedText:' + wikifilename.decode('utf-8') +
+                u'.' + langcode.lower() + u'.srt'
+            )
+            page.text = subtitletext
+            if not page.exists():
+                page.save(
+                    summary=u'Import ' + langname + u' subtitles for ' +
+                    '[[:File:' + wikifilename.decode('utf-8') + ']]',
+                    minor=False
                 )
 
-                percent += 50.0 / len(subtitles)
-                statuscallback(
-                    'Uploading subtitle in ' + langname,
-                    int(percent)
-                )
-
-                # ENSURE PYWIKIBOT OAUTH PROPERLY CONFIGURED!
-                site = pywikibot.Site('commons', 'commons', user=username)
-                page = pywikibot.Page(
-                    site,
-                    u'TimedText:' + wikifilename.decode('utf-8') +
-                    u'.' + langcode.lower() + u'.srt'
-                )
-                page.text = subtitletext
-                if not page.exists():
-                    page.save(
-                        summary=u'Import ' + langname + u' subtitles for ' +
-                        '[[:File:' + wikifilename.decode('utf-8') + ']]',
-                        minor=False
-                    )
-
-                percent += 50.0 / len(subtitles)
-                statuscallback(
-                    'Finished processing subtitle in ' + langname,
-                    int(percent)
-                )
+            percent += 50.0 / len(subtitles)
+            statuscallback(
+                'Finished processing subtitle in ' + langname,
+                int(percent)
+            )
         except TaskAbort:
             raise
-        except Exception, e:
+        except Exception as e:
             statuscallback(type(e).__name__ + ": " + str(e), None)
             pass

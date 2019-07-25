@@ -3,7 +3,7 @@ flask
 guess-language
 celery[redis]
 hiredis
-pycountry
+langcodes-py2
 chardet
 mwoauth
 emoji
