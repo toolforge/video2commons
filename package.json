@@ -21,14 +21,14 @@
     "gulp-concat": "^2.6.1",
     "gulp-htmlmin": "^3.0.0",
     "gulp-nunjucks": "^3.1.1",
-    "gulp-rename": "^1.2.2",
+    "gulp-rename": "^1.4.0",
     "gulp-uglify": "^2.1.2"
   },
   "dependencies": {
-    "express": "^4.16.3",
+    "express": "^4.17.1",
     "hiredis": "^0.5.0",
     "redis": "^2.8.0",
-    "request": "^2.85.0",
-    "socket.io": "^2.1.0"
+    "request": "^2.88.0",
+    "socket.io": "^2.2.0"
   }
 }

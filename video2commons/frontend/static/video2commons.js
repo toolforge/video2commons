@@ -68,6 +68,14 @@
 
 			video2commons.loadCsrf( video2commons.checkStatus );
 
+			$( window ).on( 'beforeunload', function ( e ) {
+				if ( $addTaskDialog && $addTaskDialog.is( ':visible' ) ) {
+					e.preventDefault();
+					e.returnValue = '';
+					return '';
+				}
+			} );
+
 			// If location.hash matches, fire up a new task dialog
 			var rePrefill = /^#?!(https?:\/\/.+)/;
 			if ( rePrefill.test( window.location.hash ) ) {
