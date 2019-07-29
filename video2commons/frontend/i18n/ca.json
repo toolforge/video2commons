@@ -1,12 +1,16 @@
 {
 	"@metadata": {
 		"authors": [
-			"Fitoschido"
+			"Fitoschido",
+			"Toniher"
 		]
 	},
+	"loginOnCommons": "Inicia una sessió a Wikimedia Commons",
 	"logout": "Finalitza la sessió",
 	"help": "Ajuda",
 	"abort": "Interromp",
+	"remove": "Suprimeix",
+	"restart": "Reinicia",
 	"next": "Següent",
 	"loading": "S’està carregant…",
 	"confirm": "Confirma",
@@ -19,6 +23,11 @@
 	"video": "vídeo",
 	"audio": "àudio",
 	"subtitles": "subtítols",
+	"keepvideo": "Conserva el vídeo",
+	"keepaudio": "Conserva l'àudio",
+	"importsubtitles": "Importa subtítols",
+	"uploadFile": "O carrega un fitxer...",
+	"uploading": "S'està carregant...",
 	"note": "Nota:",
 	"importantnote": "Nota important:"
 }
