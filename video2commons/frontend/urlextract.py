@@ -135,7 +135,7 @@ def _source(url, ie_key, title, info):
         if ':' in info['extractor']:
             # Try to find the anme of the 'owner' of this sub-ie
             ie_tmp = info['extractor'][:info['extractor'].index(':')]
-            for ie in youtube.dl.gen_extractors:
+            for ie in youtube_dl.gen_extractors():
                 if ie.IE_NAME == ie_tmp:
                     ie_key = ie.ie_key()
                     break
