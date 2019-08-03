@@ -93,7 +93,7 @@ def do_extract_url(url):
     assert 'formats' in info or info.get('direct'), \
         'Your url cannot be processed correctly'
 
-    ie_key = info['extractor']
+    ie_key = info['extractor_key']
     title = (info.get('title') or '').strip()
     url = info.get('webpage_url') or url
 
