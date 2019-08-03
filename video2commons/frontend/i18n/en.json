@@ -19,7 +19,6 @@
 	"taskDone": "Your task is done. You may find your upload at {{#a}}{{/a}}.",
 	"cancel": "Cancel",
 	"back": "Back",
-	"extractor": "Extractor",
 	"keep": "Keep",
 	"filetarget": "Target filename",
 	"transcoding": "Transcoding format",

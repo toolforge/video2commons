@@ -100,7 +100,9 @@ def download(
 
     statuscallback('Preprocessing...', -1)
     try:
-        info = dl.extract_info(url, download=True, ie_key=ie_key)
+        # Not using provided ie_key because of the existance of extractors that
+        # targets another extractor, such as TwitterIE.
+        info = dl.extract_info(url, download=True, ie_key=None)
     finally:
         std_headers['User-Agent'] = old_ua
 

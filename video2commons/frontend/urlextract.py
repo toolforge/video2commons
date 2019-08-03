@@ -132,6 +132,13 @@ def _source(url, ie_key, title, info):
     if ie_key == 'Generic':
         return url
     else:
+        if ':' in info['extractor']:
+            # Try to find the anme of the 'owner' of this sub-ie
+            ie_tmp = info['extractor'][:info['extractor'].index(':')]
+            for ie in youtube.dl.gen_extractors:
+                if ie.IE_NAME == ie_tmp:
+                    ie_key = ie.ie_key()
+                    break
         return '[%(url)s %(title)s - %(extractor)s]' % \
             {'url': url, 'title': escape_wikitext(title), 'extractor': ie_key}
 
