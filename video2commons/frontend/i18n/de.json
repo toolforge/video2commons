@@ -27,7 +27,6 @@
 	"taskDone": "Die Aufgabe wurde erledigt. Du findest die Datei unter {{#a}}{{/a}}.",
 	"cancel": "Abbrechen",
 	"back": "Zurück",
-	"extractor": "Extrahierer",
 	"keep": "Behalten",
 	"filetarget": "Vorgesehener Dateiname",
 	"transcoding": "Format der Transkodierung",

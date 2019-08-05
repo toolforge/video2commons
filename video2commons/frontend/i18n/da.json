@@ -23,7 +23,6 @@
 	"taskDone": "Din opgave er færdig. Du kan finde din overførsel på {{#a}}{{/a}}.",
 	"cancel": "Afbryd",
 	"back": "Tilbage",
-	"extractor": "Udtrækker",
 	"keep": "Behold",
 	"filetarget": "Målfilnavn",
 	"transcoding": "Omkodningsformat",

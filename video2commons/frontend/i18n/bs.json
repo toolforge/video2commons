@@ -23,7 +23,6 @@
 	"taskDone": "Vaš zadatak je završen. Postavljenu stavku možete naći na {{#a}}{{/a}}.",
 	"cancel": "Otkaži",
 	"back": "Nazad",
-	"extractor": "Ekstrator",
 	"keep": "Zadrži",
 	"filetarget": "Odredišno ime datoteke",
 	"transcoding": "Format transkodiranja",

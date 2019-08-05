@@ -26,7 +26,6 @@
 	"taskDone": "Din uppgift är färdig. Du kan hitta din uppladdning på {{#a}}{{/a}}.",
 	"cancel": "Avbryt",
 	"back": "Tillbaka",
-	"extractor": "Extraherare",
 	"keep": "Behåll",
 	"filetarget": "Målsidans namn",
 	"transcoding": "Omkodningsformat",

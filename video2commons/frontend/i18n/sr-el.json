@@ -19,7 +19,6 @@
 	"taskDone": "Vaš zadatak je završen. Možete naći otpremanje na {{#a}}{{/a}}.",
 	"cancel": "Otkaži",
 	"back": "Nazad",
-	"extractor": "Ekstraktor",
 	"keep": "Zadrži",
 	"filetarget": "Ime ciljne stranice",
 	"transcoding": "Transkodni format",

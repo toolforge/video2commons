@@ -27,7 +27,6 @@
 	"taskDone": "Votre tâche est achevée. Vous trouverez votre téléversement sur {{#a}}{{/a}}.",
 	"cancel": "Annuler",
 	"back": "Retour",
-	"extractor": "Extracteur",
 	"keep": "Garder",
 	"filetarget": "Nom du fichier cible",
 	"transcoding": "Format de transcodage",

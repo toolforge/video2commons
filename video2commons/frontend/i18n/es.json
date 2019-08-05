@@ -25,7 +25,6 @@
 	"taskDone": "Tarea completada. Puedes encontrar tu subida en {{#a}}{{/a}}.",
 	"cancel": "Cancelar",
 	"back": "Atrás",
-	"extractor": "Extractor",
 	"keep": "Mantener",
 	"filetarget": "Nombre del archivo de destino",
 	"transcoding": "Formato de transcodificación",

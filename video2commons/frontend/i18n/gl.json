@@ -23,7 +23,6 @@
 	"taskDone": "A súa tarefa está feita. Pode atopar a suba en {{#a}}{{/a}}.",
 	"cancel": "Cancelar",
 	"back": "Volver",
-	"extractor": "Extractor",
 	"keep": "Manter",
 	"filetarget": "Nome do ficheiro de destino.",
 	"transcoding": "Formato de transcodificación",

@@ -24,7 +24,6 @@
 	"taskDone": "Göreviniz tamamlandı. Yüklemenizi {{#a}}{{/a}} adresinde bulabilirsiniz.",
 	"cancel": "İptal",
 	"back": "Geri",
-	"extractor": "Ekstraktör",
 	"keep": "Tut",
 	"filetarget": "Hedef dosya adı",
 	"transcoding": "Kod dönüştürme formatı",

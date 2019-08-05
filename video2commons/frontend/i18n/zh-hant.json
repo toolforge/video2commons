@@ -24,7 +24,6 @@
 	"taskDone": "您的項目已完成。您可在{{#a}}{{/a}}找尋您的上傳。",
 	"cancel": "取消",
 	"back": "上一步驟",
-	"extractor": "提取",
 	"keep": "保留",
 	"filetarget": "目標檔名",
 	"transcoding": "轉碼格式",

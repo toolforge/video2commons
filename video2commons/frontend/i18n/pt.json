@@ -27,7 +27,6 @@
 	"taskDone": "A sua tarefa está concluída. Pode encontrar o carregamento em {{#a}}{{/a}}.",
 	"cancel": "Cancelar",
 	"back": "Voltar",
-	"extractor": "Extrator",
 	"keep": "Manter",
 	"filetarget": "Nome da página de destino",
 	"transcoding": "Formato de transcodificação",

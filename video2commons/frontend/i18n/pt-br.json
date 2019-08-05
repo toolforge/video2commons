@@ -26,7 +26,6 @@
 	"taskDone": "Sua tarefa foi completada. Você pode encontrá-la em {{#a}}{{/a}}.",
 	"cancel": "Cancelar",
 	"back": "Voltar",
-	"extractor": "Extrator",
 	"keep": "Manter",
 	"filetarget": "Nome do arquivo de destino",
 	"transcoding": "Formato de transcodificação",

@@ -24,7 +24,6 @@
 	"taskDone": "Uw taak is uitgevoerd. U kunt uw upload vinden op {{#a}}{{/a}}.",
 	"cancel": "Annuleren",
 	"back": "Terug",
-	"extractor": "Extractor",
 	"keep": "Behouden",
 	"filetarget": "Doelbestandsnaam",
 	"transcoding": "Transcoderingsopmaak",

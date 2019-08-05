@@ -22,7 +22,6 @@
 	"taskDone": "Sinun tehtäväsi on tehty. Saatat löytää latauksesi sivulta {{#a}}{{/a}}.",
 	"cancel": "Peruuta",
 	"back": "Takaisin",
-	"extractor": "Puristin",
 	"keep": "Säilytä",
 	"filetarget": "Kohteen tiedostonimi",
 	"transcoding": "Transkoodausmuoto",

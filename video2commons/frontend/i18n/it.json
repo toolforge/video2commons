@@ -26,7 +26,6 @@
 	"taskDone": "Attività completata. Puoi trovare il tuo caricamento a {{#a}}{{/a}}.",
 	"cancel": "Annulla",
 	"back": "Indietro",
-	"extractor": "Estrattore",
 	"keep": "Mantenere",
 	"filetarget": "Nome del file di destinazione",
 	"transcoding": "Formato transcodifica",
