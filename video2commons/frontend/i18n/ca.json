@@ -8,6 +8,7 @@
 	"loginOnCommons": "Inicia una sessió a Wikimedia Commons",
 	"logout": "Finalitza la sessió",
 	"help": "Ajuda",
+	"JavascriptRequired": "Heu d’activar el JavaScript per a utilitzar aquesta eina.",
 	"abort": "Interromp",
 	"remove": "Suprimeix",
 	"restart": "Reinicia",
