@@ -1,21 +1,28 @@
 {
 	"@metadata": {
 		"authors": [
-			"HairyFotr"
+			"HairyFotr",
+			"P̲̳l̳eo"
 		]
 	},
 	"logout": "Odjava",
 	"help": "Pomoč",
+	"abort": "Prekini",
+	"remove": "Odstrani",
+	"next": "Naprej",
 	"loading": "Nalaganje ...",
 	"confirm": "Potrdi",
 	"cancel": "Prekliči",
 	"back": "Nazaj",
 	"keep": "Obdrži",
+	"filedescription": "Opisna stran datoteke",
 	"filename": "Ime datoteke",
 	"video": "video",
+	"audio": "zvok",
 	"subtitles": "podnapisi",
 	"keepvideo": "Obdrži video",
 	"importsubtitles": "Uvozi podnapise",
 	"uploading": "Nalaganje ...",
+	"note": "Opomba:",
 	"notessubtitles": "Če je označen 'Uvoz podnapisov' bodo podnapisi uvoženi, razen samodejno generiranih."
 }
