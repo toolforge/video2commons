@@ -2,7 +2,8 @@
 	"@metadata": {
 		"authors": [
 			"Hedda",
-			"Uğurkent"
+			"Uğurkent",
+			"Grkn gll"
 		]
 	},
 	"loginOnCommons": "Wikimedia Commons'ta giriş yapın",
@@ -40,8 +41,8 @@
 	"note": "Not:",
 	"importantnote": "Önemli not:",
 	"notesplaylists": "Oynatma listeleri doğru bir şekilde işlenmeyecek. Bazı siteler (Youku ve Comedy Central gibi) çok parçalı videolar kullanır, oynatma listeleri olarak yorumlanır ve doğru şekilde işlenmez.",
-	"notesuncheck": "Medya video veya ses parçaları içermiyorsa, lütfen ilgili onay kutularının işaretini kaldırın. aksi halde, biçim serbest olsa bile dönüştürme işlemi başarısız olabilir.",
-	"notessubtitles": "'Altyazıları içe aktar' seçeneği işaretlenirse otomatik oluşturulanlar hariç altyazılar içe aktarılır.",
+	"notesuncheck": "Medya video veya ses parçaları içermiyorsa, lütfen ilgili onay kutularının işaretini kaldırın. Aksi halde, biçim serbest olsa bile dönüştürme işlemi başarısız olabilir.",
+	"notessubtitles": "'Alt yazıları içe aktar' seçeneği işaretlenirse otomatik oluşturulanlar hariç alt yazılar içe aktarılır.",
 	"noteslicensing": "Sadece {{#a}}#fl|özgür lisanslı{{/a}} ya da {{#a}}#pd|kamu malı{{/a}} içerikler yükleyin. {{#a}}#fu|Adil kullanıma{{/a}} Wikimedia Commons'ta izin verilmiyor.",
 	"extensionmsg": "Yukarıda belirtilen dosya uzantısı, videonun yalnızca serbest kodlama gerektiriyorsa ve kod dönüştürmeyi gerektiriyorsa kullanılır. Serbest biçimlerde videolar uzantılarını korunacak.",
 	"confirmmsg": "Lütfen görevi onaylayın veya parametreleri değiştirmek için 'Geri'ye tıklayın. 'Onayla' düğmesine tıklayarak görev teslim edilecek ve yürütülecektir. Teknik kısıtlamalar nedeniyle, bir görev gönderildikten sonra kolayca iptal edilemez."
