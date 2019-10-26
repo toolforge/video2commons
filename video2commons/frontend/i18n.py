@@ -77,7 +77,7 @@ def get(lang):
     data['@dir'] = _dir(lang)
 
     setattr(g, i18nkey, data)
-    redisconnection.setex(i18nkey, json.dumps(data), 60)
+    redisconnection.setex(i18nkey, 60, json.dumps(data))
     return data
 
 

@@ -95,8 +95,8 @@ class RedisSessionInterface(SessionInterface):
             cookie_exp = self.get_expiration_time(app, session)
             if session.modified:
                 val = self.serializer.dumps(dict(session))
-                self.redis.setex(self.prefix + session.sid, val,
-                                 int(redis_exp.total_seconds()))
+                self.redis.setex(self.prefix + session.sid,
+                                 int(redis_exp.total_seconds()), val)
             else:
                 self.redis.expire(self.prefix + session.sid,
                                   int(redis_exp.total_seconds()))

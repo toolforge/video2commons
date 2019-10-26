@@ -75,7 +75,7 @@ def main(
         self.retry(max_retries=20, countdown=5*60)
         assert False  # should never reach here
 
-    redisconnection.setex(lockkey, 'T', 7 * 24 * 3600)
+    redisconnection.setex(lockkey, 7 * 24 * 3600, 'T')
 
     # Generate temporary directory for task
     for i in range(10):  # 10 tries
