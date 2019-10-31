@@ -454,8 +454,8 @@ def remove_task():
     assert id in \
         redisconnection.lrange('tasks:' + username, 0, -1), \
         'Task must belong to you.'
-    redisconnection.lrem('alltasks', id)  # not StrictRedis
-    redisconnection.lrem('tasks:' + username, id)  # not StrictRedis
+    redisconnection.lrem('alltasks', 0, id)
+    redisconnection.lrem('tasks:' + username, 0, id)
     redisconnection.delete('titles:' + id)
     redisconnection.delete('params:' + id)
     redisconnection.delete('restarted:' + id)

@@ -32,7 +32,7 @@ redisconnection = Redis(host=redis_host, db=3, password=redis_pw)
 for userkey in redisconnection.keys('tasks:*') + ['alltasks']:
     for taskid in redisconnection.lrange(userkey, 0, -1):
         if not redisconnection.exists('titles:' + taskid):
-            redisconnection.lrem(userkey, taskid)
+            redisconnection.lrem(userkey, 0, taskid)
             print "delete %s from %s" % (taskid, userkey)
 
 for pattern in ['params:*', 'restarted:*']:  # 'tasklock:*'
