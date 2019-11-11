@@ -3,7 +3,8 @@
 		"authors": [
 			"Hedda",
 			"Uğurkent",
-			"Grkn gll"
+			"Grkn gll",
+			"BaRaN6161 TURK"
 		]
 	},
 	"loginOnCommons": "Wikimedia Commons'ta giriş yapın",
@@ -18,7 +19,7 @@
 	"loading": "Yükleniyor...",
 	"confirm": "Onayla",
 	"errorDisconnect": "Sunucu bağlantısı başarısız oldu. Lütfen bu sayfayı yenileyin veya GitHub'da bir sorun bildirin.",
-	"errorTooLarge": "Doğrudan yüklenecek dosya çok büyük!  {{#a}}Sunucu taraflı bir yükleme yapmak{{/a}} isteyebilirsiniz.",
+	"errorTooLarge": "Doğrudan yüklenecek dosya çok büyük! {{#a}}Sunucu taraflı bir yükleme yapmak{{/a}} isteyebilirsiniz.",
 	"addTask": "Görev ekle...",
 	"yourTasks": "Görevleriniz:",
 	"createServerSide": "Tek seferlik sunucu taraflı yükleme bileti oluşturun (önerilir)",
