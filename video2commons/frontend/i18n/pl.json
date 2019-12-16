@@ -2,12 +2,14 @@
 	"@metadata": {
 		"authors": [
 			"Chrumps",
-			"Woytecr"
+			"Woytecr",
+			"WaldiSt"
 		]
 	},
 	"loginOnCommons": "Zaloguj się na Wikimedia Commons",
 	"logout": "Wyloguj",
 	"help": "Pomoc",
+	"forkOnGitHub": "Rozwidlenie na GitHub",
 	"JavascriptRequired": "Do korzystania z tego narzędzia wymagany jest JavaScript!",
 	"abort": "Przerwij",
 	"remove": "Usuń",
