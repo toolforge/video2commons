@@ -149,7 +149,7 @@ def _desc(url, ie_key, title, info):
     if len(desc_orig) > 100:
         lang = guess_language.guessLanguage(desc_orig)
         if lang != 'UNKNOWN':
-            desc = u'{{' + lang + u'|1=' + desc + u'}}'
+            desc = '{{' + lang + '|1=' + desc + '}}'
     return desc
 
 
@@ -160,7 +160,7 @@ def _uploader(url, ie_key, title, info):
         # HACK: YouTube outputs http:// atm (issue #80)
         if ie_key == 'Youtube':
             uploader_url = uploader_url.replace('http://', 'https://')
-        uploader = u'[%s %s]' % (uploader_url, uploader)
+        uploader = '[%s %s]' % (uploader_url, uploader)
     return uploader
 
 
@@ -218,8 +218,8 @@ def escape_wikitext(wikitext):
         ('{', '{{(}}'),
         ('}', '{{)}}'),
     ])
-    rep = dict((re.escape(k), v) for k, v in rep.iteritems())
-    pattern = re.compile("|".join(rep.keys()))
+    rep = dict((re.escape(k), v) for k, v in rep.items())
+    pattern = re.compile("|".join(list(rep.keys())))
     return pattern.sub(lambda m: rep[re.escape(m.group(0))], wikitext)
 
 
@@ -232,71 +232,71 @@ sanitationRules = [
     },
     # "signature"
     {
-        'pattern': re.compile(ur'~{3}'),
+        'pattern': re.compile(r'~{3}'),
         'replace': ''
     },
     # Space, underscore, tab, NBSP and other unusual spaces
     {
-        'pattern': re.compile(ur'[ _\u0009\u00A0\u1680\u180E\u2000-\u200A'
-                              ur'\u2028\u2029\u202F\u205F\u3000\s]+'),
+        'pattern': re.compile(r'[ _\u0009\u00A0\u1680\u180E\u2000-\u200A'
+                              r'\u2028\u2029\u202F\u205F\u3000\s]+'),
         'replace': ' '
     },
     # issue #96
     {
-        'pattern': re.compile(ur'\u200B'),
+        'pattern': re.compile(r'\u200B'),
         'replace': ''
     },
     # unicode bidi override characters: Implicit, Embeds, Overrides
     {
-        'pattern': re.compile(ur'[\u200E\u200F\u202A-\u202E]'),
+        'pattern': re.compile(r'[\u200E\u200F\u202A-\u202E]'),
         'replace': ''
     },
     # control characters
     {
-        'pattern': re.compile(ur'[\x00-\x1f\x7f]'),
+        'pattern': re.compile(r'[\x00-\x1f\x7f]'),
         'replace': ''
     },
     # URL encoding (possibly)
     {
-        'pattern': re.compile(ur'%([0-9A-Fa-f]{2})'),
+        'pattern': re.compile(r'%([0-9A-Fa-f]{2})'),
         'replace': r'% \1'
     },
     # HTML-character-entities
     {
-        'pattern': re.compile(ur'&(([A-Za-z0-9\x80-\xff]+|'
-                              ur'#[0-9]+|#x[0-9A-Fa-f]+);)'),
+        'pattern': re.compile(r'&(([A-Za-z0-9\x80-\xff]+|'
+                              r'#[0-9]+|#x[0-9A-Fa-f]+);)'),
         'replace': r'& \1'
     },
     # slash, colon (not supported by file systems like NTFS/Windows,
     # Mac OS 9 [:], ext4 [/])
     {
-        'pattern': re.compile(ur'[:/#]'),
+        'pattern': re.compile(r'[:/#]'),
         'replace': '-'
     },
     # brackets, greater than
     {
-        'pattern': re.compile(ur'[\]\}>]'),
+        'pattern': re.compile(r'[\]\}>]'),
         'replace': ')'
     },
     # brackets, lower than
     {
-        'pattern': re.compile(ur'[\[\{<]'),
+        'pattern': re.compile(r'[\[\{<]'),
         'replace': '('
     },
     # directory structures
     {
-        'pattern': re.compile(ur'^(\.|\.\.|\./.*|\.\./.*|.*/\./.*|'
-                              ur'.*/\.\./.*|.*/\.|.*/\.\.)$'),
+        'pattern': re.compile(r'^(\.|\.\.|\./.*|\.\./.*|.*/\./.*|'
+                              r'.*/\.\./.*|.*/\.|.*/\.\.)$'),
         'replace': ''
     },
     # everything that wasn't covered yet
     {
-        'pattern': re.compile(ur'[|#+?:/\\\u0000-\u001f\u007f]'),
+        'pattern': re.compile(r'[|#+?:/\\\u0000-\u001f\u007f]'),
         'replace': '-'
     },
     # titleblacklist-custom-double-apostrophe
     {
-        'pattern': re.compile(ur"'{2,}"),
+        'pattern': re.compile(r"'{2,}"),
         'replace': '"'
     },
 ]

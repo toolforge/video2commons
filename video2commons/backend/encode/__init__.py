@@ -18,9 +18,9 @@
 """Main encode module."""
 
 import os
-from transcodejob import WebVideoTranscodeJob
-from transcode import WebVideoTranscode
-from globals import ffmpeg_location, ffprobe_location
+from .transcodejob import WebVideoTranscodeJob
+from .transcode import WebVideoTranscode
+from .globals import ffmpeg_location, ffprobe_location
 # https://github.com/senko/python-video-converter
 from converter import Converter
 
@@ -64,21 +64,21 @@ def getbestkey(info, targettype):
 
     if targettype.get('videoCodec') and targettype.get('audioCodec'):
         # need both video & audio -- no codec change in video & audio
-        for newkey, newtargettype in WebVideoTranscode.settings.items():
+        for newkey, newtargettype in list(WebVideoTranscode.settings.items()):
             if info.video.codec == newtargettype.get('videoCodec') and \
                     info.audio.codec == newtargettype.get('audioCodec'):
                 return newkey
 
     elif targettype.get('videoCodec') and 'noaudio' in targettype:
         # need video only -- no codec change in video & remove audio
-        for newkey, newtargettype in WebVideoTranscode.settings.items():
+        for newkey, newtargettype in list(WebVideoTranscode.settings.items()):
             if info.video.codec == newtargettype.get('videoCodec') and \
                     'noaudio' in newtargettype:
                 return newkey
 
     elif 'novideo' in targettype and targettype.get('audioCodec'):
         # need video only -- no codec change in audio & remove video
-        for newkey, newtargettype in WebVideoTranscode.settings.items():
+        for newkey, newtargettype in list(WebVideoTranscode.settings.items()):
             if info.audio.codec == newtargettype.get('audioCodec') and \
                     'novideo' in newtargettype:
                 return newkey

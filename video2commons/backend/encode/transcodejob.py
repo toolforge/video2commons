@@ -33,8 +33,8 @@ import math
 import time
 import subprocess
 import signal
-from transcode import WebVideoTranscode
-from globals import (
+from .transcode import WebVideoTranscode
+from .globals import (
     background_priority, background_time_limit, background_memory_limit,
     background_size_limit, ffmpeg_threads, ffmpeg_location, escape_shellarg,
     time_to_seconds
@@ -68,7 +68,7 @@ class WebVideoTranscodeJob(object):
         """
         msg = msg.strip()
         self.statuscallback(msg, None)
-        print msg
+        print(msg)
 
     def get_file(self):
         """
@@ -159,7 +159,7 @@ class WebVideoTranscodeJob(object):
             if 'twopass' in options and options['twopass'] == 'True':
                 # ffmpeg requires manual two pass
                 status = self.ffmpeg_encode(options, 1)
-                if status and not isinstance(status, basestring):
+                if status and not isinstance(status, str):
                     status = self.ffmpeg_encode(options, 2)
             else:
                 status = self.ffmpeg_encode(options)

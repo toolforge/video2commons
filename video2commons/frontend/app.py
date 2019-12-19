@@ -19,12 +19,12 @@
 
 """video2commons web frontend."""
 
-from __future__ import absolute_import
+
 
 import json
 import traceback
-from urllib import quote as urlquote
-from urlparse import urlparse, urljoin
+from urllib.parse import quote as urlquote
+from urllib.parse import urlparse, urljoin
 
 from flask import (
     Flask, request, Response, session, render_template, redirect, url_for

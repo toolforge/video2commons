@@ -17,7 +17,7 @@
 
 """video2commons backend worker."""
 
-from __future__ import absolute_import
+
 
 import os
 import sys
@@ -96,7 +96,7 @@ def main(
             s.text = text
         if percent is not None:
             s.percent = percent
-        print '%d: %s' % (s.percent, s.text)
+        print('%d: %s' % (s.percent, s.text))
 
         self.update_state(
             state='PROGRESS',
@@ -149,9 +149,9 @@ def main(
                 )
             except TaskAbort:
                 raise
-            except Exception, e:
+            except Exception as e:
                 statuscallback(type(e).__name__ + ": " + str(e), None)
-                print e
+                print(e)
                 pass
 
     except NeedServerSideUpload as e:
@@ -162,10 +162,10 @@ def main(
         exc_info = sys.exc_info()
         raise TaskError(
             (
-                u'pywikibot.Error: %s: %s' % (
+                'pywikibot.Error: %s: %s' % (
                     exc_info[0].__name__, exc_info[1]
                 )
-            ).encode('utf-8')), None, exc_info[2]
+            ).encode('utf-8')).with_traceback(exc_info[2])
     else:
         statuscallback('Done!', 100)
         return {'type': 'done', 'filename': filename, 'url': wikifileurl}

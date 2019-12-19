@@ -19,7 +19,7 @@
 
 """video2commons web shared."""
 
-from __future__ import absolute_import
+
 
 import json
 from uuid import uuid4

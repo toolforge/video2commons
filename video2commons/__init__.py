@@ -19,7 +19,7 @@
 
 """videocommons package."""
 
-from __future__ import absolute_import
+
 
 from video2commons import config
 from video2commons import exceptions
