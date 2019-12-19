@@ -1,0 +1,38 @@
+{
+	"@metadata": {
+		"authors": [
+			"Robin Owain"
+		]
+	},
+	"loginOnCommons": "Mewngofnodwch ar Comin Wicimedia",
+	"logout": "Allgofnodi",
+	"help": "Cymorth",
+	"forkOnGitHub": "Fforcia fi ar GitHub",
+	"JavascriptRequired": "Mae angen JavaScript i ddefnyddio'r teclyn yma!",
+	"abort": "Gadael",
+	"remove": "Diddymu",
+	"restart": "Ailgychwyn",
+	"next": "Nesa",
+	"loading": "Llwytho",
+	"confirm": "Cadarnhau",
+	"errorDisconnect": "Mae'r cysylltiad i'r gweinyddwr wedi methu. Adfywiwch y dudalen hon neu cyhoeddwch y broblem ar GitHub.",
+	"addTask": "Ychwanegwch dasgau...",
+	"yourTasks": "Eich tasgau:",
+	"cancel": "Canslo",
+	"back": "Yn ôl",
+	"keep": "Cadw",
+	"filetarget": "Enw-ffeil a dargedir",
+	"transcoding": "Trawsgodio'r fformat",
+	"filedescription": "Tudalen disgrifio'r ffeil",
+	"filename": "Enw-ffeil",
+	"video": "fideo",
+	"audio": "sain",
+	"subtitles": "isdeitlau",
+	"keepvideo": "Cadw'r fideo",
+	"keepaudio": "Cadw'r sain",
+	"importsubtitles": "Mewnforio'r isdeitlau",
+	"uploadFile": "Neu uwchlwytho ffeil...",
+	"uploading": "Wrthi'n uwchlwytho...",
+	"note": "Sylwer:",
+	"importantnote": "Nodyn pwysig:"
+}
