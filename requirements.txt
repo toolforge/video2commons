@@ -7,5 +7,4 @@ langcodes-py2
 chardet
 mwoauth
 emoji
-https://github.com/senko/python-video-converter/zipball/master#egg=videoconverter
 #https://github.com/wikimedia/pywikibot-core/zipball/master#egg=pywikibot

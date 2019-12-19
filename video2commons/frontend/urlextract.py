@@ -219,7 +219,7 @@ def escape_wikitext(wikitext):
         ('}', '{{)}}'),
     ])
     rep = dict((re.escape(k), v) for k, v in rep.items())
-    pattern = re.compile("|".join(list(rep.keys())))
+    pattern = re.compile("|".join(rep.keys()))
     return pattern.sub(lambda m: rep[re.escape(m.group(0))], wikitext)
 
 

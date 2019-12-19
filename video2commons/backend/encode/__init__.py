@@ -17,12 +17,47 @@
 
 """Main encode module."""
 
+import collections
+import json
 import os
+import subprocess
+
 from .transcodejob import WebVideoTranscodeJob
 from .transcode import WebVideoTranscode
-from .globals import ffmpeg_location, ffprobe_location
-# https://github.com/senko/python-video-converter
-from converter import Converter
+from .globals import ffprobe_location
+
+
+Info = collections.namedtuple('Info', 'video audio')
+Stream = collections.namedtuple('Stream', 'codec')
+
+
+def ffprobe(path):
+    ffprobe_data = subprocess.check_output([
+        ffprobe_location,
+        '-v', 'quiet',
+        '-print_format', 'json',
+        '-show_format',
+        '-show_streams',
+        path
+    ], encoding='utf-8')
+
+    ffprobe_data = json.loads(ffprobe_data)
+
+    if not ffprobe_data.get('streams'):
+        return None
+
+    info = Info(*([None] * len(Info._fields)))
+
+    for stream in ffprobe_data['streams']:
+        if stream['codec_type'] not in Info._fields:
+            continue
+        if getattr(info.video, stream['codec_type']):
+            continue
+
+        s = Stream(codec=stream['codec_name'])
+        info = info._replace(**{stream['codec_type']: s})
+
+    return info
 
 
 def encode(source, origkey, statuscallback=None, errorcallback=None):
@@ -30,8 +65,7 @@ def encode(source, origkey, statuscallback=None, errorcallback=None):
     source = os.path.abspath(source)
     preserve = {'video': False, 'audio': False}
 
-    c = Converter(ffmpeg_path=ffmpeg_location, ffprobe_path=ffprobe_location)
-    info = c.probe(source)
+    info = ffprobe(source)
 
     targettype = WebVideoTranscode.settings.get(origkey)
     key = getbestkey(info, targettype) or origkey
@@ -64,21 +98,21 @@ def getbestkey(info, targettype):
 
     if targettype.get('videoCodec') and targettype.get('audioCodec'):
         # need both video & audio -- no codec change in video & audio
-        for newkey, newtargettype in list(WebVideoTranscode.settings.items()):
+        for newkey, newtargettype in WebVideoTranscode.settings.items():
             if info.video.codec == newtargettype.get('videoCodec') and \
                     info.audio.codec == newtargettype.get('audioCodec'):
                 return newkey
 
     elif targettype.get('videoCodec') and 'noaudio' in targettype:
         # need video only -- no codec change in video & remove audio
-        for newkey, newtargettype in list(WebVideoTranscode.settings.items()):
+        for newkey, newtargettype in WebVideoTranscode.settings.items():
             if info.video.codec == newtargettype.get('videoCodec') and \
                     'noaudio' in newtargettype:
                 return newkey
 
     elif 'novideo' in targettype and targettype.get('audioCodec'):
         # need video only -- no codec change in audio & remove video
-        for newkey, newtargettype in list(WebVideoTranscode.settings.items()):
+        for newkey, newtargettype in WebVideoTranscode.settings.items():
             if info.audio.codec == newtargettype.get('audioCodec') and \
                     'novideo' in newtargettype:
                 return newkey

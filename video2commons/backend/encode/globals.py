@@ -64,4 +64,4 @@ def format_time(s):
 def time_to_seconds(time):
     """Get the number of seconds from time expression."""
     return \
-        sum([a * b for a, b in zip([3600, 60, 1], list(map(int, time.split(':'))))])
+        sum(a * b for a, b in zip([3600, 60, 1], map(int, time.split(':'))))

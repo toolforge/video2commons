@@ -42,7 +42,7 @@ def subtitles(
         ffprobe_path='/usr/bin/ffprobe'
     )
 
-    for langcode, filename in list(subtitles.items()):
+    for langcode, filename in subtitles.items():
         try:
             lang = langcodes.get(langcode)
             langcode = str(lang).lower()
@@ -51,7 +51,7 @@ def subtitles(
             langname = langdesc['language']
             del langdesc['language']
             if langdesc:
-                langname += ' (%s)' % ', '.join(list(langdesc.values()))
+                langname += ' (%s)' % ', '.join(langdesc.values())
 
             statuscallback('Loading subtitle in ' + langname, int(percent))
             subtitletext = ''
