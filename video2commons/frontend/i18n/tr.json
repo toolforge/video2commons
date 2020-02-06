@@ -4,13 +4,14 @@
 			"Hedda",
 			"Uğurkent",
 			"Grkn gll",
-			"BaRaN6161 TURK"
+			"BaRaN6161 TURK",
+			"Cobija"
 		]
 	},
 	"loginOnCommons": "Wikimedia Commons'ta giriş yapın",
 	"logout": "Oturumu kapat",
 	"help": "Yardım",
-	"forkOnGitHub": "GitHub'dan ayrıl",
+	"forkOnGitHub": "GitHub'da destekle",
 	"JavascriptRequired": "Bu aracı kullanabilmek için JavaScript gereklidir!",
 	"abort": "Sonlandır",
 	"remove": "Kaldır",
@@ -41,9 +42,9 @@
 	"uploading": "Yükleniyor...",
 	"note": "Not:",
 	"importantnote": "Önemli not:",
-	"notesplaylists": "Oynatma listeleri doğru bir şekilde işlenmeyecek. Bazı siteler (Youku ve Comedy Central gibi) çok parçalı videolar kullanır, oynatma listeleri olarak yorumlanır ve doğru şekilde işlenmez.",
+	"notesplaylists": "Oynatma listeleri doğru bir şekilde işlenmeyecek. Bazı siteler (Youku ve Comedy Central gibi) oynatma listeleri olarak yorumlanan çok parçalı videolar kullandığından bu videolar doğru şekilde işlenemez.",
 	"notesuncheck": "Medya video veya ses parçaları içermiyorsa, lütfen ilgili onay kutularının işaretini kaldırın. Aksi halde, biçim serbest olsa bile dönüştürme işlemi başarısız olabilir.",
-	"notessubtitles": "'Alt yazıları içe aktar' seçeneği işaretlenirse otomatik oluşturulanlar hariç alt yazılar içe aktarılır.",
+	"notessubtitles": "'Altyazıları içe aktar' seçeneği işaretlenirse otomatik oluşturulanlar hariç altyazılar içe aktarılır.",
 	"noteslicensing": "Sadece {{#a}}#fl|özgür lisanslı{{/a}} ya da {{#a}}#pd|kamu malı{{/a}} içerikler yükleyin. {{#a}}#fu|Adil kullanıma{{/a}} Wikimedia Commons'ta izin verilmiyor.",
 	"extensionmsg": "Yukarıda belirtilen dosya uzantısı, videonun yalnızca serbest kodlama gerektiriyorsa ve kod dönüştürmeyi gerektiriyorsa kullanılır. Serbest biçimlerde videolar uzantılarını korunacak.",
 	"confirmmsg": "Lütfen görevi onaylayın veya parametreleri değiştirmek için 'Geri'ye tıklayın. 'Onayla' düğmesine tıklayarak görev teslim edilecek ve yürütülecektir. Teknik kısıtlamalar nedeniyle, bir görev gönderildikten sonra kolayca iptal edilemez."
