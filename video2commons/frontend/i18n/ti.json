@@ -1,0 +1,18 @@
+{
+	"@metadata": {
+		"authors": [
+			"Joanmp17"
+		]
+	},
+	"logout": "ብመንነት ውጻእ",
+	"help": "ሓገዝ",
+	"abort": "ኣቋረጸ",
+	"remove": "ኣልግስ",
+	"restart": "እንደገና ጀምር",
+	"next": "ቀጻሊ",
+	"loading": "ጽዕነት...",
+	"confirm": "ኣረጋገጸ",
+	"cancel": "ኣትርፍ",
+	"back": "ሕቖ",
+	"filename": "ናይ ፋይል ስም"
+}
