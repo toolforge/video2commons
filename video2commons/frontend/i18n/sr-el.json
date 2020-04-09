@@ -1,5 +1,7 @@
 {
-	"@metadata": [],
+	"@metadata": {
+		"authors": []
+	},
 	"loginOnCommons": "Prijavi me na Vikimedijinu Ostavu",
 	"logout": "Odjavi me",
 	"help": "Pomoć",
