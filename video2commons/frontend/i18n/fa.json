@@ -2,6 +2,7 @@
 	"@metadata": {
 		"authors": [
 			"Dejavu",
+			"FarsiNevis",
 			"Huji",
 			"Namo",
 			"Reza1615"
@@ -34,6 +35,8 @@
 	"keepvideo": "نگه‌داشتن ویدئو",
 	"keepaudio": "نگه‌داشتن صدا",
 	"importsubtitles": "درون‌ریزی زیرنویس‌ها",
+	"uploadFile": "یا پرونده‌ای بارگذاری کنید...",
+	"uploading": "در حال بارگذاری...",
 	"note": "یادداشت:",
 	"importantnote": "یادداشت مهم:"
 }
