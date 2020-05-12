@@ -209,6 +209,8 @@ class WebVideoTranscodeJob(object):
         cmd = escape_shellarg(ffmpeg_location) + ' -y -i ' + \
             escape_shellarg(self.get_source_path())
 
+        cmd += " -max_muxing_queue_size 4096"
+
         if 'vpre' in options:
             cmd += ' -vpre ' + escape_shellarg(options['vpre'])
 
