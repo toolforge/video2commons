@@ -1,0 +1,31 @@
+{
+	"@metadata": {
+		"authors": [
+			"Fierodelveneto"
+		]
+	},
+	"loginOnCommons": "Lòghite so Wikimedia Commons",
+	"logout": "Deslòghite",
+	"help": "Juto",
+	"forkOnGitHub": "Fa el fork in GitHub",
+	"abort": "Ferma",
+	"remove": "Cava",
+	"restart": "Riparti",
+	"next": "Vanti",
+	"loading": "Drio cargar...",
+	"confirm": "Conferma",
+	"addTask": "Xonta atività",
+	"yourTasks": "I to cònpiti:",
+	"cancel": "Descançełare",
+	"back": "Indrìo",
+	"keep": "Mantegner",
+	"filetarget": "Nome del file de destinasion",
+	"transcoding": "Forma transcodìfega",
+	"filedescription": "Pàjina de descrision del file",
+	"filename": "Nome del file",
+	"video": "Video",
+	"audio": "Audio",
+	"subtitles": "Sototitoło",
+	"keepvideo": "Mantien video",
+	"keepaudio": "Mantien audio"
+}
