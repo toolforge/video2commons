@@ -1,0 +1,17 @@
+{
+	"@metadata": {
+		"authors": [
+			"Kareyac"
+		]
+	},
+	"help": "Օգնություն",
+	"remove": "Հեռացնել",
+	"restart": "Վերսկսել",
+	"next": "Հաջորդ",
+	"loading": "Բեռնվում է…",
+	"confirm": "Հաստատել",
+	"cancel": "Չեղարկել",
+	"back": "Հետ",
+	"video": "վիդեո",
+	"audio": "աուդիո"
+}
