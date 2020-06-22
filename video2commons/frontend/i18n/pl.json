@@ -2,6 +2,7 @@
 	"@metadata": {
 		"authors": [
 			"Chrumps",
+			"Rainbow P",
 			"WaldiSt",
 			"Woytecr"
 		]
@@ -21,6 +22,8 @@
 	"errorTooLarge": "Plik jest zbyt duży, aby można go było przesłać bezpośrednio! Możesz {{#a}}poprosić o przesłanie strony po stronie serwera{{/a}}.",
 	"addTask": "Dodaj zadanie...",
 	"yourTasks": "Twoje zadania:",
+	"createServerSide": "Stwórz za jednym razem po stronie serwera ticket przesyłania (zalecane)",
+	"taskDone": "Twoje zadanie jest zrobione. Możesz znaleźć swój upload na {{#a}}{{/a}}",
 	"cancel": "Anuluj",
 	"back": "Wstecz",
 	"keep": "Zachowaj",
