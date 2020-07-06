@@ -2,10 +2,11 @@
 	"@metadata": {
 		"authors": [
 			"Ans",
+			"Korrawit",
 			"Pon44695"
 		]
 	},
-	"loginOnCommons": "ลงชื่อเข้าระบบวิกิมีเดียคอมมอนส์",
+	"loginOnCommons": "เข้าสู่ระบบวิกิมีเดียคอมมอนส์",
 	"logout": "ออกจากระบบ",
 	"help": "วิธีใช้",
 	"forkOnGitHub": "Fork ฉันบน GitHub",
