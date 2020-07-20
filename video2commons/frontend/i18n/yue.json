@@ -1,7 +1,8 @@
 {
 	"@metadata": {
 		"authors": [
-			"Hello903hello"
+			"Hello903hello",
+			"Moon0319"
 		]
 	},
 	"logout": "簽走",
@@ -12,6 +13,6 @@
 	"next": "下個",
 	"loading": "載入緊...",
 	"confirm": "確認",
-	"uploading": "上載緊...",
+	"uploading": "噏撈緊...",
 	"note": "註："
 }
