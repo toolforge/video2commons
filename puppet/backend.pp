@@ -104,7 +104,7 @@ $config_json_template = '{
 "redis_host": "<%= @redis_host %>",
 "http_host": "video2commons.toolforge.org/static/ssu",
 "webfrontend_uri": "//video2commons.toolforge.org/",
-"socketio_uri": "//video2commons-socketio.toolforge.org/"
+"socketio_uri": "//video2commons-socketio.toolforge.org/socket.io"
 }
 '
 

@@ -7,5 +7,5 @@
 "session_key": "BlahBlahBlah",
 "http_host": "video2commons.toolforge.org/static/ssu",
 "webfrontend_uri": "//video2commons.toolforge.org/",
-"socketio_uri": "//video2commons-socketio.toolforge.org/"
+"socketio_uri": "//video2commons-socketio.toolforge.org/socket.io"
 }
