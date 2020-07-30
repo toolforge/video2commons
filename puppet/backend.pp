@@ -246,7 +246,7 @@ server {
     }
 
     location = / {
-        return 302 https://tools.wmflabs.org/video2commons/;
+        return 302 https://video2commons.toolforge.org/;
     }
 }
 '
