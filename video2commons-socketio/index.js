@@ -28,8 +28,6 @@ app.all( '*', function ( req, res /* , next */ ) {
 	res.redirect( config.webfrontend_uri );
 } );
 
-io.path( config.socketio_uri.match( /^(?:(?:https?:)?\/\/)?[^/]+(\/.*)$/ )[ 1 ] );
-
 io.on( 'connection', function ( socket ) {
 	console.log( '[' + new Date() + '] Connected: ' + socket.id );
 	socket.on( 'auth', function ( data ) {
