@@ -102,9 +102,9 @@ $config_json_template = '{
 "api_url": "https://commons.wikimedia.org/w/index.php",
 "redis_pw": "<%= @redis_pw %>",
 "redis_host": "<%= @redis_host %>",
-"http_host": "tools.wmflabs.org/video2commons/static/ssu",
-"webfrontend_uri": "//tools.wmflabs.org/video2commons/",
-"socketio_uri": "//tools.wmflabs.org/video2commons-socketio"
+"http_host": "video2commons.toolforge.org/static/ssu",
+"webfrontend_uri": "//video2commons.toolforge.org/",
+"socketio_uri": "//video2commons.toolforge.org/video2commons-socketio"
 }
 '
 
@@ -246,7 +246,7 @@ server {
     }
 
     location = / {
-        return 302 https://tools.wmflabs.org/video2commons/;
+        return 302 https://video2commons.toolforge.org/;
     }
 }
 '

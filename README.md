@@ -3,7 +3,7 @@
 Transfer video and audio from external sites to Commons. Video2commons is available for everyone (uses OAuth) via Wikimedia Commons.
 
 See also:
-* https://tools.wmflabs.org/video2commons/
-* https://commons.wikimedia.org/wiki/Commons:Video2commons
-* https://wikitech.wikimedia.org/wiki/Nova_Resource:Video/Help/video2commons
-* https://translatewiki.net/wiki/Translating:Video2commons
+* <https://video2commons.toolforge.org>
+* <https://commons.wikimedia.org/wiki/Commons:Video2commons>
+* <https://wikitech.wikimedia.org/wiki/Nova_Resource:Video/Help/video2commons>
+* <https://translatewiki.net/wiki/Translating:Video2commons>
