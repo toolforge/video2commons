@@ -2,12 +2,14 @@
 	"@metadata": {
 		"authors": [
 			"Fitoschido",
+			"Mguix",
 			"Toniher"
 		]
 	},
 	"loginOnCommons": "Inicia una sessió a Wikimedia Commons",
 	"logout": "Finalitza la sessió",
 	"help": "Ajuda",
+	"forkOnGitHub": "Deriveu la versió a GitHub",
 	"JavascriptRequired": "Heu d’activar el JavaScript per a utilitzar aquesta eina.",
 	"abort": "Interromp",
 	"remove": "Suprimeix",
@@ -15,13 +17,17 @@
 	"next": "Següent",
 	"loading": "S’està carregant…",
 	"confirm": "Confirma",
+	"errorDisconnect": "La connexió al servidor ha fallat. Si us plau actualitzeu aquesta pàgina o informeu del problema a  GitHub.",
+	"errorTooLarge": "L'arxiu és massa gran per pujar-lo directament. Pots {{#a}} sol·licitar una pujada al servidor {{/a}}.",
 	"addTask": "Afegeix una tasca…",
 	"yourTasks": "Les vostres tasques:",
+	"createServerSide": "Creeu un ticket per a les càrregues del servidor (recomanat)",
 	"taskDone": "La tasca ha finalitzat. Podeu trobar la càrrega a {{#a}}{{/a}}.",
 	"cancel": "Cancel·la",
 	"back": "Enrere",
 	"keep": "Manté",
 	"filetarget": "Nom del fitxer de destinació",
+	"transcoding": "Format de transcodificació",
 	"filedescription": "Pàgina de descripció del fitxer",
 	"filename": "Nom de fitxer",
 	"video": "vídeo",
@@ -33,5 +39,11 @@
 	"uploadFile": "O carrega un fitxer...",
 	"uploading": "S'està carregant...",
 	"note": "Nota:",
-	"importantnote": "Nota important:"
+	"importantnote": "Nota important:",
+	"notesplaylists": "Les llistes de reproducció no es processaran correctament. Alguns llocs web (com Youku i Comedy Central) utilitzen vídeos dividits en diverses parts, interpretats com una llista de reproducció, i tampoc es processaran correctament.",
+	"notesuncheck": "Si l'arxiu multimèdia no inclou pistes d'àudio o de vídeo, desactiva les caselles corresponents. En cas contrari la conversió pot fallar, encara que el format sigui lliure.",
+	"notessubtitles": "Si es marca 'Importar subtítols', s'importaran els subtítols, a excepció dels autogenerats.",
+	"noteslicensing": "Només pengeu contingut {{#a}}#fl|amb llicència lliure{{/a}} o {{#a}}#pd|contingut amb{{/a}} llicència lliure. {{#a}}#fu| L'ús raonable{{/a}} no està permès a Wikimedia Commons.",
+	"extensionmsg": "L'extensió de l'arxiu establert anteriorment s'utilitza si i només si el vídeo està en un format no lliure, que requereix la transcodificació. Els vídeos en formats lliures mantindran les extensions.",
+	"confirmmsg": "Confirmeu la tasca o feu clic a \"Enrere\" per canviar els paràmetres. Fent clic a \"Confirmar\", la tasca serà enviada i executada. A causa de restriccions tècniques, no es pot avortar fàcilment una tasca un cop enviada."
 }
