@@ -310,6 +310,11 @@ class WebVideoTranscodeJob(object):
             cmd += " -qmin " + escape_shellarg(quality)
             cmd += " -qmax " + escape_shellarg(quality)
 
+        # libvpx-specific constant quality or constrained quality
+        # note the range is different between VP8 and VP9
+        if crf in options:
+            cmd += " -crf " + escape_shellarg(options['crf']);
+
         # Check for video bitrate:
         if 'videoBitrate' in options:
             cmd += " -qmin 1 -qmax 51"

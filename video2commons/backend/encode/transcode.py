@@ -63,7 +63,8 @@ class WebVideoTranscode:
         # WebM transcode:
         'webm':
             {
-                'videoQuality': 7,
+                'crf': 10,
+                'videoBitrate': '0',
                 'audioQuality': 6,
                 'noUpscaling': 'True',
                 'twopass': 'True',
@@ -73,7 +74,8 @@ class WebVideoTranscode:
             },
         'an.webm':
             {
-                'videoQuality': 7,
+                'crf': 10,
+                'videoBitrate': '0',
                 'noUpscaling': 'True',
                 'twopass': 'True',
                 'videoCodec': 'vp8',
@@ -84,7 +86,8 @@ class WebVideoTranscode:
         # WebM VP9 transcode:
         'vp9.webm':
             {
-                'videoQuality': 7,
+                'crf': 20,
+                'videoBitrate': '0',
                 'audioBitrate': '128',
                 'samplerate': '48000',
                 'noUpscaling': 'True',
@@ -97,7 +100,8 @@ class WebVideoTranscode:
             },
         'an.vp9.webm':
             {
-                'videoQuality': 7,
+                'crf': 20,
+                'videoBitrate': '0',
                 'noUpscaling': 'True',
                 'twopass': 'True',
                 'altref': 'True',
