@@ -312,13 +312,13 @@ class WebVideoTranscodeJob(object):
 
         # libvpx-specific constant quality or constrained quality
         # note the range is different between VP8 and VP9
-        if crf in options:
-            cmd += " -crf " + escape_shellarg(options['crf']);
+        if 'crf' in options:
+            cmd += " -crf " + escape_shellarg(options['crf'])
 
         # Check for video bitrate:
         if 'videoBitrate' in options:
             cmd += " -qmin 1 -qmax 51"
-            cmd += " -vb " + escape_shellarg(int(options['videoBitrate']) * 1000)
+            cmd += " -b:v " + escape_shellarg(int(options['videoBitrate']) * 1000)
 
         # Set the codec:
         if options['videoCodec'] == 'vp9':
@@ -372,7 +372,7 @@ class WebVideoTranscodeJob(object):
         # Check for video bitrate:
         if 'videoBitrate' in options:
             cmd += " -qmin 1 -qmax 51"
-            cmd += " -vb " + escape_shellarg(int(options['videoBitrate']) * 1000)
+            cmd += " -b:v " + escape_shellarg(int(options['videoBitrate']) * 1000)
 
         # Set the codec:
         cmd += " -vcodec theora"
@@ -407,7 +407,7 @@ class WebVideoTranscodeJob(object):
             cmd += " -aq " + escape_shellarg(options['audioQuality'])
 
         if 'audioBitrate' in options:
-            cmd += ' -ab ' + str(int(options['audioBitrate']) * 1000)
+            cmd += ' -b:a ' + str(int(options['audioBitrate']) * 1000)
 
         if 'samplerate' in options:
             cmd += " -ar " + escape_shellarg(options['samplerate'])
