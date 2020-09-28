@@ -1,6 +1,7 @@
 {
 	"@metadata": {
 		"authors": [
+			"Daud I.F. Argana",
 			"Rachmat04"
 		]
 	},
@@ -16,6 +17,7 @@
 	"loading": "Memuat…",
 	"confirm": "Konfirmasi",
 	"errorDisconnect": "Sambungan ke peladen gagal. Silakan muat ulang halaman ini atau buat laporan masalah di GitHub.",
+	"errorTooLarge": "Berkas terlalu besar untuk diunggah secara langsung! Anda mungkin mau mau {{#a}} meminta pengunggahan ke antarmuka sisi peladen{{/a}},",
 	"addTask": "Tambah tugas…",
 	"yourTasks": "Tugas Anda:",
 	"createServerSide": "Buat tiket unggahan sisi peladen dalam satu kali jalan (disarankan)",
@@ -29,14 +31,17 @@
 	"filename": "Nama berkas",
 	"video": "video",
 	"audio": "audio",
+	"subtitles": "takarir",
 	"keepvideo": "Tinggalkan video",
 	"keepaudio": "Tinggalkan audio",
+	"importsubtitles": "Mengimpor takarir",
 	"uploadFile": "Atau unggah sebuah berkas…",
 	"uploading": "Mengunggah…",
 	"note": "Catatan:",
 	"importantnote": "Catatan penting:",
 	"notesplaylists": "Daftar putar tidak akan diproses dengan benar. Beberapa situs (seperti Youku dan Comedy Central) menggunakan video multi-bagian, ditafsirkan sebagai daftar putar, dan juga tidak akan diproses dengan benar.",
 	"notesuncheck": "Jika media tidak menyertakan trek video atau audio, harap hapus centang pada kotak centang yang sesuai; jika tidak, konversi mungkin gagal, bahkan jika formatnya gratis.",
+	"notessubtitles": "Jika 'takarir impor' diperiksa, takarir akan diimpor, tidak termasuk takarir yang dihasilkan secara otomtis.",
 	"noteslicensing": "Unggahkan hanya konten {{#a}}#fl|berlisensi bebas{{/a}} atau {{#a}}#pd|domain publik{{/a}}. {{#a}}#fu|Penggunaan wajar{{/a}} tidak diizinkan di Wikimedia Commons.",
 	"extensionmsg": "Ekstensi file yang ditetapkan di atas digunakan jika dan hanya jika video dalam format yang tidak bebas, yang memerlukan proses transcod. Video dalam format gratis akan menjaga ekstensi mereka.",
 	"confirmmsg": "Harap konfirmasi tugas atau klik 'Kembali' untuk mengubah parameter. Dengan mengklik 'Konfirmasi', tugas akan dikirim dan dieksekusi. Karena batasan teknis, tugas tidak dapat dengan mudah dibatalkan setelah diserahkan."
