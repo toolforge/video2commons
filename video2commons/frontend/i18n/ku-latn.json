@@ -1,18 +1,32 @@
 {
 	"@metadata": {
 		"authors": [
+			"Bikarhêner",
 			"George Animal",
 			"Ghybu"
 		]
 	},
+	"loginOnCommons": "Têkeve Wîkîmedya Commonsê",
 	"logout": "Derkeve",
 	"help": "Alîkarî",
+	"forkOnGitHub": "Li ser Github-ê alî me bike",
+	"JavascriptRequired": "Ji bo bikaranîna vê amûrê JavaScript hewce ye!",
+	"abort": "Derbar",
 	"remove": "Jê bibe",
+	"restart": "Ji nû ve dest pê bike",
 	"next": "Pêşve",
 	"loading": "Tê barkirin...",
 	"confirm": "Pesend bike",
+	"errorDisconnect": "Girêdana li rajekarê têk çû. Ji kerema xwe rûpelê nû bike an problemekê rapor bike li ser GitHubê.",
+	"errorTooLarge": "Dosye pir mezin e ji bo rasterast hilbarkirinê! Dibe ku tu {{#a}}hilbarkirinekê ji aliyê rajekarê ve bixwazî{{/a}}.",
+	"addTask": "Wezîfeyê tevlî bike...",
+	"yourTasks": "Wezîfeyên te:",
+	"createServerSide": "Bilêta hilbarkirina rajekar-aliyî bi yekcarî çêke (tê pêşniyarkirin)",
+	"taskDone": "Wezîfeya te pêk hat. Tu dikarî hilbarkirinên xwe ji {{#a}}{{/a}} peyda bikî.",
 	"cancel": "Betal bike",
 	"back": "Paşve",
 	"subtitles": "binnivîs",
-	"uploading": "Tê barkirin..."
+	"uploading": "Tê barkirin...",
+	"note": "Not:",
+	"importantnote": "Nota girîng:"
 }
