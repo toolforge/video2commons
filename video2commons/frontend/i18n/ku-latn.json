@@ -25,8 +25,20 @@
 	"taskDone": "Wezîfeya te pêk hat. Tu dikarî hilbarkirinên xwe ji {{#a}}{{/a}} peyda bikî.",
 	"cancel": "Betal bike",
 	"back": "Paşve",
+	"keep": "Pê bigire",
+	"filetarget": "Navê desyeya hedef",
+	"transcoding": "Formata zivirandina kodê",
+	"filedescription": "Rûpela danasîna pelê",
+	"filename": "Navê dosyeyê",
+	"video": "vîdeo",
+	"audio": "deng",
 	"subtitles": "binnivîs",
+	"keepvideo": "Vîdeoyê muhafeze bike",
+	"keepaudio": "Dengê muhafeze bike",
+	"importsubtitles": "Binnivîsan têxe",
+	"uploadFile": "An dosyeyekê hilbar bike...",
 	"uploading": "Tê barkirin...",
 	"note": "Not:",
-	"importantnote": "Nota girîng:"
+	"importantnote": "Nota girîng:",
+	"notesplaylists": "Lîsteya lêdanê wê bi awayekî rast neyê xebitandin. Hin malper (wekî Youku û Comedy Central) vîdeoyên pir-parçeyî bi kar tînin, û lewma bi awayekî rast nayên xebitandin."
 }
