@@ -3,7 +3,8 @@
 		"authors": [
 			"Bikarhêner",
 			"George Animal",
-			"Ghybu"
+			"Ghybu",
+			"Guherto"
 		]
 	},
 	"loginOnCommons": "Têkeve Wîkîmedya Commonsê",
@@ -40,5 +41,7 @@
 	"uploading": "Tê barkirin...",
 	"note": "Not:",
 	"importantnote": "Nota girîng:",
-	"notesplaylists": "Lîsteya lêdanê wê bi awayekî rast neyê xebitandin. Hin malper (wekî Youku û Comedy Central) vîdeoyên pir-parçeyî bi kar tînin, û lewma bi awayekî rast nayên xebitandin."
+	"notesplaylists": "Lîsteya lêdanê wê bi awayekî rast neyê xebitandin. Hin malper (wekî Youku û Comedy Central) vîdeoyên pir-parçeyî bi kar tînin, û lewma bi awayekî rast nayên xebitandin.",
+	"notesuncheck": "Ger vîdyo an parçeya dengî daxilî medyayê nîn be, ji kerema xwe nîşankên li ser qutîkên kontrolê yên eleqedar rakin; wekî din ger format serbest be jî dibe ku zivirandin têk biçe.",
+	"notessubtitles": "Ger \"Binnivîsan têxe\" nîşankirî be, wê binnivîs bên têxistin, ji xeynî yên otomatîk-çêkirî."
 }
