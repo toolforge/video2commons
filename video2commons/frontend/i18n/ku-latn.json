@@ -43,5 +43,8 @@
 	"importantnote": "Nota girîng:",
 	"notesplaylists": "Lîsteya lêdanê wê bi awayekî rast neyê xebitandin. Hin malper (wekî Youku û Comedy Central) vîdeoyên pir-parçeyî bi kar tînin, û lewma bi awayekî rast nayên xebitandin.",
 	"notesuncheck": "Ger vîdyo an parçeya dengî daxilî medyayê nîn be, ji kerema xwe nîşankên li ser qutîkên kontrolê yên eleqedar rakin; wekî din ger format serbest be jî dibe ku zivirandin têk biçe.",
-	"notessubtitles": "Ger \"Binnivîsan têxe\" nîşankirî be, wê binnivîs bên têxistin, ji xeynî yên otomatîk-çêkirî."
+	"notessubtitles": "Ger \"Binnivîsan têxe\" nîşankirî be, wê binnivîs bên têxistin, ji xeynî yên otomatîk-çêkirî.",
+	"noteslicensing": "Tenê naverokên {{#a}}#fl|bi serbestî lîsanskirî{{/a}} an {{#a}}#pd|bi domaîna giştî{{/a}} hilbar bike. Ji bo {{#a}}#fu|bi adilî bikaranîn{{/a}}ê (fair use) destûr nîne li ser Wîkîmedya Kommonsê.",
+	"extensionmsg": "Pêveka dosyeyê ya li jor mîhengkirî tenê û tenê ger vîdeo bi formateke ne-azad yê ku kodveguhastinê hewce dike be tê bikaranîn. Vîdeoyên bi formata azad wê pêvekên xwe muhafeze bikin.",
+	"confirmmsg": "Ji kerema xwe wezîfeyê tesdîq bike an pêlî \"Vegere\"yê bike ji bo guherandina parametreyan. Bi pêlkirina \"Tesdîq bike\"yê, wê wezîfe were qebûlkirin û tetbîqkirin. Ji ber sînordarkirinên teknîkî, wezîfeyeke şandî bi rehetî betal nabe."
 }
