@@ -1,7 +1,8 @@
 {
 	"@metadata": {
 		"authors": [
-			"Armeniki"
+			"Armeniki",
+			"Azniv Stepanian"
 		]
 	},
 	"logout": "Դուրս գալ",
@@ -9,7 +10,7 @@
 	"forkOnGitHub": "Բովանդակէ՛ ինծ GitHub-ի վրայ:",
 	"JavascriptRequired": "JavaScript-ը պէտք է այս գործիքը գործածելու համար:",
 	"abort": "Վիժիլ",
-	"remove": "Հանել",
+	"remove": "Հեռացնել",
 	"restart": "Վերասկսիլ",
 	"next": "Յաջորդ",
 	"loading": "Բեռնաւորութիւն",
