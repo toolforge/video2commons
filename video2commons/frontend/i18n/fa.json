@@ -1,6 +1,7 @@
 {
 	"@metadata": {
 		"authors": [
+			"Darafsh",
 			"Dejavu",
 			"FarsiNevis",
 			"Huji",
@@ -11,6 +12,7 @@
 	"loginOnCommons": "ورود به ویکی‌انبار",
 	"logout": "خروج از سامانه",
 	"help": "راهنما",
+	"forkOnGitHub": "Fork me on GitHub",
 	"JavascriptRequired": "برای استفاده از این ابزار جاوا اسکریپت نیاز دارید!",
 	"abort": "لغو",
 	"remove": "حذف",
