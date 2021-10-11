@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # -*- coding: UTF-8 -*-
 #
 # Copyright (C) 2011-2015 Krinkle
@@ -28,8 +28,8 @@ import re
 import json
 
 if not len(sys.argv) > 1 or '/messages' not in sys.argv[1]:
-    print ("usage: python " + sys.argv[0] + " <dir>\n\n"
-           "  <dir>  The path to mediawiki/languages/messages\n")
+    print(("usage: python " + sys.argv[0] + " <dir>\n\n"
+           "  <dir>  The path to mediawiki/languages/messages\n"))
     sys.exit(1)
 
 msgDir = sys.argv[1]

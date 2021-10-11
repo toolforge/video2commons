@@ -22,7 +22,7 @@ Wrapper around pywikibot when the file can be uploaded automatically.
 If not, NeedServerSideUpload with url of file is thrown
 """
 
-from __future__ import absolute_import
+
 
 import os
 import shutil
@@ -53,7 +53,7 @@ def upload(
                 filename, wikifilename, sourceurl, filedesc, username,
                 size, statuscallback, errorcallback
             )
-        except pywikibot.data.api.APIError, e:
+        except pywikibot.data.api.APIError as e:
             if 'stash' in e.code or e.code == 'backend-fail-internal':
                 upload_ss(
                     filename, wikifilename, http_host, filedesc,
@@ -81,7 +81,7 @@ def upload_pwb(
     if page.exists():
         errorcallback('File already exists. Please choose another name.')
 
-    comment = u'Imported media from ' + sourceurl
+    comment = 'Imported media from ' + sourceurl
     chunked = (16 * (1 << 20)) if size >= 100000000 else 0
 
     statuscallback('Uploading...', -1)

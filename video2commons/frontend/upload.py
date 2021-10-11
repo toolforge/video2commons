@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # -*- coding: UTF-8 -*-
 #
 # Copyright (C) 2015-2016 Zhuyifei1999
@@ -17,7 +17,7 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>
 #
 
-from __future__ import absolute_import
+
 
 import os
 import re

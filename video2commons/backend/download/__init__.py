@@ -17,10 +17,10 @@
 
 """Wrapper around youtube-dl."""
 
-from __future__ import absolute_import
+
 
 import os
-from urlparse import urlparse
+from urllib.parse import urlparse
 
 from celery.utils.log import get_logger
 import youtube_dl
@@ -46,7 +46,7 @@ def download(
     outputdir = os.path.abspath(outputdir)
     statuscallback = statuscallback or (lambda text, percent: None)
     errorcallback = errorcallback or (lambda text: None)
-    outtmpl = outputdir + u'/dl.%(ext)s'
+    outtmpl = outputdir + '/dl.%(ext)s'
 
     params = {
         'format': formats,

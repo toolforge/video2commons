@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # -*- coding: UTF-8 -*-
 #
 # Adapted from: http://flask.pocoo.org/snippets/75/ under Public Domain

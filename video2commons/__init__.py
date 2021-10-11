@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # -*- coding: UTF-8 -*-
 #
 # Copyright (C) 2016 Zhuyifei1999
@@ -19,7 +19,7 @@
 
 """videocommons package."""
 
-from __future__ import absolute_import
+
 
 from video2commons import config
 from video2commons import exceptions
