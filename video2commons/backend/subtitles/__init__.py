@@ -17,7 +17,7 @@
 
 """Convert and upload subtitles."""
 
-from __future__ import absolute_import
+
 
 import subprocess
 import pywikibot
@@ -42,7 +42,7 @@ def subtitles(
         ffprobe_path='/usr/bin/ffprobe'
     )
 
-    for langcode, filename in subtitles.items():
+    for langcode, filename in list(subtitles.items()):
         try:
             lang = langcodes.get(langcode)
             langcode = str(lang).lower()
@@ -51,9 +51,9 @@ def subtitles(
             langname = langdesc['language']
             del langdesc['language']
             if langdesc:
-                langname += u' (%s)' % ', '.join(langdesc.values())
+                langname += ' (%s)' % ', '.join(list(langdesc.values()))
 
-            statuscallback(u'Loading subtitle in ' + langname, int(percent))
+            statuscallback('Loading subtitle in ' + langname, int(percent))
             subtitletext = ''
 
             info = c.probe(filename)
@@ -94,13 +94,13 @@ def subtitles(
             site = pywikibot.Site('commons', 'commons', user=username)
             page = pywikibot.Page(
                 site,
-                u'TimedText:' + wikifilename.decode('utf-8') +
-                u'.' + langcode.lower() + u'.srt'
+                'TimedText:' + wikifilename.decode('utf-8') +
+                '.' + langcode.lower() + '.srt'
             )
             page.text = subtitletext
             if not page.exists():
                 page.save(
-                    summary=u'Import ' + langname + u' subtitles for ' +
+                    summary='Import ' + langname + ' subtitles for ' +
                     '[[:File:' + wikifilename.decode('utf-8') + ']]',
                     minor=False
                 )

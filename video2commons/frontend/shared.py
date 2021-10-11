@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # -*- coding: UTF-8 -*-
 #
 # Copyright (C) 2015-2016 Zhuyifei1999
@@ -19,7 +19,7 @@
 
 """video2commons web shared."""
 
-from __future__ import absolute_import
+
 
 import json
 from uuid import uuid4

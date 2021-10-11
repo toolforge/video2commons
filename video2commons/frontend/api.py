@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # -*- coding: UTF-8 -*-
 #
 # Copyright (C) 2015-2016 Zhuyifei1999
@@ -19,7 +19,7 @@
 
 """video2commons web API."""
 
-from __future__ import absolute_import
+
 
 import json
 import traceback
@@ -75,7 +75,7 @@ def format_exception(e):
     try:
         desc = str(e)
     except UnicodeError:
-        desc = u'%s' % e
+        desc = '%s' % e
 
     try:
         desc = str(desc.encode('utf-8'))
@@ -131,7 +131,7 @@ def status():
     for id in ids:
         values.append(_status(id))
 
-    values = filter(None, values)
+    values = [_f for _f in values if _f]
     rooms = [t['id'] for t in values] + [key]
     return jsonify(
         values=values,
