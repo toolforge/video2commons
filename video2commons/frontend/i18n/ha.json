@@ -1,0 +1,22 @@
+{
+	"@metadata": {
+		"authors": [
+			"Em-em"
+		]
+	},
+	"loginOnCommons": "Shiga ta kan Wikimedia Commons",
+	"logout": "Fita",
+	"help": "Taimako",
+	"forkOnGitHub": "Zargo ni a GitHub",
+	"JavascriptRequired": "JavaScript ana bukatar shi dan amfani da wannan tool din!",
+	"abort": "Anhana",
+	"remove": "Cire",
+	"restart": "Sake farawa",
+	"next": "Nagaba",
+	"loading": "Shigarwa...",
+	"confirm": "Tabbatar",
+	"errorDisconnect": "alakar zuwa masaukin ajiyar ya yanke. Hakuri ku sake zubin wannan shafi ko kai korafi a GitHub.",
+	"errorTooLarge": "Fayil din yayi girma sosai a daura shi kai tsaye! zaku so ku {{#a}}nema sashen bangare na masaukin dauriyar{{/a}}.",
+	"addTask": "Kara aiki...",
+	"yourTasks": "Ayyukan ku:"
+}
