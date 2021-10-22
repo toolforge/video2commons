@@ -29,7 +29,8 @@ from redis import Redis
 
 from video2commons.config import redis_pw, redis_host
 
-redisconnection = Redis(host=redis_host, db=3, password=redis_pw)
+redisconnection = Redis(host=redis_host, db=3, password=redis_pw,
+                        decode_responses=True)
 
 
 def check_banned():
