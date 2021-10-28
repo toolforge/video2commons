@@ -26,9 +26,9 @@ package { [
 package { [
     'ffmpeg',
     'ffmpeg2theora',
-    'gstreamer0.10-plugins-good',
-    'gstreamer0.10-plugins-ugly',
-    'gstreamer0.10-plugins-bad',
+    'gstreamer1.0-plugins-good',
+    'gstreamer1.0-plugins-ugly',
+    'gstreamer1.0-plugins-bad',
 ]:
     ensure => latest,
 }
@@ -115,7 +115,7 @@ file { '/srv/v2c/config.json':
     notify  => Service['v2ccelery'],
 }
 
-package { 'libmysqlclient-dev': # wanted by some pip packages
+package { 'default-libmysqlclient-dev': # wanted by some pip packages
     ensure => present,
 }
 
@@ -126,7 +126,7 @@ exec { 'pip-install-requirements':
         Exec['git-clone-v2c'],
         Package['python-dev'],
         Package['build-essential'],
-        Package['libmysqlclient-dev'],
+        Package['default-libmysqlclient-dev'],
     ],
     before  => Service['v2ccelery'],
 }
