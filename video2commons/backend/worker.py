@@ -79,7 +79,7 @@ def main(
 
     # Generate temporary directory for task
     for i in range(10):  # 10 tries
-        id = os.urandom(8).encode('hex')
+        id = os.urandom(8).hex()
         outputdir = '/srv/v2c/output/' + id
         if not os.path.isdir(outputdir):
             os.mkdir(outputdir)
