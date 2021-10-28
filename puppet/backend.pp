@@ -34,8 +34,8 @@ package { [
 }
 
 exec { 'install-pip':
-    command => '/usr/bin/easy_install pip',
-    creates => '/usr/local/bin/pip',
+    command => '/usr/bin/curl https://bootstrap.pypa.io/get-pip.py| python3',
+    creates => '/usr/local/bin/pip3',
     require => Package['python-setuptools'],
 }
 
@@ -120,7 +120,7 @@ package { 'libmysqlclient-dev': # wanted by some pip packages
 }
 
 exec { 'pip-install-requirements':
-    command => '/usr/local/bin/pip install -Ur /srv/v2c/requirements.txt',
+    command => '/usr/local/bin/pip3 install -Ur /srv/v2c/requirements.txt',
     require => [
         Exec['install-pip'],
         Exec['git-clone-v2c'],
