@@ -147,7 +147,7 @@ def _desc(url, ie_key, title, info):
     desc_orig = desc = (info.get('description') or '').strip() or title
     desc = escape_wikitext(desc)
     if len(desc_orig) > 100:
-        lang = guess_language.guessLanguage(desc_orig)
+        lang = guess_language.guess_language(desc_orig)
         if lang != 'UNKNOWN':
             desc = '{{' + lang + '|1=' + desc + '}}'
     return desc
