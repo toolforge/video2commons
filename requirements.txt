@@ -1,6 +1,6 @@
 youtube-dl
 flask
-guess-language
+guess_language-spirit
 celery[redis]
 hiredis
 langcodes-py2
