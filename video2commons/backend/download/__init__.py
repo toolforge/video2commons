@@ -24,7 +24,7 @@ from urllib.parse import urlparse
 
 from celery.utils.log import get_logger
 import youtube_dl
-from youtube_dl.utils import std_headers
+from youtube_dl.utils import std_headers, DownloadError
 
 from video2commons.exceptions import TaskError
 
@@ -103,6 +103,14 @@ def download(
         # Not using provided ie_key because of the existance of extractors that
         # targets another extractor, such as TwitterIE.
         info = dl.extract_info(url, download=True, ie_key=None)
+    except DownloadError:
+        params['cachedir'] = False
+        statuscallback('Download failed.'
+                       ' creating YoutubeDL instance without local cache', -1)
+        dl = youtube_dl.YoutubeDL(params)
+        dl.add_progress_hook(progresshook)
+        info = dl.extract_info(url, download=True, ie_key=None)
+
     finally:
         std_headers['User-Agent'] = old_ua
 
