@@ -2,7 +2,8 @@
 	"@metadata": {
 		"authors": [
 			"Pyscowicz",
-			"Silvonen"
+			"Silvonen",
+			"Veikk0.ma"
 		]
 	},
 	"loginOnCommons": "Kirjaudu Wikimedia Commonsiin",
@@ -16,6 +17,7 @@
 	"next": "Seuraava",
 	"loading": "Ladataan...",
 	"confirm": "Vahvista",
+	"errorDisconnect": "Yhteys palvelimeen katkesi. Lataa sivu uudelleen tai tee vikaraportti GitHubissa.",
 	"errorTooLarge": "Tiedosto on liian suuri suoraan ladattavaksi! Voit halutessasi {{#a}} pyytää palvelinsisäistä latausta{{/a}}.",
 	"addTask": "Lisää tehtävä...",
 	"yourTasks": "Tehtäväsi:",
