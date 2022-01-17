@@ -1,0 +1,19 @@
+{
+	"@metadata": {
+		"authors": [
+			"JSantos",
+			"Joao Xavier"
+		]
+	},
+	"loginOnCommons": "Enirar che ''Wikimedia Commons''",
+	"loading": "Karganta...",
+	"confirm": "Konfirmez",
+	"errorDisconnect": "Konekto kun la servero faliis. Voluntez rinovigar la pagino, o dokumentigez ca problemo en GitHub.",
+	"createServerSide": "Krear etiketo por sendar a servero-komputero (konsilebla)",
+	"cancel": "Nuligar",
+	"back": "Retroirar",
+	"filename": "Nomo dil arkivo",
+	"video": "video",
+	"uploading": "Karganta...",
+	"note": "Notoː"
+}
