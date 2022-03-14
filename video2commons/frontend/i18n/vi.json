@@ -3,6 +3,7 @@
 		"authors": [
 			"Keo010122",
 			"Leducthn",
+			"Minh Nguyen",
 			"Nghiemtrongdai VN"
 		]
 	},
@@ -12,7 +13,7 @@
 	"forkOnGitHub": "Truy cập mã nguồn trên GitHub",
 	"JavascriptRequired": "Công cụ này cần có JavaScript thì mới hoạt động được!",
 	"abort": "Gián đoạn",
-	"remove": "Xoá",
+	"remove": "Xóa",
 	"restart": "Khởi động lại",
 	"next": "Tiếp theo",
 	"loading": "Đang tải…",
@@ -44,5 +45,5 @@
 	"notessubtitles": "Khi chọn 'Nhập phụ đề', phụ đề (trừ các phụ đề tự động do máy tạo) sẽ được nhập vào.",
 	"noteslicensing": "Chỉ tải lên nội dung {{#a}}#fl|được cấp phép tự do{{/a}} hoặc {{#a}}#pd|phạm vi công cộng{{/a}}. {{#a}}#fu|Sử dụng hợp lý{{/a}} không được phép trên Wikimedia Commons.",
 	"extensionmsg": "Định dạng tập tin đặt ở trên sẽ chỉ được sử dụng khi video không phải là một định dạng tự do. Các video như thế sẽ được chuyển đổi sang định dạng tự do trên. Các video có định dạng tự do giữ nguyên định dạng ấy.",
-	"confirmmsg": "Xin hãy xác nhận công việc hoặc bấm 'Trở về' để điều chỉnh thông số nếu cần. Khi nhấn 'Xác nhận', công việc sẽ được gửi và sẽ được thực thi. Vì hạn chế kĩ thuật, một công việc khi đã gửi thì khó mà huỷ giữa chừng được."
+	"confirmmsg": "Xin hãy xác nhận công việc hoặc bấm “Trở về” để điều chỉnh thông số nếu cần. Khi nhấn “Xác nhận”, công việc sẽ được gửi và sẽ được thực thi. Vì hạn chế kỹ thuật, một công việc khi đã gửi thì khó mà hủy giữa chừng được."
 }
