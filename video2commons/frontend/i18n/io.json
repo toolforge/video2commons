@@ -6,6 +6,7 @@
 		]
 	},
 	"loginOnCommons": "Enirar che ''Wikimedia Commons''",
+	"next": "Sequanta",
 	"loading": "Karganta...",
 	"confirm": "Konfirmez",
 	"errorDisconnect": "Konekto kun la servero faliis. Voluntez rinovigar la pagino, o dokumentigez ca problemo en GitHub.",
