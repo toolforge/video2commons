@@ -2,7 +2,8 @@
 	"@metadata": {
 		"authors": [
 			"Fulup",
-			"Gwenn-Ael"
+			"Gwenn-Ael",
+			"Huñvreüs"
 		]
 	},
 	"loginOnCommons": "Kevreañ ouzh Wikimedia Commons",
@@ -17,7 +18,7 @@
 	"loading": "O kargañ...",
 	"confirm": "Kadarnaat",
 	"errorDisconnect": "N'eus ket bet gall kevreañ ouzh ar servijer. Freskaat ar bajenn en-dro pe kas keloù diwar-benn ar gudenn e GitHub.",
-	"errorTooLarge": "Re vras eo ar restr evit bezañ enporzhiet war-eeun ! Gallout a rit {{#a}}goulenn ma vo sevenet an enporzhiañ gant ar servijer{{/a}}.",
+	"errorTooLarge": "Re vras eo ar restr evit bezañ enporzhiet war-eeun ! Gallout a rit {{#a}}goulenn ma vo sevenet ar pellgas gant ar servijer{{/a}}.",
 	"addTask": "Ouzhpennañ un trevell...",
 	"yourTasks": "Ho trevelloù:",
 	"createServerSide": "Krouiñ un tiked enporzhiañ dre ar servijer en ur wech (erbedet)",
