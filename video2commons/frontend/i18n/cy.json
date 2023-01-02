@@ -1,6 +1,7 @@
 {
 	"@metadata": {
 		"authors": [
+			"Afalau",
 			"Robin Owain"
 		]
 	},
@@ -12,7 +13,7 @@
 	"abort": "Gadael",
 	"remove": "Diddymu",
 	"restart": "Ailgychwyn",
-	"next": "Nesa",
+	"next": "Nesaf",
 	"loading": "Llwytho",
 	"confirm": "Cadarnhau",
 	"errorDisconnect": "Mae'r cysylltiad i'r gweinyddwr wedi methu. Adfywiwch y dudalen hon neu cyhoeddwch y broblem ar GitHub.",
