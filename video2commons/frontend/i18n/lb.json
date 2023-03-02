@@ -1,10 +1,11 @@
 {
 	"@metadata": {
 		"authors": [
-			"Robby"
+			"Robby",
+			"Volvox"
 		]
 	},
-	"loginOnCommons": "Aloggen op Wikimedia Commons",
+	"loginOnCommons": "Op Wikimedia Commons aloggen",
 	"logout": "Ausloggen",
 	"help": "Hëllef",
 	"JavascriptRequired": "JavaSCript gëtt fir dësen Tool gebraucht!",
@@ -26,7 +27,7 @@
 	"filedescription": "Beschreiwungssäit vum Fichier",
 	"filename": "Numm vum Fichier",
 	"video": "Video",
-	"audio": "audio",
+	"audio": "Audio",
 	"subtitles": "Ënnertitelen",
 	"keepvideo": "Video halen",
 	"keepaudio": "Audio halen",
