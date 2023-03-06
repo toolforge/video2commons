@@ -2,6 +2,7 @@
 	"@metadata": {
 		"authors": [
 			"Afalau",
+			"JonesT143",
 			"Robin Owain"
 		]
 	},
@@ -14,7 +15,7 @@
 	"remove": "Dileu",
 	"restart": "Ailgychwyn",
 	"next": "Nesaf",
-	"loading": "Llwytho",
+	"loading": "Wrthi'n llwytho...",
 	"confirm": "Cadarnhau",
 	"errorDisconnect": "Mae'r cysylltiad i'r gweinyddwr wedi methu. Adfywiwch y dudalen hon neu cyhoeddwch y broblem ar GitHub.",
 	"addTask": "Ychwanegwch dasgau...",
