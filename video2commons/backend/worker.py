@@ -158,7 +158,7 @@ def main(
         # json serializer cannot properly serialize an exception
         # without losing data, so we change the exception into a dict.
         return {'type': 'ssu', 'hashsum': e.hashsum, 'url': e.url}
-    except pywikibot.Error:  # T124922 workaround
+    except pywikibot.exceptions.Error:
         exc_info = sys.exc_info()
         raise TaskError(
             (
