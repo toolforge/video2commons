@@ -100,7 +100,7 @@ def upload_pwb(
             raise
 
     statuscallback('Upload success!', 100)
-    return page.title(withNamespace=False), page.full_url()
+    return page.title(with_ns=False), page.full_url()
 
 
 def upload_ss(
