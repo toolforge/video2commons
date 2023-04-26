@@ -68,7 +68,7 @@ def download(
         'fragment_retries': 10,
         'prefer_ffmpeg': True,  # avconv do not have srt encoder
         'prefer_free_formats': True,
-        'logger': get_logger('celery.task.v2c.main.yt_dlp)
+        'logger': get_logger('celery.task.v2c.main.yt_dlp')
     }
 
     old_ua = std_headers['User-Agent']
