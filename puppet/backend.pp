@@ -39,7 +39,7 @@ exec { 'install-pip':
     require => Package['python-setuptools'],
 }
 
-package { 'youtube-dl':
+package { 'yt_dlp':
     ensure   => latest,
     provider => 'pip',
     require  => Exec['install-pip'],
