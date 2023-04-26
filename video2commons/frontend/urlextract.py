@@ -25,7 +25,7 @@ import re
 import emoji
 import guess_language
 import pywikibot
-import youtube_dl
+import yt_dlp
 
 SITE = pywikibot.Site()
 
@@ -88,7 +88,7 @@ def do_extract_url(url):
         'cachedir': '/tmp/',
         'noplaylist': True,  # not implemented in video2commons
     }
-    info = youtube_dl.YoutubeDL(params).extract_info(url, download=False)
+    info = yt_dlp.YoutubeDL(params).extract_info(url, download=False)
 
     assert 'formats' in info or info.get('direct'), \
         'Your url cannot be processed correctly'
@@ -135,7 +135,7 @@ def _source(url, ie_key, title, info):
         if ':' in info['extractor']:
             # Try to find the anme of the 'owner' of this sub-ie
             ie_tmp = info['extractor'][:info['extractor'].index(':')]
-            for ie in youtube_dl.gen_extractors():
+            for ie in yt_dlp.gen_extractors():
                 if ie.IE_NAME == ie_tmp:
                     ie_key = ie.ie_key()
                     break

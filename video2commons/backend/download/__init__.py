@@ -23,8 +23,8 @@ import os
 from urllib.parse import urlparse
 
 from celery.utils.log import get_logger
-import youtube_dl
-from youtube_dl.utils import std_headers, DownloadError
+import yt_dlp
+from yt_dlp.utils import std_headers, DownloadError
 
 from video2commons.exceptions import TaskError
 
@@ -68,7 +68,7 @@ def download(
         'fragment_retries': 10,
         'prefer_ffmpeg': True,  # avconv do not have srt encoder
         'prefer_free_formats': True,
-        'logger': get_logger('celery.task.v2c.main.youtube-dl')
+        'logger': get_logger('celery.task.v2c.main.yt_dlp)
     }
 
     old_ua = std_headers['User-Agent']
@@ -95,7 +95,7 @@ def download(
             errorcallback('Error raised by YoutubeDL')
 
     statuscallback('Creating YoutubeDL instance', -1)
-    dl = youtube_dl.YoutubeDL(params)
+    dl = yt_dlp.YoutubeDL(params)
     dl.add_progress_hook(progresshook)
 
     statuscallback('Preprocessing...', -1)
@@ -107,7 +107,7 @@ def download(
         params['cachedir'] = False
         statuscallback('Download failed.'
                        ' creating YoutubeDL instance without local cache', -1)
-        dl = youtube_dl.YoutubeDL(params)
+        dl = yt_dlp.YoutubeDL(params)
         dl.add_progress_hook(progresshook)
         info = dl.extract_info(url, download=True, ie_key=None)
 

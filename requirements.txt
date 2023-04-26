@@ -1,4 +1,4 @@
-youtube-dl
+yt-dlp
 flask
 guess_language-spirit
 celery[redis]
