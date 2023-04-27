@@ -43,7 +43,7 @@
 	"notesplaylists": "Predvajalni seznami se ne bodo pravilno obdelali. Nekatera spletna mesta (npr. Youku in Comedy Central) uporabljajo večdelne videoposnetke, ki jih interpretirajo kot predvajalne sezname, in ti se prav tako ne bodo pravilno obdelali.",
 	"notesuncheck": "Če predstavnostna datoteka ne vključuje video- ali avdioposnetkov, počistite ustrezna potrditvena polja; v nasprotnem primeru pretvorba ne bo uspela, tudi če je oblika brezplačna.",
 	"notessubtitles": "Če je označena možnost »Uvozi podnapise«, bodo uvoženi vsi podnapisi razen samodejno ustvarjenih.",
-	"noteslicensing": "Nalagajte samo vsebino pod {{#a}}#fl|prosto licenco{{/a}} ali v {{#a}}#pd|javni lasti{{/a}}. {{#a}}#fu|Poštena uporaba{{/a}} v Wikimedijini zbirki ni dovoljena.",
+	"noteslicensing": "Nalagajte samo vsebino pod {{#a}}#fl|prosto licenco{{/a}} ali v {{#a}}#pd|javni domeni{{/a}}. {{#a}}#fu|Poštena uporaba{{/a}} v Wikimedijini zbirki ni dovoljena.",
 	"extensionmsg": "Zgoraj določena pripona datoteke se uporabi le in samo, če je videoposnetek v neprostem formatu in zahteva prekodiranje. Videoposnetki v prostih formatih bodo ohranili svojo pripono.",
 	"confirmmsg": "Prosimo, potrdite nanlogo ali kliknite »Nazaj«, da spremenite parametre. Ob kliku »Potrdi« se bo naloga predložila in izvedla. Zaradi tehničnih omejitev naloge, ko je predložena, ni mogoče zlahka preklicati."
 }
