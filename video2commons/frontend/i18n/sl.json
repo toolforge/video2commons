@@ -17,7 +17,7 @@
 	"next": "Naprej",
 	"loading": "Nalaganje ...",
 	"confirm": "Potrdi",
-	"errorDisconnect": "Povezava s strežnikom ni uspela. Osvežite stran ali poročajte o težavi na GitHubu.",
+	"errorDisconnect": "Povezava s strežnikom ni uspela. Osvežite stran ali sporočite težavo v GitHubu.",
 	"errorTooLarge": "Datoteka je prevelika za neposredno nalaganje! Zaprosite lahko za {{#a}}strežniško nalaganje{{/a}}.",
 	"addTask": "Dodaj nalogo ...",
 	"yourTasks": "Vaše naloge:",
