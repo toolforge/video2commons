@@ -93,7 +93,7 @@ def upload_pwb(
                            asynchronous=bool(chunked),
                            ):
             errorcallback('Upload failed!')
-    except pywikibot.data.api.APIError:
+    except pywikibot.exceptions.APIError:
         # recheck
         site.loadpageinfo(page)
         if not page.exists():
