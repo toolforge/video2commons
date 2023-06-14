@@ -82,7 +82,7 @@ def main(
         id = os.urandom(8).hex()
         outputdir = '/srv/v2c/output/' + id
         if not os.path.isdir(outputdir):
-            os.mkdir(outputdir)
+            os.makedirs(outputdir)
             break
     else:
         raise TaskError("Too many retries to generate a task id")
