@@ -10,7 +10,7 @@ import json as _json
 try:
     tooldir = _os.path.dirname(_os.path.realpath(__file__))
     if tooldir.startswith("/workspace"):  # we are in buildpack
-        tooldir = _os.expandvars("$TOOL_DATA_DIR/video2commons")
+        tooldir = _os.path.expandvars("$TOOL_DATA_DIR/video2commons")
     with open(tooldir + '/../config.json', 'r') as _f:
         _data = _json.load(_f)
 except IOError as _e:
