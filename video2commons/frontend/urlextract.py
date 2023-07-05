@@ -50,7 +50,7 @@ FILEDESC_TEMPLATE = """
 {{LicenseReview}}
 
 [[Category:Uploaded with video2commons]]
-[[Category:Videos of %(yyyy)s|%(mm_dd)s]]
+[[Category:Videos of %(yyyy)s|%(mmdd)s]]
 """
 
 
@@ -105,7 +105,7 @@ def do_extract_url(url):
         'uploader': _uploader(url, ie_key, title, info),
         'license': _license(url, ie_key, title, info),
         'yyyy': _date(url, ie_key, title, info)[1],
-        'mm_dd': _date(url, ie_key, title, info)[2]
+        'mmdd': _date(url, ie_key, title, info)[2]
     }
 
     return {
@@ -119,14 +119,14 @@ def do_extract_url(url):
 def _date(url, ie_key, title, info):
     date = (info.get('upload_date') or '').strip()
     yyyy = ''
-    mm_dd = ''
+    mmdd = ''
 
     if re.match(r'^[0-9]{8}$', date):
         yyyy = date[0:4]
-        mm_dd = f"{date[4:6]}-{date[6:8]}"
+        mmdd = date[4:8]
         date = '%s-%s-%s' % (date[0:4], date[4:6], date[6:8])
 
-    return date, yyyy, mm_dd
+    return date, yyyy, mmdd
 
 
 def _source(url, ie_key, title, info):
