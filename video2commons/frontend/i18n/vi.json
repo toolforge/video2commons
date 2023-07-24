@@ -1,6 +1,7 @@
 {
 	"@metadata": {
 		"authors": [
+			"Caden99",
 			"Flyplanevn27",
 			"Keo010122",
 			"Leducthn",
@@ -28,6 +29,7 @@
 	"cancel": "Hủy bỏ",
 	"back": "Trở lại",
 	"keep": "Giữ",
+	"filetarget": "Tên của trang đổi hướng tới",
 	"transcoding": "Định dạng chuyển tải",
 	"filedescription": "Miêu tả tập tin",
 	"filename": "Tên tập tin",
