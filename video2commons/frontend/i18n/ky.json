@@ -1,0 +1,33 @@
+{
+	"@metadata": {
+		"authors": [
+			"Bosogo"
+		]
+	},
+	"loginOnCommons": "Викиказынага кирүү",
+	"logout": "Чыгуу",
+	"help": "Жардам",
+	"JavascriptRequired": "Бул куралды колдонуу үчүн JavaScript талап кылынат !",
+	"abort": "Жокко чыгаруу",
+	"remove": "Алып салуу",
+	"next": "Кийинки",
+	"loading": "Жүктөлүүдө...",
+	"confirm": "Ырастоо",
+	"addTask": "Тапшырма кошуу...",
+	"yourTasks": "Тапшырмаларыңыз:",
+	"cancel": "Жокко чыгаруу",
+	"back": "Артка",
+	"keep": "Сактоо",
+	"filedescription": "Файлдын сыпаттамасы",
+	"filename": "Файлдын аталышы",
+	"video": "видео",
+	"audio": "аудио",
+	"subtitles": "субтитрлер",
+	"keepvideo": "Видеону сактоо",
+	"keepaudio": "Аудиону сактоо",
+	"importsubtitles": "Субтитрлерди импорттоо",
+	"uploadFile": "Же файл жүктөп бериңиз...",
+	"uploading": "Жүктөлүүдө...",
+	"note": "Эскертме:",
+	"importantnote": "Маанилүү эскертме:"
+}
