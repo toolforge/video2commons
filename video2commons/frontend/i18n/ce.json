@@ -1,0 +1,34 @@
+{
+	"@metadata": {
+		"authors": [
+			"Умар"
+		]
+	},
+	"loginOnCommons": "Викилармин чугӀо",
+	"logout": "Аравала(йала)",
+	"help": "ГӀо",
+	"forkOnGitHub": "GitHub тӀехь форк йе",
+	"JavascriptRequired": "Оьцу гӀирсаца болхбан оьшу JavaScript!",
+	"abort": "Йухайаккха",
+	"remove": "ДӀайаккха",
+	"next": "РогӀера",
+	"loading": "Чуйолуш…",
+	"confirm": "Бакъде",
+	"addTask": "ТӀетоха Ӏалашо...",
+	"yourTasks": "Хьан Ӏалашонаш:",
+	"cancel": "Йухайаккхар",
+	"back": "Йуха",
+	"keep": "Ӏалашйе",
+	"filetarget": "Хьажочу файлан цӀе",
+	"filedescription": "Файлах лаьцна",
+	"filename": "Файлан цӀе",
+	"video": "видео",
+	"audio": "Аудио",
+	"subtitles": "субтитраш",
+	"keepvideo": "Ӏалашйе видео",
+	"keepaudio": "Ӏалашйе аудио",
+	"importsubtitles": "Субтитрийн импорт",
+	"uploadFile": "Йа чуйаккха файл…",
+	"uploading": "Чуйолуш йу...",
+	"note": "Билгалдаккхар:"
+}
