@@ -1,7 +1,8 @@
 {
 	"@metadata": {
 		"authors": [
-			"Xuacu"
+			"Xuacu",
+			"YoaR"
 		]
 	},
 	"loginOnCommons": "Aniciar sesión en Wikimedia Commons",
@@ -21,7 +22,7 @@
 	"yourTasks": "Les tos xeres:",
 	"createServerSide": "Crear un ticket pa xubíes del llau del sirvidor (encamentáu)",
 	"taskDone": "Xera completada. Puedes atopar la carga en {{#a}}{{/a}}.",
-	"cancel": "Encaboxar",
+	"cancel": "Zarrar",
 	"back": "Anterior",
 	"keep": "Caltener",
 	"filetarget": "Nome del ficheru de destín",
