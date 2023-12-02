@@ -55,7 +55,7 @@ def download(
         'writeinfojson': True,
         'writesubtitles': subtitles,
         'writeautomaticsub': False,
-        'allsubtitles': True,
+        'subtitleslangs': ['all', '-live_chat'],
         'subtitlesformat': 'srt/ass/vtt/best',
         'cachedir': '/tmp/',
         'noplaylist': True,  # not implemented in video2commons
