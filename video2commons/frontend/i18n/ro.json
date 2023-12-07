@@ -1,6 +1,7 @@
 {
 	"@metadata": {
 		"authors": [
+			"Strainu",
 			"WebSourceContentRO"
 		]
 	},
@@ -20,7 +21,7 @@
 	"addTask": "Adăugați sarcină...",
 	"yourTasks": "Sarcina dvs.:",
 	"createServerSide": "Creați un ticket de încărcare pentru server în același timp (recomandat)",
-	"taskDone": "Sarcina ta sa terminat. Puteți găsi încărcarea dvs. la {{#a}}{{/a}}",
+	"taskDone": "Sarcina dumneavoastră s-a terminat. Puteți găsi încărcarea dvs. la {{#a}}{{/a}}",
 	"cancel": "Revocare",
 	"back": "Înapoi",
 	"keep": "Păstrează",
