@@ -132,7 +132,7 @@ def upload_ss(
             '[[Category:Uploaded with video2commons]]',
             '[[Category:Uploaded with video2commons/Server-side uploads]]'
         )
-        filedescfile.write(filedesc.encode('utf-8'))
+        filedescfile.write(filedesc)
 
     fileurl = 'https://' + http_host + '/' + wikifilename
 
