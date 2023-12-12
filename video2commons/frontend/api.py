@@ -82,6 +82,7 @@ def format_exception(e):
     except UnicodeError:
         desc = str(desc.decode('utf-8').encode('utf-8'))
 
+    desc = desc[:7000]
     if isinstance(e, AssertionError):
         return desc
     else:
