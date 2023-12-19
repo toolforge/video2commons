@@ -45,7 +45,8 @@ from video2commons.frontend.i18n import (
 )
 
 consumer_token = ConsumerToken(consumer_key, consumer_secret)
-handshaker = Handshaker(api_url, consumer_token)
+user_agent = "video2commons/0.0 <https://github.com/toolforge/video2commons>"
+handshaker = Handshaker(api_url, consumer_token, user_agent=user_agent)
 
 app = Flask(__name__)
 

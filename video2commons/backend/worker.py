@@ -38,7 +38,7 @@ from video2commons.config import (
     redis_pw, redis_host, consumer_key, consumer_secret, http_host
 )
 
-redisurl = 'redis://:' + redis_pw + '@' + redis_host + ':6379/'
+redisurl = f'redis://:{redis_pw}@{redis_host}:6379/'
 app = celery.Celery(
     'v2cbackend',
     backend=redisurl + '1',
@@ -104,7 +104,7 @@ def main(
         )
 
     def errorcallback(text):
-        raise TaskError(text)
+        raise TaskError(text[:6000])
 
     try:
         statuscallback('Downloading...', -1)
@@ -163,7 +163,7 @@ def main(
         raise TaskError(
             (
                 'pywikibot.Error: %s: %s' % (
-                    exc_info[0].__name__, exc_info[1]
+                    exc_info[0].__name__, str(exc_info[1])[:6000]
                 )
             ).encode('utf-8')).with_traceback(exc_info[2])
     else:

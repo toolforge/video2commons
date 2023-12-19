@@ -1,0 +1,30 @@
+[tool.poetry]
+name = "video2commons"
+version = "0.1.0"
+description = "Transfer video and audio from external sites to Commons. Video2commons is available for everyone (uses OAuth) via Wikimedia Commons."
+authors = ["zhuyifei1999"]
+license = "GPL-3.0"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = ">3.8,<4.0.0"
+yt-dlp = "^2023.11.16"
+flask = "^3.0.0"
+guess-language-spirit = "^0.5.3"
+celery = {extras = ["redis"], version = "^5.3.6"}
+hiredis = "^2.3.2"
+langcodes-py2 = "^1.2.0"
+chardet = "^5.2.0"
+mwoauth = "^0.4.0"
+emoji = "^2.9.0"
+pywikibot = "^8.6.0"
+mwparserfromhell = ">=0.5.0"
+videoconverter = {git = "https://github.com/senko/python-video-converter"}
+
+
+[tool.poetry.group.dev.dependencies]
+ipykernel = "^6.27.1"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

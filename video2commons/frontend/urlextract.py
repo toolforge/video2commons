@@ -227,8 +227,7 @@ def escape_wikitext(wikitext):
 sanitationRules = [
     # issue #101
     {
-        'pattern': emoji.get_emoji_regexp(),
-        'replace': ''
+        "function": emoji.replace_emoji
     },
     # "signature"
     {
@@ -305,7 +304,10 @@ sanitationRules = [
 def sanitize(filename):
     """Sanitize a filename for uploading."""
     for rule in sanitationRules:
-        filename = rule['pattern'].sub(rule['replace'], filename)
+        if rule.get("pattern"):
+            filename = rule['pattern'].sub(rule['replace'], filename)
+        if rule.get("function"):
+            filename = rule.get("function")(filename)
 
     return filename
 
