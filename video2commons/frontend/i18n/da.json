@@ -1,13 +1,14 @@
 {
 	"@metadata": {
 		"authors": [
-			"Joedalton"
+			"Joedalton",
+			"Peterleth"
 		]
 	},
-	"loginOnCommons": "Logind på Wikimedia Commons",
+	"loginOnCommons": "Log ind på Wikimedia Commons",
 	"logout": "Log af",
 	"help": "Hjælp",
-	"forkOnGitHub": "Forgren mig på GitHub",
+	"forkOnGitHub": "Fork mig på GitHub",
 	"JavascriptRequired": "JavaScript er krævet for at bruge dette værktøj!",
 	"abort": "Afbryd",
 	"remove": "Fjern",
