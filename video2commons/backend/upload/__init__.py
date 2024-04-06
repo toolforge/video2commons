@@ -91,6 +91,7 @@ def upload_pwb(
                            text=filedesc,
                            chunk_size=chunked,
                            asynchronous=bool(chunked),
+                           ignore_warnings=['exists-normalized'],
                            ):
             errorcallback('Upload failed!')
     except pywikibot.exceptions.APIError:
