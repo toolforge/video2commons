@@ -334,7 +334,7 @@ def validate_filedesc():
 def get_backend_keys(format):
     """Get the youtube-dl download format key."""
 
-    MAXSIZE = 4 << 30
+    MAXSIZE = 5 << 30
     COMBINED_FMT = (
         'bestvideo[ext={{vext}}][filesize<{max}]+'
         'bestaudio[acodec={{acodec}}]/'
