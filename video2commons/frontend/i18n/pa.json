@@ -1,6 +1,7 @@
 {
 	"@metadata": {
 		"authors": [
+			"Cabal",
 			"Tow"
 		]
 	},
@@ -9,7 +10,7 @@
 	"remove": "ਹਟਾਓ",
 	"restart": "ਮੁੜ ਚਾਲੂ ਕਰੋ",
 	"next": "ਅੱਗੇ",
-	"loading": "ਲੋਡ ਕੀਤਾ ਜਾ ਰਿਹਾ ਹੈ...",
+	"loading": "ਲੱਦ ਰਿਹਾ ਹੈ...",
 	"confirm": "ਪੁਸ਼ਟੀ",
 	"addTask": "ਕੰਮ ਜੋੜੋ...",
 	"yourTasks": "ਤੁਹਾਡੇ ਕੰਮ:",
