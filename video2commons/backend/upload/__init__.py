@@ -47,7 +47,7 @@ def upload(
             filename, wikifilename, sourceurl, filedesc, username,
             size, statuscallback, errorcallback
         )
-    elif size < (4 << 30):
+    elif size < (5 << 30):
         try:
             return upload_pwb(
                 filename, wikifilename, sourceurl, filedesc, username,
@@ -63,7 +63,7 @@ def upload(
                 raise
     else:
         errorcallback(
-            'Sorry, but files larger than 4GB can not be uploaded even ' +
+            'Sorry, but files larger than 5GB can not be uploaded even ' +
             'with server-side uploading. This task may need manual ' +
             ' intervention.'
         )
