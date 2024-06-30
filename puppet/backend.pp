@@ -62,7 +62,7 @@ exec { 'check-srv-mounted':
 }
 
 exec { 'git-clone-v2c':
-    command => '/usr/bin/git clone https://github.com/Toollabs/video2commons.git /srv/v2c',
+    command => '/usr/bin/git clone https://github.com/toolforge/video2commons.git /srv/v2c',
     creates => '/srv/v2c/.git/config',
     require => [
         Package['git'],
