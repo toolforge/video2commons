@@ -1,7 +1,7 @@
 $consumer_key = 'REDACTED'
 $consumer_secret = 'REDACTED'
 $redis_pw = 'REDACTED'
-$redis_host = 'video-redis.video.eqiad.wmflabs'
+$redis_host = 'video-redis-buster.video.eqiad1.wikimedia.cloud'
 $http_host = 'v2c.wmflabs.org'
 
 ## BASIC INSTANCE SETUP
