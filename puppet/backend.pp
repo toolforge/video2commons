@@ -218,11 +218,12 @@ $logrotate_config = '# THIS FILE IS MANAGED BY MANUAL PUPPET
 /var/log/v2ccelery/*.log {
     daily
     missingok
-    rotate 52
+    rotate 30
     compress
     delaycompress
     notifempty
     copytruncate
+    su tools.video2commons tools.video2commons
 }
 '
 
