@@ -5,7 +5,7 @@
   },
   "devDependencies": {
     "esm": "^3.2.25",
-    "gulp": "^4.0.2",
+    "gulp": "^5.0.0",
     "gulp-concat": ">=2.6.1",
     "gulp-htmlmin": ">3.0.0",
     "gulp-nunjucks": ">3.1.1",
