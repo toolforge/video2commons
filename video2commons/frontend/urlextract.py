@@ -223,11 +223,19 @@ def escape_wikitext(wikitext):
     return pattern.sub(lambda m: rep[re.escape(m.group(0))], wikitext)
 
 
+def get_emoji_regexp():
+    # Sort emoji by length to make sure multi-character emojis are
+    # matched first
+    emojis = sorted(emoji.EMOJI_DATA, key=len, reverse=True)
+    pattern = u'(' + u'|'.join(re.escape(u) for u in emojis) + u')'
+    return re.compile(pattern)
+
+
 # Source: mediawiki.Title.js@9df363d
 sanitationRules = [
     # issue #101
     {
-        'pattern': emoji.get_emoji_regexp(),
+        'pattern': get_emoji_regexp(),
         'replace': ''
     },
     # "signature"
