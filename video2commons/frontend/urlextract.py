@@ -332,7 +332,7 @@ def do_validate_filename(filename):
 
 def do_validate_filedesc(filedesc):
     """Validate filename for invalid characters/parts."""
-    parse = SITE._simple_request(
+    parse = SITE.simple_request(
         action='parse',
         text=filedesc,
         prop='externallinks'
@@ -341,7 +341,7 @@ def do_validate_filedesc(filedesc):
     externallinks = parse.get('parse', {}).get('externallinks', [])
 
     if externallinks:
-        spam = SITE._simple_request(
+        spam = SITE.simple_request(
             action='spamblacklist',
             url=externallinks
         ).submit()
