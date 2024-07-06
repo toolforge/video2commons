@@ -1,0 +1,9 @@
+yt-dlp
+celery[redis]
+langcodes
+chardet
+mwoauth>=0.2.4,!=0.3.1
+#pywikibot
+mwparserfromhell>=0.5.2
+PythonVideoConverter
+https://github.com/wikimedia/pywikibot-core/zipball/master#egg=pywikibot

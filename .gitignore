@@ -2,3 +2,6 @@
 /config.json
 *.pyc
 /node_modules/
+ssu
+throttle.ctrl
+venv

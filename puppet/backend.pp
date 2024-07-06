@@ -8,10 +8,14 @@ $http_host = 'v2c.wmflabs.org'
 
 # include role::labs::lvm::srv
 
+include cron
+
 package { [
     'build-essential',
-    'python-dev',
-    'python-setuptools',
+    'python3-dev',
+    'python3-full',
+    'python3-pip',
+    'python3-setuptools',
 ]:
     ensure => present,
 }
@@ -25,24 +29,12 @@ package { [
 
 package { [
     'ffmpeg',
-    'ffmpeg2theora',
+#    'ffmpeg2theora',
     'gstreamer1.0-plugins-good',
     'gstreamer1.0-plugins-ugly',
     'gstreamer1.0-plugins-bad',
 ]:
     ensure => latest,
-}
-
-exec { 'install-pip':
-    command => '/usr/bin/curl https://bootstrap.pypa.io/get-pip.py| python3',
-    creates => '/usr/local/bin/pip3',
-    require => Package['python-setuptools'],
-}
-
-package { 'yt_dlp':
-    ensure   => latest,
-    provider => 'pip',
-    require  => Exec['install-pip'],
 }
 
 package { 'nginx':
@@ -67,6 +59,15 @@ exec { 'git-clone-v2c':
     require => [
         Package['git'],
         Exec['check-srv-mounted'],
+    ],
+}
+
+exec { 'create-venv':
+    command => '/usr/bin/python3 -m venv /srv/v2c/venv',
+    creates => '/srv/v2c/venv',
+    require => [
+        Exec['git-clone-v2c'],
+        Package['python3-full'],
     ],
 }
 
@@ -119,12 +120,20 @@ package { 'default-libmysqlclient-dev': # wanted by some pip packages
     ensure => present,
 }
 
-exec { 'pip-install-requirements':
-    command => '/usr/local/bin/pip3 install -Ur /srv/v2c/requirements.txt',
+exec { 'git-pull-v2c':
+    command => '/usr/bin/git --git-dir=/srv/v2c/.git --work-tree=/srv/v2c pull',
     require => [
-        Exec['install-pip'],
         Exec['git-clone-v2c'],
-        Package['python-dev'],
+    ],
+    before  => Service['v2ccelery'],
+}
+
+exec { 'pip-install-requirements':
+    command => '/srv/v2c/venv/bin/pip3 install -Ur /srv/v2c/video2commons/backend/requirements.txt',
+    require => [
+        Exec['git-pull-v2c'],
+        Package['python3-dev'],
+        Package['python3-pip'],
         Package['build-essential'],
         Package['default-libmysqlclient-dev'],
     ],
@@ -167,10 +176,10 @@ file { '/lib/systemd/system/v2ccelery.service':
 
 $celeryd_config = '# THIS FILE IS MANAGED BY MANUAL PUPPET
 CELERYD_NODES=2
-CELERY_BIN="/usr/local/bin/celery"
+CELERY_BIN="/srv/v2c/venv/bin/celery"
 CELERY_APP="video2commons.backend.worker"
 CELERYD_MULTI="multi"
-CELERYD_LOG_FILE="/var/log/v2ccelery/%N.log"
+CELERYD_LOG_FILE="/var/log/v2ccelery/%N%I.log"
 CELERYD_PID_FILE="/var/run/v2ccelery/%N.pid"
 CELERYD_USER="tools.video2commons"
 CELERYD_GROUP="tools.video2commons"
@@ -185,7 +194,6 @@ file { '/etc/default/v2ccelery':
         File['/var/log/v2ccelery'],
     ],
     notify  => Service['v2ccelery'],
-
 }
 
 $tmpfiles_config = '# THIS FILE IS MANAGED BY MANUAL PUPPET
@@ -265,7 +273,7 @@ file { '/etc/nginx/sites-enabled/video2commons':
     notify  => Service['nginx'],
 }
 
-cron { 'v2ccleanup':
+cron::job { 'v2ccleanup':
     command => '/bin/sh /srv/v2c/video2commons/backend/cleanup.sh',
     user    => 'tools.video2commons',
     minute  => '48',

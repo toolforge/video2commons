@@ -1,0 +1,8 @@
+flask
+guess_language-spirit
+mwoauth
+mwoauth>=0.2.4,!=0.3.1
+emoji
+#pywikibot
+mwparserfromhell>=0.5.2
+https://github.com/wikimedia/pywikibot-core/zipball/master#egg=pywikibot
