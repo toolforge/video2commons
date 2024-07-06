@@ -85,7 +85,9 @@ class RedisSessionInterface(SessionInterface):
         domain = self.get_cookie_domain(app)
         path = url_for('main', _external=False)
 
-        if not session:
+        if session is None:
+            return
+        elif not session:
             self.redis.delete(self.prefix + session.sid)
             if session.modified:
                 response.delete_cookie(app.session_cookie_name,
