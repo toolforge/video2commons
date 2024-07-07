@@ -371,7 +371,7 @@
 				} ).join( '\n' );
 			return 'https://phabricator.wikimedia.org/maniphest/task/edit/form/1/?' + $.param( {
 				title: 'Server side upload for ' + username,
-				projects: 'Wikimedia-Site-requests,commons,video2commons,server-side-upload-request',
+				projects: 'video2commons,server-side-upload-request',
 				description: ssuTemplate.replace( '{{{ urls }}}', urls ).replace( '{{{ checksums }}}', checksums )
 			} );
 		},
