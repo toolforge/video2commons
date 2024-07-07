@@ -26,7 +26,10 @@ class TaskError(Exception):
     def __init__(self, desc):
         """Initialize."""
         super(TaskError, self).__init__(desc)
+        self.desc = desc
 
+    def __reduce__(self):
+        return TaskError, (self.desc)
 
 class NeedServerSideUpload(TaskError):
     """A server server-side is needed."""

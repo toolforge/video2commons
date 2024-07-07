@@ -223,11 +223,19 @@ def escape_wikitext(wikitext):
     return pattern.sub(lambda m: rep[re.escape(m.group(0))], wikitext)
 
 
+def get_emoji_regexp():
+    # Sort emoji by length to make sure multi-character emojis are
+    # matched first
+    emojis = sorted(emoji.EMOJI_DATA, key=len, reverse=True)
+    pattern = u'(' + u'|'.join(re.escape(u) for u in emojis) + u')'
+    return re.compile(pattern)
+
+
 # Source: mediawiki.Title.js@9df363d
 sanitationRules = [
     # issue #101
     {
-        'pattern': emoji.get_emoji_regexp(),
+        'pattern': get_emoji_regexp(),
         'replace': ''
     },
     # "signature"
@@ -324,7 +332,7 @@ def do_validate_filename(filename):
 
 def do_validate_filedesc(filedesc):
     """Validate filename for invalid characters/parts."""
-    parse = SITE._simple_request(
+    parse = SITE.simple_request(
         action='parse',
         text=filedesc,
         prop='externallinks'
@@ -333,7 +341,7 @@ def do_validate_filedesc(filedesc):
     externallinks = parse.get('parse', {}).get('externallinks', [])
 
     if externallinks:
-        spam = SITE._simple_request(
+        spam = SITE.simple_request(
             action='spamblacklist',
             url=externallinks
         ).submit()
