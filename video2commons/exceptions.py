@@ -25,11 +25,13 @@ class TaskError(Exception):
 
     def __init__(self, desc):
         """Initialize."""
-        super(TaskError, self).__init__(desc)
+        super().__init__(desc)
         self.desc = desc
 
     def __reduce__(self):
-        return TaskError, (self.desc)
+        """Helper for pickling."""
+        return (self.__class__, (self.desc,))
+
 
 class NeedServerSideUpload(TaskError):
     """A server server-side is needed."""
@@ -37,7 +39,7 @@ class NeedServerSideUpload(TaskError):
     # So no one should handle it
     def __init__(self, url, hashsum=None):
         """Initialize."""
-        super(NeedServerSideUpload, self).__init__(url)
+        super().__init__(url)
         self.url = url
         self.hashsum = hashsum
 
@@ -47,4 +49,5 @@ class TaskAbort(TaskError):
 
     def __init__(self):
         """Initialize."""
-        super(TaskAbort, self).__init__('The task has been aborted.')
+        super().__init__('The task has been aborted.')
+
