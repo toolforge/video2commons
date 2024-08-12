@@ -1,12 +1,14 @@
 {
 	"@metadata": {
 		"authors": [
+			"Nemoralis",
 			"Şeyx Şamil"
 		]
 	},
 	"loginOnCommons": "Vikipediya Commons-a daxil ol",
 	"logout": "Çıxış",
 	"help": "Kömək",
+	"forkOnGitHub": "Githubda dəstəklə",
 	"JavascriptRequired": "Bu alətdən istifadə etmək üçün JavaScript tələb olunur!",
 	"abort": "İmtina",
 	"remove": "Sil",
@@ -14,6 +16,12 @@
 	"next": "Növbəti",
 	"loading": "Yüklənir…",
 	"confirm": "Təsdiq et",
+	"errorDisconnect": "Server ilə əlaqə uğursuz oldu. Lütfən, bu səhifəni yeniləyin və ya problemi GitHub-da bildirin.",
+	"errorTooLarge": "Fayl birbaşa yükləmək üçün çox böyükdür! Siz {{#a}}server tərəfdən yükləmə sorğusu göndərmək{{/a}} istəyə bilərsiniz.",
+	"addTask": "Tapşırıq əlavə edin...",
+	"yourTasks": "Tapşırıqlarınız:",
+	"createServerSide": "Server tərəfində yükləmə sorğusu yaradın (tövsiyə olunur)",
+	"taskDone": "Tapşırıq tamamlandı. Yükləmənizi {{#a}}{{/a}} ünvanında tapa bilərsiniz.",
 	"cancel": "Ləğv et",
 	"back": "Geri",
 	"keep": "Saxla",
