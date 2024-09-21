@@ -200,6 +200,15 @@ def _license(url, ie_key, title, info):
             'cc0':
                 '{{cc-zero}}',
         }.get(info.get('license'), default)
+    elif ie_key == 'PeerTube':
+        return {
+            'Attribution':
+                '{{cc-by-4.0%s}}' % uploader_param,
+            'Attribution - Share Alike':
+                '{{cc-by-sa-4.0%s}}' % uploader_param,
+            'Public Domain Dedication':
+                '{{cc-zero}}',
+        }.get(info.get('license'), default)
 
     return default
 
