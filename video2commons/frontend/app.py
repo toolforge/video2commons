@@ -228,8 +228,8 @@ def logincallback():
             'autoconfirmed' in identify['rights']):
         return render_template(
             'error.min.html',
-            message='Due to ongoing abuse, you must be autoconfirmed '
-                    'with at least 50 edits on Commons to use this tool.',
+            message='You must be an autoconfirmed Commons user '
+                    'with at least 50 edits to use this tool.',
             loggedin=True
         )
 
