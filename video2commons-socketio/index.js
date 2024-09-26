@@ -3,11 +3,12 @@
 
 /* ===== Globals Declaration ===== */
 
-var express = require( 'express' ),
+var axios = require( 'axios' ),
+	express = require( 'express' ),
 	http = require( 'http' ),
 	io = require( 'socket.io' )(),
 	redis = require( 'redis' ),
-	request = require( 'request' );
+	tough = require('tough-cookie');
 
 var port = parseInt( process.env.PORT, 10 ),
 	config = require( '../config.json' );
@@ -49,26 +50,30 @@ io.on( 'connection', function ( socket ) {
 					return;
 				}
 
-				var j = request.jar();
-				var cookie = request.cookie( 'v2c-session=' + sessionkey );
-				var url = 'https:' + config.webfrontend_uri + 'api/status';
-				j.setCookie( cookie, url );
-				request( {
+				var j = new tough.CookieJar();
+				var domain = 'https:' + config.webfrontend_uri
+				var cookie = new tough.Cookie({ key: 'v2c-session', value: sessionkey, domain: domain });
+				var url = domain + 'api/status';
+				j.setCookieSync( cookie.toString(), url );
+				axios( {
 					url: url,
 					jar: j,
+					withCredentials: true,
 					headers: {
 						'User-Agent': 'video2commons-socketio'
 						// 'X-V2C-Session-Bypass': config.session_key
 					}
-				}, function ( error, response, body ) {
-					if ( error || response.statusCode !== 200 ) {
+				} ).then ( response => {
+					if ( response.status !== 200 ) {
 						socket.disconnect();
 						return;
 					}
-					var status = JSON.parse( body );
+					var status = response.data;
 
 					socket.emit( 'status', status );
 					socket.join( status.rooms );
+				} ).catch ( error => {
+					socket.disconnect();
 				} );
 			} );
 		} );

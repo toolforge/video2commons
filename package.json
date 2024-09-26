@@ -13,9 +13,10 @@
     "gulp-uglify": ">2.1.2"
   },
   "dependencies": {
+    "axios": "^1.7.7",
     "express": "^4.21.0",
     "redis": "^4.6.12",
-    "request": "^2.88.2",
-    "socket.io": "^4.7.2"
+    "socket.io": "^4.7.2",
+    "tough-cookie": "^5.0.0"
   }
 }
