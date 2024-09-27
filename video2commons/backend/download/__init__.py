@@ -95,21 +95,21 @@ def download(
             errorcallback('Error raised by YoutubeDL')
 
     statuscallback('Creating YoutubeDL instance', -1)
-    dl = yt_dlp.YoutubeDL(params)
-    dl.add_progress_hook(progresshook)
 
-    statuscallback('Preprocessing...', -1)
     try:
         # Not using provided ie_key because of the existance of extractors that
         # targets another extractor, such as TwitterIE.
-        info = dl.extract_info(url, download=True, ie_key=None)
+        with yt_dlp.YoutubeDL(params) as dl:
+            dl.add_progress_hook(progresshook)
+            statuscallback('Preprocessing...', -1)
+            info = dl.extract_info(url, download=True, ie_key=None)
     except DownloadError:
         params['cachedir'] = False
         statuscallback('Download failed.'
                        ' creating YoutubeDL instance without local cache', -1)
-        dl = yt_dlp.YoutubeDL(params)
-        dl.add_progress_hook(progresshook)
-        info = dl.extract_info(url, download=True, ie_key=None)
+        with yt_dlp.YoutubeDL(params) as dl:
+            dl.add_progress_hook(progresshook)
+            info = dl.extract_info(url, download=True, ie_key=None)
 
     finally:
         std_headers['User-Agent'] = old_ua

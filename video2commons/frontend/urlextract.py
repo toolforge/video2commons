@@ -88,7 +88,8 @@ def do_extract_url(url):
         'cachedir': '/tmp/',
         'noplaylist': True,  # not implemented in video2commons
     }
-    info = yt_dlp.YoutubeDL(params).extract_info(url, download=False)
+    with yt_dlp.YoutubeDL(params) as dl:
+        info = dl.extract_info(url, download=False)
 
     assert 'formats' in info or info.get('direct'), \
         'Your url cannot be processed correctly'
