@@ -336,14 +336,14 @@ def get_backend_keys(format):
 
     MAXSIZE = 5 << 30
     COMBINED_FMT = (
-        'bestvideo[ext={{vext}}][filesize<{max}]+'
+        'bestvideo[filesize<{max}]+'
         'bestaudio[acodec={{acodec}}]/'
-        'bestvideo[ext={{vext}}][filesize<{max}]+'
+        'bestvideo[filesize<{max}]+'
         'bestaudio[ext={{aext}}]/'
         'bestvideo+bestaudio/best'
     ).format(max=MAXSIZE)
     VIDEO_FMT = (
-        'bestvideo[ext={{vext}}][filesize<{max}]/'
+        'bestvideo[filesize<{max}]/'
         'bestvideo/best'
     ).format(max=MAXSIZE)
     AUDIO_FMT = (
