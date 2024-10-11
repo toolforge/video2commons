@@ -13,9 +13,9 @@
     "gulp-uglify": ">2.1.2"
   },
   "dependencies": {
-    "express": "^4.21.0",
+    "express": "^4.21.1",
     "redis": "^4.6.12",
     "request": "^2.88.2",
-    "socket.io": "^4.7.2"
+    "socket.io": "^4.8.0"
   }
 }
