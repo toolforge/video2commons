@@ -1,6 +1,7 @@
 {
 	"@metadata": {
 		"authors": [
+			"Băng Tỏa",
 			"Caden99",
 			"Doraemonluonbentoi",
 			"Flyplanevn27",
@@ -30,6 +31,7 @@
 	"cancel": "Hủy bỏ",
 	"back": "Trở lại",
 	"keep": "Giữ",
+	"filetarget": "Tên mới",
 	"transcoding": "Định dạng chuyển tải",
 	"filedescription": "Miêu tả tập tin",
 	"filename": "Tên tập tin",
