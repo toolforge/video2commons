@@ -1,5 +1,6 @@
 *~
 /config.json
+*.bak
 *.pyc
 /node_modules/
 ssu
@@ -17,12 +18,16 @@ venv
 .localpython
 .mysql_history
 .nano
+.node_repl_history
+.npm
 .python_history
 .selected_editor
 .ssh
 .subversion
 .toolskube
+.vim
 .viminfo
+.vimrc
 cleanup.err
 cleanup.out
 cleanuploads.err
@@ -34,6 +39,7 @@ converter-src
 crontab.bak
 get-pip.py
 libtorrent-code
+node.log
 public_html
 python-video-converter
 pywikibot
@@ -42,3 +48,4 @@ secretfiletest
 service.manifest
 uwsgi.log
 uwsgi.log.*
+www/js/
