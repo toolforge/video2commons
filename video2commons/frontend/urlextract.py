@@ -20,6 +20,7 @@
 """video2commons url extracter."""
 
 from collections import OrderedDict
+from video2commons.config import youtube_user, youtube_pass
 import re
 
 import emoji
@@ -88,6 +89,11 @@ def do_extract_url(url):
         'cachedir': '/tmp/',
         'noplaylist': True,  # not implemented in video2commons
     }
+    if url.contains('.youtube.com/'):
+        params.update({
+            'username': youtube_user,
+            'password': youtube_pass
+            })
     with yt_dlp.YoutubeDL(params) as dl:
         info = dl.extract_info(url, download=False)
 
