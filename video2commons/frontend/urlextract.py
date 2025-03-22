@@ -20,7 +20,7 @@
 """video2commons url extracter."""
 
 from collections import OrderedDict
-from video2commons.config import youtube_user, youtube_pass
+from video2commons.config import tooldir, youtube_user, youtube_pass
 import re
 
 import emoji
@@ -90,7 +90,10 @@ def do_extract_url(url):
         'noplaylist': True,  # not implemented in video2commons
     }
     if '.youtube.com/' in url:
+        # https://github.com/yt-dlp/yt-dlp/wiki/Extractors#exporting-youtube-cookies
+        # https://github.com/yt-dlp/yt-dlp/wiki/FAQ#how-do-i-pass-cookies-to-yt-dlp
         params.update({
+            'cookiefile': tooldir + '/../cookies.txt',
             'username': youtube_user,
             'password': youtube_pass
             })
