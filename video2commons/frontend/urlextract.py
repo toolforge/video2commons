@@ -89,7 +89,7 @@ def do_extract_url(url):
         'cachedir': '/tmp/',
         'noplaylist': True,  # not implemented in video2commons
     }
-    if url.contains('.youtube.com/'):
+    if '.youtube.com/' in url:
         params.update({
             'username': youtube_user,
             'password': youtube_pass
