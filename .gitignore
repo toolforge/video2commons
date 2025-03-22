@@ -20,8 +20,11 @@ venv
 .nano
 .node_repl_history
 .npm
+.project
+.pydevproject
 .python_history
 .selected_editor
+.settings/
 .ssh
 .subversion
 .toolskube

@@ -26,6 +26,7 @@ from celery.utils.log import get_logger
 import yt_dlp
 from yt_dlp.utils import std_headers, DownloadError
 
+from video2commons.config import youtube_user, youtube_pass
 from video2commons.exceptions import TaskError
 
 
@@ -75,6 +76,10 @@ def download(
     if ie_key == 'Youtube':
         # HACK: Get equirectangular for 360° videos (ytdl-org/youtube-dl#15267)
         std_headers['User-Agent'] = ''
+        params.update({
+            'username': youtube_user,
+            'password': youtube_pass
+            })
 
     last_percentage = [Ellipsis]
 
