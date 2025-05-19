@@ -1,20 +1,25 @@
 {
 	"@metadata": {
 		"authors": [
-			"Ahmed-Najib-Biabani-Ibrahimkhel"
+			"Ahmed-Najib-Biabani-Ibrahimkhel",
+			"شاه زمان پټان"
 		]
 	},
 	"loginOnCommons": "ويکيمېډيا خونديځ کې ورننوځئ",
 	"logout": "وتل",
 	"help": "لارښود",
 	"JavascriptRequired": "د دې اوزارونو کارولو لپاره جاواسکرېپټ ته اړتيا ده!",
+	"abort": "درول",
 	"remove": "غورځول",
 	"restart": "بياپيلول",
 	"next": "راتلونکی",
 	"loading": "رابرسېرېږي...",
 	"confirm": "تاييدول",
+	"errorDisconnect": "پالنگر سره اړيکه ناکامه شوه. مهرباني وکړئ دا مخ بياتاند کړئ يا په گيټ‌هوب کې ستونزه ثبت کړئ.",
+	"errorTooLarge": "دوتنه ډېره لويه ده چې په نېغ ډول نشي راپورته کېدای! تاسو شايد د {{#a}}پالنگر-اړخيزې راپورته کولو غوښتنه وکړئ{{/a}}.",
 	"addTask": "دنده ورگډول...",
 	"yourTasks": "ستاسې دندې:",
+	"createServerSide": "په يو ځل د پالنگر-اړخيز راپورته کولو تيکېټ جوړ کړئ (سپارښتنه شوې)",
 	"cancel": "ناگارل",
 	"back": "پر شا",
 	"keep": "ساتل",
@@ -27,6 +32,7 @@
 	"keepvideo": "ويډيو ساتل",
 	"keepaudio": "غږ ساتل",
 	"importsubtitles": "لمنليکونه راغوښتل",
+	"uploadFile": "يا دوتنه راپورته کول...",
 	"uploading": "پورته کېږي...",
 	"note": "يادښت:",
 	"importantnote": "اهم يادښت:"
