@@ -369,7 +369,7 @@
 				checksums = $.map( vals, function ( val /* , key */ ) {
 					return '| ' + val.filename + ' | ' + val.hashsum + ' |';
 				} ).join( '\n' );
-			return 'https://phabricator.wikimedia.org/maniphest/task/edit/form/1/?' + $.param( {
+			return 'https://phabricator.wikimedia.org/maniphest/task/edit/form/106/?' + $.param( {
 				title: 'Server side upload for ' + username,
 				projects: 'video2commons,server-side-upload-request',
 				description: ssuTemplate.replace( '{{{ urls }}}', urls ).replace( '{{{ checksums }}}', checksums )
