@@ -283,7 +283,7 @@ cron::job { 'v2ccleanup':
 cron::job { 'v2chealthcheck':
     command => '/bin/sh /srv/v2c/video2commons/utils/healthcheck.sh',
     user    => 'tools.video2commons',
-    minute  => '1/5',
+    minute  => '*/5',
     require => Service['v2ccelery'],
 }
 
