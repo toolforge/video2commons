@@ -348,6 +348,10 @@ class WebVideoTranscodeJob(object):
         elif 'speed' in options:
             cmd += ' -speed ' + escape_shellarg(options['speed'])
 
+        # In libvpx quality sets a deadline on how long frames can be processed.
+        if 'quality' in options:
+            cmd += ' -quality ' + escape_shellarg(options['quality'])
+
         # Output WebM
         cmd += " -f webm"
 
