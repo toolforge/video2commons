@@ -86,7 +86,7 @@ class WebVideoTranscode:
         # WebM VP9 transcode:
         'vp9.webm':
             {
-                'crf': 20,
+                'crf': 35,
                 'videoBitrate': '0',
                 'audioBitrate': '128',
                 'samplerate': '48000',
@@ -96,11 +96,13 @@ class WebVideoTranscode:
                 'videoCodec': 'vp9',
                 'audioCodec': 'opus',
                 'tileColumns': '4',
+                'speed': '2',
+                'quality': 'good',
                 'type': 'video/webm codecs="vp9, opus"',
             },
         'an.vp9.webm':
             {
-                'crf': 20,
+                'crf': 35,
                 'videoBitrate': '0',
                 'noUpscaling': 'True',
                 'twopass': 'True',
@@ -108,6 +110,8 @@ class WebVideoTranscode:
                 'videoCodec': 'vp9',
                 'noaudio': 'True',
                 'tileColumns': '4',
+                'speed': '2',
+                'quality': 'good',
                 'type': 'video/webm codecs="vp9, opus"',
             },
 
