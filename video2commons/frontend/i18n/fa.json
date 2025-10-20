@@ -7,6 +7,7 @@
 			"Ebraminio",
 			"FarsiNevis",
 			"Huji",
+			"LordProfo",
 			"Namo",
 			"Reza1615"
 		]
@@ -18,7 +19,7 @@
 	"JavascriptRequired": "برای استفاده از این ابزار جاوا اسکریپت نیاز دارید!",
 	"abort": "لغو",
 	"remove": "حذف",
-	"restart": "راه‌اندازی مجدد",
+	"restart": "راه‌اندازی دوباره",
 	"next": "بعدی",
 	"loading": "در حال بارگیری...",
 	"confirm": "تأیید",
