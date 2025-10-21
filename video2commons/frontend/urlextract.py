@@ -20,6 +20,7 @@
 """video2commons url extracter."""
 
 from collections import OrderedDict
+from video2commons.backend.encode.transcode import WebVideoTranscode
 from video2commons.config import tooldir, youtube_user, youtube_pass
 import re
 
@@ -52,6 +53,8 @@ FILEDESC_TEMPLATE = """
 
 [[Category:Uploaded with video2commons]]
 """
+
+NAMESPACE_FILE = 6
 
 # Upload filenames are limited to 228 bytes (not counting the extension).
 #
@@ -378,3 +381,16 @@ def do_validate_filedesc(filedesc):
              ', '.join(spam.get('spamblacklist', {}).get('matches', [])))
 
     return filedesc
+
+
+def do_validate_filename_unique(filename):
+    """Validate filename isn't already in use on the wiki."""
+    formats = set(WebVideoTranscode.settings.keys())
+    conflicting_names = {f"{filename}.{format}" for format in formats}
+
+    pages = SITE.allpages(prefix=filename, namespace=NAMESPACE_FILE)
+    for page in pages:
+        assert page.title(with_ns=False) not in conflicting_names, \
+            f'A filename with the same name already exists: {page.full_url()}'
+
+    return filename

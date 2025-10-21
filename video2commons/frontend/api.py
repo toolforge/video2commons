@@ -37,8 +37,8 @@ from video2commons.frontend.shared import (
     redisconnection, check_banned, generate_csrf_token, redis_publish
 )
 from video2commons.frontend.urlextract import (
-    do_extract_url, make_dummy_desc, do_validate_filename,
-    do_validate_filedesc, sanitize
+    do_extract_url, do_validate_filename_unique, make_dummy_desc,
+    do_validate_filename, do_validate_filedesc, sanitize
 )
 from video2commons.frontend.upload import (
     upload as _upload, status as _uploadstatus
@@ -328,6 +328,14 @@ def validate_filedesc():
     """Validate filename for invalid characters/parts."""
     return jsonify(
         filedesc=do_validate_filedesc(request.form['filedesc'])
+    )
+
+
+@api.route('/validatefilenameunique', methods=['POST'])
+def validate_filename_unique():
+    """Validate filename isn't already in use on the wiki."""
+    return jsonify(
+        filename=do_validate_filename_unique(request.form['filename'])
     )
 
 
