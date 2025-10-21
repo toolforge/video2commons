@@ -537,7 +537,8 @@
 				filedesc: '',
 				uploadedFile: {},
 				filenamechecked: false,
-				filedescchecked: false
+				filedescchecked: false,
+				filenameuniquechecked: false
 			};
 			$.extend( newTaskData, taskdata );
 
@@ -723,6 +724,7 @@
 							if ( !newTaskData.filename || !newTaskData.filedesc || url !== newTaskData.url ) {
 								newTaskData.filenamechecked = false;
 								newTaskData.filedescchecked = false;
+								newTaskData.filenameuniquechecked = false;
 								var uploadedFile = newTaskData.uploadedFile[ url ];
 								if ( uploadedFile ) {
 									newTaskData.url = url;
@@ -778,6 +780,26 @@
 								}, [ 'filedesc' ] )
 									.done( function () {
 										newTaskData.filedescchecked = true;
+									} );
+							} else {
+								return resolved;
+							}
+						}() ),
+						( function () {
+							var filename = $addTaskDialog.find( '#filename' ).val();
+
+							if ( !filename ) {
+								return $.Deferred()
+									.reject( 'Filename cannot be empty!' )
+									.promise();
+							}
+
+							if ( !newTaskData.filenameuniquechecked || filename !== newTaskData.filename ) {
+								return video2commons.askAPI( 'validatefilenameunique', {
+									filename: filename
+								}, [ 'filename' ] )
+									.done( function ( result ) {
+										newTaskData.filenameuniquechecked = true;
 									} );
 							} else {
 								return resolved;
