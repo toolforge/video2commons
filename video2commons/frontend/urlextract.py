@@ -53,6 +53,13 @@ FILEDESC_TEMPLATE = """
 [[Category:Uploaded with video2commons]]
 """
 
+# Upload filenames are limited to 228 bytes (not counting the extension).
+#
+# This number was chosen since the length of the longest output extension we
+# support is 12 bytes long, and 228 + 12 = 240, which is the maximum filename
+# size supported by MediaWiki for uploads.
+MAX_FILENAME_SIZE = 228
+
 
 def make_dummy_desc(filename):
     filedesc = FILEDESC_TEMPLATE % {
@@ -339,7 +346,8 @@ def sanitize(filename):
 
 def do_validate_filename(filename):
     """Validate filename for invalid characters/parts."""
-    assert len(filename) < 250, 'Your filename is too long'
+    assert len(filename.encode('utf-8')) <= MAX_FILENAME_SIZE, \
+        'Your filename is too long'
 
     for rule in sanitationRules:
         reobj = rule['pattern'].search(filename)
