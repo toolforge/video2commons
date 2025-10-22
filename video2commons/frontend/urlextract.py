@@ -347,6 +347,14 @@ def sanitize(filename):
     return filename
 
 
+def capitalize_first_letter(input_string):
+    """Capitalize the first letter of a string without affecting the rest."""
+    if not input_string:
+        return ""
+
+    return input_string[0].upper() + input_string[1:]
+
+
 def do_validate_filename(filename):
     """Validate filename for invalid characters/parts."""
     assert len(filename.encode('utf-8')) <= MAX_FILENAME_SIZE, \
@@ -386,7 +394,18 @@ def do_validate_filedesc(filedesc):
 def do_validate_filename_unique(filename):
     """Validate filename isn't already in use on the wiki."""
     formats = set(WebVideoTranscode.settings.keys())
-    conflicting_names = {f"{filename}.{format}" for format in formats}
+
+    # Capitalize the filename since all pages start with a capital letter, and
+    # we need these values to match what MediaWiki returns for our comparison
+    # to be accurate. Every letter except the first one is case-sensitive for
+    # MediaWiki page titles.
+    #
+    # The built in 'capitalize()' method isn't used since it lowers the rest of
+    # the string, which would also break the comparison.
+    conflicting_names = {
+        capitalize_first_letter(f"{filename}.{format}")
+        for format in formats
+    }
 
     pages = SITE.allpages(prefix=filename, namespace=NAMESPACE_FILE)
     for page in pages:
