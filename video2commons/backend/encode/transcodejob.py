@@ -153,7 +153,7 @@ class WebVideoTranscodeJob(object):
         # Check the codec see which encode method to call
         if 'novideo' in options or self.preserve['video']:
             status = self.ffmpeg_encode(options)
-        elif options['videoCodec'] in ['vp8', 'vp9', 'h264'] or \
+        elif options['videoCodec'] in ['vp8', 'vp9', 'h264', "av1"] or \
                 (options['videoCodec'] == 'theora'):
             # Check for twopass:
             if 'twopass' in options and options['twopass'] == 'True':
@@ -218,6 +218,8 @@ class WebVideoTranscodeJob(object):
             cmd += " -vn "
         elif self.preserve['video']:
             cmd += " -vcodec copy"
+        elif options['videoCodec'] == 'av1':
+            cmd += self.ffmpeg_add_av1_video_options(options, p)
         elif options['videoCodec'] == 'vp8' or options['videoCodec'] == 'vp9':
             cmd += self.ffmpeg_add_webm_video_options(options, p)
         elif options['videoCodec'] == 'h264':
@@ -280,6 +282,36 @@ class WebVideoTranscodeJob(object):
 
         # Output mp4
         cmd += " -f mp4"
+        return cmd
+
+    def ffmpeg_add_av1_video_options(self, options, p):
+        """
+        Add ffmpeg shell options for av1.
+
+        @param options
+        @param p
+        @return string
+        """
+        cmd = ' -threads ' + str(ffmpeg_threads)
+
+        # libsvtav1-specific constant quality
+        if 'crf' in options:
+            cmd += " -crf " + escape_shellarg(options['crf'])
+
+        if 'videoBitrate' in options:
+            if int(options['videoBitrate']) > 0:
+                cmd += " -qmin 1 -qmax 63"
+            cmd += " -b:v " + escape_shellarg(int(options['videoBitrate']) * 1000)
+
+        cmd += " -vcodec libsvtav1"
+
+        if p == 1:
+            cmd += ' -preset 12'  # Make first pass faster
+        elif 'preset' in options:
+            cmd += ' -preset ' + escape_shellarg(options['preset'])
+
+        cmd += " -f webm"
+
         return cmd
 
     def ffmpeg_add_webm_video_options(self, options, p):

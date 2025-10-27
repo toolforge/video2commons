@@ -26,9 +26,16 @@ background_priority = 19
 
 # The total amout of time a transcoding shell command can take:
 background_time_limit = 3600 * 24 * 2  # 2 days
+
 # Maximum amount of virtual memory available to transcoding processes in KB
-# 2GB avconv
-background_memory_limit = 8 * 1024 * 1024  # 8GB
+#
+# At least 12GB VIRT is needed for libsvtav1 encoding to prevent segfaults.
+# 1080p videos of any significant length and 4k video will result in VIRT
+# allocations larger than this, so some padding is needed. libsvtav1 with lots
+# of threads is very aggressive with virtual memory allocation and only uses
+# ~25-30% of what it actually allocates per worker (max ~8GB).
+background_memory_limit = 32 * 1024 * 1024  # 32GB
+
 # Maximum file size transcoding processes can create, in KB
 background_size_limit = 10 * 1024 * 1024  # 10GB
 # Number of threads to use in avconv for transcoding
