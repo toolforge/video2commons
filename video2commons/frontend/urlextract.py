@@ -359,6 +359,10 @@ def do_validate_filename(filename):
     """Validate filename for invalid characters/parts."""
     assert len(filename.encode('utf-8')) <= MAX_FILENAME_SIZE, \
         'Your filename is too long'
+    assert len(filename) == len(filename.lstrip()), \
+        'Your filename contains leading spaces'
+    assert len(filename) == len(filename.rstrip()), \
+        'Your filename contains trailing spaces'
 
     for rule in sanitationRules:
         reobj = rule['pattern'].search(filename)
