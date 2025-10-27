@@ -575,7 +575,7 @@
 						.html( nunjucksEnv.render( 'targetForm.html' ) );
 
 					$addTaskDialog.find( '#filename' )
-						.val( newTaskData.filename )
+						.val( newTaskData.filename.trim() )
 						.focus();
 					$.each( newTaskData.formats, function ( i, desc ) {
 						$addTaskDialog.find( '#format' )
@@ -745,7 +745,7 @@
 				case 'target':
 					deferred = $.when(
 						( function () {
-							var filename = $addTaskDialog.find( '#filename' ).val();
+							var filename = $addTaskDialog.find( '#filename' ).val().trim();
 							newTaskData.format = $addTaskDialog.find( '#format' ).val();
 
 							if ( !filename ) {
@@ -786,7 +786,7 @@
 							}
 						}() ),
 						( function () {
-							var filename = $addTaskDialog.find( '#filename' ).val();
+							var filename = $addTaskDialog.find( '#filename' ).val().trim();
 
 							if ( !filename ) {
 								return $.Deferred()
