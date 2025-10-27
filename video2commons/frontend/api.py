@@ -290,12 +290,12 @@ def list_formats():
     if video:
         if audio:
             formats = ['ogv (Theora/Vorbis)', 'webm (VP8/Vorbis)',
-                       'webm (VP9/Opus)']
-            prefer = 'webm (VP9/Opus)'
+                       'webm (VP9/Opus)', 'webm (AV1/Opus)']
+            prefer = 'webm (AV1/Opus)'
         else:
             formats = ['ogv (Theora)', 'webm (VP8)',
-                       'webm (VP9)']
-            prefer = 'webm (VP9)'
+                       'webm (VP9)', 'webm (AV1)']
+            prefer = 'webm (AV1)'
     else:
         if audio:
             formats = ['ogg (Vorbis)', 'opus (Opus)']
@@ -366,6 +366,8 @@ def get_backend_keys(format):
             (VIDEO_FMT.format(vcodec='vp8', vext='webm'), 'an.webm'),
         'webm (VP9)':
             (VIDEO_FMT.format(vcodec='vp9', vext='webm'), 'an.vp9.webm'),
+        'webm (AV1)':
+            (VIDEO_FMT.format(vcodec='av1', vext='webm'), 'an.av1.webm'),
         'ogg (Vorbis)':
             (AUDIO_FMT.format(acodec='vorbis', aext='ogg'), 'ogg'),
         'opus (Opus)':
@@ -382,6 +384,10 @@ def get_backend_keys(format):
             (COMBINED_FMT.format(
                 vcodec='vp9', vext='webm', acodec='opus', aext='webm'),
              'vp9.webm'),
+        'webm (AV1/Opus)':
+            (COMBINED_FMT.format(
+                vcodec='av1', vext='webm', acodec='opus', aext='webm'),
+             'av1.webm'),
     }[format]
 
 

@@ -115,6 +115,33 @@ class WebVideoTranscode:
                 'type': 'video/webm codecs="vp9, opus"',
             },
 
+        # WebM AV1 transcode:
+        #
+        # Presets: https://gitlab.com/AOMediaCodec/SVT-AV1/-/blob/master/Docs/CommonQuestions.md#what-presets-do
+        # Multipass: https://github.com/HandBrake/HandBrake/issues/4831#issuecomment-1546617210
+        'av1.webm':
+            {
+                'audioBitrate': '128',
+                'audioCodec': 'opus',
+                'crf': 30,
+                'preset': '6',
+                'samplerate': '48000',
+                'twopass': 'False', # twopass is not supported for AV1 with CRF
+                'type': 'video/webm codecs="av01, opus"',
+                'videoBitrate': '0',
+                'videoCodec': 'av1',
+            },
+        'an.av1.webm':
+            {
+                'crf': 30,
+                'noaudio': 'True',
+                'preset': '6',
+                'twopass': 'False', # twopass is not supported for AV1 with CRF
+                'type': 'video/webm codecs="av01, opus"',
+                'videoBitrate': '0',
+                'videoCodec': 'av1',
+            },
+
         # Audio profiles
         'ogg':
             {
