@@ -22,6 +22,7 @@
 
 
 import json
+import logging
 import traceback
 from urllib.parse import quote as urlquote
 from urllib.parse import urlparse, urljoin
@@ -48,6 +49,8 @@ consumer_token = ConsumerToken(consumer_key, consumer_secret)
 handshaker = Handshaker(api_url, consumer_token)
 
 app = Flask(__name__)
+
+app.logger.setLevel(logging.INFO)
 
 app.session_cookie_name = 'v2c-session'
 app.session_interface = RedisSessionInterface(redisconnection)

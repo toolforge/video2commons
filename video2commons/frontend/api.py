@@ -23,10 +23,12 @@
 
 import json
 import traceback
+import re
+
 from uuid import uuid4
 
 from flask import (
-    Blueprint, request, session, jsonify
+    Blueprint, request, session, jsonify, current_app
 )
 
 from video2commons.config import session_key
@@ -37,11 +39,18 @@ from video2commons.frontend.shared import (
     redisconnection, check_banned, generate_csrf_token, redis_publish
 )
 from video2commons.frontend.urlextract import (
-    do_extract_url, do_validate_filename_unique, make_dummy_desc,
+    do_extract_url, do_validate_filename_unique, do_validate_youtube_id, make_dummy_desc,
     do_validate_filename, do_validate_filedesc, sanitize
 )
 from video2commons.frontend.upload import (
     upload as _upload, status as _uploadstatus
+)
+
+# Adapted from: https://stackoverflow.com/a/19161373
+YOUTUBE_REGEX = (
+    r'(https?://)?(www\.)?'
+    r'(youtube|youtu|youtube-nocookie)\.(com|be)/'
+    r'(watch\?.*?(?=v=)v=|embed/|v/|.+\?v=)?([^&=%\?]{11})'
 )
 
 api = Blueprint('api', __name__)
@@ -337,6 +346,27 @@ def validate_filename_unique():
     return jsonify(
         filename=do_validate_filename_unique(request.form['filename'])
     )
+
+
+@api.route('/validateurl', methods=['POST'])
+def validate_url():
+    """Validate that a video belonging to a URL is not already on the wiki."""
+    url = request.form['url']
+
+    # Check if the URL is a YouTube URL, and if so, extract the ID and validate
+    # that it doesn't already exist on Commons.
+    yt_match = re.match(YOUTUBE_REGEX, url)
+    if yt_match:
+        try:
+            youtube_id = yt_match.group(6)
+            return jsonify(entity_url=do_validate_youtube_id(session, youtube_id))
+        except Exception as e:
+            current_app.logger.error(f'Error validating YouTube URL "{url}": {e}')
+
+            # Skip validation if errors are encountered, e.g. SPARQL is down.
+            return jsonify(entity_url=None)
+
+    return jsonify(entity_url=None)
 
 
 def get_backend_keys(format):

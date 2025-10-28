@@ -732,9 +732,21 @@
 										filename: uploadedFile.name || ''
 									}, [ 'extractor', 'filedesc', 'filename' ] );
 								} else {
-									return video2commons.askAPI( 'extracturl', {
+									// Validate the URL before extracting information.
+									return video2commons.askAPI( 'validateurl', {
 										url: url
-									}, [ 'url', 'extractor', 'filedesc', 'filename' ] );
+									}, [ 'entity_url' ] )
+										.then( function (data) {
+											if (data.entity_url) {
+												return $.Deferred()
+													.reject('This video has already been uploaded: ' + data.entity_url)
+													.promise();
+											}
+
+											return video2commons.askAPI( 'extracturl', {
+												url: url
+											}, [ 'url', 'extractor', 'filedesc', 'filename' ] );
+										} )
 								}
 							} else {
 								return resolved;
