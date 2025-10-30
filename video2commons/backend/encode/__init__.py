@@ -45,7 +45,7 @@ def encode(source, origkey, statuscallback=None, errorcallback=None):
 
     target = source + '.' + key
     job = WebVideoTranscodeJob(
-        source, target, key, preserve, statuscallback, errorcallback
+        source, target, key, preserve, statuscallback, errorcallback, info
     )
 
     return target if job.run() else None

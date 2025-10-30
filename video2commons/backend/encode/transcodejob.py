@@ -48,7 +48,7 @@ class WebVideoTranscodeJob(object):
 
     def __init__(
         self, source, target, key, preserve={},
-        statuscallback=None, errorcallback=None
+        statuscallback=None, errorcallback=None, source_info=None
     ):
         """Initialize the instance."""
         self.source = os.path.abspath(source)
@@ -59,6 +59,7 @@ class WebVideoTranscodeJob(object):
         self.statuscallback = statuscallback or (lambda text, percent: None)
         self.errorcallback = errorcallback or (lambda text: None)
         self.removeDuplicates = True
+        self.source_info = source_info
 
     def output(self, msg):
         """
@@ -213,6 +214,13 @@ class WebVideoTranscodeJob(object):
 
         if 'vpre' in options:
             cmd += ' -vpre ' + escape_shellarg(options['vpre'])
+
+        # Copy non-standard custom metadata specific to mp4 and mov files
+        container = self.source_info.format.format
+        if container == 'mov,mp4,m4a,3gp,3g2,mj2':
+            cmd += ' -movflags use_metadata_tags'
+
+        cmd += ' -map_metadata 0'
 
         if 'novideo' in options:
             cmd += " -vn "
