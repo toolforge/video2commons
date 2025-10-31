@@ -21,9 +21,12 @@
 
 from collections import OrderedDict
 from video2commons.backend.encode.transcode import WebVideoTranscode
-from video2commons.config import tooldir, youtube_user, youtube_pass
-import re
+from video2commons.config import (
+    tooldir, youtube_user, youtube_pass, consumer_key, consumer_secret
+)
+from pywikibot.data import sparql
 
+import re
 import emoji
 import guess_language
 import pywikibot
@@ -417,3 +420,32 @@ def do_validate_filename_unique(filename):
             f'A filename with the same name already exists: {page.full_url()}'
 
     return filename
+
+
+def do_validate_youtube_id(session, youtube_id):
+    """Query Commons to find an entity with a specific YouTube ID."""
+    oauth = (session['access_token_key'], session['access_token_secret'])
+    credentials = (consumer_key, consumer_secret) + tuple(oauth)
+
+    # Configure pywikibot to use the session's OAuth credentials.
+    pywikibot.config.authenticate['commons.wikimedia.org'] = credentials
+    pywikibot.config.usernames['commons']['commons'] = session['username']
+    pywikibot.Site('commons', 'commons', user=session['username']).login()
+
+    query = f"""
+        SELECT ?file WHERE {{
+            ?file wdt:P1651 "{youtube_id}".
+        }}
+        LIMIT 1
+    """
+
+    query_object = sparql.SparqlQuery(
+        endpoint="https://commons-query.wikimedia.org/sparql",
+        entity_url="https://commons.wikimedia.org/entity/",
+    )
+    data = query_object.select(query, full_data=True)
+    if data:
+        return data[0]["file"]
+
+    return None
+
