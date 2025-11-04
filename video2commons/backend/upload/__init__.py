@@ -22,14 +22,15 @@ Wrapper around pywikibot when the file can be uploaded automatically.
 If not, NeedServerSideUpload with url of file is thrown
 """
 
-
-
+import time
 import os
 import shutil
 import pywikibot
 import hashlib
 
-from video2commons.exceptions import NeedServerSideUpload
+from video2commons.exceptions import NeedServerSideUpload, TaskError
+
+MAX_RETRIES = 5
 
 
 def upload(
@@ -83,22 +84,47 @@ def upload_pwb(
 
     comment = 'Imported media from ' + sourceurl
     chunked = (16 * (1 << 20)) if size >= 100000000 else 0
+    remaining_tries = MAX_RETRIES
 
-    statuscallback('Uploading...', -1)
-    try:
-        if not site.upload(page, source_filename=filename,
-                           comment=comment,
-                           text=filedesc,
-                           chunk_size=chunked,
-                           asynchronous=bool(chunked),
-                           ignore_warnings=['exists-normalized'],
-                           ):
-            errorcallback('Upload failed!')
-    except pywikibot.exceptions.APIError:
-        # recheck
-        site.loadpageinfo(page)
-        if not page.exists():
-            raise
+    while True:
+        if remaining_tries == MAX_RETRIES:
+            statuscallback('Uploading...', -1)
+        elif remaining_tries > 1:
+            statuscallback(f'Retrying upload... ({remaining_tries} tries remaining)', -1)
+        elif remaining_tries == 1:
+            statuscallback(f'Retrying upload... ({remaining_tries} try remaining)', -1)
+
+        if remaining_tries != MAX_RETRIES:
+            exponential_backoff(remaining_tries)
+
+        try:
+            if not site.upload(
+                page,
+                source_filename=filename,
+                comment=comment,
+                text=filedesc,
+                chunk_size=chunked,
+                asynchronous=bool(chunked),
+                ignore_warnings=['exists-normalized'],
+            ):
+                errorcallback('Upload failed!')
+
+            break  # The upload completed successfully.
+        except TaskError:
+            raise  # Don't retry errors caused by errorcallback.
+        except pywikibot.exceptions.APIError:
+            # Recheck in case the error didn't prevent the upload.
+            site.loadpageinfo(page)
+            if page.exists():
+                break  # The upload completed successfully.
+
+            remaining_tries -= 1
+            if remaining_tries == 0:
+                raise  # No more retries, raise the error.
+        except Exception:
+            remaining_tries -= 1
+            if remaining_tries == 0:
+                raise  # No more retries, raise the error.
 
     statuscallback('Upload success!', 100)
     return page.title(with_ns=False), page.full_url()
@@ -109,8 +135,6 @@ def upload_ss(
     statuscallback, errorcallback
 ):
     """Prepare for server-side upload."""
-    statuscallback('Preparing for server-side upload...', -1)
-
     # Get hash
     md5 = hashlib.md5()
     with open(filename, 'rb') as f:
@@ -126,7 +150,30 @@ def upload_ss(
     wikifilename = wikifilename.replace('\r', '_').replace('\n', '_')
 
     newfilename = '/srv/v2c/ssu/' + wikifilename
-    shutil.move(filename, newfilename)
+    remaining_tries = MAX_RETRIES
+
+    while True:
+        try:
+            if remaining_tries == MAX_RETRIES:
+                statuscallback('Preparing for server-side upload...', -1)
+            elif remaining_tries > 1:
+                statuscallback(f'Retrying server-side upload preparation... ({remaining_tries} tries remaining)', -1)
+            elif remaining_tries == 1:
+                statuscallback(f'Retrying server-side upload preparation... ({remaining_tries} try remaining)', -1)
+
+            if remaining_tries != MAX_RETRIES:
+                exponential_backoff(remaining_tries)
+
+            shutil.move(filename, newfilename)
+
+            break  # The file was moved to the SSU share successfully.
+        except BlockingIOError:
+            # A BlockingIOError will be raised whenever the NFS share that SSU
+            # files are kept on is overloaded.
+            remaining_tries -= 1
+            if remaining_tries == 0:
+                # No more retries, raise the error.
+                errorcallback('Upload failed: NFS share is likely overloaded')
 
     with open(newfilename + '.txt', 'w') as filedescfile:
         filedesc = filedesc.replace(
@@ -138,3 +185,8 @@ def upload_ss(
     fileurl = 'https://' + http_host + '/' + wikifilename
 
     raise NeedServerSideUpload(fileurl, md5.hexdigest())
+
+
+def exponential_backoff(tries, max_tries=MAX_RETRIES, delay=20):
+    """Exponential backoff doubling for every retry."""
+    time.sleep(delay * (2 ** (max_tries - tries - 1)))
