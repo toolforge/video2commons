@@ -359,9 +359,12 @@ def validate_url():
     if yt_match:
         try:
             youtube_id = yt_match.group(6)
-            return jsonify(entity_url=do_validate_youtube_id(session, youtube_id))
+            return jsonify(entity_url=do_validate_youtube_id(youtube_id))
         except Exception as e:
-            current_app.logger.error(f'Error validating YouTube URL "{url}": {e}')
+            current_app.logger.error(
+                f'Error validating YouTube URL "{url}": {e}\n\n'
+                f'{traceback.format_exc()}'
+            )
 
             # Skip validation if errors are encountered, e.g. SPARQL is down.
             return jsonify(entity_url=None)
