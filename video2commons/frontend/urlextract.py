@@ -32,6 +32,8 @@ import guess_language
 import pywikibot
 import yt_dlp
 
+from video2commons.frontend.wcqs import WcqsSession
+
 SITE = pywikibot.Site()
 
 # File extensions are probably alphanumeric with 0 to 4 chars
@@ -422,15 +424,8 @@ def do_validate_filename_unique(filename):
     return filename
 
 
-def do_validate_youtube_id(session, youtube_id):
+def do_validate_youtube_id(youtube_id):
     """Query Commons to find an entity with a specific YouTube ID."""
-    oauth = (session['access_token_key'], session['access_token_secret'])
-    credentials = (consumer_key, consumer_secret) + tuple(oauth)
-
-    # Configure pywikibot to use the session's OAuth credentials.
-    pywikibot.config.authenticate['commons.wikimedia.org'] = credentials
-    pywikibot.config.usernames['commons']['commons'] = session['username']
-    pywikibot.Site('commons', 'commons', user=session['username']).login()
 
     query = f"""
         SELECT ?file WHERE {{
@@ -438,14 +433,10 @@ def do_validate_youtube_id(session, youtube_id):
         }}
         LIMIT 1
     """
+    results = WcqsSession().query(query)
 
-    query_object = sparql.SparqlQuery(
-        endpoint="https://commons-query.wikimedia.org/sparql",
-        entity_url="https://commons.wikimedia.org/entity/",
-    )
-    data = query_object.select(query, full_data=True)
-    if data:
-        return data[0]["file"]
+    if len(results['results']['bindings']) == 0:
+        return None
 
-    return None
+    return results['results']['bindings'][0]['file']['value']
 
