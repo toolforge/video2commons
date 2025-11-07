@@ -94,7 +94,7 @@ class WcqsSession():
         current_app.logger.warning('Pulling in WCQS session from file as fallback')
         try:
             # Fallback: Pull in cookies from file. Needed for initial setup.
-            with open('/srv/v2c/wcqs-session.json', 'r') as f:
+            with open('/data/project/video2commons/wcqs-session.json', 'r') as f:
                 return json.load(f)
         except FileNotFoundError:
             raise RuntimeError('No WCQS session found in Redis or filesystem')
