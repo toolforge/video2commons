@@ -176,7 +176,7 @@ file { '/lib/systemd/system/v2ccelery.service':
 
 $celeryd_config = '# THIS FILE IS MANAGED BY MANUAL PUPPET
 CELERYD_NODES=1
-CELERYD_OPTS="--concurrency=3"
+CELERYD_OPTS="--concurrency=2"
 CELERY_BIN="/srv/v2c/venv/bin/celery"
 CELERY_APP="video2commons.backend.worker"
 CELERYD_MULTI="multi"
