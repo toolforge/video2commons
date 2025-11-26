@@ -12,7 +12,11 @@
 			restartbutton: '<button type="button" class="btn btn-xs flip pull-right restart-btn"><span class="glyphicon glyphicon-repeat"></span> ' + nunjucks.lib.escape( i18n.restart ) + '</button>',
 			loading: '<center>' + loaderImage + '&nbsp;&nbsp;' + nunjucks.lib.escape( i18n.loading ) + '</center>',
 			errorDisconnect: '<div class="alert alert-danger">' + nunjucks.lib.escape( i18n.errorDisconnect ) + '</div>',
-			yourTasks: '<h4>' + nunjucks.lib.escape( i18n.yourTasks ) + '</h4><table id="tasktable" class="table"><tbody></tbody></table>',
+			yourTasks: '<h4>' + nunjucks.lib.escape( i18n.yourTasks ) + '</h4><table id="tasktable" class="table"><colgroup><col style="width: 20%;"/><col style="width: 10%;"/><col style="width: 40%;"/><col style="width: 30%;"/></colgroup><tbody></tbody></table>',
+			workers: '<h4>' + nunjucks.lib.escape( i18n.workers ) + '</h4>',
+			capacity: rtl ? `<div><span id="capacity">...</span> ${i18n.capacity}</div>` : `<div>${i18n.capacity} <span id="capacity">...</span></div>`,
+			utilization: rtl ? `<div><span id="utilization">...</span> ${i18n.utilization}</div>` : `<div>${i18n.utilization} <span id="utilization">...</span></div>`,
+			pending: rtl ? `<div><span id="pending">...</span> ${i18n.pending}</div>` : `<div>${i18n.pending} <span id="pending">...</span></div>`,
 			addTask: '<input class="btn btn-primary btn-md" type="button" accesskey="n" value="' + nunjucks.lib.escape( i18n.addTask ) + '">',
 			requestServerSide: '<a class="btn btn-primary btn-success btn-md flip pull-right disabled" id="ssubtn">' + nunjucks.lib.escape( i18n.createServerSide ) + '</a>',
 			progressbar: '<div class="progress"><div class="progress-bar" role="progressbar"></div></div>',
@@ -446,17 +450,22 @@
 		},
 
 		setupTables: function () {
-			$( '#content' )
-				.html( htmlContent.yourTasks );
-			var addButton = $( htmlContent.addTask );
-			$( '#content' )
-				.append( addButton );
+			$( '#content' ).empty();
+
+			$( '#content' ).append( htmlContent.workers );
+			$( '#content' ).append( htmlContent.capacity );
+			$( '#content' ).append( htmlContent.utilization );
+			$( '#content' ).append( htmlContent.pending );
+			$( '#content' ).append( htmlContent.yourTasks );
+
+			const addButton = $( htmlContent.addTask );
+			$( '#content' ).append( addButton );
 			addButton.click( function () {
 				video2commons.addTask();
 			} );
-			var ssuButton = $( htmlContent.requestServerSide );
-			$( '#content' )
-				.append( ssuButton.hide() );
+
+			const ssuButton = $( htmlContent.requestServerSide );
+			$( '#content' ).append( ssuButton.hide() );
 		},
 
 		alterTaskTableBoilerplate: function ( cb ) {
@@ -505,6 +514,17 @@
 						$row.remove();
 					}
 				} );
+
+
+			if ( data.stats ) {
+				$( '#capacity' ).text( `${data.stats.processing} / ${data.stats.capacity}` );
+				$( '#utilization' ).text( `${Math.round(data.stats.utilization * 100)}%` );
+				$( '#pending' ).text( `${data.stats.pending}` );
+			} else {
+				$( '#capacity' ).text( 'N/A' );
+				$( '#utilization' ).text( 'N/A' );
+				$( '#pending' ).text( 'N/A' );
+			}
 		},
 
 		updateTask: function ( val ) {
@@ -529,6 +549,11 @@
 			var $title = $row.find( '#' + id + '-title' );
 			if ( $title.text() !== val.title ) {
 				$title.text( val.title );
+			}
+
+			var $hostname = $row.find( '#' + id + '-hostname' );
+			if ( $hostname.text() !== val.hostname ) {
+				$hostname.text( val.hostname ?? 'N/A' );
 			}
 
 			var setStatusText = function ( htmlortext, href, text ) {
@@ -591,16 +616,15 @@
 				case 'progress':
 					/* eslint-disable indent */
 					$row.append( $( '<td />' )
-							.attr( 'id', id + '-title' )
-							.attr( 'width', '30%' ) )
+							.attr( 'id', id + '-title' ) )
+						.append( $( '<td />' )
+							.attr( 'id', id + '-hostname' ) )
 						.append( $( '<td />' )
 							.attr( 'id', id + '-status' )
-							.attr( 'width', '40%' )
 							.append( $( '<span />' )
 								.attr( 'id', id + '-statustext' ) ) )
 						.append( $( '<td />' )
-							.attr( 'id', id + '-progress' )
-							.attr( 'width', '30%' ) );
+							.attr( 'id', id + '-progress' ) );
 					/* eslint-enable indent */
 					var $abortbutton = video2commons.eventButton( id, 'abort' );
 					$row.find( '#' + id + '-status' )
@@ -724,13 +748,11 @@
 
 		appendButtons: function ( buttonArray, $row, type, id ) {
 			$row.append( $( '<td />' )
-				.attr( 'id', id + '-title' )
-				.attr( 'width', '30%' ) );
+				.attr( 'id', id + '-title' ) );
 
 			var $buttons = $( '<td />' )
 				.attr( 'id', id + '-status' )
-				.attr( 'width', '70%' )
-				.attr( 'colspan', '2' )
+				.attr( 'colspan', '3' )
 				.append( $( '<span />' )
 					.attr( 'id', id + '-statustext' ) );
 

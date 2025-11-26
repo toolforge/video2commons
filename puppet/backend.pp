@@ -304,3 +304,9 @@ cron::job { 'v2chealthcheck':
     minute  => '*/5',
     require => Service['v2ccelery'],
 }
+cron::job { 'v2cstats':
+    command => '/srv/v2c/venv/bin/python3 /srv/v2c/utils/stats.py',
+    user    => 'tools.video2commons',
+    minute  => '0',
+    require => Service['v2ccelery'],
+}
