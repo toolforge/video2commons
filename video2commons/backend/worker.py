@@ -38,6 +38,7 @@ from video2commons.backend import subtitles as subtitleuploader
 from video2commons.config import (
     redis_pw, redis_host, consumer_key, consumer_secret, http_host
 )
+from video2commons.shared.stats import update_task_stats
 
 redisurl = 'redis://:' + redis_pw + '@' + redis_host + ':6379/'
 app = celery.Celery(
@@ -80,13 +81,20 @@ def main(
     if redisconnection.exists(lockkey):
         raise Ignore
 
+    # Immediately increment the processing count in stats since the cron job
+    # may take a while to update it (it takes a while to poll).
+    try:
+        update_task_stats(redisconnection, self.request.id, remove=False)
+    except Exception:
+        pass  # We don't want to fail the task if we can't update stats.
+
     # Check for 10G of disk space, refuse to run if it is unavailable
     st = os.statvfs('/srv')
     if st.f_frsize * st.f_bavail < 10 << 30:
         self.retry(max_retries=20, countdown=5*60)
         assert False  # should never reach here
 
-    redisconnection.setex(lockkey, 7 * 24 * 3600, 'T')
+    redisconnection.setex(lockkey, 7 * 24 * 3600, self.request.hostname)
 
     # Generate temporary directory for task
     for i in range(10):  # 10 tries
@@ -191,3 +199,8 @@ def main(
         pywikibot._sites.clear()
 
         shutil.rmtree(outputdir)
+
+        try:
+            update_task_stats(redisconnection, self.request.id, remove=True)
+        except Exception:
+            pass  # We don't want to fail the task if we can't update stats.
