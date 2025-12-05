@@ -174,6 +174,24 @@ file { '/lib/systemd/system/v2ccelery.service':
     notify  => Service['v2ccelery'],
 }
 
+file { '/etc/systemd/system/cron.service.d':
+    ensure => directory,
+}
+
+# lint:ignore:single_quote_string_with_variables
+$cron_override = '# THIS FILE IS MANAGED BY MANUAL PUPPET
+[Service]
+ExecStartPre=/bin/sh -c \'for i in $(seq 30); do getent passwd tools.video2commons >/dev/null 2>&1 && break || sleep 1; done\'
+'
+# lint:endignore
+
+# Wait until the project user is available before loading crontabs.
+file { '/etc/systemd/system/cron.service.d/override.conf':
+    ensure  => file,
+    content => $cron_override,
+    require => File['/etc/systemd/system/cron.service.d'],
+}
+
 $celeryd_config = '# THIS FILE IS MANAGED BY MANUAL PUPPET
 CELERYD_NODES=1
 CELERYD_OPTS="--concurrency=2"
@@ -281,9 +299,8 @@ cron::job { 'v2ccleanup':
     require => Service['v2ccelery'],
 }
 cron::job { 'v2chealthcheck':
-    command => '/bin/sh /srv/v2c/video2commons/utils/healthcheck.sh',
+    command => '/bin/sh /srv/v2c/utils/healthcheck.sh',
     user    => 'tools.video2commons',
     minute  => '*/5',
     require => Service['v2ccelery'],
 }
-
