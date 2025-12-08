@@ -48,7 +48,8 @@ class WebVideoTranscodeJob(object):
 
     def __init__(
         self, source, target, key, preserve={},
-        statuscallback=None, errorcallback=None, source_info=None
+        statuscallback=None, errorcallback=None, source_info=None,
+        concurrency=None
     ):
         """Initialize the instance."""
         self.source = os.path.abspath(source)
@@ -60,6 +61,11 @@ class WebVideoTranscodeJob(object):
         self.errorcallback = errorcallback or (lambda text: None)
         self.removeDuplicates = True
         self.source_info = source_info
+
+        if concurrency:
+            self.concurrency = min(max(concurrency, 1), ffmpeg_threads)
+        else:
+            self.concurrency = 1
 
     def output(self, msg):
         """
@@ -283,7 +289,7 @@ class WebVideoTranscodeJob(object):
         @return string
         """
         # Set the codec:
-        cmd = " -threads " + str(ffmpeg_threads) + " -vcodec libx264"
+        cmd = " -threads " + str(self.ffmpeg_get_thread_count()) + " -vcodec libx264"
 
         if 'videoBitrate' in options:
             cmd += " -b " + escape_shellarg(options['videoBitrate'])
@@ -300,7 +306,7 @@ class WebVideoTranscodeJob(object):
         @param p
         @return string
         """
-        cmd = ' -threads ' + str(ffmpeg_threads)
+        cmd = ' -threads ' + str(self.ffmpeg_get_thread_count())
 
         # libsvtav1-specific constant quality
         if 'crf' in options:
@@ -312,6 +318,9 @@ class WebVideoTranscodeJob(object):
             cmd += " -b:v " + escape_shellarg(int(options['videoBitrate']) * 1000)
 
         cmd += " -vcodec libsvtav1"
+
+        # libsvtav1 ignores the -threads option, so we have to set it manually.
+        cmd += ' -svtav1-params lp=' + str(self.ffmpeg_get_thread_count())
 
         if p == 1:
             cmd += ' -preset 12'  # Make first pass faster
@@ -330,7 +339,7 @@ class WebVideoTranscodeJob(object):
         @param p
         @return string
         """
-        cmd = ' -threads ' + str(ffmpeg_threads)
+        cmd = ' -threads ' + str(self.ffmpeg_get_thread_count())
         if options['videoCodec'] == 'vp9':
             cmd += ' -row-mt 1'
 
@@ -407,7 +416,7 @@ class WebVideoTranscodeJob(object):
         @param p
         @return string
         """
-        cmd = ' -threads ' + str(ffmpeg_threads)
+        cmd = ' -threads ' + str(self.ffmpeg_get_thread_count())
 
         # Check for video quality:
         if 'videoQuality' in options and int(options['videoQuality']) >= 0:
@@ -479,6 +488,14 @@ class WebVideoTranscodeJob(object):
             cmd += " -acodec libvorbis "
 
         return cmd
+
+    def ffmpeg_get_thread_count(self):
+        """
+        Get a safe thread count to pass to ffmpeg.
+
+        @return int
+        """
+        return math.floor(ffmpeg_threads / self.concurrency)
 
     def run_shell_exec(self, cmd, track=True):
         """
