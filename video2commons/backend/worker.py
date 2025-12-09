@@ -22,6 +22,7 @@
 import os
 import sys
 import shutil
+import re
 
 import celery
 from celery.contrib.abortable import AbortableTask
@@ -57,6 +58,15 @@ class Stats:
 
     text = ''
     percent = 0
+
+
+def get_worker_concurrency():
+    """Parse concurrency value from CELERYD_OPTS environment variable."""
+    celeryd_opts = os.environ.get('CELERYD_OPTS', '')
+
+    match = re.search(r'--concurrency[=\s]+(\d+)', celeryd_opts)
+    if match:
+        return int(match.group(1))
 
 
 @app.task(bind=True, track_started=False, base=AbortableTask)
@@ -121,7 +131,10 @@ def main(
         subtitles = subtitles and d['subtitles']
 
         statuscallback('Converting...', -1)
-        file = encode.encode(file, convertkey, statuscallback, errorcallback)
+        concurrency = get_worker_concurrency()
+        file = encode.encode(
+            file, convertkey, statuscallback, errorcallback, concurrency
+        )
         if not file:
             errorcallback('Convert failed!')
         ext = file.split('.')[-1]
