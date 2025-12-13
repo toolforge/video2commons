@@ -560,6 +560,20 @@
 
 					$addTaskDialog.find( '#url' )
 						.val( newTaskData.url )
+						.on( 'input', function () {
+							if ( newTaskData.url !== $( this ).val() ) {
+								newTaskData.url = $( this ).val();
+							}
+
+							const youtubeRegex = /(https?:\/\/)?(www\.)?(youtube|youtu|youtube-nocookie)\.(com|be)\/(watch\?.*?(?=v=)v=|embed\/|v\/|.+\?v=)?([^&=%\?]{11})/;
+							if ( newTaskData.url.match( youtubeRegex ) ) {
+								$addTaskDialog.find( '#youtube-warning' )
+									.removeClass( 'hidden' );
+							} else {
+								$addTaskDialog.find( '#youtube-warning' )
+									.addClass( 'hidden' );
+							}
+						} )
 						.focus();
 					$addTaskDialog.find( '#video' )
 						.prop( 'checked', newTaskData.video );

@@ -34,6 +34,7 @@
 	"uploading": "Uploading...",
 	"note": "Note:",
 	"importantnote": "Important note:",
+	"youtubewarning": "YouTube downloads may fail due to bot detection. This typically happens when YouTube's rate limits are exceeded. If this happens, wait 1-2 hours before retrying.",
 	"notesplaylists": "Playlists will not be processed correctly. Some sites (such as Youku and Comedy Central) make use of multipart videos, interpreted as playlists, and will not be processed correctly either.",
 	"notesuncheck": "If the media does not include video or audio tracks, please uncheck the corresponding checkboxes; otherwise conversion may fail, even if the format is free.",
 	"notessubtitles": "If 'Import subtitles' is checked, subtitles will be imported, excluding auto-generated ones.",
