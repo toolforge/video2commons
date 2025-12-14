@@ -40,6 +40,7 @@
 	"uploading": "Plain text shown near a progress bar on the source screen (first step) of the add task dialog. The progress bar indicates the current upload progress percentage.\n{{Identical|Uploading}}",
 	"note": "Plain text shown in the add task dialog. Following it are some bullet-point notes about the dialog that the user is supposed to know.\n{{Identical|Note}}",
 	"importantnote": "Bold plain text shown on the source screen (first step) of the add task dialog after the other notes. The note after this is to warn the user of [[:commons:|Commons]]'s [[:commons:Special:MyLanguage/Commons:Licensing|Licensing]]",
+	"youtubewarning": "Plain text shown on the source screen (first step) of the add task dialog. This text is only shown if the user puts a YouTube URL into the URL field.",
 	"notesplaylists": "Plain text shown as a note on the source screen (first step) of the add task dialog. Youku and Comedy Central are both video sites.",
 	"notesuncheck": "Plain text shown as a note on the source screen (first step) of the add task dialog.",
 	"notessubtitles": "Plain text shown as a note on the source screen (first step) of the add task dialog.",
