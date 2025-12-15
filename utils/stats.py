@@ -2,14 +2,11 @@
 
 """Update worker usage and capacity statistics in Redis."""
 
-import os
 import random
 import sys
 import time
 
-sys.path.append(
-    os.path.dirname(os.path.realpath(__file__)) + "/../video2commons"
-)
+sys.path.insert(0, '/srv/v2c')
 
 from redis import Redis
 
