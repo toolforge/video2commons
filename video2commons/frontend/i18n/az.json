@@ -39,6 +39,7 @@
 	"uploading": "Yüklənir...",
 	"note": "Qeyd:",
 	"importantnote": "Vacib qeyd:",
+	"youtubewarning": "YouTube yükləmələri bot yoxlanışı səbəbindən uğursuz ola bilər. Bu, adətən YouTube-un sürət limitləri aşıldıqda baş verir. Əgər bu baş verərsə, təkrar cəhd etməzdən əvvəl 1-2 saat gözləyin.",
 	"notesplaylists": "Pleylistlər düzgün işlənməyəcək. Bəzi saytlar (Youku və Comedy Central kimi) pleylist kimi göstərilən çoxhissəli videolardan istifadə edir və bu düzgün işlənməyəcək.",
 	"notesuncheck": "Mediada video və ya audio treklər yoxdursa, zəhmət olmasa, həmin qutuları seçməyin. Əks halda, format azad olsa belə, çevrilmə uğursuz ola bilər.",
 	"notessubtitles": "\"Subtitrləri idxal et\" seçilərsə, avtomatik yaradılanlar istisna olmaqla, subtitrlər idxal ediləcək.",
