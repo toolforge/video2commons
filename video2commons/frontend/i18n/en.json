@@ -45,5 +45,6 @@
 	"edit": "Edit",
 	"selectAll": "Select all",
 	"select": "Select",
-	"videos": "Videos"
+	"videos": "Videos",
+	"noVideos": "No videos found"
 }
