@@ -1,0 +1,62 @@
+<form role="form">
+  <div class="form-group">
+    <h4 class="text-center">
+      <span class="glyphicon glyphicon-list"></span>
+      {{ task.title }}
+    </h4>
+  </div>
+
+  <div class="table-responsive">
+    <table class="table table-striped table-hover">
+      <colgroup>
+        <col span="1">
+        <col span="1">
+        <col span="1" style="width: 35%;">
+        <col span="1">
+      </colgroup>
+
+      <thead>
+        <tr>
+          <th style="vertical-align: middle; text-align: center;">
+            <input type="checkbox" id="select-all" title="{{ _('selectAll') }}">
+          </th>
+          <th>{{ _('filename') }}</th>
+          <th>{{ _('transcoding') }}</th>
+          <th class="text-center">{{ _('actions') }}</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for video in task.videos %}
+        <tr>
+          <td style="vertical-align: middle; text-align: center;">
+            <input
+              type="checkbox"
+              class="video-select"
+              title="{{ _('select') }}"
+              value="{{ loop.index0 }}"
+            >
+          </td>
+          <td style="vertical-align: middle;">{{ video.filename }}</td>
+          <td style="vertical-align: middle;">{{ video.format }}</td>
+          <td class="text-center" style="vertical-align: middle;">
+            <button
+              type="button"
+              class="btn btn-lg btn-edit"
+              data-video-index="{{ loop.index0 }}"
+              aria-label="{{ _('edit') }}"
+            >
+              <span class="glyphicon glyphicon-pencil"></span>
+            </button>
+          </td>
+        </tr>
+        {% else %}
+        <tr>
+          <td colspan="4" class="text-center text-muted">
+            <span class="glyphicon glyphicon-info-sign"></span> {{ _('noVideos') }}
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</form>

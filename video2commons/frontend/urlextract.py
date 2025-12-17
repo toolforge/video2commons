@@ -102,7 +102,7 @@ def do_extract_url(url):
         'writesubtitles': False,
         'subtitlesformat': 'srt/ass/vtt/best',
         'cachedir': '/tmp/',
-        'noplaylist': True,  # not implemented in video2commons
+        'noplaylist': False,
     }
     if '.youtube.com/' in url:
         # https://github.com/yt-dlp/yt-dlp/wiki/Extractors#exporting-youtube-cookies
@@ -111,16 +111,38 @@ def do_extract_url(url):
             'cookiefile': tooldir + '/../cookies.txt',
             'username': youtube_user,
             'password': youtube_pass
-            })
+        })
     with yt_dlp.YoutubeDL(params) as dl:
         info = dl.extract_info(url, download=False)
 
+    # Extract playlist entries if this is a playlist.
+    if info and 'entries' in info:
+        videos = []
+        for entry in info['entries']:
+            video_info = _extract_info(entry)
+            videos.append(video_info)
+
+        return {
+            'type': 'playlist',
+            'id': info.get('id', ''),
+            'title': info.get('title', ''),
+            'url': url,
+            'videos': videos
+        }
+
+    video_info = _extract_info(info)
+
+    return { 'type': 'single', **video_info }
+
+
+def _extract_info(info):
+    """Process metadata for a single video."""
     assert 'formats' in info or info.get('direct'), \
         'Your url cannot be processed correctly'
 
     ie_key = info['extractor_key']
     title = (info.get('title') or '').strip()
-    url = info.get('webpage_url') or url
+    url = info.get('webpage_url')
 
     filedesc = FILEDESC_TEMPLATE % {
         'desc': _desc(url, ie_key, title, info),
@@ -439,4 +461,3 @@ def do_validate_youtube_id(youtube_id):
         return None
 
     return results['results']['bindings'][0]['file']['value']
-
