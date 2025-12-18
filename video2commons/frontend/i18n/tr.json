@@ -45,6 +45,7 @@
 	"uploading": "Yükleniyor...",
 	"note": "Not:",
 	"importantnote": "Önemli not:",
+	"youtubewarning": "YouTube indirmeleri, bot algılaması nedeniyle başarısız olabilir. Bu durum genellikle YouTube'un hız sınırları aşıldığında ortaya çıkar. Böyle bir durumda, yeniden denemeden önce 1–2 saat bekleyin.",
 	"notesplaylists": "Oynatma listeleri doğru bir şekilde işlenmeyecek. Bazı siteler (Youku ve Comedy Central gibi) oynatma listeleri olarak yorumlanan çok parçalı videolar kullandığından bu videolar doğru şekilde işlenemez.",
 	"notesuncheck": "Medya video veya ses parçaları içermiyorsa, lütfen ilgili onay kutularının işaretini kaldırın. Aksi halde, biçim serbest olsa bile dönüştürme işlemi başarısız olabilir.",
 	"notessubtitles": "'Altyazıları içe aktar' seçeneği işaretlenirse otomatik oluşturulanlar hariç altyazılar içe aktarılır.",
