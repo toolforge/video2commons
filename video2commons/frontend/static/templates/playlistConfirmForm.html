@@ -1,0 +1,27 @@
+<form class="form-horizontal" role="form">
+  <div class="form-group">
+    <label class="control-label col-sm-2" for="url">URL</label>
+    <div class="col-sm-10">
+      <p class="form-control-static" id="url"></p>
+    </div>
+  </div>
+  <div class="form-group">
+    <label class="control-label col-sm-2" for="keep">{{ _('keep') }}</label>
+    <div class="col-sm-10">
+      <p class="form-control-static" id="keep"></p>
+    </div>
+  </div>
+  <div class="form-group">
+    <label class="control-label col-sm-2" for="videos">{{ _('videos') }}</label>
+    <div class="col-sm-10">
+      <ul class="form-control-static" id="videos">
+        {% for video in task.selectedVideos %}
+        <li>{{ video.filename }}</li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+  <div class="alert alert-info">
+    {{ _('confirmmsg') }}
+  </div>
+</form>

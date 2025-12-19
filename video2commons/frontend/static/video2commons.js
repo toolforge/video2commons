@@ -8,17 +8,17 @@
 		rtl = i18n[ '@dir' ] === 'rtl',
 		htmlContent = {
 			abortbutton: '<button type="button" class="btn btn-danger btn-xs flip pull-right"><span class="glyphicon glyphicon-remove"></span> ' + nunjucks.lib.escape( i18n.abort ) + '</button>',
-			removebutton: '<button type="button" class="btn btn-danger btn-xs flip pull-right"><span class="glyphicon glyphicon-trash"></span> ' + nunjucks.lib.escape( i18n.remove ) + '</button>',
-			restartbutton: '<button type="button" class="btn btn-warning btn-xs flip pull-right"><span class="glyphicon glyphicon-repeat"></span> ' + nunjucks.lib.escape( i18n.restart ) + '</button>',
+			removebutton: '<button type="button" class="btn btn-danger btn-xs flip pull-right remove-btn"><span class="glyphicon glyphicon-trash"></span> ' + nunjucks.lib.escape( i18n.remove ) + '</button>',
+			restartbutton: '<button type="button" class="btn btn-xs flip pull-right restart-btn"><span class="glyphicon glyphicon-repeat"></span> ' + nunjucks.lib.escape( i18n.restart ) + '</button>',
 			loading: '<center>' + loaderImage + '&nbsp;&nbsp;' + nunjucks.lib.escape( i18n.loading ) + '</center>',
 			errorDisconnect: '<div class="alert alert-danger">' + nunjucks.lib.escape( i18n.errorDisconnect ) + '</div>',
 			yourTasks: '<h4>' + nunjucks.lib.escape( i18n.yourTasks ) + '</h4><table id="tasktable" class="table"><tbody></tbody></table>',
-			addTask: '<input class="btn btn-primary btn-success btn-md" type="button" accesskey="n" value="' + nunjucks.lib.escape( i18n.addTask ) + '">',
+			addTask: '<input class="btn btn-primary btn-md" type="button" accesskey="n" value="' + nunjucks.lib.escape( i18n.addTask ) + '">',
 			requestServerSide: '<a class="btn btn-primary btn-success btn-md flip pull-right disabled" id="ssubtn">' + nunjucks.lib.escape( i18n.createServerSide ) + '</a>',
 			progressbar: '<div class="progress"><div class="progress-bar" role="progressbar"></div></div>',
 			prevbutton: '<span class="glyphicon glyphicon-chevron-' + ( rtl ? 'right' : 'left' ) + '"></span> ' + nunjucks.lib.escape( i18n.back ),
 			nextbutton: nunjucks.lib.escape( i18n.next ) + ' <span class="glyphicon glyphicon-chevron-' + ( rtl ? 'left' : 'right' ) + '"></span>',
-			confirmbutton: nunjucks.lib.escape( i18n.confirm ) + ' <span class="glyphicon glyphicon-ok"></span>'
+			confirmbutton: nunjucks.lib.escape( i18n.confirm )
 		},
 		ssuTemplate = 'Please upload these file(s) to Wikimedia Commons:\n\n**URLs**\n\n{{{ urls }}}\n\n//Description files are available too: append `.txt` to the URLs.//\n\n**Checksums**\n\n| **File** | **MD5** |\n{{{ checksums }}}\n\nThank you!',
 		csrfToken = '',
@@ -59,6 +59,291 @@
 			} );
 
 	var $addTaskDialog, newTaskData, newTaskDataQS, SSUs, username;
+
+	const form = {
+		/**
+		 * Get the data from the source form in the new task dialog.
+		 */
+		getSourceData: function () {
+			return {
+				url: $addTaskDialog.find( '#url' ).val(),
+				video: $addTaskDialog.find( '#video' ).is( ':checked' ),
+				audio: $addTaskDialog.find( '#audio' ).is( ':checked' ),
+				subtitles: $addTaskDialog.find( '#subtitles' ).is( ':checked' )
+			};
+		},
+
+		/**
+		 * Get the data from the target form in the new task dialog.
+		 */
+		getTargetData: function () {
+			return {
+				filename: $addTaskDialog.find( '#filename' ).val().trim(),
+				format: $addTaskDialog.find( '#format' ).val(),
+				filedesc: $addTaskDialog.find( '#filedesc' ).val()
+			};
+		},
+
+		/**
+		 * Get the data from the playlist form in the new task dialog.
+		 */
+		getPlaylistData: function () {
+			const selectedVideos = [];
+
+			$addTaskDialog.find( '.video-select:checked' ).each( function () {
+				const index = parseInt( $( this ).val(), 10 );
+				const video = newTaskData.videos[ index ];
+				selectedVideos.push( video );
+			} );
+
+			return selectedVideos;
+		},
+	};
+
+	const api = {
+		/**
+		 * Start a new video transcoding task.
+		 *
+		 * @param {object} task The details of the task to start.
+		 * @return {jQuery.Deferred} Resolves when the API call is complete.
+		 */
+		startTask: function ( task ) {
+			return video2commons.apiPost( 'task/run', task );
+		},
+
+		/**
+		 * Update valid output formats for the input video.
+		 *
+		 * @param {boolean} keepVideo Whether the video is kept.
+		 * @param {boolean} keepAudio Whether the audio is kept.
+		 * @return {jQuery.Deferred} Resolves if the formats are valid.
+		 */
+		updateFormats: function ( keepVideo, keepAudio ) {
+			if (
+				newTaskData.formats.length > 0 &&
+				keepVideo === newTaskData.video &&
+				keepAudio === newTaskData.audio
+			) {
+				return $.when();
+			}
+
+			return video2commons.askAPI(
+				'listformats',
+				{ video: keepVideo, audio: keepAudio },
+				[ 'video', 'audio', 'format', 'formats' ]
+			);
+		},
+
+		/**
+		 * Validate the input video URL and generate a description for it.
+		 *
+		 * @param {string} url The URL to check.
+		 * @return {jQuery.Deferred} Resolves if the URL is valid.
+		 */
+		updateUrl: function ( url ) {
+			if ( !url ) {
+				return $.Deferred()
+					.reject( 'URL cannot be empty!' )
+					.promise();
+			}
+
+			if ( url === newTaskData.url && newTaskData.initialFilenameValidated ) {
+				return $.when();
+			}
+
+			// Generate a description for files that are from the filesystem.
+			var uploadedFile = newTaskData.uploadedFile[ url ];
+			if ( uploadedFile ) {
+				newTaskData.url = url;
+				return video2commons.askAPI( 'makedesc', {
+					filename: uploadedFile.name || ''
+				}, [ 'extractor', 'filedesc', 'filename' ] );
+			}
+
+			// Validate that the video at the URL hasn't already been uploaded
+			// to Commons, and if it hasn't, extract its metadata.
+			return video2commons.askAPI( 'validateurl', { url }, [ 'entity_url' ] )
+				.then( function ( data ) {
+					if ( data.entity_url ) {
+						return $.Deferred()
+							.reject( 'This video has already been uploaded: ' + data.entity_url )
+							.promise();
+					}
+					return video2commons.askAPI( 'extracturl', { url }, [
+						'type',
+						'id',
+						'title',
+						'url',
+						'extractor',
+						'filedesc',
+						'filename',
+						'videos'
+					] ).then( () => {
+						newTaskData.initialFilenameValidated = true;
+					} );
+				} )
+				.then( function () {
+					if ( newTaskData.type === 'playlist' ) {
+						newTaskData.videos.forEach( ( video ) => {
+							video.format = newTaskData.format;
+						} );
+					}
+				} );
+		},
+
+		/**
+		 * Check if the given filename is valid and unique.
+		 *
+		 * @param {string} filename The filename to check.
+		 * @param {object|null} object The object to update.
+		 * @return {jQuery.Deferred} Resolves if the filename is valid.
+		 */
+		updateFilename: function ( filename, object=null ) {
+			if ( object == null ) {
+				object = newTaskData;
+			}
+
+			if ( !filename ) {
+				return $.Deferred()
+					.reject( 'Filename cannot be empty!' )
+					.promise();
+			}
+
+			if ( filename === object.filename && object.initialFilenameValidated ) {
+				return $.when();
+			}
+
+			return video2commons.askAPI( 'validatefilename', { filename }, [], object )
+				.then( function () {
+					return video2commons.askAPI(
+						'validatefilenameunique', { filename }, [ 'filename' ], object
+					);
+				} )
+				.then( function () {
+					object.initialFilenameValidated = true;
+				} );
+		},
+
+		/**
+		 * Check if the given file description is valid.
+		 *
+		 * @param {string} filedesc The file description to check.
+		 * @param {object|null} object The object to update.
+		 * @return {jQuery.Deferred} Resolves if the file description is valid.
+		 */
+		updateFiledesc: function ( filedesc, object=null ) {
+			if ( object == null ) {
+				object = newTaskData;
+			}
+
+			if ( !filedesc ) {
+				return $.Deferred()
+					.reject( 'Decription cannot be empty!' )
+					.promise();
+			}
+
+			if ( filedesc === object.filedesc && object.initialFiledescValidated ) {
+				return $.when();
+			}
+
+			return video2commons.askAPI( 'validatefiledesc', { filedesc }, [ 'filedesc' ], object )
+				.then( function () {
+					object.initialFiledescValidated = true;
+				} );
+		},
+
+		/**
+		 * Validate that a video URL is valid and not already on the wiki.
+		 *
+		 * @param {string} url The URL to check.
+		 * @return {jQuery.Deferred} Resolves if the URL is valid.
+		 */
+		validateUrl: function ( url ) {
+			return video2commons.askAPI( 'validateurl', { url }, [] )
+				.then( ( data ) => {
+					if ( data.entity_url ) {
+						return $.Deferred()
+							.reject( 'This video has already been uploaded: ' + data.entity_url )
+							.promise();
+					}
+				} );
+		}
+	};
+
+	const steps = {
+		source: function () {
+			const data = form.getSourceData();
+			newTaskData.subtitles = data.subtitles;
+			newTaskData.selectedVideos = [];
+
+			return $.when(
+				api.updateFormats( data.video, data.audio ),
+				api.updateUrl( data.url )
+			).then( () => {
+				if ( newTaskData.type === 'playlist' ) {
+					newTaskData.nextStep = 'playlist';
+				} else {
+					newTaskData.nextStep = 'target';
+				}
+			} );
+		},
+
+		playlist: function () {
+			const selectedVideos = form.getPlaylistData();
+
+			if ( selectedVideos.length === 0 ) {
+				return $.Deferred()
+					.reject( 'Please select at least one video to upload!' )
+					.promise();
+			}
+
+			const tasks = [
+				...selectedVideos.map( ( video ) => () => api.updateFilename( video.filename, video ) ),
+				...selectedVideos.map( ( video ) => () => api.updateFiledesc( video.filedesc, video ) ),
+				...selectedVideos.map( ( video ) => () => api.validateUrl( video.url ) )
+			];
+			return $.when( video2commons.runWithConcurrency( tasks ) )
+				.then( ( results ) => {
+					const errors = results.filter( ( result ) => !!result?.error );
+					if ( errors.length > 0 ) {
+						return $.Deferred()
+							.reject( errors.map( ( result ) => result.error ).join( '\n\n' ) )
+							.promise();
+					}
+
+					newTaskData.selectedVideos = selectedVideos;
+					newTaskData.nextStep = 'confirm';
+				} );
+		},
+
+		target: function () {
+			const data = form.getTargetData();
+
+			const object = newTaskData.type === 'playlist'
+				? newTaskData.videos[ newTaskData.editingVideoIndex ]
+				: newTaskData;
+
+			object.format = data.format;
+
+			return $.when(
+				api.updateFilename( data.filename, object ),
+				api.updateFiledesc( data.filedesc, object )
+			).then( () => {
+				if ( newTaskData.type === 'playlist' ) {
+					newTaskData.nextStep = 'playlist';
+				} else {
+					newTaskData.nextStep = 'confirm';
+				}
+			} );
+		},
+
+		confirm: function () {
+			return $.when().then( () => {
+				newTaskData.nextStep = null;
+			} );
+		}
+	};
+
 	var video2commons = window.video2commons = {
 		init: function () {
 			$( '#content' )
@@ -536,9 +821,14 @@
 				format: '',
 				filedesc: '',
 				uploadedFile: {},
-				filenamechecked: false,
-				filedescchecked: false,
-				filenameuniquechecked: false
+				initialUrlValidated: false,
+				initialFilenameValidated: false,
+				initialFiledescValidated: false,
+				nextStep: 'source',
+				history: [],
+				videos: [],
+				selectedVideos: [],
+				editingVideoIndex: null,
 			};
 			$.extend( newTaskData, taskdata );
 
@@ -584,12 +874,57 @@
 
 					video2commons.initUpload();
 					break;
+				case 'playlist':
+					$addTaskDialog.find( '.modal-body' )
+						.html( nunjucksEnv.render( 'playlistForm.html', { task: newTaskData } ) );
+
+					$addTaskDialog.find( '.video-select' ).each( ( i, el ) => {
+						const video = newTaskData.videos[ i ];
+						if ( newTaskData.selectedVideos.indexOf( video ) >= 0 ) {
+							$( el ).prop( 'checked', true );
+						}
+					} );
+
+					const allChecked = $addTaskDialog.find( '.video-select:checked' ).length === $addTaskDialog.find( '.video-select' ).length;
+					$addTaskDialog.find( '#select-all' ).prop( 'checked', allChecked );
+
+					$addTaskDialog.find( '#select-all' )
+						.off()
+						.change( function () {
+							const isChecked = $( this ).is( ':checked' );
+							$addTaskDialog.find( '.video-select' ).prop( 'checked', isChecked );
+						} );
+
+					$addTaskDialog.find( '.video-select' )
+						.off()
+						.change( function () {
+							const allChecked = $addTaskDialog.find( '.video-select:checked' ).length === $addTaskDialog.find( '.video-select' ).length;
+							$addTaskDialog.find( '#select-all' ).prop( 'checked', allChecked );
+						} );
+
+					$addTaskDialog.find( '.btn-edit' )
+						.off()
+						.click( function () {
+							const videoIndex = $( this ).data( 'video-index' );
+
+							newTaskData.selectedVideos = form.getPlaylistData();
+							newTaskData.editingVideoIndex = videoIndex;
+							newTaskData.history.push( newTaskData.step );
+							newTaskData.step = 'target';
+							video2commons.setupAddTaskDialog();
+							video2commons.reactivatePrevNextButtons();
+						} );
+					break;
 				case 'target':
+					const source = newTaskData.type === 'playlist'
+						? newTaskData.videos[ newTaskData.editingVideoIndex ]
+						: newTaskData;
+
 					$addTaskDialog.find( '.modal-body' )
 						.html( nunjucksEnv.render( 'targetForm.html' ) );
 
 					$addTaskDialog.find( '#filename' )
-						.val( newTaskData.filename.trim() )
+						.val( source.filename.trim() )
 						.focus();
 					$.each( newTaskData.formats, function ( i, desc ) {
 						$addTaskDialog.find( '#format' )
@@ -597,13 +932,15 @@
 								.text( desc ) );
 					} );
 					$addTaskDialog.find( '#format' )
-						.val( newTaskData.format );
+						.val( source.format );
 					$addTaskDialog.find( '#filedesc' )
-						.val( newTaskData.filedesc );
+						.val( source.filedesc );
 					break;
 				case 'confirm':
-					$addTaskDialog.find( '.modal-body' )
-						.html( nunjucksEnv.render( 'confirmForm.html' ) );
+					const confirmForm = newTaskData.type === 'playlist'
+						? nunjucksEnv.render( 'playlistConfirmForm.html', { task: newTaskData } )
+						: nunjucksEnv.render( 'confirmForm.html' );
+					$addTaskDialog.find( '.modal-body' ).html( confirmForm );
 
 					var keep = [];
 					if ( newTaskData.video ) {
@@ -646,11 +983,23 @@
 						.html( htmlContent.nextbutton );
 					video2commons.setPrevNextButton( 'next' );
 					break;
-				case 'target':
+				case 'playlist':
 					video2commons.setPrevNextButton( 'prev' );
 
 					$addTaskDialog.find( '#btn-next' )
 						.html( htmlContent.nextbutton );
+					video2commons.setPrevNextButton( 'next' );
+					break;
+				case 'target':
+					video2commons.setPrevNextButton( 'prev' );
+
+					if ( newTaskData.type === 'playlist' ) {
+						$addTaskDialog.find( '#btn-next' )
+							.html( htmlContent.confirmbutton );
+					} else {
+						$addTaskDialog.find( '#btn-next' )
+							.html( htmlContent.nextbutton );
+					}
 					video2commons.setPrevNextButton( 'next' );
 					break;
 				case 'confirm':
@@ -669,14 +1018,43 @@
 							window.scrollTo( 0, document.body.scrollHeight );
 
 							newTaskData.uploadedFile = {}; // FIXME
-							video2commons.apiPost( 'task/run', newTaskData )
-								.done( function ( data ) {
-									if ( data.error ) {
-										// eslint-disable-next-line no-alert
-										window.alert( data.error );
-									}
-									video2commons.checkStatus();
+
+							let tasks = [];
+
+							if ( newTaskData.type === 'playlist' ) {
+								tasks = newTaskData.selectedVideos.map( ( video ) => ( {
+									url: video.url,
+									extractor: video.extractor,
+									subtitles: newTaskData.subtitles,
+									filename: video.filename,
+									filedesc: video.filedesc,
+									format: video.format,
+								} ) );
+							} else {
+								tasks.push( {
+									url: newTaskData.url,
+									extractor: newTaskData.extractor,
+									subtitles: newTaskData.subtitles,
+									filename: newTaskData.filename,
+									filedesc: newTaskData.filedesc,
+									format: newTaskData.format,
 								} );
+							}
+
+							// Run all of the tasks in parallel. Only check for
+							// the status after all of theme have been queued.
+							video2commons.runWithConcurrency(
+								tasks.map( ( task ) => () =>
+									api.startTask( task ).done( ( data ) => {
+										if ( data.error ) {
+											// eslint-disable-next-line no-alert
+											window.alert( data.error );
+										}
+									} )
+								)
+							).always( () => {
+								video2commons.checkStatus();
+							} );
 						} );
 			}
 		},
@@ -706,147 +1084,43 @@
 		},
 
 		processInput: function ( button ) {
-			var resolved = $.when(); // A resolved jQuery promise
+			const currentStep = newTaskData.step;
 
-			var deferred;
-			switch ( newTaskData.step ) {
-				case 'source':
-					deferred = $.when(
-						( function () {
-							var video = $addTaskDialog.find( '#video' ).is( ':checked' ),
-								audio = $addTaskDialog.find( '#audio' ).is( ':checked' );
-							newTaskData.subtitles = $addTaskDialog.find( '#subtitles' )
-								.is( ':checked' );
-							if ( !newTaskData.formats.length || video !== newTaskData.video || audio !== newTaskData.audio ) {
-								return video2commons.askAPI( 'listformats', {
-									video: video,
-									audio: audio
-								}, [ 'video', 'audio', 'format', 'formats' ] );
-							} else {
-								return resolved;
-							}
-						}() ),
-						( function () {
-							var url = $addTaskDialog.find( '#url' )
-								.val();
-
-							if ( !url ) {
-								return $.Deferred()
-									.reject( 'URL cannot be empty!' )
-									.promise();
-							}
-							if ( !newTaskData.filename || !newTaskData.filedesc || url !== newTaskData.url ) {
-								newTaskData.filenamechecked = false;
-								newTaskData.filedescchecked = false;
-								newTaskData.filenameuniquechecked = false;
-								var uploadedFile = newTaskData.uploadedFile[ url ];
-								if ( uploadedFile ) {
-									newTaskData.url = url;
-									return video2commons.askAPI( 'makedesc', {
-										filename: uploadedFile.name || ''
-									}, [ 'extractor', 'filedesc', 'filename' ] );
-								} else {
-									// Validate the URL before extracting information.
-									return video2commons.askAPI( 'validateurl', {
-										url: url
-									}, [ 'entity_url' ] )
-										.then( function (data) {
-											if (data.entity_url) {
-												return $.Deferred()
-													.reject('This video has already been uploaded: ' + data.entity_url)
-													.promise();
-											}
-
-											return video2commons.askAPI( 'extracturl', {
-												url: url
-											}, [ 'url', 'extractor', 'filedesc', 'filename' ] );
-										} )
-								}
-							} else {
-								return resolved;
-							}
-						}() )
-					);
-					break;
-				case 'target':
-					deferred = $.when(
-						( function () {
-							var filename = $addTaskDialog.find( '#filename' ).val().trim();
-							newTaskData.format = $addTaskDialog.find( '#format' ).val();
-
-							if ( !filename ) {
-								return $.Deferred()
-									.reject( 'Filename cannot be empty!' )
-									.promise();
-							}
-
-							if ( !newTaskData.filenamechecked || filename !== newTaskData.filename ) {
-								return video2commons.askAPI( 'validatefilename', {
-									filename: filename
-								}, [ 'filename' ] )
-									.done( function () {
-										newTaskData.filenamechecked = true;
-									} );
-							} else {
-								return resolved;
-							}
-						}() ),
-						( function () {
-							var filedesc = $addTaskDialog.find( '#filedesc' ).val();
-
-							if ( !filedesc ) {
-								return $.Deferred()
-									.reject( 'File description cannot be empty!' )
-									.promise();
-							}
-
-							if ( !newTaskData.filedescchecked || filedesc !== newTaskData.filedesc ) {
-								return video2commons.askAPI( 'validatefiledesc', {
-									filedesc: filedesc
-								}, [ 'filedesc' ] )
-									.done( function () {
-										newTaskData.filedescchecked = true;
-									} );
-							} else {
-								return resolved;
-							}
-						}() ),
-						( function () {
-							var filename = $addTaskDialog.find( '#filename' ).val().trim();
-
-							if ( !filename ) {
-								return $.Deferred()
-									.reject( 'Filename cannot be empty!' )
-									.promise();
-							}
-
-							if ( !newTaskData.filenameuniquechecked || filename !== newTaskData.filename ) {
-								return video2commons.askAPI( 'validatefilenameunique', {
-									filename: filename
-								}, [ 'filename' ] )
-									.done( function ( result ) {
-										newTaskData.filenameuniquechecked = true;
-									} );
-							} else {
-								return resolved;
-							}
-						}() )
-					);
-					break;
-				case 'confirm':
-					// nothing to do in confirm screen
-					deferred = resolved;
+			const step = steps[ currentStep ];
+			if ( !step ) {
+				console.error( 'Unknown step:', currentStep );
+				return;
 			}
 
-			video2commons.promiseWorkingOn( deferred.done( function () {
-				var action = {
-					prev: -1,
-					next: 1
-				}[ button ];
-				var steps = [ 'source', 'target', 'confirm' ];
-				newTaskData.step = steps[ steps.indexOf( newTaskData.step ) + action ];
+			if ( button === 'next' ) {
+				const validationPromise = step();
+				video2commons.promiseWorkingOn(
+					validationPromise.done( function () {
+						video2commons.transitionStep( button );
+					} )
+				);
+			} else {
+				video2commons.transitionStep( button );
+				video2commons.reactivatePrevNextButtons();
+			}
+		},
+
+		transitionStep: function ( button ) {
+			if ( button === 'prev' && newTaskData.history.length > 0 ) {
+				newTaskData.step = newTaskData.history.pop();
 				video2commons.setupAddTaskDialog();
-			} ) );
+			} else if ( button === 'next' ) {
+				const lastStep = newTaskData.history[ newTaskData.history.length - 1 ];
+
+				if ( newTaskData.nextStep === lastStep ) {
+					newTaskData.step = newTaskData.history.pop();
+				} else {
+					newTaskData.history.push( newTaskData.step );
+					newTaskData.step = newTaskData.nextStep;
+				}
+
+				video2commons.setupAddTaskDialog();
+			}
 		},
 
 		promiseWorkingOn: function ( promise ) {
@@ -945,7 +1219,11 @@
 				} );
 		},
 
-		askAPI: function ( url, datain, dataout ) {
+		askAPI: function ( url, datain, dataout, object=null ) {
+			if ( object == null ) {
+				object = newTaskData;
+			}
+
 			var deferred = $.Deferred();
 			video2commons.apiPost( url, datain )
 				.done( function ( data ) {
@@ -956,9 +1234,9 @@
 					for ( var i = 0; i < dataout.length; i++ ) {
 						var name = dataout[ i ];
 						if ( newTaskDataQS && newTaskDataQS[ name ] ) {
-							newTaskData[ name ] = newTaskDataQS[ name ];
-						} else {
-							newTaskData[ name ] = data[ name ];
+							object[ name ] = newTaskDataQS[ name ];
+						} else if ( data[ name ] ) {
+							object[ name ] = data[ name ];
 						}
 					}
 
@@ -975,6 +1253,49 @@
 			// eslint-disable-next-line no-underscore-dangle,camelcase
 			data._csrf_token = csrfToken;
 			return $.post( 'api/' + endpoint, data );
+		},
+
+		/**
+		 * Run a list of tasks concurrently with a limit.
+		 *
+		 * @param {Array} tasks The tasks to run.
+		 * @param {number} limit The maximum number of tasks to run concurrently.
+		 * @return {jqery.Deferred} Will resolve when all tasks have completed.
+		 */
+		runWithConcurrency( tasks, limit=5 ) {
+			const _tasks = tasks.slice();
+
+			const deferred = $.Deferred();
+			const results = [];
+
+			let running = 0;
+			let index = 0;
+
+			const startTasks = () => {
+				if ( index >= _tasks.length && running === 0 ) {
+					deferred.resolve( results );
+					return;
+				}
+
+				// Start new tasks up to the limit.
+				while ( running < limit && index < _tasks.length ) {
+					const currentIndex = index++;
+					const task = _tasks[ currentIndex ];
+					running++;
+
+					task().then( ( result ) => {
+						results[ currentIndex ] = result;
+					} ).fail( ( error ) => {
+						results[ currentIndex ] = { error };
+					} ).always( () => {
+						running--;
+						startTasks();
+					} );
+				}
+			};
+
+			startTasks();
+			return deferred.promise();
 		}
 	};
 

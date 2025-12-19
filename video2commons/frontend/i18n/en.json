@@ -40,5 +40,11 @@
 	"notessubtitles": "If 'Import subtitles' is checked, subtitles will be imported, excluding auto-generated ones.",
 	"noteslicensing": "Only upload {{#a}}#fl|freely licensed{{/a}} or {{#a}}#pd|public domain{{/a}} content. {{#a}}#fu|Fair use{{/a}} is not allowed on Wikimedia Commons.",
 	"extensionmsg": "The file extension set above is used if and only if the video is in a non-free format, which requires transcoding. Videos in free formats will keep their extensions.",
-	"confirmmsg": "Please confirm the task or click 'Back' to change the parameters. By clicking 'Confirm', the task will be submitted and executed. Due to technical restrictions, a task cannot be easily aborted once it is submitted."
+	"confirmmsg": "Please confirm the task or click 'Back' to change the parameters. By clicking 'Confirm', the task will be submitted and executed. Due to technical restrictions, a task cannot be easily aborted once it is submitted.",
+	"actions": "Actions",
+	"edit": "Edit",
+	"selectAll": "Select all",
+	"select": "Select",
+	"videos": "Videos",
+	"noVideos": "No videos found"
 }

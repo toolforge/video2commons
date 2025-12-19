@@ -46,5 +46,11 @@
 	"notessubtitles": "Plain text shown as a note on the source screen (first step) of the add task dialog.",
 	"noteslicensing": "Semi-plain text shown as the importent note on the source screen (first step) of the add task dialog. There are some links in the text: [[:commons:Commons:Licensing#Acceptable_licenses|freely licensed]], [[:commons:Commons:Licensing#Material_in_the_public_domain|public domain]], [[:commons:Commons:FU|fair use]]. <code><nowiki>{{#a}}</nowiki></code> indicates the start of the link while <code><nowiki>{{/a}}</nowiki></code> indicates the end of the link, and <code><nowiki>#??|</nowiki></code> are the identifier of the link, which should not be changed.",
 	"extensionmsg": "Plain text shown as a note on the destination screen (second step) of the add task dialog. Terms: [[:w:Transcoding|transcoding]], [[:w:free format|free format]].",
-	"confirmmsg": "Plain text shown as a note on the confirm screen (third final step) of the add task dialog."
+	"confirmmsg": "Plain text shown as a note on the confirm screen (third final step) of the add task dialog.",
+	"actions": "Plain text shown as the name of a column in the playlist video table.",
+	"edit": "Plain text shown as the text of an action button in the playlist video table.",
+	"selectAll": "Plain text shown as tooltip text for a checkbox in the playlist video table. Checking the box will result in all videos in the playlist being selected for upload.",
+	"select": "Plain text shown as tooltip text for a checkbox in the playlist video table. Checking the box will result in a specific video in being selected for upload.",
+	"videos": "Plain text shown as a label on the confirm screen (third final step) of the add task dialog.",
+	"noVideos": "Plain text shown as a label on the playlist screen (second step) of the add task dialog when there are no videos to upload."
 }
