@@ -45,5 +45,11 @@
 	"notessubtitles": "Se se marca «Importar os subtítulos», importaranse os subtítulos, agás os xerados automaticamente.",
 	"noteslicensing": "Sube unicamente contido {{#a}}#fl|con licenza libre{{/a}} ou {{#a}}#pd|no dominio público{{/a}}. Non se permite {{#a}}#fu|o uso lexítimo{{/a}} en Wikimedia Commons.",
 	"extensionmsg": "A extensión de ficheiro seleccionada arriba úsase se, e só se, o vídeo está nun formato non libre, o que obriga a unha transcodificación. Os vídeos en formatos libres manterán as súas extensións.",
-	"confirmmsg": "Confirma a tarefa ou preme en «Volver» para cambiar os parámetros. Ó premer en «Confirmar», a tarefa será enviada e executada. Debido a restricións técnicas, a tarefa non se pode interromper con facilidade unha vez enviada."
+	"confirmmsg": "Confirma a tarefa ou preme en «Volver» para cambiar os parámetros. Ó premer en «Confirmar», a tarefa será enviada e executada. Debido a restricións técnicas, a tarefa non se pode interromper con facilidade unha vez enviada.",
+	"actions": "Accións",
+	"edit": "Editar",
+	"selectAll": "Seleccionar todos",
+	"select": "Seleccionar",
+	"videos": "Vídeos",
+	"noVideos": "Non se atoparon vídeos"
 }

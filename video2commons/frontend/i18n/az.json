@@ -45,5 +45,11 @@
 	"notessubtitles": "\"Subtitrləri idxal et\" seçilərsə, avtomatik yaradılanlar istisna olmaqla, subtitrlər idxal ediləcək.",
 	"noteslicensing": "Yalnız  {{#a}}#fl|azad lisenziyalı{{/a}} və ya {{#a}}#pd|ictimai mülkiyyətdə{{/a}} olan məzmunu yükləyin. Vikianbarda {{#a}}#fu|ədalətli istifadəyə{{/a}} icazə verilmir.",
 	"extensionmsg": "Yuxarıda təyin olunmuş fayl uzantısı yalnız və yalnız video transkodlaşdırma tələb edən qeyri-azad formatda olduqda istifadə olunur. Azad formatlardakı videolar öz uzantılarını saxlayacaq.",
-	"confirmmsg": "Zəhmət olmasa tapşırığı təsdiqləyin və ya parametrləri dəyişmək üçün \"Geri\" düyməsinə klikləyin. \"Təsdiq et\" düyməsini klikləməklə, tapşırıq təqdim olunacaq və icra ediləcək. Texniki məhdudiyyətlərə görə, tapşırıq təqdim edildikdən sonra asanlıqla dayandırıla bilməz."
+	"confirmmsg": "Zəhmət olmasa tapşırığı təsdiqləyin və ya parametrləri dəyişmək üçün \"Geri\" düyməsinə klikləyin. \"Təsdiq et\" düyməsini klikləməklə, tapşırıq təqdim olunacaq və icra ediləcək. Texniki məhdudiyyətlərə görə, tapşırıq təqdim edildikdən sonra asanlıqla dayandırıla bilməz.",
+	"actions": "Fəaliyyətlər",
+	"edit": "Redaktə",
+	"selectAll": "Hamısını seç",
+	"select": "Seç",
+	"videos": "Videolar",
+	"noVideos": "Heç bir video tapılmadı"
 }

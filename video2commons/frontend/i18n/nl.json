@@ -39,6 +39,7 @@
 	"uploading": "Bezig met uploaden...",
 	"note": "Opmerking:",
 	"importantnote": "Belangrijke opmerking:",
+	"youtubewarning": "Het downloaden van YouTube-video's kan mislukken door detectie van bots. Dit gebeurt meestal wanneer de downloadlimieten van YouTube worden overschreden. Wacht in dat geval één tot twee uur voordat u het opnieuw probeert.",
 	"notesplaylists": "Afspeellijsten worden niet correct verwerkt. Sommige sites (zoals Youku en Comedy Central) maken gebruik van multipart-video's, geïnterpreteerd als afspeellijsten, en deze worden niet correct verwerkt.",
 	"notesuncheck": "Als de mediabestanden geen video- of audiosporen bevatten, vink de selectievakjes dan af, anders mislukt het omzetten, zelfs als het een open bestand is.",
 	"notessubtitles": "Als \"ondertitels importeren\" is aangevinkt, dan worden ondertitels geïmporteerd, met uitzondering van automatisch gegenereerde ondertitels.",
