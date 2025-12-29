@@ -1,6 +1,7 @@
 {
 	"@metadata": {
 		"authors": [
+			"Avengium",
 			"Fitoschido",
 			"Macofe",
 			"Wilfredor"
@@ -45,5 +46,11 @@
 	"notessubtitles": "Si se marca 'Importar subtítulos', se importarán los subtítulos, a excepción de los autogenerados.",
 	"noteslicensing": "Sólo sube contenido {{#a}}#fl|con licencia libre{{/a}} o {{#a}}#pd|en dominio público{{/a}}. No se me permite {{#a}}#fu|uso justo{{/a}} en Wikimedia Commons.",
 	"extensionmsg": "La extensión de archivo seleccionada arriba se usa si y sólo si el vídeo está en formato no libre, los cuales requieren transcodificación. Los vídeos en formatos libres mantendrán sus extensiones.",
-	"confirmmsg": "Confirma la tarea o haz clic en 'Atrás' para cambiar los parámetros. Al hacer clic en 'Confirmar', la tarea será enviada y ejecutada. Debido a restricciones técnicas, la tarea no se puede interrumpir con facilidad una vez que comienza."
+	"confirmmsg": "Confirma la tarea o haz clic en 'Atrás' para cambiar los parámetros. Al hacer clic en 'Confirmar', la tarea será enviada y ejecutada. Debido a restricciones técnicas, la tarea no se puede interrumpir con facilidad una vez que comienza.",
+	"actions": "Acciones",
+	"edit": "Editar",
+	"selectAll": "Seleccionar todo",
+	"select": "Seleccionar",
+	"videos": "Vídeos",
+	"noVideos": "No se encontraron videos"
 }
