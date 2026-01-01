@@ -220,7 +220,9 @@ def _license(url, ie_key, title, info):
     default = DEFAULT_LICENSE
     if ie_key == 'Youtube' and info.get('license') == \
             'Creative Commons Attribution license (reuse allowed)':
-        return '{{YouTube CC-BY%s}}' % uploader_param
+        if _date(url, ie_key, title, info) <= '2025-08-01':
+            return '{{YouTube CC-BY%s}}' % uploader_param
+        return '{{YouTube CC-BY 4.0%s}}' % uploader_param
     elif ie_key == 'Flickr':
         return {
             'Attribution':
