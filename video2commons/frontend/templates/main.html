@@ -23,7 +23,7 @@
 {% else %}
 <form method="get" action="{{ url_for('loginredirect') }}">
   <center>
-    <input class="btn btn-primary btn-success btn-lg" type="submit" value="{{ _('loginOnCommons') }}">
+    <input class="btn btn-primary btn-lg btn-login" type="submit" value="{{ _('loginOnCommons') }}">
   </center>
   <input type="hidden" name="returnto" value="{{ request.url }}">
 </form>
