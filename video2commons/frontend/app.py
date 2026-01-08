@@ -24,7 +24,6 @@
 import json
 import logging
 import traceback
-from urllib.parse import quote as urlquote
 from urllib.parse import urlparse, urljoin
 
 from flask import (
@@ -40,7 +39,7 @@ from video2commons.config import (
 
 from video2commons.frontend.redisession import RedisSessionInterface
 from video2commons.frontend.shared import redisconnection, check_banned
-from video2commons.frontend.api import api
+from video2commons.frontend.api import api, is_sudoer
 from video2commons.frontend.i18n import (
     i18nblueprint, translate as _, getlanguage, is_rtl
 )
@@ -227,8 +226,14 @@ def logincallback():
     session.pop('username', None)
 
     identify = handshaker.identify(access_token)
-    if not (identify['editcount'] >= 50 and
-            'autoconfirmed' in identify['rights']):
+
+    is_contributor = identify['editcount'] >= 50
+    is_maintainer = is_sudoer(identify['username'])
+    is_autoconfirmed = 'autoconfirmed' in identify['rights']
+
+    # Only allow autoconfirmed users either with at least 50 edits or
+    # maintainer status to use this tool.
+    if not (is_autoconfirmed and (is_contributor or is_maintainer)):
         return render_template(
             'error.min.html',
             message='You must be an autoconfirmed Commons user '
@@ -240,6 +245,7 @@ def logincallback():
         access_token.key, access_token.secret
 
     session['username'] = identify['username']
+    session['is_maintainer'] = is_maintainer
 
     return redirect(session.get('return_to_url', url_for('main')))
 

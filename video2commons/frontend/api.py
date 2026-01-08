@@ -45,6 +45,7 @@ from video2commons.frontend.urlextract import (
 from video2commons.frontend.upload import (
     upload as _upload, status as _uploadstatus
 )
+from video2commons.shared import stats
 
 # Adapted from: https://stackoverflow.com/a/19161373
 YOUTUBE_REGEX = (
@@ -146,7 +147,8 @@ def status():
     return jsonify(
         values=values,
         rooms=rooms,
-        username=session['username']
+        username=session['username'],
+        stats=get_stats()
     )
 
 
@@ -167,7 +169,8 @@ def _status(id):
     res = worker.main.AsyncResult(id)
     task = {
         'id': id,
-        'title': title
+        'title': title,
+        'hostname': get_hostname_from_task(id)
     }
 
     try:
@@ -260,7 +263,7 @@ def get_tasks():
     """Get a list of visible tasks for user."""
     # sudoer = able to monitor all tasks
     username = session['username']
-    if is_sudoer(username):
+    if session.get('is_maintainer'):
         key = 'alltasks'
     else:
         key = 'tasks:' + username
@@ -268,9 +271,28 @@ def get_tasks():
     return key, redisconnection.lrange(key, 0, -1)[::-1]
 
 
+def get_stats():
+    """Get worker stats from Redis."""
+    stats = redisconnection.get('stats')
+
+    return json.loads(stats) if stats else None
+
+
 def get_title_from_task(id):
     """Get task title from task ID."""
     return redisconnection.get('titles:' + id)
+
+
+def get_hostname_from_task(id):
+    """Get the hostname of the worker processing a task from task ID."""
+    hostname = redisconnection.get('tasklock:' + id)
+
+    # Old tasks don't have a hostname as the value in tasklock and store the
+    # literal 'T' instead. Reinterpret these values as null.
+    if hostname == 'T':
+        hostname = None
+
+    return hostname
 
 
 @api.route('/extracturl', methods=['POST'])
@@ -462,6 +484,11 @@ def run_task_internal(filename, params):
     redisconnection.set('params:' + taskid, json.dumps(params))
     redisconnection.expire('params:' + taskid, expire)
 
+    try:
+        stats.increment_queue_counter(redisconnection)
+    except Exception:
+        pass  # We don't want to fail the API call if we can't update stats.
+
     redis_publish('add', {'taskid': taskid, 'user': session['username']})
     redis_publish('update', {'taskid': taskid, 'data': _status(taskid)})
 
@@ -475,9 +502,10 @@ def restart_task():
 
     filename = redisconnection.get('titles:' + id)
     assert filename, 'Task does not exist'
-    assert id in \
-        redisconnection.lrange('tasks:' + session['username'], 0, -1), \
-        'Task must belong to you.'
+    if not session.get('is_maintainer'):
+        assert id in \
+            redisconnection.lrange('tasks:' + session['username'], 0, -1), \
+            'Task must belong to you.'
 
     restarted = redisconnection.get('restarted:' + id)
     assert not restarted, \
@@ -498,9 +526,10 @@ def remove_task():
     """Revove a task from list of tasks."""
     id = request.form['id']
     username = session['username']
-    assert id in \
-        redisconnection.lrange('tasks:' + username, 0, -1), \
-        'Task must belong to you.'
+    if not session.get('is_maintainer'):
+        assert id in \
+            redisconnection.lrange('tasks:' + username, 0, -1), \
+            'Task must belong to you.'
     redisconnection.lrem('alltasks', 0, id)
     redisconnection.lrem('tasks:' + username, 0, id)
     redisconnection.delete('titles:' + id)
@@ -517,9 +546,10 @@ def abort_task():
     """Abort a task."""
     id = request.form['id']
     username = session['username']
-    assert id in \
-        redisconnection.lrange('tasks:' + username, 0, -1), \
-        'Task must belong to you.'
+    if not session.get('is_maintainer'):
+        assert id in \
+            redisconnection.lrange('tasks:' + username, 0, -1), \
+            'Task must belong to you.'
     worker.main.AsyncResult(id).abort()
 
     redis_publish('update', {'taskid': id, 'data': _status(id)})
