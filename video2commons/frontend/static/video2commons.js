@@ -583,7 +583,7 @@
 					video2commons.makeSSULink( [ val ] )
 				);
 			} else if ( val.status === 'fail' ) {
-				setStatusText( val.text );
+				setStatusText( val.text, val.url, val.url );
 				if ( val.restartable ) {
 					$row.find( '#' + id + '-restartbutton' )
 						.show()

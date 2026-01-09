@@ -82,22 +82,12 @@ def csrf_protect():
 
 def format_exception(e):
     """Format an exception to text."""
-    try:
-        desc = str(e)
-    except UnicodeError:
-        desc = '%s' % e
+    desc = str(e)[:7000]
 
-    try:
-        desc = str(desc.encode('utf-8'))
-    except UnicodeError:
-        desc = str(desc.decode('utf-8').encode('utf-8'))
-
-    desc = desc[:7000]
     if isinstance(e, AssertionError):
         return desc
     else:
-        return 'An exception occurred: %s: %s' % \
-            (type(e).__name__, desc)
+        return f'An exception occurred: {type(e).__name__}: {desc}'
 
 
 def error_json(e):
@@ -247,8 +237,11 @@ def _status(id):
         else:
             task.update({
                 'status': 'fail',
-                'text': 'This task is in an unknown state. ' +
-                        'Please file an issue in GitHub.'
+                'text': (
+                    'This task is in an unknown state. Please file an issue '
+                    'in GitHub: <a></a>'
+                ),
+                'url': 'https://github.com/toolforge/video2commons/issues'
             })
 
     return task
