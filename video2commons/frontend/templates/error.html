@@ -1,4 +1,21 @@
 {% extends "base.min.html" %}
+
 {% block content %}
-<div class="alert alert-danger">{{ message }}</div>
+  {% if html_message %}
+    <div class="alert alert-danger">
+      <span>{{ html_message|safe }}</span>
+
+      {% if stacktrace %}
+        <pre><code>{{ stacktrace }}</code></pre>
+      {% endif %}
+    </div>
+  {% else %}
+    <div class="alert alert-danger">
+      <span>{{ message }}</span>
+
+      {% if stacktrace %}
+        <pre><code>{{ stacktrace }}</code></pre>
+      {% endif %}
+    </div>
+  {% endif %}
 {% endblock %}

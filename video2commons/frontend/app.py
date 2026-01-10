@@ -44,6 +44,8 @@ from video2commons.frontend.i18n import (
     i18nblueprint, translate as _, getlanguage, is_rtl
 )
 
+ISSUE_URL = 'https://github.com/toolforge/video2commons/issues'
+
 consumer_token = ConsumerToken(consumer_key, consumer_secret)
 handshaker = Handshaker(api_url, consumer_token)
 
@@ -73,22 +75,29 @@ app.register_blueprint(i18nblueprint, url_prefix='/i18n')
 @app.errorhandler(Exception)
 def all_exception_handler(e):
     """Handle an exception and show the traceback to error page."""
+    issue_link = f'<a href="{ISSUE_URL}">{ISSUE_URL}</a>'
+    stacktrace = None
+
     try:
-        message = 'Please file an issue in GitHub: ' + \
-                  traceback.format_exc()
+        message = (
+            f'Please file an issue with this error in GitHub: '
+            f'{issue_link}<br><br>'
+        )
         loggedin = 'username' in session
+        stacktrace = traceback.format_exc()
     except:
         message = (
-            'Something went terribly wrong, '
-            'and we failed to find the cause automatically. '
-            'Please file an issue in GitHub.'
+            f'Something went terribly wrong, '
+            f'and we failed to find the cause automatically. '
+            f'Please file an issue in GitHub: {issue_link}'
         )
         loggedin = False
 
     try:
         return render_template(
             'error.min.html',
-            message=message,
+            html_message=message,
+            stacktrace=stacktrace,
             loggedin=loggedin
         ), 500
     except:
