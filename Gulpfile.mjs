@@ -47,4 +47,6 @@ gulp.task( 'watch', function () {
 		.on( 'change', changeevent );
 } );
 
-gulp.task( 'default', gulp.series( 'scripts', 'jinja2', 'nunjucks', 'watch' ));
+gulp.task( 'build', gulp.series( 'scripts', 'jinja2', 'nunjucks' ));
+
+gulp.task( 'default', gulp.series( 'build', 'watch' ));
