@@ -41,9 +41,23 @@ jobs:
 
       - name: Check for unstaged changes
         run: |
-          git diff --exit-code -- video2commons/frontend/static/*.min.js video2commons/frontend/templates/*.min.html || {
-            echo "Error: Built files do not match committed files."
-            echo "Please run 'npx gulp' locally and commit the changes."
+          if ! git diff --exit-code -- video2commons/frontend/static/*.min.js video2commons/frontend/templates/*.min.html; then
+            echo "Built files differ from committed files."
             git diff --stat -- video2commons/frontend/static/*.min.js video2commons/frontend/templates/*.min.html
-            exit 1
-          }
+            echo "NEEDS_COMMIT=true" >> $GITHUB_ENV
+          else
+            echo "Built files match committed files."
+            echo "NEEDS_COMMIT=false" >> $GITHUB_ENV
+          fi
+
+      - name: Commit and push changes
+        if: env.NEEDS_COMMIT == 'true'
+        run: |
+          git checkout HEAD -- video2commons/frontend/static/ssu video2commons/frontend/static/uploads
+          git fetch origin $GITHUB_HEAD_REF
+          git checkout $GITHUB_HEAD_REF
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add video2commons/frontend/static/*.min.js video2commons/frontend/templates/*.min.html
+          git commit -m "Update built files from CI"
+          git push origin $GITHUB_HEAD_REF
