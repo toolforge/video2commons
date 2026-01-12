@@ -1,0 +1,49 @@
+name: Validate JavaScript Build
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    container:
+      image: debian:bookworm
+
+    steps:
+      - name: Install dependencies
+        run: |
+          apt-get update
+          apt-get install -y git curl
+
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Configure git safe directory
+        run: git config --global --add safe.directory "$GITHUB_WORKSPACE"
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: 'npm'
+
+      - name: Install npm dependencies
+        run: npm ci
+
+      - name: Remove broken symlinks
+        run: |
+          rm -f video2commons/frontend/static/ssu
+          rm -f video2commons/frontend/static/uploads
+
+      - name: Build
+        run: npx gulp build
+
+      - name: Check for unstaged changes
+        run: |
+          git diff --exit-code -- video2commons/frontend/static/*.min.js video2commons/frontend/templates/*.min.html || {
+            echo "Error: Built files do not match committed files."
+            echo "Please run 'npx gulp' locally and commit the changes."
+            git diff --stat -- video2commons/frontend/static/*.min.js video2commons/frontend/templates/*.min.html
+            exit 1
+          }
