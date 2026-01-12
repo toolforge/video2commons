@@ -2,6 +2,7 @@
 	"@metadata": {
 		"authors": [
 			"Pyscowicz",
+			"Samoasambia",
 			"Silvonen",
 			"Veikk0.ma"
 		]
@@ -39,5 +40,11 @@
 	"uploading": "Lähetetään...",
 	"note": "Huomautus:",
 	"importantnote": "Tärkeä huomautus:",
-	"noteslicensing": "Tallenna vain {{#a}}#fl|vapaasti lisensoitua{{/a}} tai {{#a}}#pd|tekijänoikeudetonta{{/a}} sisältöä. {{#a}}#fu|Fair use{{/a}} ei ole sallittua Wikimedia Commonsissa."
+	"noteslicensing": "Tallenna vain {{#a}}#fl|vapaasti lisensoitua{{/a}} tai {{#a}}#pd|tekijänoikeudetonta{{/a}} sisältöä. {{#a}}#fu|Fair use{{/a}} ei ole sallittua Wikimedia Commonsissa.",
+	"actions": "Toiminnot",
+	"edit": "Muokkaa",
+	"selectAll": "Valitse kaikki",
+	"select": "Valitse",
+	"videos": "Videot",
+	"noVideos": "Videoita ei löytynyt"
 }
