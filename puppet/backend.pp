@@ -10,6 +10,16 @@ $http_host = 'v2c.wmflabs.org'
 
 include cron
 
+class { 'nodejs':
+    repo_version => '24',
+}
+
+# Needed for yt-dlp as it uses JavaScript to get higher quality videos.
+package { 'deno':
+  ensure   => installed,
+  provider => 'npm',
+}
+
 package { [
     'build-essential',
     'python3-dev',
