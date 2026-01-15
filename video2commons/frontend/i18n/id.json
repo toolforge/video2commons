@@ -1,6 +1,7 @@
 {
 	"@metadata": {
 		"authors": [
+			"Bennylin",
 			"Daud I.F. Argana",
 			"Rachmat04"
 		]
@@ -13,7 +14,7 @@
 	"abort": "Batalkan",
 	"remove": "Hapus",
 	"restart": "Mulai ulang",
-	"next": "Berikutnya",
+	"next": "Selanjutnya",
 	"loading": "Memuat…",
 	"confirm": "Konfirmasi",
 	"errorDisconnect": "Sambungan ke peladen gagal. Silakan muat ulang halaman ini atau buat laporan masalah di GitHub.",
