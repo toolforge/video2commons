@@ -5,6 +5,7 @@
 			"Cobija",
 			"Grkn gll",
 			"Hedda",
+			"Leo",
 			"MuratTheTurkish",
 			"Stonecy",
 			"Uncitoyen",
@@ -26,6 +27,10 @@
 	"errorTooLarge": "Doğrudan yüklenecek dosya çok büyük! {{#a}}Sunucu taraflı bir yükleme yapmak{{/a}} isteyebilirsiniz.",
 	"addTask": "Görev ekle...",
 	"yourTasks": "Görevleriniz:",
+	"workers": "İşçiler:",
+	"capacity": "Kapasite:",
+	"utilization": "İşçi Kullanımı:",
+	"pending": "Bekleyen Görevler:",
 	"createServerSide": "Tek seferlik sunucu taraflı yükleme bileti oluşturun (önerilir)",
 	"taskDone": "Göreviniz tamamlandı. Yüklemenizi {{#a}}{{/a}} adresinde bulabilirsiniz.",
 	"cancel": "İptal",
@@ -51,5 +56,11 @@
 	"notessubtitles": "'Altyazıları içe aktar' seçeneği işaretlenirse otomatik oluşturulanlar hariç altyazılar içe aktarılır.",
 	"noteslicensing": "Sadece {{#a}}#fl|özgür lisanslı{{/a}} ya da {{#a}}#pd|kamu malı{{/a}} içerikler yükleyin. {{#a}}#fu|Adil kullanıma{{/a}} Wikimedia Commons'ta izin verilmiyor.",
 	"extensionmsg": "Yukarıda belirtilen dosya uzantısı, videonun yalnızca serbest kodlama gerektiriyorsa ve kod dönüştürmeyi gerektiriyorsa kullanılır. Serbest biçimlerde videolar uzantılarını korunacak.",
-	"confirmmsg": "Lütfen görevi onaylayın veya parametreleri değiştirmek için 'Geri'ye tıklayın. 'Onayla' düğmesine tıklayarak görev teslim edilecek ve yürütülecektir. Teknik kısıtlamalar nedeniyle, bir görev gönderildikten sonra kolayca iptal edilemez."
+	"confirmmsg": "Lütfen görevi onaylayın veya parametreleri değiştirmek için 'Geri'ye tıklayın. 'Onayla' düğmesine tıklayarak görev teslim edilecek ve yürütülecektir. Teknik kısıtlamalar nedeniyle, bir görev gönderildikten sonra kolayca iptal edilemez.",
+	"actions": "Eylemler",
+	"edit": "Değiştir",
+	"selectAll": "Tümünü seç",
+	"select": "Seç",
+	"videos": "Videolar",
+	"noVideos": "Hiç video bulunamadı"
 }

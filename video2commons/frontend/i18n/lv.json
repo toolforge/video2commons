@@ -1,10 +1,14 @@
 {
 	"@metadata": {
 		"authors": [
-			"Papuass"
+			"Papuass",
+			"Rusjanis"
 		]
 	},
+	"logout": "Iziet",
 	"help": "Palīdzība",
+	"JavascriptRequired": "Lai izmantotu šo rīku, nepieciešams JavaScript!",
+	"abort": "Pārtraukt",
 	"remove": "Noņemt",
 	"restart": "Sākt no jauna",
 	"next": "Tālāk",
@@ -27,5 +31,11 @@
 	"uploadFile": "Vai augšupielādēt failu...",
 	"uploading": "Augšupielādē...",
 	"note": "Piezīme:",
-	"importantnote": "Svarīga piezīme:"
+	"importantnote": "Svarīga piezīme:",
+	"actions": "Darbības",
+	"edit": "Labot",
+	"selectAll": "Izvēlēties visu",
+	"select": "Izvēlēties",
+	"videos": "Video",
+	"noVideos": "Nav atrasts neviens video"
 }
