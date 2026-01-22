@@ -17,8 +17,10 @@
 
 """Convert and upload subtitles."""
 
+import os
 import traceback
 import subprocess
+import json
 import pywikibot
 import langcodes
 from converter import Converter
@@ -26,15 +28,178 @@ import chardet
 
 from ..encode.globals import ffmpeg_location, ffprobe_location
 from video2commons.exceptions import TaskAbort
+from langcodes import Language
+from langcodes.tag_parser import LanguageTagError
 
 
-def subtitles(
+def upload(site, filename, text, langcode, langname):
+    """Upload subtitles to Wikimedia Commons."""
+    page = pywikibot.Page(site, f'TimedText:{filename}.{langcode.lower()}.srt')
+    page.text = text
+    if not page.exists():
+        page.save(
+            summary=f'Import {langname} subtitles for [[:File:{filename}]]',
+            minor=False
+        )
+
+
+def upload_container_subtitles(filepath, filename, outputdir, username, statuscallback=None):
+    """Extract subtitles from a video container that supports it (e.g. mkv)."""
+    statuscallback = statuscallback or (lambda text, percent: None)
+
+    statuscallback('Uploading subtitles...', -1)
+
+    percent = 0
+
+    result = subprocess.run([
+        ffprobe_location,
+        '-loglevel', 'error',
+        '-select_streams', 's',
+        '-show_entries', 'stream=index:stream_tags=language',
+        '-of', 'json',
+        filepath
+    ], capture_output=True, text=True)
+
+    if result.returncode != 0:
+        statuscallback(
+            f'Failed to extract subtitles: {result.stderr or result.returncode}',
+            None
+        )
+        return
+
+    subtitles = []
+    languages = set()
+    streams = json.loads(result.stdout).get('streams', [])
+
+    if not streams:
+        statuscallback('No subtitles found in container', 100)
+        return
+
+    statuscallback(f'Extracting subtitles for {len(streams)} language(s)...', -1)
+
+    # Extract all subtitles from the video container (0-50%).
+    for stream in streams:
+        has_language = 'tags' in stream and 'language' in stream['tags']
+        has_index = 'index' in stream
+
+        # Skip unlabelled subtitles that have no language tag.
+        if not has_language or not has_index:
+            percent += 50.0 / len(streams)
+            statuscallback('Skipping subtitles missing required tags', None)
+            continue
+
+        try:
+            langcode = langcodes.standardize_tag(stream['tags']['language'])
+        except LanguageTagError:
+            percent += 50.0 / len(streams)
+            statuscallback(
+                f'Skipping subtitles with invalid language tag: {langcode}',
+                None
+            )
+            continue  # Skip subtitles with invalid language tags.
+
+        # Skip subtitles with the same language as previous subtitles since
+        # this isn't supported by Mediawiki.
+        if langcode in languages:
+            percent += 50.0 / len(streams)
+            statuscallback(
+                f'Skipping duplicate subtitles with language: {langcode}',
+                None
+            )
+            continue
+        else:
+            languages.add(langcode)
+
+        langname = Language.make(language=langcode).display_name()
+        statuscallback(f'Extracting {langname} subtitles...', int(percent))
+
+        srt_filepath = os.path.join(outputdir, f'{filename}.{langcode.lower()}.srt')
+
+        # Write the subtitles to the output directory of the job.
+        result = subprocess.run([
+            ffmpeg_location,
+            '-nostdin',
+            '-hide_banner',
+            '-loglevel', 'quiet',
+            '-i', filepath,
+            '-map', f'0:{stream["index"]}',
+            srt_filepath
+        ], capture_output=True, text=True)
+
+        percent += 50.0 / len(streams)
+
+        if result.returncode != 0:
+            statuscallback(
+                f"Failed to extract '{langcode.lower()}' subtitles: {result.stderr or result.returncode}",
+                int(percent)
+            )
+            continue
+
+        subtitles.append((langcode, langname, srt_filepath))
+
+    if not subtitles:
+        statuscallback('No subtitles extracted successfully', 100)
+        return
+
+    # Attempt uploads only after successful extraction of all subtitles (50-100%).
+    for langcode, langname, srt_filepath in subtitles:
+        try:
+            statuscallback(f'Uploading {langname} subtitles...', int(percent))
+
+            with open(srt_filepath, 'rb') as f:
+                text = f.read()
+
+            # Try to first decode the subtitles as UTF-8 if possible rather
+            # than relying entirely on chardet as it detects encodings
+            # using a statistical method that is prone to error.
+            decoded_text = parse_utf8(text)
+            if decoded_text is not None:
+                text = decoded_text
+            else:
+                # It's not UTF-8, so try to detect the encoding.
+                encoding = chardet.detect(text)['encoding']
+                if not encoding:
+                    statuscallback(
+                        f'Skipping subtitles with invalid encoding: {langcode}',
+                        None
+                    )
+                    continue
+
+                try:
+                    text = text.decode(encoding)
+                except Exception:
+                    statuscallback(
+                        f'Skipping subtitles with invalid encoding: {langcode}',
+                        None
+                    )
+                    continue
+
+            upload(
+                site=pywikibot.Site('commons', 'commons', user=username),
+                filename=filename,
+                text=text,
+                langcode=langcode,
+                langname=langname
+            )
+
+            percent += 50.0 / len(subtitles)
+            statuscallback(f'Finished uploading {langname} subtitles', int(percent))
+        except TaskAbort:
+            raise
+        except Exception as e:
+            percent += 50.0 / len(subtitles)
+            statuscallback(f'{type(e).__name__}: {e}\n\n{traceback.format_exc()}', int(percent))
+
+
+def upload_subtitles(
     subtitles, wikifilename, username,
     statuscallback=None, errorcallback=None
 ):
     """Convert and upload subtitles to corresponding TimedText pages."""
     statuscallback = statuscallback or (lambda text, percent: None)
     errorcallback = errorcallback or (lambda text: None)
+
+    statuscallback('Uploading subtitles...', -1)
 
     percent = 0
     c = Converter(
@@ -92,16 +257,14 @@ def subtitles(
 
             # ENSURE PYWIKIBOT OAUTH PROPERLY CONFIGURED!
             site = pywikibot.Site('commons', 'commons', user=username)
-            page = pywikibot.Page(
-                site,
-                f'TimedText:{wikifilename}.{langcode.lower()}.srt'
+
+            upload(
+                site=site,
+                filename=wikifilename,
+                text=subtitletext,
+                langcode=langcode,
+                langname=langname
             )
-            page.text = subtitletext
-            if not page.exists():
-                page.save(
-                    summary=f'Import {langname} subtitles for [[:File:{wikifilename}]]',
-                    minor=False
-                )
 
             percent += 50.0 / len(subtitles)
             statuscallback(
@@ -113,3 +276,11 @@ def subtitles(
         except Exception as e:
             statuscallback(f'{type(e).__name__}: {e} \n\n{traceback.format_exc()}', None)
             pass
+
+
+def parse_utf8(bytestring):
+    """Try to decode a bytestring as UTF-8, returning None on failure."""
+    try:
+        return bytestring.decode('utf-8')
+    except UnicodeDecodeError:
+        return None
