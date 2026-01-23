@@ -136,6 +136,9 @@ def main(
         file = d['target']
         if not file:
             errorcallback('Download failed!')
+
+        source = file
+        subtitles_requested = subtitles
         subtitles = subtitles and d['subtitles']
 
         statuscallback('Converting...', -1)
@@ -163,9 +166,8 @@ def main(
             errorcallback('Upload failed!')
 
         if subtitles:
-            statuscallback('Uploading subtitles...', -1)
             try:
-                subtitleuploader.subtitles(
+                subtitleuploader.upload_subtitles(
                     subtitles, filename, username,
                     statuscallback, errorcallback
                 )
@@ -174,7 +176,23 @@ def main(
             except Exception as e:
                 statuscallback(type(e).__name__ + ": " + str(e), None)
                 print(e)
-                pass
+        elif subtitles_requested:
+            # Fallback to extracting subtitles from the container if yt-dlp was
+            # unable to find subtitles. This happens with manual mkv uploads
+            # that contain embedded subtitles.
+            try:
+                subtitleuploader.upload_container_subtitles(
+                    filepath=source,
+                    filename=filename,
+                    outputdir=outputdir,
+                    username=username,
+                    statuscallback=statuscallback
+                )
+            except TaskAbort:
+                raise
+            except Exception as e:
+                statuscallback(type(e).__name__ + ": " + str(e), None)
+                print(e)
 
     except NeedServerSideUpload as e:
         # json serializer cannot properly serialize an exception

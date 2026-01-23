@@ -3,6 +3,7 @@ celery[redis]
 langcodes
 chardet
 mwoauth>=0.2.4,!=0.3.1
+language_data>=1.4.0,<2
 #pywikibot
 mwparserfromhell>=0.5.2
 PythonVideoConverter
