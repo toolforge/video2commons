@@ -43,6 +43,54 @@ def upload(site, filename, text, langcode, langname):
         )
 
 
+def get_container_subtitle_languages(filepath):
+    """Returns subtitle languages contained in a video container."""
+    languages = set()
+
+    result = subprocess.run([
+        ffprobe_location,
+        '-loglevel', 'error',
+        '-select_streams', 's',
+        '-show_entries', 'stream=index:stream_tags=language',
+        '-of', 'json',
+        filepath
+    ], capture_output=True, text=True)
+
+    if result.returncode != 0:
+        return set()
+
+    for stream in json.loads(result.stdout).get('streams', []):
+        has_language = 'tags' in stream and 'language' in stream['tags']
+        has_index = 'index' in stream
+
+        # Skip unlabelled subtitles that have no language tag.
+        if not has_language or not has_index:
+            continue
+
+        try:
+            langcode = langcodes.standardize_tag(stream['tags']['language'])
+        except LanguageTagError:
+            continue  # Skip subtitles with invalid language tags.
+
+        languages.add(langcode)
+
+    return languages
+
+
+def get_subtitle_languages(subtitles):
+    """Returns subtitle languages identifid by yt-dlp."""
+    languages = set()
+
+    for langcode, _ in subtitles.items():
+        try:
+            langcode = str(langcodes.get(langcode))
+        except LanguageTagError:
+            continue  # Skip subtitles with invalid language tags.
+
+        languages.add(langcode)
+
+    return languages
+
 def upload_container_subtitles(filepath, filename, outputdir, username, statuscallback=None):
     """Extract subtitles from a video container that supports it (e.g. mkv)."""
     statuscallback = statuscallback or (lambda text, percent: None)
