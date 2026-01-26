@@ -28,6 +28,8 @@
 	"transcoding": "Transcoding format",
 	"filedescription": "File description page",
 	"filename": "Filename",
+	"datecategory": "Date Category",
+	"datecategory-help": "Optional: Set the date category of the file if you know when it was originally created. If you don't know, leave this blank.\n\nThe format of the date must be either \"Videos of YYYY\" or \"Videos taken on YYYY-MM-DD\".",
 	"video": "video",
 	"audio": "audio",
 	"subtitles": "subtitles",

@@ -64,6 +64,107 @@
 
 	var $addTaskDialog, newTaskData, newTaskDataQS, SSUs, username;
 
+	/**
+	 * Validate date category names.
+	 *
+	 * This function ensures that dates are valid and match these patterns:
+	 *
+	 * - "Videos of YYYY"
+	 * - "Videos taken on YYYY-MM-DD"
+	 *
+	 * @param {string} value The date category value to validate.
+	 * @return {object} Object with valid (boolean), value (string|null), and error (string|undefined).
+	 */
+	function validateDateCategory( value ) {
+		// Dates are optional, so pass through as valid if no value is given.
+		if ( !value ) {
+			return { valid: true, value: null };
+		}
+
+		// Validate names that match the "Videos of YYYY" pattern.
+		const yearMatch = value.match( /^Videos of (\d{4})$/ );
+		if ( yearMatch ) {
+			const year = parseInt( yearMatch[ 1 ], 10 );
+			const currentYear = new Date().getFullYear();
+
+			if ( year > currentYear ) {
+				return { valid: false, error: 'The year must not be in the future.' };
+			}
+
+			return { valid: true, value };
+		}
+
+		// Validate names that match the "Videos taken on YYYY-MM-DD" pattern.
+		const dateMatch = value.match( /^Videos taken on (\d{4})-(\d{2})-(\d{2})$/ );
+		if ( dateMatch ) {
+			const year = parseInt( dateMatch[ 1 ], 10 );
+			const month = parseInt( dateMatch[ 2 ], 10 );
+			const day = parseInt( dateMatch[ 3 ], 10 );
+			const date = new Date( year, month - 1, day );
+			const now = new Date();
+
+			if (
+				date.getFullYear() !== year
+				|| date.getMonth() !== month - 1
+				|| date.getDate() !== day
+				|| date > now
+			) {
+				return { valid: false, error: 'The date must be a real date in the past.' };
+			}
+
+			return { valid: true, value };
+		}
+
+		return { valid: false, error: 'The format of the date must be either "Videos of YYYY" or "Videos taken on YYYY-MM-DD".' };
+	}
+
+	/**
+	 * Get the placeholder text for the date category field.
+	 *
+	 * @param {object} source The source data object (newTaskData or a video object).
+	 * @return {string} The placeholder text with example formats.
+	 */
+	function getDateCategoryPlaceholder( source ) {
+		const now = new Date();
+		const currentDate = now.toISOString().split( 'T' )[ 0 ];
+		const dateStr = source.date || currentDate;
+		const yearStr = dateStr.split( '-' )[ 0 ];
+
+		return `e.g. "Videos of ${yearStr}", "Videos taken on ${dateStr}", etc.`;
+	}
+
+	/**
+	 * Get the default value for the date category field.
+	 *
+	 * @param {object} source The source data object (newTaskData or a video object).
+	 * @return {string} The default value.
+	 */
+	function getDateCategoryDefault( source ) {
+		const now = new Date();
+		const currentDate = now.toISOString().split( 'T' )[ 0 ];
+		const dateStr = source.date || currentDate;
+
+		return `Videos taken on ${dateStr}`;
+	}
+
+	/**
+	 * Generate datalist options for the date category field.
+	 *
+	 * @param {object} source The source data object (newTaskData or a video object).
+	 * @return {Array} Array of option strings.
+	 */
+	function getDateCategoryOptions( source ) {
+		const now = new Date();
+		const currentDate = now.toISOString().split( 'T' )[ 0 ];
+		const dateStr = source.date || currentDate;
+		const yearStr = dateStr.split( '-' )[ 0 ];
+
+		return [
+			`Videos of ${yearStr}`,
+			`Videos taken on ${dateStr}`
+		];
+	}
+
 	const form = {
 		/**
 		 * Get the data from the source form in the new task dialog.
@@ -84,7 +185,8 @@
 			return {
 				filename: $addTaskDialog.find( '#filename' ).val().trim(),
 				format: $addTaskDialog.find( '#format' ).val(),
-				filedesc: $addTaskDialog.find( '#filedesc' ).val()
+				filedesc: $addTaskDialog.find( '#filedesc' ).val(),
+				dateCategory: $addTaskDialog.find( '#dateCategory' ).val().trim()
 			};
 		},
 
@@ -178,6 +280,7 @@
 						'id',
 						'title',
 						'url',
+						'date',
 						'extractor',
 						'filedesc',
 						'filename',
@@ -190,7 +293,10 @@
 					if ( newTaskData.type === 'playlist' ) {
 						newTaskData.videos.forEach( ( video ) => {
 							video.format = newTaskData.format;
+							video.dateCategory = getDateCategoryDefault( video );
 						} );
+					} else {
+						newTaskData.dateCategory = getDateCategoryDefault( newTaskData );
 					}
 				} );
 		},
@@ -328,6 +434,14 @@
 				: newTaskData;
 
 			object.format = data.format;
+
+			const dateCategoryResult = validateDateCategory( data.dateCategory );
+			if ( !dateCategoryResult.valid ) {
+				return $.Deferred()
+					.reject( dateCategoryResult.error )
+					.promise();
+			}
+			object.dateCategory = dateCategoryResult.value;
 
 			return $.when(
 				api.updateFilename( data.filename, object ),
@@ -834,6 +948,7 @@
 			newTaskData = {
 				step: 'source',
 				url: '',
+				date: '',
 				extractor: '',
 				audio: true,
 				video: true,
@@ -842,6 +957,7 @@
 				formats: [],
 				format: '',
 				filedesc: '',
+				dateCategory: '',
 				uploadedFile: {},
 				initialUrlValidated: false,
 				initialFilenameValidated: false,
@@ -957,6 +1073,29 @@
 						.val( source.format );
 					$addTaskDialog.find( '#filedesc' )
 						.val( source.filedesc );
+
+					$addTaskDialog.find( '#dateCategory' )
+						.attr( 'placeholder', getDateCategoryPlaceholder( source ) )
+						.val( source.dateCategory || '' );
+
+					const dateCategoryOptions = getDateCategoryOptions( source );
+					$.each( dateCategoryOptions, function ( _, option ) {
+						$addTaskDialog.find( '#dateCategoryOptions' )
+							.append( $( '<option></option>' ).val( option ) );
+					} );
+
+					// Add validation feedback for the date category whenever
+					// the input value in the box changes.
+					$addTaskDialog.find( '#dateCategory' ).on( 'input', function () {
+						const result = validateDateCategory( $( this ).val().trim() );
+						if ( result.valid ) {
+							$addTaskDialog.find( '#dateCategoryError' ).hide();
+							$addTaskDialog.find( '#dateCategory-group' ).removeClass( 'has-error' );
+						} else {
+							$addTaskDialog.find( '#dateCategoryError' ).text( result.error ).show();
+							$addTaskDialog.find( '#dateCategory-group' ).addClass( 'has-error' );
+						}
+					} );
 					break;
 				case 'confirm':
 					const confirmForm = newTaskData.type === 'playlist'
@@ -1044,21 +1183,33 @@
 							let tasks = [];
 
 							if ( newTaskData.type === 'playlist' ) {
-								tasks = newTaskData.selectedVideos.map( ( video ) => ( {
-									url: video.url,
-									extractor: video.extractor,
-									subtitles: newTaskData.subtitles,
-									filename: video.filename,
-									filedesc: video.filedesc,
-									format: video.format,
-								} ) );
+								tasks = newTaskData.selectedVideos.map( ( video ) => {
+									let filedesc = video.filedesc;
+									if ( video.dateCategory ) {
+										filedesc += '\n[[Category:' + video.dateCategory + ']]';
+									}
+
+									return {
+										url: video.url,
+										extractor: video.extractor,
+										subtitles: newTaskData.subtitles,
+										filename: video.filename,
+										filedesc: filedesc,
+										format: video.format,
+									};
+								} );
 							} else {
+								let filedesc = newTaskData.filedesc;
+								if ( newTaskData.dateCategory ) {
+									filedesc += '\n[[Category:' + newTaskData.dateCategory + ']]';
+								}
+
 								tasks.push( {
 									url: newTaskData.url,
 									extractor: newTaskData.extractor,
 									subtitles: newTaskData.subtitles,
 									filename: newTaskData.filename,
-									filedesc: newTaskData.filedesc,
+									filedesc: filedesc,
 									format: newTaskData.format,
 								} );
 							}
