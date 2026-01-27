@@ -143,8 +143,9 @@
 		const now = new Date();
 		const currentDate = now.toISOString().split( 'T' )[ 0 ];
 		const dateStr = source.date || currentDate;
+		const yearStr = dateStr.split( '-' )[ 0 ];
 
-		return `Videos taken on ${dateStr}`;
+		return `Videos of ${yearStr}`;
 	}
 
 	/**
