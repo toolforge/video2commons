@@ -88,7 +88,7 @@
 			const currentYear = new Date().getFullYear();
 
 			if ( year > currentYear ) {
-				return { valid: false, error: 'The year must not be in the future.' };
+				return { valid: false, error: i18n[ 'datecategory-error-future-year' ] };
 			}
 
 			return { valid: true, value };
@@ -109,13 +109,13 @@
 				|| date.getDate() !== day
 				|| date > now
 			) {
-				return { valid: false, error: 'The date must be a real date in the past.' };
+				return { valid: false, error: i18n[ 'datecategory-error-invalid-date' ] };
 			}
 
 			return { valid: true, value };
 		}
 
-		return { valid: false, error: 'The format of the date must be either "Videos of YYYY" or "Videos taken on YYYY-MM-DD".' };
+		return { valid: false, error: i18n[ 'datecategory-error-format' ] };
 	}
 
 	/**
@@ -130,7 +130,7 @@
 		const dateStr = source.date || currentDate;
 		const yearStr = dateStr.split( '-' )[ 0 ];
 
-		return `e.g. "Videos of ${yearStr}", "Videos taken on ${dateStr}", etc.`;
+		return i18n[ 'datecategory-placeholder' ].replace( '$1', yearStr ).replace( '$2', dateStr );
 	}
 
 	/**
