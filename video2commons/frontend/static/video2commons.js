@@ -297,11 +297,11 @@
 		 * @param {boolean} keepAudio Whether the audio is kept.
 		 * @return {jQuery.Deferred} Resolves if the formats are valid.
 		 */
-		updateFormats: function ( keepVideo, keepAudio ) {
+		updateFormats: function ( keepVideo, keepAudio, task ) {
 			if (
-				newTaskData.formats.length > 0 &&
-				keepVideo === newTaskData.video &&
-				keepAudio === newTaskData.audio
+				task.formats.length > 0 &&
+				keepVideo === task.video &&
+				keepAudio === task.audio
 			) {
 				return $.when();
 			}
@@ -456,10 +456,11 @@
 	const steps = {
 		source: function () {
 			const data = form.getSourceData();
+			oldTaskData = { ...newTaskData };
 			newTaskData = { ...newTaskData, ...data, selectedVideos: [] };
 
 			return $.when(
-				api.updateFormats( data.video, data.audio ),
+				api.updateFormats( data.video, data.audio, oldTaskData ),
 				api.updateUrl( data.url )
 			).then( () => {
 				if ( newTaskData.type === 'playlist' ) {
