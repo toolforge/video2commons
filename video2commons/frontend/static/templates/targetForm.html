@@ -13,7 +13,11 @@
   </div>
   <div class="form-group" id="dateCategory-group">
     <label for="dateCategory"><span class="glyphicon glyphicon-calendar"></span> {{ _('datecategory') }}</label>
-    <span class="help-block">{{ _('datecategory-help') }}</span>
+    {% if source.audio and not source.video %}
+      <span class="help-block">{{ _('datecategory-audio-help') }}</span>
+    {% else %}
+      <span class="help-block">{{ _('datecategory-video-help') }}</span>
+    {% endif %}
     <input type="text" class="form-control" id="dateCategory" list="dateCategoryOptions" dir="ltr">
     <datalist id="dateCategoryOptions"></datalist>
     <span class="help-block text-danger" id="dateCategoryError" style="display: none;"></span>

@@ -67,6 +67,27 @@
 	/**
 	 * Validate date category names.
 	 *
+	 * @param {string} source The video source associated with the value being validated.
+	 * @param {string} value The date category value to validate.
+	 * @return {object} Object with valid (boolean), value (string|null), and error (string|undefined).
+	 */
+	function validateDateCategory( source, value ) {
+		// Dates are optional, so pass through as valid if no value is given.
+		if ( !value ) {
+			return { valid: true, value: null };
+		}
+
+		// Dispatch to the appropriate validation function based on whether the
+		// source is audio-only or has video since audio files have their own
+		// separate yearly categories.
+		if ( !source.video && source.audio ) {
+			return validateAudioDateCategory( value );
+		} else {
+			return validateVideoDateCategory( value );
+		}
+	}
+
+	/**
 	 * This function ensures that dates are valid and match these patterns:
 	 *
 	 * - "Videos of YYYY"
@@ -75,12 +96,7 @@
 	 * @param {string} value The date category value to validate.
 	 * @return {object} Object with valid (boolean), value (string|null), and error (string|undefined).
 	 */
-	function validateDateCategory( value ) {
-		// Dates are optional, so pass through as valid if no value is given.
-		if ( !value ) {
-			return { valid: true, value: null };
-		}
-
+	function validateVideoDateCategory( value ) {
 		// Validate names that match the "Videos of YYYY" pattern.
 		const yearMatch = value.match( /^Videos of (\d{4})$/ );
 		if ( yearMatch ) {
@@ -115,7 +131,30 @@
 			return { valid: true, value };
 		}
 
-		return { valid: false, error: i18n[ 'datecategory-error-format' ] };
+		return { valid: false, error: i18n[ 'datecategory-video-error-format' ] };
+	}
+
+	/**
+	 * This function ensures that dates match "Audio files of YYYY".
+	 *
+	 * @param {string} value The date category value to validate.
+	 * @return {object} Object with valid (boolean), value (string|null), and error (string|undefined).
+	 */
+	function validateAudioDateCategory( value ) {
+		// Validate names that match the "Audio files of YYYY" pattern.
+		const yearMatch = value.match( /^Audio files of (\d{4})$/ );
+		if ( yearMatch ) {
+			const year = parseInt( yearMatch[ 1 ], 10 );
+			const currentYear = new Date().getFullYear();
+
+			if ( year > currentYear ) {
+				return { valid: false, error: 'The year must not be in the future.' };
+			}
+
+			return { valid: true, value };
+		}
+
+		return { valid: false, error: i18n[ 'datecategory-audio-error-format' ] };
 	}
 
 	/**
@@ -129,8 +168,17 @@
 		const currentDate = now.toISOString().split( 'T' )[ 0 ];
 		const dateStr = source.date || currentDate;
 		const yearStr = dateStr.split( '-' )[ 0 ];
+		const isAudioOnly = source.audio && !source.video
 
-		return i18n[ 'datecategory-placeholder' ].replace( '$1', yearStr ).replace( '$2', dateStr );
+		const placeholder = isAudioOnly
+			? i18n[ 'datecategory-audio-placeholder' ]
+			: i18n[ 'datecategory-video-placeholder' ];
+
+		if ( isAudioOnly ) {
+			return placeholder.replace( '$1', yearStr );
+		} else {
+			return placeholder.replace( '$1', yearStr ).replace( '$2', dateStr );
+		}
 	}
 
 	/**
@@ -140,12 +188,9 @@
 	 * @return {string} The default value.
 	 */
 	function getDateCategoryDefault( source ) {
-		const now = new Date();
-		const currentDate = now.toISOString().split( 'T' )[ 0 ];
-		const dateStr = source.date || currentDate;
-		const yearStr = dateStr.split( '-' )[ 0 ];
-
-		return `Videos of ${yearStr}`;
+		return source.audio && !source.video
+			? getAudioDateCategoryOptions( source )[ 0 ]
+			: getVideoDateCategoryOptions( source )[ 0 ];
 	}
 
 	/**
@@ -155,6 +200,18 @@
 	 * @return {Array} Array of option strings.
 	 */
 	function getDateCategoryOptions( source ) {
+		return source.audio && !source.video
+			? getAudioDateCategoryOptions( source )
+			: getVideoDateCategoryOptions( source );
+	}
+
+	/**
+	 * Generate datalist options for the date category field for videos.
+	 *
+	 * @param {object} source The source data object (newTaskData or a video object).
+	 * @return {Array} Array of option strings.
+	 */
+	function getVideoDateCategoryOptions( source ) {
 		const now = new Date();
 		const currentDate = now.toISOString().split( 'T' )[ 0 ];
 		const dateStr = source.date || currentDate;
@@ -164,6 +221,21 @@
 			`Videos of ${yearStr}`,
 			`Videos taken on ${dateStr}`
 		];
+	}
+
+	/**
+	 * Generate datalist options for the date category field for audio-only files.
+	 *
+	 * @param {object} source The source data object (newTaskData or a video object).
+	 * @return {Array} Array of option strings.
+	 */
+	function getAudioDateCategoryOptions( source ) {
+		const now = new Date();
+		const currentDate = now.toISOString().split( 'T' )[ 0 ];
+		const dateStr = source.date || currentDate;
+		const yearStr = dateStr.split( '-' )[ 0 ];
+
+		return [ `Audio files of ${yearStr}` ];
 	}
 
 	const form = {
@@ -384,8 +456,7 @@
 	const steps = {
 		source: function () {
 			const data = form.getSourceData();
-			newTaskData.subtitles = data.subtitles;
-			newTaskData.selectedVideos = [];
+			newTaskData = { ...newTaskData, ...data, selectedVideos: [] };
 
 			return $.when(
 				api.updateFormats( data.video, data.audio ),
@@ -436,7 +507,7 @@
 
 			object.format = data.format;
 
-			const dateCategoryResult = validateDateCategory( data.dateCategory );
+			const dateCategoryResult = validateDateCategory( object, data.dateCategory );
 			if ( !dateCategoryResult.valid ) {
 				return $.Deferred()
 					.reject( dateCategoryResult.error )
@@ -1060,7 +1131,7 @@
 						: newTaskData;
 
 					$addTaskDialog.find( '.modal-body' )
-						.html( nunjucksEnv.render( 'targetForm.html' ) );
+						.html( nunjucksEnv.render( 'targetForm.html', { source } ) );
 
 					$addTaskDialog.find( '#filename' )
 						.val( source.filename.trim() )
@@ -1088,7 +1159,7 @@
 					// Add validation feedback for the date category whenever
 					// the input value in the box changes.
 					$addTaskDialog.find( '#dateCategory' ).on( 'input', function () {
-						const result = validateDateCategory( $( this ).val().trim() );
+						const result = validateDateCategory( source, $( this ).val().trim() );
 						if ( result.valid ) {
 							$addTaskDialog.find( '#dateCategoryError' ).hide();
 							$addTaskDialog.find( '#dateCategory-group' ).removeClass( 'has-error' );
