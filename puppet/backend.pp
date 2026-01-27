@@ -70,6 +70,7 @@ exec { 'git-clone-v2c':
         Package['git'],
         Exec['check-srv-mounted'],
     ],
+    notify  => Service['v2ccelery'],
 }
 
 exec { 'create-venv':
@@ -135,6 +136,7 @@ exec { 'git-pull-v2c':
     require => [
         Exec['git-clone-v2c'],
     ],
+    notify  => Service['v2ccelery'],
     before  => Service['v2ccelery'],
 }
 
@@ -147,6 +149,7 @@ exec { 'pip-install-requirements':
         Package['build-essential'],
         Package['default-libmysqlclient-dev'],
     ],
+    notify  => Service['v2ccelery'],
     before  => Service['v2ccelery'],
 }
 
@@ -177,11 +180,17 @@ WantedBy=multi-user.target
 '
 # lint:endignore
 
+exec { 'systemctl-daemon-reload':
+    command     => '/usr/bin/systemctl daemon-reload',
+    refreshonly => true,
+    notify      => Service['v2ccelery'],
+}
+
 file { '/lib/systemd/system/v2ccelery.service':
     ensure  => file,
     content => $celeryd_service,
     require => File['/etc/default/v2ccelery'],
-    notify  => Service['v2ccelery'],
+    notify  => Exec['systemctl-daemon-reload'],
 }
 
 file { '/etc/systemd/system/cron.service.d':
@@ -208,6 +217,7 @@ CELERYD_OPTS="--concurrency=2"
 CELERY_BIN="/srv/v2c/venv/bin/celery"
 CELERY_APP="video2commons.backend.worker"
 CELERYD_MULTI="multi"
+CELERYD_LOG_LEVEL="INFO"
 CELERYD_LOG_FILE="/var/log/v2ccelery/%N%I.log"
 CELERYD_PID_FILE="/var/run/v2ccelery/%N.pid"
 CELERYD_USER="tools.video2commons"
@@ -249,6 +259,7 @@ service { 'v2ccelery':
     ensure  => running,
     enable  => true,
     require => Package['ffmpeg'],
+    restart => '/usr/bin/systemctl --no-block restart v2ccelery.service',
 }
 
 $logrotate_config = '# THIS FILE IS MANAGED BY MANUAL PUPPET
