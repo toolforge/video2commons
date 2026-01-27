@@ -139,7 +139,13 @@ def main(
             errorcallback('Download failed!')
 
         source = file
+
+        # Remember intent with subtitles so categories can be added
+        # appropriately later. These can be strings, so convert to bool.
         subtitles_requested = subtitles
+        if type(subtitles_requested) == str:
+            subtitles_requested = subtitles_requested.lower() == 'true'
+
         subtitles = subtitles and d['subtitles']
 
         statuscallback('Converting...', -1)
@@ -168,7 +174,7 @@ def main(
         # Add additional inferable meta-categories to the file description.
         found_categories = set()
         found_categories.update(categories.get_inferable_categories(file))
-        found_categories.update(categories.get_subtitle_categories(found_langcodes))
+        found_categories.update(categories.get_subtitle_categories(file, found_langcodes))
         filedesc = categories.append_categories(filedesc, found_categories)
 
         statuscallback('Uploading...', -1)

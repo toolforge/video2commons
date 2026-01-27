@@ -21,9 +21,53 @@ from typing import Iterable, Set
 from ..encode.globals import ffprobe_location
 
 
-def get_subtitle_categories(langcodes: Iterable[str]) -> Set[str]:
+def has_video_track(source: str) -> bool:
+    """Check if a video has an audio track."""
+
+    result = subprocess.run([
+        ffprobe_location,
+        '-loglevel', 'error',
+        '-select_streams', 'v',
+        '-show_entries', 'stream=index,codec_type',
+        '-of', 'json',
+        source
+    ], capture_output=True, text=True)
+
+    if result.returncode == 0:
+        for stream in json.loads(result.stdout).get('streams', []):
+            if stream.get('codec_type') == 'video':
+                return True
+
+    return False
+
+
+def has_audio_track(source: str) -> bool:
+    """Check if a video has an audio track."""
+
+    result = subprocess.run([
+        ffprobe_location,
+        '-loglevel', 'error',
+        '-select_streams', 'a',
+        '-show_entries', 'stream=index,codec_type',
+        '-of', 'json',
+        source
+    ], capture_output=True, text=True)
+
+    if result.returncode == 0:
+        for stream in json.loads(result.stdout).get('streams', []):
+            if stream.get('codec_type') == 'audio':
+                return True
+
+    return False
+
+
+def get_subtitle_categories(source: str, langcodes: Iterable[str]) -> Set[str]:
     """Map a set of language codes to MediaWiki categories."""
     categories = set()
+
+    # Don't add video subtitle categories if the output file has no video.
+    if not has_video_track(source):
+        return categories
 
     for langcode in langcodes:
         category = SUBTITLE_CATEGORY_MAPPING.get(langcode)
@@ -37,24 +81,7 @@ def get_inferable_categories(source: str) -> Set[str]:
     """Get categories that can be inferred from the source metadata."""
     categories = set()
 
-    result = subprocess.run([
-        ffprobe_location,
-        '-loglevel', 'error',
-        '-select_streams', 'a',
-        '-show_entries', 'stream=index,codec_type',
-        '-of', 'json',
-        source
-    ], capture_output=True, text=True)
-
-    has_audio = False
-
-    if result.returncode == 0:
-        for stream in json.loads(result.stdout).get('streams', []):
-            if stream.get('codec_type') == 'audio':
-                has_audio = True
-                break
-
-    if not has_audio:
+    if not has_audio_track(source):
         categories.add('[[Category:Videos without audio]]')
 
     return categories
