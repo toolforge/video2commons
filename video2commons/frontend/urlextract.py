@@ -156,7 +156,8 @@ def _extract_info(info):
         'url': url,
         'extractor': ie_key,
         'filedesc': filedesc.strip(),
-        'filename': sanitize(title)
+        'filename': sanitize(title),
+        'date': _date(url, ie_key, title, info)
     }
 
 

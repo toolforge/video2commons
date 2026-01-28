@@ -32,6 +32,7 @@ import pywikibot
 
 from video2commons.exceptions import TaskError, TaskAbort, NeedServerSideUpload
 from video2commons.backend import download
+from video2commons.backend import categories
 from video2commons.backend import encode
 from video2commons.backend import upload
 from video2commons.backend import subtitles as subtitleuploader
@@ -138,7 +139,13 @@ def main(
             errorcallback('Download failed!')
 
         source = file
+
+        # Remember intent with subtitles so categories can be added
+        # appropriately later. These can be strings, so convert to bool.
         subtitles_requested = subtitles
+        if type(subtitles_requested) == str:
+            subtitles_requested = subtitles_requested.lower() == 'true'
+
         subtitles = subtitles and d['subtitles']
 
         statuscallback('Converting...', -1)
@@ -155,6 +162,20 @@ def main(
             (consumer_key, consumer_secret) + tuple(oauth)
         pywikibot.config.usernames['commons']['commons'] = username
         pywikibot.Site('commons', 'commons', user=username).login()
+
+        # Identify the language codes of all present subtitles. Fallback to
+        # checking the container ONLY IF yt-dlp was unable to find subtitles.
+        found_langcodes = set()
+        if subtitles:
+            found_langcodes.update(subtitleuploader.get_subtitle_languages(subtitles))
+        elif subtitles_requested:
+            found_langcodes.update(subtitleuploader.get_container_subtitle_languages(source))
+
+        # Add additional inferable meta-categories to the file description.
+        found_categories = set()
+        found_categories.update(categories.get_inferable_categories(file))
+        found_categories.update(categories.get_subtitle_categories(file, found_langcodes))
+        filedesc = categories.append_categories(filedesc, found_categories)
 
         statuscallback('Uploading...', -1)
         filename += '.' + ext

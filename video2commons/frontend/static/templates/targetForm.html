@@ -11,6 +11,17 @@
     <label for="filedesc"><span class="glyphicon glyphicon-list"></span> {{ _('filedescription') }}</label>
     <textarea class="form-control" rows="10" id="filedesc" dir="ltr"></textarea>
   </div>
+  <div class="form-group" id="dateCategory-group">
+    <label for="dateCategory"><span class="glyphicon glyphicon-calendar"></span> {{ _('datecategory') }}</label>
+    {% if source.audio and not source.video %}
+      <span class="help-block">{{ _('datecategory-help') | replace('$1', '"Audio files of YYYY"') }}</span>
+    {% else %}
+      <span class="help-block">{{ _('datecategory-help') | replace('$1', '"Videos of YYYY", "Videos taken on YYYY-MM-DD"') }}</span>
+    {% endif %}
+    <input type="text" class="form-control" id="dateCategory" list="dateCategoryOptions" dir="ltr">
+    <datalist id="dateCategoryOptions"></datalist>
+    <span class="help-block text-danger" id="dateCategoryError" style="display: none;"></span>
+  </div>
   <div class="alert alert-info">
     {{ _('extensionmsg') }}
   </div>
