@@ -78,7 +78,7 @@ def get_container_subtitle_languages(filepath):
 
 
 def get_subtitle_languages(subtitles):
-    """Returns subtitle languages identifid by yt-dlp."""
+    """Returns subtitle languages identified by yt-dlp."""
     languages = set()
 
     for langcode, _ in subtitles.items():
