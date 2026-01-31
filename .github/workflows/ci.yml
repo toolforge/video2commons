@@ -1,4 +1,4 @@
-name: Validate JavaScript Build
+name: CI
 
 on:
   pull_request:
@@ -6,6 +6,7 @@ on:
 
 jobs:
   check:
+    name: Validate JavaScript Build
     runs-on: ubuntu-latest
     container:
       image: debian:bookworm
@@ -61,3 +62,16 @@ jobs:
           git add video2commons/frontend/static/*.min.js video2commons/frontend/templates/*.min.html
           git commit -m "Update built files from CI"
           git push origin $GITHUB_HEAD_REF
+
+  biome:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Biome
+        uses: biomejs/setup-biome@v2.7.0
+
+      - name: Run Biome
+        run: biome ci .

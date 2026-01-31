@@ -5,6 +5,7 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "devDependencies": {
+    "@biomejs/biome": "2.3.13",
     "esm": "^3.2.25",
     "gulp": "^5.0.0",
     "gulp-concat": ">=2.6.1",
