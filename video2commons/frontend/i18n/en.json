@@ -36,6 +36,7 @@
 	"datecategory-help": "Optional: Set the date category of the file if you know when it was originally created. If you don't know, leave this blank.\n\nThe format of the date must be: $1.",
 	"datecategory-video-error-format": "The format of the date must be \"Videos of YYYY\" or \"Videos taken on YYYY-MM-DD\".",
 	"datecategory-video-placeholder": "e.g. \"Videos of $1\", \"Videos taken on $2\", etc.",
+	"languagecategory": "Language",
 	"video": "video",
 	"audio": "audio",
 	"subtitles": "subtitles",

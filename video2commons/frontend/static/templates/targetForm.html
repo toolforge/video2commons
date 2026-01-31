@@ -11,6 +11,10 @@
     <label for="filedesc"><span class="glyphicon glyphicon-list"></span> {{ _('filedescription') }}</label>
     <textarea class="form-control" rows="10" id="filedesc" dir="ltr"></textarea>
   </div>
+  <div class="form-group" id="languageCategory-group" style="display: none;">
+    <label for="languageCategory"><span class="glyphicon glyphicon-globe"></span> {{ _('languagecategory') }}</label>
+    <select class="form-control" id="languageCategory" dir="ltr"></select>
+  </div>
   <div class="form-group" id="dateCategory-group">
     <label for="dateCategory"><span class="glyphicon glyphicon-calendar"></span> {{ _('datecategory') }}</label>
     {% if source.audio and not source.video %}

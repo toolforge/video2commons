@@ -259,7 +259,8 @@
 				filename: $addTaskDialog.find( '#filename' ).val().trim(),
 				format: $addTaskDialog.find( '#format' ).val(),
 				filedesc: $addTaskDialog.find( '#filedesc' ).val(),
-				dateCategory: $addTaskDialog.find( '#dateCategory' ).val().trim()
+				dateCategory: $addTaskDialog.find( '#dateCategory' ).val().trim(),
+				languageCategory: $addTaskDialog.find( '#languageCategory' ).val() || ''
 			};
 		},
 
@@ -515,6 +516,7 @@
 					.promise();
 			}
 			object.dateCategory = dateCategoryResult.value;
+			object.languageCategory = data.languageCategory || null;
 
 			return $.when(
 				api.updateFilename( data.filename, object ),
@@ -1031,6 +1033,7 @@
 				format: '',
 				filedesc: '',
 				dateCategory: '',
+				languageCategory: '',
 				uploadedFile: {},
 				initialUrlValidated: false,
 				initialFilenameValidated: false,
@@ -1169,6 +1172,27 @@
 							$addTaskDialog.find( '#dateCategory-group' ).addClass( 'has-error' );
 						}
 					} );
+
+					// The language categories are meant for content with both
+					// video and audio, so hide it if either are missing.
+					if ( newTaskData.video && newTaskData.audio ) {
+						$addTaskDialog.find( '#languageCategory-group' ).show();
+
+						// Populate the language dropdown with all known video
+						// language categories on Commons.
+						languageOptions.forEach( ( opt ) => {
+							$addTaskDialog.find( '#languageCategory' )
+								.append( $( '<option></option>' )
+									.val( opt.category )
+									.text( opt.label ) );
+						} );
+
+						if ( source.languageCategory ) {
+							$addTaskDialog.find( '#languageCategory' ).val( source.languageCategory );
+						}
+					} else {
+						$addTaskDialog.find( '#languageCategory-group' ).hide();
+					}
 					break;
 				case 'confirm':
 					const confirmForm = newTaskData.type === 'playlist'
@@ -1261,6 +1285,9 @@
 									if ( video.dateCategory ) {
 										filedesc += '\n[[Category:' + video.dateCategory + ']]';
 									}
+									if ( video.languageCategory ) {
+										filedesc += '\n[[Category:' + video.languageCategory + ']]';
+									}
 
 									return {
 										url: video.url,
@@ -1275,6 +1302,9 @@
 								let filedesc = newTaskData.filedesc;
 								if ( newTaskData.dateCategory ) {
 									filedesc += '\n[[Category:' + newTaskData.dateCategory + ']]';
+								}
+								if ( newTaskData.languageCategory ) {
+									filedesc += '\n[[Category:' + newTaskData.languageCategory + ']]';
 								}
 
 								tasks.push( {
@@ -1544,6 +1574,177 @@
 			return deferred.promise();
 		}
 	};
+
+	// Language options for the language dropdown used while creating tasks.
+	const languageOptions = [
+		{ label: 'Unselected', category: '' },
+		{ label: 'English (en)', category: 'Videos in English' },
+		{ label: 'American English (en-US)', category: 'Videos in American English' },
+		{ label: 'Australian English (en-AU)', category: 'Videos in Australian English' },
+		{ label: 'British English (en-GB)', category: 'Videos in British English' },
+		{ label: 'Canadian English (en-CA)', category: 'Videos in Canadian English' },
+		{ label: 'Spanish (es)', category: 'Videos in Spanish' },
+		{ label: 'Portuguese (pt)', category: 'Videos in Portuguese' },
+		{ label: 'Brazilian Portuguese (pt-BR)', category: 'Videos in Brazilian Portuguese' },
+		{ label: 'Chinese (zh)', category: 'Videos in Chinese' },
+		{ label: 'Cantonese (yue)', category: 'Videos in Cantonese' },
+		{ label: 'Mandarin (cmn)', category: 'Videos in Mandarin' },
+		{ label: 'Japanese (ja)', category: 'Videos in Japanese' },
+		{ label: 'Korean (ko)', category: 'Videos in Korean' },
+		{ label: 'Hindi (hi)', category: 'Videos in Hindi' },
+		{ label: 'Arabic (ar)', category: 'Videos in Arabic' },
+		{ label: 'Russian (ru)', category: 'Videos in Russian' },
+		{ label: 'German (de)', category: 'Videos in German' },
+		{ label: 'Bavarian (bar)', category: 'Videos in Bavarian' },
+		{ label: 'French (fr)', category: 'Videos in French' },
+		{ label: 'Italian (it)', category: 'Videos in Italian' },
+		{ label: 'Dutch (nl)', category: 'Videos in Dutch' },
+		{ label: 'Polish (pl)', category: 'Videos in Polish' },
+		{ label: 'Turkish (tr)', category: 'Videos in Turkish' },
+		{ label: 'Albanian (sq)', category: 'Videos in Albanian' },
+		{ label: 'Algerian Arabic (arq)', category: 'Videos in Algerian Arabic' },
+		{ label: 'Egyptian Arabic (arz)', category: 'Videos in Egyptian Arabic' },
+		{ label: 'Moroccan Arabic (ary)', category: 'Videos in Moroccan Arabic' },
+		{ label: 'North Levantine Arabic (apc)', category: 'Videos in North Levantine Arabic' },
+		{ label: 'Amharic (am)', category: 'Videos in Amharic' },
+		{ label: 'American Sign Language (ase)', category: 'Videos in American Sign Language' },
+		{ label: 'Ancient Greek (grc)', category: 'Videos in Ancient Greek' },
+		{ label: 'Armenian (hy)', category: 'Videos in Armenian' },
+		{ label: 'Assamese (as)', category: 'Videos in Assamese' },
+		{ label: 'Asturian (ast)', category: 'Videos in Asturian' },
+		{ label: 'Avar (av)', category: 'Videos in Avar' },
+		{ label: 'Azerbaijani (az)', category: 'Videos in Azerbaijani' },
+		{ label: 'Balinese (ban)', category: 'Videos in Balinese' },
+		{ label: 'Balochi (bal)', category: 'Videos in Balochi' },
+		{ label: 'Bangla (bn)', category: 'Videos in Bangla' },
+		{ label: 'Basque (eu)', category: 'Videos in Basque' },
+		{ label: 'Belarusian (be)', category: 'Videos in Belarusian' },
+		{ label: 'Bislama (bi)', category: 'Videos in Bislama' },
+		{ label: 'Bosnian (bs)', category: 'Videos in Bosnian' },
+		{ label: 'Breton (br)', category: 'Videos in Breton' },
+		{ label: 'British Sign Language (bfi)', category: 'Videos in British Sign Language' },
+		{ label: 'Bulgarian (bg)', category: 'Videos in Bulgarian' },
+		{ label: 'Burmese (my)', category: 'Videos in Burmese' },
+		{ label: 'Catalan (ca)', category: 'Videos in Catalan' },
+		{ label: 'Cebuano (ceb)', category: 'Videos in Cebuano' },
+		{ label: 'Central Bikol (bcl)', category: 'Videos in Central Bikol' },
+		{ label: 'Chamorro (ch)', category: 'Videos in Chamorro' },
+		{ label: 'Cherokee (chr)', category: 'Videos in Cherokee' },
+		{ label: 'Cornish (kw)', category: 'Videos in Cornish' },
+		{ label: 'Crimean Tatar (crh)', category: 'Videos in Crimean Tatar' },
+		{ label: 'Croatian (hr)', category: 'Videos in Croatian' },
+		{ label: 'Czech (cs)', category: 'Videos in Czech' },
+		{ label: 'Danish (da)', category: 'Videos in Danish' },
+		{ label: 'Dari (prs)', category: 'Videos in Dari' },
+		{ label: 'Esperanto (eo)', category: 'Videos in Esperanto' },
+		{ label: 'Estonian (et)', category: 'Videos in Estonian' },
+		{ label: 'Farsi (fa)', category: 'Videos in Farsi' },
+		{ label: 'Fijian (fj)', category: 'Videos in Fijian' },
+		{ label: 'Finnish (fi)', category: 'Videos in Finnish' },
+		{ label: 'Galician (gl)', category: 'Videos in Galician' },
+		{ label: 'Georgian (ka)', category: 'Videos in Georgian' },
+		{ label: 'Greek (el)', category: 'Videos in Greek' },
+		{ label: 'Greenlandic (kl)', category: 'Videos in Greenlandic' },
+		{ label: 'Guarani (gn)', category: 'Videos in Guarani' },
+		{ label: 'Gujarati (gu)', category: 'Videos in Gujarati' },
+		{ label: 'Haitian Creole (ht)', category: 'Videos in Haitian Creole' },
+		{ label: 'Hakka (hak)', category: 'Videos in Hakka' },
+		{ label: 'Min Dong Chinese (cdo)', category: 'Videos in Min Dong Chinese' },
+		{ label: 'Hausa (ha)', category: 'Videos in Hausa' },
+		{ label: 'Hebrew (he)', category: 'Videos in Hebrew' },
+		{ label: 'Hungarian (hu)', category: 'Videos in Hungarian' },
+		{ label: 'Icelandic (is)', category: 'Videos in Icelandic' },
+		{ label: 'Ido (io)', category: 'Videos in Ido' },
+		{ label: 'Igbo (ig)', category: 'Videos in Igbo' },
+		{ label: 'Indonesian (id)', category: 'Videos in Indonesian' },
+		{ label: 'Irish (ga)', category: 'Videos in Irish' },
+		{ label: 'Jamaican Patois (jam)', category: 'Videos in Jamaican Patois' },
+		{ label: 'Javanese (jv)', category: 'Videos in Javanese' },
+		{ label: 'Judaeo-Spanish (lad)', category: 'Videos in Judaeo-Spanish' },
+		{ label: 'Kannada (kn)', category: 'Videos in Kannada' },
+		{ label: 'Kashmiri (ks)', category: 'Videos in Kashmiri' },
+		{ label: 'Kazakh (kk)', category: 'Videos in Kazakh' },
+		{ label: 'Khasi (kha)', category: 'Videos in Khasi' },
+		{ label: 'Khmer (km)', category: 'Videos in Khmer' },
+		{ label: 'Komi (kv)', category: 'Videos in Komi' },
+		{ label: 'Kotava (avk)', category: 'Videos in Kotava' },
+		{ label: 'Kurdish (ku)', category: 'Videos in Kurdish' },
+		{ label: 'Kyrgyz (ky)', category: 'Videos in Kyrgyz' },
+		{ label: "K'iche' (quc)", category: "Videos in K'iche'" },
+		{ label: 'Lakota (lkt)', category: 'Videos in Lakota' },
+		{ label: 'Lao (lo)', category: 'Videos in Lao' },
+		{ label: 'Latin (la)', category: 'Videos in Latin' },
+		{ label: 'Latvian (lv)', category: 'Videos in Latvian' },
+		{ label: 'Leonese (roa-leon)', category: 'Videos in Leonese' },
+		{ label: 'Limburgish (li)', category: 'Videos in Limburgish' },
+		{ label: 'Lithuanian (lt)', category: 'Videos in Lithuanian' },
+		{ label: 'Lojban (jbo)', category: 'Videos in Lojban' },
+		{ label: 'Low German (nds)', category: 'Videos in Low German' },
+		{ label: 'Lozi (loz)', category: 'Videos in Lozi' },
+		{ label: 'Luxembourgish (lb)', category: 'Videos in Luxembourgish' },
+		{ label: 'Macedonian (mk)', category: 'Videos in Macedonian' },
+		{ label: 'Malay (ms)', category: 'Videos in Malay' },
+		{ label: 'Malayalam (ml)', category: 'Videos in Malayalam' },
+		{ label: 'Maltese (mt)', category: 'Videos in Maltese' },
+		{ label: 'Manx (gv)', category: 'Videos in Manx' },
+		{ label: 'Mapudungun (arn)', category: 'Videos in Mapudungun' },
+		{ label: 'Marathi (mr)', category: 'Videos in Marathi' },
+		{ label: 'Marwari (mwr)', category: 'Videos in Marwari' },
+		{ label: 'Mirandese (mwl)', category: 'Videos in Mirandese' },
+		{ label: 'Mongolian (mn)', category: 'Videos in Mongolian' },
+		{ label: 'Mossi (mos)', category: 'Videos in Mossi' },
+		{ label: 'Neapolitan (nap)', category: 'Videos in Neapolitan' },
+		{ label: 'Sicilian (scn)', category: 'Videos in Sicilian' },
+		{ label: 'Nepali (ne)', category: 'Videos in Nepali' },
+		{ label: 'Northern Sami (se)', category: 'Videos in Northern Sami' },
+		{ label: 'Norwegian (no)', category: 'Videos in Norwegian' },
+		{ label: 'Occitan (oc)', category: 'Videos in Occitan' },
+		{ label: 'Odia (or)', category: 'Videos in Odia' },
+		{ label: 'Pashto (ps)', category: 'Videos in Pashto' },
+		{ label: 'Punjabi (pa)', category: 'Videos in Punjabi' },
+		{ label: 'Quechua (qu)', category: 'Videos in Quechua' },
+		{ label: 'Romanian (ro)', category: 'Videos in Romanian' },
+		{ label: 'Saint Lucian Creole (acf)', category: 'Videos in Saint Lucian Creole' },
+		{ label: 'Samoan (sm)', category: 'Videos in Samoan' },
+		{ label: 'Sanskrit (sa)', category: 'Videos in Sanskrit' },
+		{ label: 'Santali (sat)', category: 'Videos in Santali' },
+		{ label: 'Sardinian (sc)', category: 'Videos in Sardinian' },
+		{ label: 'Serbian (sr)', category: 'Videos in Serbian' },
+		{ label: 'Serbo-Croatian (sh)', category: 'Videos in Serbo-Croatian' },
+		{ label: 'Silesian (szl)', category: 'Videos in Silesian' },
+		{ label: 'Sindhi (sd)', category: 'Videos in Sindhi' },
+		{ label: 'Slovak (sk)', category: 'Videos in Slovak' },
+		{ label: 'Slovene (sl)', category: 'Videos in Slovene' },
+		{ label: 'Somali (so)', category: 'Videos in Somali' },
+		{ label: 'Swahili (sw)', category: 'Videos in Swahili' },
+		{ label: 'Swedish (sv)', category: 'Videos in Swedish' },
+		{ label: 'Sylheti (syl)', category: 'Videos in Sylheti' },
+		{ label: 'Tagalog (tl)', category: 'Videos in Tagalog' },
+		{ label: 'Tamazight (zgh)', category: 'Videos in Tamazight' },
+		{ label: 'Tamil (ta)', category: 'Videos in Tamil' },
+		{ label: 'Tatar (tt)', category: 'Videos in Tatar' },
+		{ label: 'Telugu (te)', category: 'Videos in Telugu' },
+		{ label: 'Tetum (tet)', category: 'Videos in Tetum' },
+		{ label: 'Thai (th)', category: 'Videos in Thai' },
+		{ label: 'Tok Pisin (tpi)', category: 'Videos in Tok Pisin' },
+		{ label: 'Toki Pona (tok)', category: 'Videos in Toki Pona' },
+		{ label: 'Tsonga (ts)', category: 'Videos in Tsonga' },
+		{ label: 'Tuvan (tyv)', category: 'Videos in Tuvan' },
+		{ label: 'Twi (tw)', category: 'Videos in Twi' },
+		{ label: 'Ukrainian (uk)', category: 'Videos in Ukrainian' },
+		{ label: 'Urdu (ur)', category: 'Videos in Urdu' },
+		{ label: 'Veps (vep)', category: 'Videos in Veps' },
+		{ label: 'Vietnamese (vi)', category: 'Videos in Vietnamese' },
+		{ label: 'Volapük (vo)', category: 'Videos in Volapük' },
+		{ label: 'Walloon (wa)', category: 'Videos in Walloon' },
+		{ label: 'Welsh (cy)', category: 'Videos in Welsh' },
+		{ label: 'West Frisian (fy)', category: 'Videos in West Frisian' },
+		{ label: 'Wolof (wo)', category: 'Videos in Wolof' },
+		{ label: 'Xhosa (xh)', category: 'Videos in Xhosa' },
+		{ label: 'Yiddish (yi)', category: 'Videos in Yiddish' },
+		{ label: 'Yoruba (yo)', category: 'Videos in Yoruba' },
+		{ label: 'Yucatec (yua)', category: 'Videos in Yucatec' }
+	];
 
 	$( document )
 		.ready( function () {
