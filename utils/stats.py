@@ -6,7 +6,7 @@ import random
 import sys
 import time
 
-sys.path.insert(0, '/srv/v2c')
+sys.path.insert(0, "/srv/v2c")
 
 from redis import Redis
 
@@ -17,7 +17,7 @@ from video2commons.shared.stats import (
     collect_worker_stats,
     get_worker_stats,
     release_write_lock,
-    update_worker_stats
+    update_worker_stats,
 )
 
 # Stats are considered stale if they haven't been updated in 30 minutes.
@@ -41,8 +41,8 @@ def main():
 
     # Don't update stats if they've been updated recently by another job.
     existing_stats = get_worker_stats(app_conn)
-    if existing_stats and 'last_updated_by_job' in existing_stats:
-        if int(time.time()) - existing_stats['last_updated_by_job'] < STALE_SECS:
+    if existing_stats and "last_updated_by_job" in existing_stats:
+        if int(time.time()) - existing_stats["last_updated_by_job"] < STALE_SECS:
             print("Stats have been updated recently, skipping update.")
             return
 
@@ -58,5 +58,6 @@ def main():
     finally:
         release_write_lock(app_conn)
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     main()

@@ -34,8 +34,14 @@ MAX_RETRIES = 5
 
 
 def upload(
-    filename, wikifilename, sourceurl, http_host, filedesc, username,
-    statuscallback=None, errorcallback=None
+    filename,
+    wikifilename,
+    sourceurl,
+    http_host,
+    filedesc,
+    username,
+    statuscallback=None,
+    errorcallback=None,
 ):
     """Upload a file from filename to wikifilename."""
     statuscallback = statuscallback or (lambda text, percent: None)
@@ -45,54 +51,78 @@ def upload(
 
     if size < 1000000000:
         return upload_pwb(
-            filename, wikifilename, sourceurl, filedesc, username,
-            size, statuscallback, errorcallback
+            filename,
+            wikifilename,
+            sourceurl,
+            filedesc,
+            username,
+            size,
+            statuscallback,
+            errorcallback,
         )
     elif size < (5 << 30):
         try:
             return upload_pwb(
-                filename, wikifilename, sourceurl, filedesc, username,
-                size, statuscallback, errorcallback
+                filename,
+                wikifilename,
+                sourceurl,
+                filedesc,
+                username,
+                size,
+                statuscallback,
+                errorcallback,
             )
         except pywikibot.exceptions.APIError as e:
-            if 'stash' in e.code or e.code == 'backend-fail-internal':
+            if "stash" in e.code or e.code == "backend-fail-internal":
                 upload_ss(
-                    filename, wikifilename, http_host, filedesc,
-                    statuscallback, errorcallback
+                    filename,
+                    wikifilename,
+                    http_host,
+                    filedesc,
+                    statuscallback,
+                    errorcallback,
                 )
             else:
                 raise
     else:
         errorcallback(
-            'Sorry, but files larger than 5GB can not be uploaded even ' +
-            'with server-side uploading. This task may need manual ' +
-            ' intervention.'
+            "Sorry, but files larger than 5GB can not be uploaded even "
+            + "with server-side uploading. This task may need manual "
+            + " intervention."
         )
 
 
 def upload_pwb(
-    filename, wikifilename, sourceurl, filedesc, username,
-    size, statuscallback, errorcallback
+    filename,
+    wikifilename,
+    sourceurl,
+    filedesc,
+    username,
+    size,
+    statuscallback,
+    errorcallback,
 ):
     """Upload with pywikibot."""
     # ENSURE PYWIKIBOT OAUTH PROPERLY CONFIGURED!
-    site = pywikibot.Site('commons', 'commons', user=username)
+    site = pywikibot.Site("commons", "commons", user=username)
     page = pywikibot.FilePage(site, wikifilename)
 
     if page.exists():
-        errorcallback('File already exists. Please choose another name.')
+        errorcallback("File already exists. Please choose another name.")
 
-    comment = 'Imported media from ' + sourceurl
+    comment = "Imported media from " + sourceurl
     chunked = (16 * (1 << 20)) if size >= 100000000 else 0
     remaining_tries = MAX_RETRIES
 
     while True:
         if remaining_tries == MAX_RETRIES:
-            statuscallback('Uploading...', -1)
+            statuscallback("Uploading...", -1)
         elif remaining_tries > 1:
-            statuscallback(f'Retrying upload... ({remaining_tries} tries remaining)', -1)
+            statuscallback(
+                f"Retrying upload... ({remaining_tries} tries remaining)", -1
+            )
         elif remaining_tries == 1:
-            statuscallback(f'Retrying upload... ({remaining_tries} try remaining)', -1)
+            statuscallback(f"Retrying upload... ({remaining_tries} try remaining)", -1)
 
         if remaining_tries != MAX_RETRIES:
             exponential_backoff(remaining_tries)
@@ -105,9 +135,9 @@ def upload_pwb(
                 text=filedesc,
                 chunk_size=chunked,
                 asynchronous=bool(chunked),
-                ignore_warnings=['exists-normalized'],
+                ignore_warnings=["exists-normalized"],
             ):
-                errorcallback('Upload failed!')
+                errorcallback("Upload failed!")
 
             break  # The upload completed successfully.
         except TaskError:
@@ -126,18 +156,17 @@ def upload_pwb(
             if remaining_tries == 0:
                 raise  # No more retries, raise the error.
 
-    statuscallback('Upload success!', 100)
+    statuscallback("Upload success!", 100)
     return page.title(with_ns=False), page.full_url()
 
 
 def upload_ss(
-    filename, wikifilename, http_host, filedesc,
-    statuscallback, errorcallback
+    filename, wikifilename, http_host, filedesc, statuscallback, errorcallback
 ):
     """Prepare for server-side upload."""
     # Get hash
     md5 = hashlib.md5()
-    with open(filename, 'rb') as f:
+    with open(filename, "rb") as f:
         while True:
             data = f.read(65536)
             if not data:
@@ -145,21 +174,27 @@ def upload_ss(
             md5.update(data)
 
     # file name check
-    wikifilename = wikifilename.replace('/', '-').replace(' ', '_')
-    wikifilename = wikifilename.replace('\r\n', '_')
-    wikifilename = wikifilename.replace('\r', '_').replace('\n', '_')
+    wikifilename = wikifilename.replace("/", "-").replace(" ", "_")
+    wikifilename = wikifilename.replace("\r\n", "_")
+    wikifilename = wikifilename.replace("\r", "_").replace("\n", "_")
 
-    newfilename = '/srv/v2c/ssu/' + wikifilename
+    newfilename = "/srv/v2c/ssu/" + wikifilename
     remaining_tries = MAX_RETRIES
 
     while True:
         try:
             if remaining_tries == MAX_RETRIES:
-                statuscallback('Preparing for server-side upload...', -1)
+                statuscallback("Preparing for server-side upload...", -1)
             elif remaining_tries > 1:
-                statuscallback(f'Retrying server-side upload preparation... ({remaining_tries} tries remaining)', -1)
+                statuscallback(
+                    f"Retrying server-side upload preparation... ({remaining_tries} tries remaining)",
+                    -1,
+                )
             elif remaining_tries == 1:
-                statuscallback(f'Retrying server-side upload preparation... ({remaining_tries} try remaining)', -1)
+                statuscallback(
+                    f"Retrying server-side upload preparation... ({remaining_tries} try remaining)",
+                    -1,
+                )
 
             if remaining_tries != MAX_RETRIES:
                 exponential_backoff(remaining_tries)
@@ -173,16 +208,16 @@ def upload_ss(
             remaining_tries -= 1
             if remaining_tries == 0:
                 # No more retries, raise the error.
-                errorcallback('Upload failed: NFS share is likely overloaded')
+                errorcallback("Upload failed: NFS share is likely overloaded")
 
-    with open(newfilename + '.txt', 'w') as filedescfile:
+    with open(newfilename + ".txt", "w") as filedescfile:
         filedesc = filedesc.replace(
-            '[[Category:Uploaded with video2commons]]',
-            '[[Category:Uploaded with video2commons/Server-side uploads]]'
+            "[[Category:Uploaded with video2commons]]",
+            "[[Category:Uploaded with video2commons/Server-side uploads]]",
         )
         filedescfile.write(filedesc)
 
-    fileurl = 'https://' + http_host + '/' + wikifilename
+    fileurl = "https://" + http_host + "/" + wikifilename
 
     raise NeedServerSideUpload(fileurl, md5.hexdigest())
 

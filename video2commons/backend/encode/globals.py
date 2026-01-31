@@ -39,26 +39,27 @@ background_memory_limit = 32 * 1024 * 1024  # 32GB
 # Maximum file size transcoding processes can create, in KB
 background_size_limit = 10 * 1024 * 1024  # 10GB
 # Number of threads to use in avconv for transcoding
-ffmpeg_threads = __import__('multiprocessing').cpu_count()
+ffmpeg_threads = __import__("multiprocessing").cpu_count()
 # Location of the avconv/ffmpeg binary (used to encode WebM and for thumbnails)
-ffmpeg_location = '/mnt/nfs/labstore-secondary-project/gentoo-prefix/usr/bin/ffmpeg'
-ffprobe_location = '/usr/bin/ffprobe'
+ffmpeg_location = "/mnt/nfs/labstore-secondary-project/gentoo-prefix/usr/bin/ffmpeg"
+ffprobe_location = "/usr/bin/ffprobe"
 
 
 def escape_shellarg(*args):
     """Escape shell arguments."""
     import pipes
+
     return " ".join([pipes.quote(str(arg)) for arg in args])
 
 
-def format_size(num, suffix='B'):
+def format_size(num, suffix="B"):
     """Format the size with prefixes."""
     # Source: StackOverflow
-    for unit in ['', 'K', 'M', 'G', 'T', 'P', 'E', 'Z']:
+    for unit in ["", "K", "M", "G", "T", "P", "E", "Z"]:
         if abs(num) < 1024.0:
             return "%3.1f%s%s" % (num, unit, suffix)
         num /= 1024.0
-    return "%.1f%s%s" % (num, 'Y', suffix)
+    return "%.1f%s%s" % (num, "Y", suffix)
 
 
 def format_time(s):
@@ -70,5 +71,4 @@ def format_time(s):
 
 def time_to_seconds(time):
     """Get the number of seconds from time expression."""
-    return \
-        sum([a * b for a, b in zip([3600, 60, 1], list(map(int, time.split(':'))))])
+    return sum([a * b for a, b in zip([3600, 60, 1], list(map(int, time.split(":"))))])

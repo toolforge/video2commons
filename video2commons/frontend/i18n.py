@@ -19,15 +19,13 @@
 
 """video2commons web i18n module."""
 
-
-
 import os
 import json
 
 from flask import Blueprint, Response, request, session, g
 from video2commons.frontend.shared import redisconnection
 
-i18nblueprint = Blueprint('i18n', __name__)
+i18nblueprint = Blueprint("i18n", __name__)
 
 _d = os.path.dirname(os.path.realpath(__file__))
 
@@ -39,16 +37,16 @@ def max_age(response):
     return response
 
 
-@i18nblueprint.route('/<lang>')
+@i18nblueprint.route("/<lang>")
 def urlget(lang):
     """Get the i18n of language lang and output Javascript."""
-    data = 'window.i18n=' + json.dumps(get(lang)) + ';'
-    return Response(data, mimetype='application/javascript; charset=utf-8')
+    data = "window.i18n=" + json.dumps(get(lang)) + ";"
+    return Response(data, mimetype="application/javascript; charset=utf-8")
 
 
 def get(lang):
     """Get the i18n of language lang and output dict."""
-    i18nkey = 'i18n:' + lang
+    i18nkey = "i18n:" + lang
     gval = g.get(i18nkey, None)
     if gval:
         return gval
@@ -58,8 +56,8 @@ def get(lang):
     data = {}
     fallbacklist = _create_fallback(lang)
     datafiles = _loadi18nfiles(fallbacklist)
-    for key in datafiles['en']:
-        if key == '@metadata':
+    for key in datafiles["en"]:
+        if key == "@metadata":
             # @metadata is a dict not a string
             continue
 
@@ -70,11 +68,11 @@ def get(lang):
                 # if the translation breaks due to double escaping,
                 # oh well, why are you hacking this tool?
                 # --XSS prevention
-                data[key] = data[key].replace('<', '&lt;')
-                data[key] = data[key].replace('>', '&gt;')
+                data[key] = data[key].replace("<", "&lt;")
+                data[key] = data[key].replace(">", "&gt;")
                 break
-    data['@lang'] = lang
-    data['@dir'] = _dir(lang)
+    data["@lang"] = lang
+    data["@dir"] = _dir(lang)
 
     setattr(g, i18nkey, data)
     redisconnection.setex(i18nkey, 60, json.dumps(data))
@@ -85,40 +83,40 @@ def _loadi18nfiles(fallbacklist):
     datafiles = {}
     for code in fallbacklist:
         if code not in datafiles:
-            path = _d + '/i18n/' + code + '.json'
+            path = _d + "/i18n/" + code + ".json"
             if os.path.isfile(path):
-                with open(path, 'r') as f:
+                with open(path, "r") as f:
                     datafiles[code] = json.load(f)
     return datafiles
 
 
 def _create_fallback(lang):
-    fallbacks = _loadmetadatafile('fallbacks').get(lang, [])
+    fallbacks = _loadmetadatafile("fallbacks").get(lang, [])
     fallbacks = fallbacks if isinstance(fallbacks, list) else [fallbacks]
-    return [lang] + fallbacks + ['en']
+    return [lang] + fallbacks + ["en"]
 
 
 def translate(key):
     """Translate a key in user language."""
-    return get(getlanguage()).get(key, '&lt;' + key + '&gt;')
+    return get(getlanguage()).get(key, "&lt;" + key + "&gt;")
 
 
 def getlanguage():
     """Get the user language."""
-    gval = g.get('language', None)
+    gval = g.get("language", None)
     if gval:
         return gval
 
     for lang in [
-        request.form.get('uselang'),
-        request.args.get('uselang'),
-        session.get('language'),
+        request.form.get("uselang"),
+        request.args.get("uselang"),
+        session.get("language"),
         request.accept_languages.best,
     ]:
         if lang and _islang(lang):
             break
     else:
-        lang = 'en'
+        lang = "en"
 
     g.language = lang
 
@@ -126,13 +124,13 @@ def getlanguage():
 
 
 def _loadmetadatafile(metadata):
-    key = 'i18nmeta-' + metadata
+    key = "i18nmeta-" + metadata
     gval = g.get(key, None)
     if gval:
         return gval
 
-    path = _d + '/i18n-metadata/' + metadata + '.json'
-    with open(path, 'r') as f:
+    path = _d + "/i18n-metadata/" + metadata + ".json"
+    with open(path, "r") as f:
         data = json.load(f)
 
     setattr(g, key, data)
@@ -140,13 +138,13 @@ def _loadmetadatafile(metadata):
 
 
 def _islang(lang):
-    return lang in _loadmetadatafile('alllangs')
+    return lang in _loadmetadatafile("alllangs")
 
 
 def _dir(lang):
-    return 'rtl' if lang in _loadmetadatafile('rtl') else 'ltr'
+    return "rtl" if lang in _loadmetadatafile("rtl") else "ltr"
 
 
 def is_rtl(lang):
     """Jinja2 test for rtl-ness."""
-    return get(lang).get('@dir') == 'rtl'
+    return get(lang).get("@dir") == "rtl"
