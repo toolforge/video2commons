@@ -75,3 +75,22 @@ jobs:
 
       - name: Run Biome
         run: biome ci .
+
+  ruff:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Setup uv
+        uses: astral-sh/setup-uv@v7.2.1
+        with:
+          python-version: "3.11"
+          enable-cache: true
+
+      - name: Run Ruff
+        run: uv run ruff check --output-format=github .
+
+      - name: Run the Ruff formatter
+        run: uv run ruff format --check .

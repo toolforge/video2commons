@@ -21,6 +21,7 @@ import os
 from .transcodejob import WebVideoTranscodeJob
 from .transcode import WebVideoTranscode
 from .globals import ffmpeg_location, ffprobe_location
+
 # https://github.com/senko/python-video-converter
 from converter import Converter
 
@@ -28,7 +29,7 @@ from converter import Converter
 def encode(source, origkey, statuscallback=None, errorcallback=None, concurrency=None):
     """Main encode function."""
     source = os.path.abspath(source)
-    preserve = {'video': False, 'audio': False}
+    preserve = {"video": False, "audio": False}
 
     c = Converter(ffmpeg_path=ffmpeg_location, ffprobe_path=ffprobe_location)
     info = c.probe(source)
@@ -38,14 +39,20 @@ def encode(source, origkey, statuscallback=None, errorcallback=None, concurrency
     targettype = WebVideoTranscode.settings.get(key)
 
     if info and targettype:
-        if info.video and info.video.codec == targettype.get('videoCodec'):
-            preserve['video'] = True
-        if info.audio and info.audio.codec == targettype.get('audioCodec'):
-            preserve['audio'] = True
+        if info.video and info.video.codec == targettype.get("videoCodec"):
+            preserve["video"] = True
+        if info.audio and info.audio.codec == targettype.get("audioCodec"):
+            preserve["audio"] = True
 
-    target = source + '.' + key
+    target = source + "." + key
     job = WebVideoTranscodeJob(
-        source, target, key, preserve, statuscallback, errorcallback, info,
+        source,
+        target,
+        key,
+        preserve,
+        statuscallback,
+        errorcallback,
+        info,
         concurrency,
     )
 
@@ -55,33 +62,40 @@ def encode(source, origkey, statuscallback=None, errorcallback=None, concurrency
 def getbestkey(info, targettype):
     """Find the bext convert key to use."""
     # Asserts
-    assert info, 'The file format could not be recognized'
-    assert targettype, 'The target format is invalid.'
-    assert info.video or info.audio, 'The file has no video or audio tracks.'
-    assert info.video or not targettype.get('videoCodec'), \
-        'Video is asked to be kept but the file has no video tracks.'
-    assert info.audio or not targettype.get('audioCodec'), \
-        'Audio is asked to be kept but the file has no audio tracks.'
+    assert info, "The file format could not be recognized"
+    assert targettype, "The target format is invalid."
+    assert info.video or info.audio, "The file has no video or audio tracks."
+    assert info.video or not targettype.get("videoCodec"), (
+        "Video is asked to be kept but the file has no video tracks."
+    )
+    assert info.audio or not targettype.get("audioCodec"), (
+        "Audio is asked to be kept but the file has no audio tracks."
+    )
 
-    if targettype.get('videoCodec') and targettype.get('audioCodec'):
+    if targettype.get("videoCodec") and targettype.get("audioCodec"):
         # need both video & audio -- no codec change in video & audio
         for newkey, newtargettype in list(WebVideoTranscode.settings.items()):
-            if info.video.codec == newtargettype.get('videoCodec') and \
-                    info.audio.codec == newtargettype.get('audioCodec'):
+            if info.video.codec == newtargettype.get(
+                "videoCodec"
+            ) and info.audio.codec == newtargettype.get("audioCodec"):
                 return newkey
 
-    elif targettype.get('videoCodec') and 'noaudio' in targettype:
+    elif targettype.get("videoCodec") and "noaudio" in targettype:
         # need video only -- no codec change in video & remove audio
         for newkey, newtargettype in list(WebVideoTranscode.settings.items()):
-            if info.video.codec == newtargettype.get('videoCodec') and \
-                    'noaudio' in newtargettype:
+            if (
+                info.video.codec == newtargettype.get("videoCodec")
+                and "noaudio" in newtargettype
+            ):
                 return newkey
 
-    elif 'novideo' in targettype and targettype.get('audioCodec'):
+    elif "novideo" in targettype and targettype.get("audioCodec"):
         # need video only -- no codec change in audio & remove video
         for newkey, newtargettype in list(WebVideoTranscode.settings.items()):
-            if info.audio.codec == newtargettype.get('audioCodec') and \
-                    'novideo' in newtargettype:
+            if (
+                info.audio.codec == newtargettype.get("audioCodec")
+                and "novideo" in newtargettype
+            ):
                 return newkey
 
     return None

@@ -44,7 +44,7 @@ class RedisSessionInterface(SessionInterface):
     serializer = json
     session_class = RedisSession
 
-    def __init__(self, redis=None, prefix='session:'):
+    def __init__(self, redis=None, prefix="session:"):
         """Initialize the instance."""
         if redis is None:
             redis = Redis()
@@ -83,28 +83,37 @@ class RedisSessionInterface(SessionInterface):
     def save_session(self, app, session, response):
         """Save session to Redis."""
         domain = self.get_cookie_domain(app)
-        path = url_for('main', _external=False)
+        path = url_for("main", _external=False)
 
         if session is None:
             return
         elif not session:
             self.redis.delete(self.prefix + session.sid)
             if session.modified:
-                response.delete_cookie(app.session_cookie_name,
-                                       domain=domain, path=path)
+                response.delete_cookie(
+                    app.session_cookie_name, domain=domain, path=path
+                )
         else:
             redis_exp = self.get_redis_expiration_time(app, session)
             cookie_exp = self.get_expiration_time(app, session)
             if session.modified:
                 val = self.serializer.dumps(dict(session))
-                self.redis.setex(self.prefix + session.sid,
-                                 int(redis_exp.total_seconds()), val)
+                self.redis.setex(
+                    self.prefix + session.sid, int(redis_exp.total_seconds()), val
+                )
             else:
-                self.redis.expire(self.prefix + session.sid,
-                                  int(redis_exp.total_seconds()))
-            response.set_cookie(app.session_cookie_name, session.sid,
-                                expires=cookie_exp, httponly=True,
-                                domain=domain, path=path, secure=True)
+                self.redis.expire(
+                    self.prefix + session.sid, int(redis_exp.total_seconds())
+                )
+            response.set_cookie(
+                app.session_cookie_name,
+                session.sid,
+                expires=cookie_exp,
+                httponly=True,
+                domain=domain,
+                path=path,
+                secure=True,
+            )
 
     def abandon_session(self, app, session):
         """Delete the session from redis, empty it, and reinit."""

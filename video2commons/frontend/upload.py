@@ -18,7 +18,6 @@
 #
 
 
-
 import os
 import re
 import uuid
@@ -26,8 +25,8 @@ import shutil
 
 from flask import request, jsonify
 
-RE_CONTENT_RANGE = re.compile(r'^bytes (\d+)-(\d+)/(\d+)$')
-RE_ALLOWED_FILEKEYS = re.compile(r'^[a-zA-Z0-9-]+$')
+RE_CONTENT_RANGE = re.compile(r"^bytes (\d+)-(\d+)/(\d+)$")
+RE_ALLOWED_FILEKEYS = re.compile(r"^[a-zA-Z0-9-]+$")
 
 
 class WrongOffset(Exception):
@@ -37,8 +36,9 @@ class WrongOffset(Exception):
 
 
 def getpath(digest):
-    return os.path.join(os.path.dirname(os.path.realpath(__file__)),
-                        'static/uploads', digest)
+    return os.path.join(
+        os.path.dirname(os.path.realpath(__file__)), "static/uploads", digest
+    )
 
 
 def stat(permpath):
@@ -47,42 +47,43 @@ def stat(permpath):
 
 # Flask endpoint
 def upload():
-    f = request.files['file']
+    f = request.files["file"]
     assert f, "Where's my file?"
 
-    filekey = request.form.get('filekey') or str(uuid.uuid1())
-    assert RE_ALLOWED_FILEKEYS.match('filekey'), 'Unacceptable file key'
+    filekey = request.form.get("filekey") or str(uuid.uuid1())
+    assert RE_ALLOWED_FILEKEYS.match("filekey"), "Unacceptable file key"
 
     permpath = getpath(filekey)
 
-    content_range = (f.headers.get('Content-Range') or
-                     request.headers.get('Content-Range'))
+    content_range = f.headers.get("Content-Range") or request.headers.get(
+        "Content-Range"
+    )
 
     if content_range:
         result, kwargs = handle_chunked(f, permpath, content_range)
     else:
         result, kwargs = handle_full(f, permpath)
 
-    kwargs['filekey'] = filekey
+    kwargs["filekey"] = filekey
 
     return jsonify(result=result, **kwargs)
 
 
 # Flask endpoint
 def status():
-    permpath = getpath(request.form['filekey'])
+    permpath = getpath(request.form["filekey"])
     return jsonify(offset=stat(permpath))
 
 
 def handle_full(f, permpath):
     f.save(permpath)
-    return 'Success', {}
+    return "Success", {}
 
 
 def handle_chunked(f, permpath, content_range):
     try:
         content_range = RE_CONTENT_RANGE.match(content_range)
-        assert content_range, 'Invalid content range!'
+        assert content_range, "Invalid content range!"
 
         cr1, cr2, cr3 = [int(content_range.group(i)) for i in range(1, 4)]
 
@@ -94,7 +95,7 @@ def handle_chunked(f, permpath, content_range):
         if size != cr1:
             raise WrongOffset(size)
 
-        with open(permpath, 'ab') as dest:
+        with open(permpath, "ab") as dest:
             shutil.copyfileobj(f, dest)
 
     except WrongOffset as e:
@@ -102,8 +103,9 @@ def handle_chunked(f, permpath, content_range):
     else:
         size = stat(permpath)
     if size < cr3:
-        return 'Continue', {'offset': size}
+        return "Continue", {"offset": size}
     elif size > cr3:
-        raise RuntimeError('What?! Uploaded file is larger than '
-                           'what it is supposed to be?')
-    return 'Success', {}
+        raise RuntimeError(
+            "What?! Uploaded file is larger than what it is supposed to be?"
+        )
+    return "Success", {}

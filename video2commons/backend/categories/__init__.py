@@ -24,18 +24,26 @@ from ..encode.globals import ffprobe_location
 def has_video_track(source: str) -> bool:
     """Check if a video has an audio track."""
 
-    result = subprocess.run([
-        ffprobe_location,
-        '-loglevel', 'error',
-        '-select_streams', 'v',
-        '-show_entries', 'stream=index,codec_type',
-        '-of', 'json',
-        source
-    ], capture_output=True, text=True)
+    result = subprocess.run(
+        [
+            ffprobe_location,
+            "-loglevel",
+            "error",
+            "-select_streams",
+            "v",
+            "-show_entries",
+            "stream=index,codec_type",
+            "-of",
+            "json",
+            source,
+        ],
+        capture_output=True,
+        text=True,
+    )
 
     if result.returncode == 0:
-        for stream in json.loads(result.stdout).get('streams', []):
-            if stream.get('codec_type') == 'video':
+        for stream in json.loads(result.stdout).get("streams", []):
+            if stream.get("codec_type") == "video":
                 return True
 
     return False
@@ -44,18 +52,26 @@ def has_video_track(source: str) -> bool:
 def has_audio_track(source: str) -> bool:
     """Check if a video has an audio track."""
 
-    result = subprocess.run([
-        ffprobe_location,
-        '-loglevel', 'error',
-        '-select_streams', 'a',
-        '-show_entries', 'stream=index,codec_type',
-        '-of', 'json',
-        source
-    ], capture_output=True, text=True)
+    result = subprocess.run(
+        [
+            ffprobe_location,
+            "-loglevel",
+            "error",
+            "-select_streams",
+            "a",
+            "-show_entries",
+            "stream=index,codec_type",
+            "-of",
+            "json",
+            source,
+        ],
+        capture_output=True,
+        text=True,
+    )
 
     if result.returncode == 0:
-        for stream in json.loads(result.stdout).get('streams', []):
-            if stream.get('codec_type') == 'audio':
+        for stream in json.loads(result.stdout).get("streams", []):
+            if stream.get("codec_type") == "audio":
                 return True
 
     return False
@@ -82,7 +98,7 @@ def get_inferable_categories(source: str) -> Set[str]:
     categories = set()
 
     if not has_audio_track(source):
-        categories.add('[[Category:Videos without audio]]')
+        categories.add("[[Category:Videos without audio]]")
 
     return categories
 

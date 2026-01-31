@@ -19,8 +19,6 @@
 
 """video2commons web shared."""
 
-
-
 import json
 from uuid import uuid4
 
@@ -29,8 +27,7 @@ from redis import Redis
 
 from video2commons.config import redis_pw, redis_host
 
-redisconnection = Redis(host=redis_host, db=3, password=redis_pw,
-                        decode_responses=True)
+redisconnection = Redis(host=redis_host, db=3, password=redis_pw, decode_responses=True)
 
 
 def check_banned():
@@ -40,10 +37,10 @@ def check_banned():
 
 def generate_csrf_token():
     """Generate a CSRF token."""
-    if '_csrf_token' not in session:
-        session['_csrf_token'] = str(uuid4())
-    return session['_csrf_token']
+    if "_csrf_token" not in session:
+        session["_csrf_token"] = str(uuid4())
+    return session["_csrf_token"]
 
 
 def redis_publish(typ, data):
-    redisconnection.publish('v2cnotif:'+typ, json.dumps(data))
+    redisconnection.publish("v2cnotif:" + typ, json.dumps(data))

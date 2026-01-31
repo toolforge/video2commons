@@ -27,50 +27,55 @@ import sys
 import re
 import json
 
-if not len(sys.argv) > 1 or '/messages' not in sys.argv[1]:
-    print(("usage: python " + sys.argv[0] + " <dir>\n\n"
-           "  <dir>  The path to mediawiki/languages/messages\n"))
+if not len(sys.argv) > 1 or "/messages" not in sys.argv[1]:
+    print(
+        (
+            "usage: python " + sys.argv[0] + " <dir>\n\n"
+            "  <dir>  The path to mediawiki/languages/messages\n"
+        )
+    )
     sys.exit(1)
 
 msgDir = sys.argv[1]
 
-dest = os.path.dirname(os.path.realpath(__file__)) + \
-    '/../video2commons/frontend/i18n-metadata'
+dest = (
+    os.path.dirname(os.path.realpath(__file__))
+    + "/../video2commons/frontend/i18n-metadata"
+)
 
 data = {
-    'fallbacks': {},
-    'rtl': [],
-    'alllangs': [],
+    "fallbacks": {},
+    "rtl": [],
+    "alllangs": [],
 }
 rFallback = re.compile(r"fallback = '(.*?)'", re.I)
-rIsRtl = re.compile(r'rtl = true', re.I)
+rIsRtl = re.compile(r"rtl = true", re.I)
 for file in os.listdir(msgDir):
     filePath = msgDir + "/" + file
-    if file in ['.', '..'] or not os.path.isfile(filePath):
+    if file in [".", ".."] or not os.path.isfile(filePath):
         continue
 
-    with open(filePath, 'r') as openfile:
+    with open(filePath, "r") as openfile:
         content = openfile.read()
 
-    fileMatch = re.match(r'Messages(.*?)\.php', file)
-    source = fileMatch.group(1).lower().replace('_', '-')
+    fileMatch = re.match(r"Messages(.*?)\.php", file)
+    source = fileMatch.group(1).lower().replace("_", "-")
     contentMatch = rFallback.search(content)
     if contentMatch:
-        fallbacks = [s.strip() for s in contentMatch.group(1).split(',')]
-        data['fallbacks'][source] = \
-            fallbacks if len(fallbacks) > 1 else fallbacks[0]
+        fallbacks = [s.strip() for s in contentMatch.group(1).split(",")]
+        data["fallbacks"][source] = fallbacks if len(fallbacks) > 1 else fallbacks[0]
 
     if rIsRtl.search(content):
-        data['rtl'].append(source)
+        data["rtl"].append(source)
 
-    data['alllangs'].append(source)
+    data["alllangs"].append(source)
 
 
 def _write(key):
     dest_file = dest + "/" + key + ".json"
-    with open(dest_file, 'w') as openfile:
-        json.dump(data[key], openfile, sort_keys=True,
-                  indent=4, separators=(',', ': '))
+    with open(dest_file, "w") as openfile:
+        json.dump(data[key], openfile, sort_keys=True, indent=4, separators=(",", ": "))
+
 
 for key in data:
     _write(key)

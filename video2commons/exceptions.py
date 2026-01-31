@@ -49,5 +49,4 @@ class TaskAbort(TaskError):
 
     def __init__(self):
         """Initialize."""
-        super().__init__('The task has been aborted.')
-
+        super().__init__("The task has been aborted.")
