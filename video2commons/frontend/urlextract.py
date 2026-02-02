@@ -23,7 +23,9 @@ from collections import OrderedDict
 from video2commons.backend.encode.transcode import WebVideoTranscode
 from video2commons.config import tooldir, youtube_user, youtube_pass
 
+import json
 import re
+import subprocess
 import emoji
 import guess_language
 import pywikibot
@@ -64,6 +66,78 @@ NAMESPACE_FILE = 6
 # support is 12 bytes long, and 228 + 12 = 240, which is the maximum filename
 # size supported by MediaWiki for uploads.
 MAX_FILENAME_SIZE = 228
+
+# Task queue routing thresholds for the default and heavy queues. Both 4k and
+# 20 Mbps (in kbps) videos get routed to the heavy queue to avoid OOM errors.
+HEAVY_RESOLUTION_THRESHOLD = 3840
+HEAVY_BITRATE_THRESHOLD = 20000
+DEFAULT_QUEUE = "celery"
+HEAVY_QUEUE = "heavy"
+
+
+def predict_task_type(metadata):
+    """Predict how resource-intensive a task is based on yt-dlp metadata."""
+    # Check if the resolution exceed the threshold for the standard queue.
+    width = metadata.get("width") or 0
+    height = metadata.get("height") or 0
+    if width >= HEAVY_RESOLUTION_THRESHOLD or height >= HEAVY_RESOLUTION_THRESHOLD:
+        return HEAVY_QUEUE
+
+    # Check the bitrate. TBR is total, VBR is video only (both in kbps).
+    bitrate = metadata.get("tbr") or metadata.get("vbr") or 0
+    if bitrate >= HEAVY_BITRATE_THRESHOLD:
+        return HEAVY_QUEUE
+
+    # Default to heavy if no bitrate is available. This is a fallback for video
+    # sources that don't have yt-dlp extractors such as NASA Scientific
+    # Visualization Studio, which typically has large files.
+    if metadata.get("tbr") is None and metadata.get("vbr") is None:
+        return HEAVY_QUEUE
+
+    return DEFAULT_QUEUE
+
+
+def predict_task_type_ffprobe(filepath):
+    """Predict how resource-intensive a task is based on ffprobe metadata."""
+    result = subprocess.run(
+        [
+            "ffprobe",
+            "-v",
+            "quiet",
+            "-print_format",
+            "json",
+            "-show_streams",
+            "-show_format",
+            filepath,
+        ],
+        capture_output=True,
+        text=True,
+    )
+
+    if result.returncode != 0:
+        return DEFAULT_QUEUE
+
+    probe = json.loads(result.stdout)
+
+    # Check video streams for resolution.
+    for stream in probe.get("streams", []):
+        if stream.get("codec_type") == "video":
+            width = stream.get("width") or 0
+            height = stream.get("height") or 0
+            if (
+                width >= HEAVY_RESOLUTION_THRESHOLD
+                or height >= HEAVY_RESOLUTION_THRESHOLD
+            ):
+                return HEAVY_QUEUE
+
+    # Check bitrate from format (in bits/sec, convert to kbps).
+    format_info = probe.get("format", {})
+    bitrate_bps = int(format_info.get("bit_rate") or 0)
+    bitrate_kbps = bitrate_bps / 1000
+    if bitrate_kbps >= HEAVY_BITRATE_THRESHOLD:
+        return HEAVY_QUEUE
+
+    return DEFAULT_QUEUE
 
 
 def make_dummy_desc(filename):
@@ -158,6 +232,7 @@ def _extract_info(info):
         "filedesc": filedesc.strip(),
         "filename": sanitize(title),
         "date": _date(url, ie_key, title, info),
+        "queue": predict_task_type(info),
     }
 
 

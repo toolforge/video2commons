@@ -44,8 +44,8 @@ def collect_worker_stats(conn, inspector):
 
 
 def get_queue_length(conn):
-    """Get the number of messages waiting in the broker queue."""
-    return conn.llen("celery") + conn.hlen("unacked")
+    """Get the number of messages waiting in the broker queues."""
+    return conn.llen("celery") + conn.llen("heavy") + conn.hlen("unacked")
 
 
 def update_task_stats(conn, task_id, remove=False):

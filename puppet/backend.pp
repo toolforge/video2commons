@@ -4,6 +4,16 @@ $redis_pw = 'REDACTED'
 $redis_host = 'video-redis-buster.video.eqiad1.wikimedia.cloud'
 $http_host = 'v2c.wmflabs.org'
 
+# Configure encoding05 and encoding06 to use 1 worker and listen to the heavy
+# queue so that resource intensive tasks don't bring down workers.
+if $facts['hostname'] in ['encoding05', 'encoding06'] {
+  $celeryd_concurrency = '1'
+  $celeryd_queues      = 'heavy,celery'
+} else {
+  $celeryd_concurrency = '2'
+  $celeryd_queues      = 'celery'
+}
+
 ## BASIC INSTANCE SETUP
 
 # include role::labs::lvm::srv
@@ -211,19 +221,19 @@ file { '/etc/systemd/system/cron.service.d/override.conf':
     require => File['/etc/systemd/system/cron.service.d'],
 }
 
-$celeryd_config = '# THIS FILE IS MANAGED BY MANUAL PUPPET
+$celeryd_config = "# THIS FILE IS MANAGED BY MANUAL PUPPET
 CELERYD_NODES=1
-CELERYD_OPTS="--concurrency=2"
-CELERY_BIN="/srv/v2c/venv/bin/celery"
-CELERY_APP="video2commons.backend.worker"
-CELERYD_MULTI="multi"
-CELERYD_LOG_LEVEL="INFO"
-CELERYD_LOG_FILE="/var/log/v2ccelery/%N%I.log"
-CELERYD_PID_FILE="/var/run/v2ccelery/%N.pid"
-CELERYD_USER="tools.video2commons"
-CELERYD_GROUP="tools.video2commons"
+CELERYD_OPTS=\"--concurrency=${celeryd_concurrency} -Q ${celeryd_queues}\"
+CELERY_BIN=\"/srv/v2c/venv/bin/celery\"
+CELERY_APP=\"video2commons.backend.worker\"
+CELERYD_MULTI=\"multi\"
+CELERYD_LOG_LEVEL=\"INFO\"
+CELERYD_LOG_FILE=\"/var/log/v2ccelery/%N%I.log\"
+CELERYD_PID_FILE=\"/var/run/v2ccelery/%N.pid\"
+CELERYD_USER=\"tools.video2commons\"
+CELERYD_GROUP=\"tools.video2commons\"
 CELERY_CREATE_DIRS=1
-'
+"
 
 file { '/etc/default/v2ccelery':
     ensure  => file,
