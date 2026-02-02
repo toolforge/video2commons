@@ -10,7 +10,7 @@
     "gulp-concat": ">=2.6.1",
     "gulp-htmlmin": ">3.0.0",
     "gulp-nunjucks": ">3.1.1",
-    "gulp-rename": ">1.4.0",
+    "gulp-rename": ">2.1.0",
     "gulp-uglify": ">2.1.2"
   },
   "dependencies": {
