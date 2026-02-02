@@ -2,7 +2,8 @@
 	"@metadata": {
 		"authors": [
 			"Arsenekoumyk",
-			"ArslanX"
+			"ArslanX",
+			"Кумнац"
 		]
 	},
 	"logout": "Чыкъмакъ",
@@ -16,6 +17,7 @@
 	"back": "Артгъа",
 	"keep": "Сакъламакъ",
 	"filename": "Сапламны аты",
+	"languagecategory": "Тил",
 	"video": "видео",
 	"audio": "сес",
 	"keepvideo": "Видеону сакъламакъ",

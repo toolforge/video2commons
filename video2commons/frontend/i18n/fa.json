@@ -7,6 +7,7 @@
 			"Ebraminio",
 			"FarsiNevis",
 			"Huji",
+			"Jeeputer",
 			"LordProfo",
 			"Namo",
 			"Reza1615"
@@ -36,6 +37,7 @@
 	"transcoding": "قالب فراکدگذاری",
 	"filedescription": "صفحه توضیحات پرونده",
 	"filename": "نام پرونده",
+	"languagecategory": "زبان",
 	"video": "ویدئو",
 	"audio": "صوتی",
 	"subtitles": "زیرنویس‌ها",

@@ -26,6 +26,7 @@
 	"transcoding": "Transcoding-Format",
 	"filedescription": "Beschreiwungssäit vum Fichier",
 	"filename": "Numm vum Fichier",
+	"languagecategory": "Sprooch",
 	"video": "Video",
 	"audio": "Audio",
 	"subtitles": "Ënnertitelen",
