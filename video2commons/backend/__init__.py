@@ -19,8 +19,6 @@
 
 """videocommons backend."""
 
-
-
 from video2commons.backend import worker
 
-__all__ = ['worker']
+__all__ = ["worker"]

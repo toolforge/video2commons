@@ -1,4 +1,4 @@
-name: Validate JavaScript Build
+name: CI
 
 on:
   pull_request:
@@ -6,6 +6,7 @@ on:
 
 jobs:
   check:
+    name: Validate JavaScript Build
     runs-on: ubuntu-latest
     container:
       image: debian:bookworm
@@ -17,13 +18,13 @@ jobs:
           apt-get install -y git curl
 
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Configure git safe directory
         run: git config --global --add safe.directory "$GITHUB_WORKSPACE"
 
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
           node-version: '24'
           cache: 'npm'
@@ -61,3 +62,35 @@ jobs:
           git add video2commons/frontend/static/*.min.js video2commons/frontend/templates/*.min.html
           git commit -m "Update built files from CI"
           git push origin $GITHUB_HEAD_REF
+
+  biome:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Setup Biome
+        uses: biomejs/setup-biome@v2.7.0
+
+      - name: Run Biome
+        run: biome ci .
+
+  ruff:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Setup uv
+        uses: astral-sh/setup-uv@v7.2.1
+        with:
+          python-version: "3.11"
+          enable-cache: true
+
+      - name: Run Ruff
+        run: uv run ruff check --output-format=github .
+
+      - name: Run the Ruff formatter
+        run: uv run ruff format --check .

@@ -1,4 +1,4 @@
-# video2commons [![Build Status](https://travis-ci.org/toolforge/video2commons.svg?branch=master)](https://travis-ci.org/toolforge/video2commons) [![Code Climate](https://codeclimate.com/github/toolforge/video2commons/badges/gpa.svg)](https://codeclimate.com/github/toolforge/video2commons)
+# video2commons [![Build Status](https://github.com/toolforge/video2commons/actions/workflows/ci.yml/badge.svg?branch=master)](https://github.com/toolforge/video2commons/actions/workflows/ci.yml) [![Code Climate](https://codeclimate.com/github/toolforge/video2commons/badges/gpa.svg)](https://codeclimate.com/github/toolforge/video2commons)
 
 Transfer video and audio from external sites to Commons. Video2commons is available for everyone (uses OAuth) via Wikimedia Commons.
 

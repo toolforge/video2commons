@@ -1,0 +1,13 @@
+[project]
+name = "video2commons"
+version = "0.1.0"
+requires-python = ">=3.11"
+
+[dependency-groups]
+dev = ["ruff>=0.14.14"]
+
+[tool.ruff.lint]
+ignore = ["E722"]
+
+[tool.ruff.format]
+docstring-code-format = true

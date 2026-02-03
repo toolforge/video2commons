@@ -17,8 +17,6 @@
 
 """video2commons backend worker."""
 
-
-
 import os
 import sys
 import shutil
@@ -37,19 +35,19 @@ from video2commons.backend import encode
 from video2commons.backend import upload
 from video2commons.backend import subtitles as subtitleuploader
 from video2commons.config import (
-    redis_pw, redis_host, consumer_key, consumer_secret, http_host
+    redis_pw,
+    redis_host,
+    consumer_key,
+    consumer_secret,
+    http_host,
 )
 from video2commons.shared.stats import update_task_stats
 
-redisurl = 'redis://:' + redis_pw + '@' + redis_host + ':6379/'
-app = celery.Celery(
-    'v2cbackend',
-    backend=redisurl + '1',
-    broker=redisurl + '2'
-)
+redisurl = "redis://:" + redis_pw + "@" + redis_host + ":6379/"
+app = celery.Celery("v2cbackend", backend=redisurl + "1", broker=redisurl + "2")
 app.conf.result_expires = 30 * 24 * 3600  # 1 month
 
-app.conf.accept_content = ['json']
+app.conf.accept_content = ["json"]
 app.conf.worker_prefetch_multiplier = 1
 
 redisconnection = Redis(host=redis_host, db=3, password=redis_pw)
@@ -58,27 +56,35 @@ redisconnection = Redis(host=redis_host, db=3, password=redis_pw)
 class Stats:
     """Storage for task status."""
 
-    text = ''
+    text = ""
     percent = 0
 
 
 def get_worker_concurrency():
     """Parse concurrency value from CELERYD_OPTS environment variable."""
-    celeryd_opts = os.environ.get('CELERYD_OPTS', '')
+    celeryd_opts = os.environ.get("CELERYD_OPTS", "")
 
-    match = re.search(r'--concurrency[=\s]+(\d+)', celeryd_opts)
+    match = re.search(r"--concurrency[=\s]+(\d+)", celeryd_opts)
     if match:
         return int(match.group(1))
 
 
 @app.task(bind=True, track_started=False, base=AbortableTask)
 def main(
-    self, url, ie_key, subtitles, filename, filedesc,
-    downloadkey, convertkey, username, oauth
+    self,
+    url,
+    ie_key,
+    subtitles,
+    filename,
+    filedesc,
+    downloadkey,
+    convertkey,
+    username,
+    oauth,
 ):
     """Main worker code."""
     # Get a lock to prevent double-running with same task ID
-    lockkey = 'tasklock:' + self.request.id
+    lockkey = "tasklock:" + self.request.id
     if redisconnection.exists(lockkey):
         raise Ignore
 
@@ -90,9 +96,9 @@ def main(
         pass  # We don't want to fail the task if we can't update stats.
 
     # Check for 10G of disk space, refuse to run if it is unavailable
-    st = os.statvfs('/srv')
+    st = os.statvfs("/srv")
     if st.f_frsize * st.f_bavail < 10 << 30:
-        self.retry(max_retries=20, countdown=5*60)
+        self.retry(max_retries=20, countdown=5 * 60)
         assert False  # should never reach here
 
     redisconnection.setex(lockkey, 7 * 24 * 3600, self.request.hostname)
@@ -100,7 +106,7 @@ def main(
     # Generate temporary directory for task
     for i in range(10):  # 10 tries
         id = os.urandom(8).hex()
-        outputdir = '/srv/v2c/output/' + id
+        outputdir = "/srv/v2c/output/" + id
         if not os.path.isdir(outputdir):
             os.makedirs(outputdir)
             break
@@ -116,52 +122,56 @@ def main(
             s.text = text
         if percent is not None:
             s.percent = percent
-        print('%d: %s' % (s.percent, s.text))
+        print("%d: %s" % (s.percent, s.text))
 
-        self.update_state(
-            state='PROGRESS',
-            meta={'text': s.text, 'percent': s.percent}
-        )
+        self.update_state(state="PROGRESS", meta={"text": s.text, "percent": s.percent})
 
     def errorcallback(text):
         raise TaskError(text)
 
     try:
-        statuscallback('Downloading...', -1)
+        statuscallback("Downloading...", -1)
         d = download.download(
-            url, ie_key, downloadkey, subtitles,
-            outputdir, statuscallback, errorcallback
+            url,
+            ie_key,
+            downloadkey,
+            subtitles,
+            outputdir,
+            statuscallback,
+            errorcallback,
         )
         if not d:
-            errorcallback('Download failed!')
-        file = d['target']
+            errorcallback("Download failed!")
+        file = d["target"]
         if not file:
-            errorcallback('Download failed!')
+            errorcallback("Download failed!")
 
         source = file
 
         # Remember intent with subtitles so categories can be added
         # appropriately later. These can be strings, so convert to bool.
         subtitles_requested = subtitles
-        if type(subtitles_requested) == str:
-            subtitles_requested = subtitles_requested.lower() == 'true'
+        if type(subtitles_requested) is str:
+            subtitles_requested = subtitles_requested.lower() == "true"
 
-        subtitles = subtitles and d['subtitles']
+        subtitles = subtitles and d["subtitles"]
 
-        statuscallback('Converting...', -1)
+        statuscallback("Converting...", -1)
         concurrency = get_worker_concurrency()
         file = encode.encode(
             file, convertkey, statuscallback, errorcallback, concurrency
         )
         if not file:
-            errorcallback('Convert failed!')
-        ext = file.split('.')[-1]
+            errorcallback("Convert failed!")
+        ext = file.split(".")[-1]
 
-        statuscallback('Configuring Pywikibot...', -1)
-        pywikibot.config.authenticate['commons.wikimedia.org'] = \
-            (consumer_key, consumer_secret) + tuple(oauth)
-        pywikibot.config.usernames['commons']['commons'] = username
-        pywikibot.Site('commons', 'commons', user=username).login()
+        statuscallback("Configuring Pywikibot...", -1)
+        pywikibot.config.authenticate["commons.wikimedia.org"] = (
+            consumer_key,
+            consumer_secret,
+        ) + tuple(oauth)
+        pywikibot.config.usernames["commons"]["commons"] = username
+        pywikibot.Site("commons", "commons", user=username).login()
 
         # Identify the language codes of all present subtitles. Fallback to
         # checking the container ONLY IF yt-dlp was unable to find subtitles.
@@ -169,28 +179,37 @@ def main(
         if subtitles:
             found_langcodes.update(subtitleuploader.get_subtitle_languages(subtitles))
         elif subtitles_requested:
-            found_langcodes.update(subtitleuploader.get_container_subtitle_languages(source))
+            found_langcodes.update(
+                subtitleuploader.get_container_subtitle_languages(source)
+            )
 
         # Add additional inferable meta-categories to the file description.
         found_categories = set()
         found_categories.update(categories.get_inferable_categories(file))
-        found_categories.update(categories.get_subtitle_categories(file, found_langcodes))
+        found_categories.update(
+            categories.get_subtitle_categories(file, found_langcodes)
+        )
         filedesc = categories.append_categories(filedesc, found_categories)
 
-        statuscallback('Uploading...', -1)
-        filename += '.' + ext
+        statuscallback("Uploading...", -1)
+        filename += "." + ext
         filename, wikifileurl = upload.upload(
-            file, filename, url, http_host,
-            filedesc, username, statuscallback, errorcallback
+            file,
+            filename,
+            url,
+            http_host,
+            filedesc,
+            username,
+            statuscallback,
+            errorcallback,
         )
         if not wikifileurl:
-            errorcallback('Upload failed!')
+            errorcallback("Upload failed!")
 
         if subtitles:
             try:
                 subtitleuploader.upload_subtitles(
-                    subtitles, filename, username,
-                    statuscallback, errorcallback
+                    subtitles, filename, username, statuscallback, errorcallback
                 )
             except TaskAbort:
                 raise
@@ -207,7 +226,7 @@ def main(
                     filename=filename,
                     outputdir=outputdir,
                     username=username,
-                    statuscallback=statuscallback
+                    statuscallback=statuscallback,
                 )
             except TaskAbort:
                 raise
@@ -218,23 +237,22 @@ def main(
     except NeedServerSideUpload as e:
         # json serializer cannot properly serialize an exception
         # without losing data, so we change the exception into a dict.
-        return {'type': 'ssu', 'hashsum': e.hashsum, 'url': e.url}
+        return {"type": "ssu", "hashsum": e.hashsum, "url": e.url}
     except pywikibot.exceptions.Error:
         exc_info = sys.exc_info()
         raise TaskError(
-            (
-                'pywikibot.Error: %s: %s' % (
-                    exc_info[0].__name__, exc_info[1]
-                )
-            ).encode('utf-8')).with_traceback(exc_info[2])
+            ("pywikibot.Error: %s: %s" % (exc_info[0].__name__, exc_info[1])).encode(
+                "utf-8"
+            )
+        ).with_traceback(exc_info[2])
     else:
-        statuscallback('Done!', 100)
-        return {'type': 'done', 'filename': filename, 'url': wikifileurl}
+        statuscallback("Done!", 100)
+        return {"type": "done", "filename": filename, "url": wikifileurl}
     finally:
-        statuscallback('Cleaning up...', -1)
+        statuscallback("Cleaning up...", -1)
         pywikibot.stopme()
         pywikibot.config.authenticate.clear()
-        pywikibot.config.usernames['commons'].clear()
+        pywikibot.config.usernames["commons"].clear()
         pywikibot._sites.clear()
 
         shutil.rmtree(outputdir)

@@ -35,9 +35,14 @@ import subprocess
 import signal
 from .transcode import WebVideoTranscode
 from .globals import (
-    background_priority, background_time_limit, background_memory_limit,
-    background_size_limit, ffmpeg_threads, ffmpeg_location, escape_shellarg,
-    time_to_seconds
+    background_priority,
+    background_time_limit,
+    background_memory_limit,
+    background_size_limit,
+    ffmpeg_threads,
+    ffmpeg_location,
+    escape_shellarg,
+    time_to_seconds,
 )
 
 from video2commons.exceptions import TaskAbort
@@ -47,15 +52,21 @@ class WebVideoTranscodeJob(object):
     """Job class."""
 
     def __init__(
-        self, source, target, key, preserve={},
-        statuscallback=None, errorcallback=None, source_info=None,
-        concurrency=None
+        self,
+        source,
+        target,
+        key,
+        preserve={},
+        statuscallback=None,
+        errorcallback=None,
+        source_info=None,
+        concurrency=None,
     ):
         """Initialize the instance."""
         self.source = os.path.abspath(source)
         self.target = os.path.abspath(target)
         self.key = key
-        self.preserve = {'video': False, 'audio': False}
+        self.preserve = {"video": False, "audio": False}
         self.preserve.update(preserve)
         self.statuscallback = statuscallback or (lambda text, percent: None)
         self.errorcallback = errorcallback or (lambda text: None)
@@ -83,8 +94,8 @@ class WebVideoTranscodeJob(object):
 
         @return File
         """
-        if not hasattr(self, 'file'):
-            self.file = open(self.source, 'r')
+        if not hasattr(self, "file"):
+            self.file = open(self.source, "r")
             self.file.close()
 
         return self.file
@@ -95,8 +106,8 @@ class WebVideoTranscodeJob(object):
 
         @return string
         """
-        if not hasattr(self, 'targetEncodeFile'):
-            self.targetEncodeFile = open(self.target, 'w')
+        if not hasattr(self, "targetEncodeFile"):
+            self.targetEncodeFile = open(self.target, "w")
             self.targetEncodeFile.close()
 
         return self.targetEncodeFile.name
@@ -107,7 +118,7 @@ class WebVideoTranscodeJob(object):
 
         @return string|bool
         """
-        if not hasattr(self, 'sourceFilePath'):
+        if not hasattr(self, "sourceFilePath"):
             self.sourceFilePath = self.get_file().name
 
         return self.sourceFilePath
@@ -132,7 +143,7 @@ class WebVideoTranscodeJob(object):
 
         # Validate the file exists:
         if not file:
-            self.set_error(self.source + ': File not found ')
+            self.set_error(self.source + ": File not found ")
             return False
 
         # Validate the transcode key param:
@@ -144,26 +155,26 @@ class WebVideoTranscodeJob(object):
             return False
 
         # Validate the source exists:
-        if not self.get_source_path() or not \
-                os.path.isfile(self.get_source_path()):
-            status = self.source + ': Source not found'
+        if not self.get_source_path() or not os.path.isfile(self.get_source_path()):
+            status = self.source + ": Source not found"
             self.set_error(status, transcode_key)
             return False
 
         options = WebVideoTranscode.settings[transcode_key]
 
-        if 'novideo' in options:
-            self.output("Encoding to audio codec: " + options['audioCodec'])
+        if "novideo" in options:
+            self.output("Encoding to audio codec: " + options["audioCodec"])
         else:
-            self.output("Encoding to codec: " + options['videoCodec'])
+            self.output("Encoding to codec: " + options["videoCodec"])
 
         # Check the codec see which encode method to call
-        if 'novideo' in options or self.preserve['video']:
+        if "novideo" in options or self.preserve["video"]:
             status = self.ffmpeg_encode(options)
-        elif options['videoCodec'] in ['vp8', 'vp9', 'h264', "av1"] or \
-                (options['videoCodec'] == 'theora'):
+        elif options["videoCodec"] in ["vp8", "vp9", "h264", "av1"] or (
+            options["videoCodec"] == "theora"
+        ):
             # Check for twopass:
-            if 'twopass' in options and options['twopass'] == 'True':
+            if "twopass" in options and options["twopass"] == "True":
                 # ffmpeg requires manual two pass
                 status = self.ffmpeg_encode(options, 1)
                 if status and not isinstance(status, str):
@@ -171,14 +182,14 @@ class WebVideoTranscodeJob(object):
             else:
                 status = self.ffmpeg_encode(options)
         else:
-            self.output('Error unknown codec:' + options['videoCodec'])
-            status = 'Error unknown target codec:' + options['videoCodec']
+            self.output("Error unknown codec:" + options["videoCodec"])
+            status = "Error unknown target codec:" + options["videoCodec"]
 
         self.remove_ffmpeg_log_files()
 
         # If status is oky and target does not exist, reset status
         if status is True and not os.path.isfile(self.get_target_path()):
-            status = 'Target does not exist: ' + self.get_target_path()
+            status = "Target does not exist: " + self.get_target_path()
 
         # If status is ok and target is larger than 0 bytes
         if status is True and os.path.getsize(self.get_target_path()) > 0:
@@ -196,8 +207,8 @@ class WebVideoTranscodeJob(object):
         if os.path.isdir(dir):
             for file in os.listdir(dir):
                 log_path = os.path.abspath(dir + "/" + file)
-                ext = file.split('.')[-1]
-                if ext == 'log' and log_path.startswith(path):
+                ext = file.split(".")[-1]
+                if ext == "log" and log_path.startswith(path):
                     os.unlink(log_path)
 
     def ffmpeg_encode(self, options, p=0):
@@ -209,63 +220,68 @@ class WebVideoTranscodeJob(object):
         @return bool|string
         """
         if not os.path.isfile(self.get_source_path()):
-            return "source file is missing, " + self.get_source_path() + \
-                ". Encoding failed."
+            return (
+                "source file is missing, "
+                + self.get_source_path()
+                + ". Encoding failed."
+            )
 
         # Set up the base command
-        cmd = escape_shellarg(ffmpeg_location) + ' -y -i ' + \
-            escape_shellarg(self.get_source_path())
+        cmd = (
+            escape_shellarg(ffmpeg_location)
+            + " -y -i "
+            + escape_shellarg(self.get_source_path())
+        )
 
         cmd += " -max_muxing_queue_size 4096"
 
-        if 'vpre' in options:
-            cmd += ' -vpre ' + escape_shellarg(options['vpre'])
+        if "vpre" in options:
+            cmd += " -vpre " + escape_shellarg(options["vpre"])
 
         # Copy non-standard custom metadata specific to mp4 and mov files
         container = self.source_info.format.format
-        if container == 'mov,mp4,m4a,3gp,3g2,mj2':
-            cmd += ' -movflags use_metadata_tags'
+        if container == "mov,mp4,m4a,3gp,3g2,mj2":
+            cmd += " -movflags use_metadata_tags"
 
-        cmd += ' -map_metadata 0'
+        cmd += " -map_metadata 0"
 
-        if 'novideo' in options:
+        if "novideo" in options:
             cmd += " -vn "
-        elif self.preserve['video']:
+        elif self.preserve["video"]:
             cmd += " -vcodec copy"
-        elif options['videoCodec'] == 'av1':
+        elif options["videoCodec"] == "av1":
             cmd += self.ffmpeg_add_av1_video_options(options, p)
-        elif options['videoCodec'] == 'vp8' or options['videoCodec'] == 'vp9':
+        elif options["videoCodec"] == "vp8" or options["videoCodec"] == "vp9":
             cmd += self.ffmpeg_add_webm_video_options(options, p)
-        elif options['videoCodec'] == 'h264':
+        elif options["videoCodec"] == "h264":
             cmd += self.ffmpeg_add_h264_video_options(options, p)
-        elif options['videoCodec'] == 'theora':
+        elif options["videoCodec"] == "theora":
             cmd += self.ffmpeg_add_theora_video_options(options, p)
 
         # Check for start time
-        if 'starttime' in options:
-            cmd += ' -ss ' + escape_shellarg(options['starttime'])
+        if "starttime" in options:
+            cmd += " -ss " + escape_shellarg(options["starttime"])
         else:
-            options['starttime'] = 0
+            options["starttime"] = 0
 
         # Check for end time:
-        if 'endtime' in options:
-            cmd += ' -t ' + str(options['endtime']) - str(options['starttime'])
+        if "endtime" in options:
+            cmd += " -t " + str(options["endtime"]) - str(options["starttime"])
 
-        if p == 1 or 'noaudio' in options:
-            cmd += ' -an'
-        elif self.preserve['audio']:
+        if p == 1 or "noaudio" in options:
+            cmd += " -an"
+        elif self.preserve["audio"]:
             cmd += " -acodec copy"
         else:
             cmd += self.ffmpeg_add_audio_options(options, p)
 
         if p != 0:
             cmd += " -pass " + escape_shellarg(p)
-            cmd += " -passlogfile " + \
-                escape_shellarg(self.get_target_path() + '.log')
+            cmd += " -passlogfile " + escape_shellarg(self.get_target_path() + ".log")
 
         # And the output target:
         if p == 1:
-            cmd += ' /dev/null'
+            cmd += " /dev/null"
         else:
             cmd += " " + escape_shellarg(self.get_target_path())
 
@@ -275,8 +291,7 @@ class WebVideoTranscodeJob(object):
         retval, shellOutput = self.run_shell_exec(cmd, track=p != 1)
 
         if int(retval) != 0:
-            return cmd + \
-                "\nExitcode: " + str(retval)
+            return cmd + "\nExitcode: " + str(retval)
 
         return True
 
@@ -291,8 +306,8 @@ class WebVideoTranscodeJob(object):
         # Set the codec:
         cmd = " -threads " + str(self.ffmpeg_get_thread_count()) + " -vcodec libx264"
 
-        if 'videoBitrate' in options:
-            cmd += " -b " + escape_shellarg(options['videoBitrate'])
+        if "videoBitrate" in options:
+            cmd += " -b " + escape_shellarg(options["videoBitrate"])
 
         # Output mp4
         cmd += " -f mp4"
@@ -306,26 +321,26 @@ class WebVideoTranscodeJob(object):
         @param p
         @return string
         """
-        cmd = ' -threads ' + str(self.ffmpeg_get_thread_count())
+        cmd = " -threads " + str(self.ffmpeg_get_thread_count())
 
         # libsvtav1-specific constant quality
-        if 'crf' in options:
-            cmd += " -crf " + escape_shellarg(options['crf'])
+        if "crf" in options:
+            cmd += " -crf " + escape_shellarg(options["crf"])
 
-        if 'videoBitrate' in options:
-            if int(options['videoBitrate']) > 0:
+        if "videoBitrate" in options:
+            if int(options["videoBitrate"]) > 0:
                 cmd += " -qmin 1 -qmax 63"
-            cmd += " -b:v " + escape_shellarg(int(options['videoBitrate']) * 1000)
+            cmd += " -b:v " + escape_shellarg(int(options["videoBitrate"]) * 1000)
 
         cmd += " -vcodec libsvtav1"
 
         # libsvtav1 ignores the -threads option, so we have to set it manually.
-        cmd += ' -svtav1-params lp=' + str(self.ffmpeg_get_thread_count())
+        cmd += " -svtav1-params lp=" + str(self.ffmpeg_get_thread_count())
 
         if p == 1:
-            cmd += ' -preset 12'  # Make first pass faster
-        elif 'preset' in options:
-            cmd += ' -preset ' + escape_shellarg(options['preset'])
+            cmd += " -preset 12"  # Make first pass faster
+        elif "preset" in options:
+            cmd += " -preset " + escape_shellarg(options["preset"])
 
         cmd += " -f webm"
 
@@ -339,67 +354,65 @@ class WebVideoTranscodeJob(object):
         @param p
         @return string
         """
-        cmd = ' -threads ' + str(self.ffmpeg_get_thread_count())
-        if options['videoCodec'] == 'vp9':
-            cmd += ' -row-mt 1'
+        cmd = " -threads " + str(self.ffmpeg_get_thread_count())
+        if options["videoCodec"] == "vp9":
+            cmd += " -row-mt 1"
 
         # check for presets:
-        if 'preset' in options:
-            if options['preset'] == "360p":
+        if "preset" in options:
+            if options["preset"] == "360p":
                 cmd += " -vpre libvpx-360p"
-            elif options['preset'] == "720p":
+            elif options["preset"] == "720p":
                 cmd += " -vpre libvpx-720p"
-            elif options['preset'] == "1080p":
+            elif options["preset"] == "1080p":
                 cmd += " -vpre libvpx-1080p"
 
         # Check for video quality:
-        if 'videoQuality' in options and int(options['videoQuality']) >= 0:
+        if "videoQuality" in options and int(options["videoQuality"]) >= 0:
             # Map 0-10 to 63-0, higher values worse quality
-            quality = 63 - int(int(options['videoQuality']) / 10.0 * 63)
+            quality = 63 - int(int(options["videoQuality"]) / 10.0 * 63)
             cmd += " -qmin " + escape_shellarg(quality)
             cmd += " -qmax " + escape_shellarg(quality)
 
         # libvpx-specific constant quality or constrained quality
         # note the range is different between VP8 and VP9
-        if 'crf' in options:
-            cmd += " -crf " + escape_shellarg(options['crf'])
+        if "crf" in options:
+            cmd += " -crf " + escape_shellarg(options["crf"])
 
         # Check for video bitrate:
-        if 'videoBitrate' in options:
+        if "videoBitrate" in options:
             cmd += " -qmin 1 -qmax 51"
-            cmd += " -b:v " + escape_shellarg(int(options['videoBitrate']) * 1000)
+            cmd += " -b:v " + escape_shellarg(int(options["videoBitrate"]) * 1000)
 
         # Set the codec:
-        if options['videoCodec'] == 'vp9':
+        if options["videoCodec"] == "vp9":
             cmd += " -vcodec libvpx-vp9"
-            if 'tileColumns' in options:
-                cmd += ' -tile-columns ' + \
-                    escape_shellarg(options['tileColumns'])
+            if "tileColumns" in options:
+                cmd += " -tile-columns " + escape_shellarg(options["tileColumns"])
         else:
             cmd += " -vcodec libvpx"
 
-        if 'altref' in options:
-            cmd += ' -auto-alt-ref 1'
-            cmd += ' -lag-in-frames 25'
+        if "altref" in options:
+            cmd += " -auto-alt-ref 1"
+            cmd += " -lag-in-frames 25"
 
         # Check for keyframeInterval
-        if 'keyframeInterval' in options:
-            cmd += ' -g ' + escape_shellarg(options['keyframeInterval'])
-            cmd += ' -keyint_min ' + \
-                escape_shellarg(options['keyframeInterval'])
+        if "keyframeInterval" in options:
+            cmd += " -g " + escape_shellarg(options["keyframeInterval"])
+            cmd += " -keyint_min " + escape_shellarg(options["keyframeInterval"])
 
-        if 'deinterlace' in options:
-            cmd += ' -deinterlace'
+        if "deinterlace" in options:
+            cmd += " -deinterlace"
 
         if p == 1:
             # Make first pass faster...
-            cmd += ' -speed 4'
-        elif 'speed' in options:
-            cmd += ' -speed ' + escape_shellarg(options['speed'])
+            cmd += " -speed 4"
+        elif "speed" in options:
+            cmd += " -speed " + escape_shellarg(options["speed"])
 
         # In libvpx quality sets a deadline on how long frames can be processed.
-        if 'quality' in options:
-            cmd += ' -quality ' + escape_shellarg(options['quality'])
+        if "quality" in options:
+            cmd += " -quality " + escape_shellarg(options["quality"])
 
         # Output WebM
         cmd += " -f webm"
@@ -416,31 +429,30 @@ class WebVideoTranscodeJob(object):
         @param p
         @return string
         """
-        cmd = ' -threads ' + str(self.ffmpeg_get_thread_count())
+        cmd = " -threads " + str(self.ffmpeg_get_thread_count())
 
         # Check for video quality:
-        if 'videoQuality' in options and int(options['videoQuality']) >= 0:
-            cmd += " -q:v " + escape_shellarg(options['videoQuality'])
+        if "videoQuality" in options and int(options["videoQuality"]) >= 0:
+            cmd += " -q:v " + escape_shellarg(options["videoQuality"])
 
         # Check for video bitrate:
-        if 'videoBitrate' in options:
+        if "videoBitrate" in options:
             cmd += " -qmin 1 -qmax 51"
-            cmd += " -b:v " + escape_shellarg(int(options['videoBitrate']) * 1000)
+            cmd += " -b:v " + escape_shellarg(int(options["videoBitrate"]) * 1000)
 
         # Set the codec:
         cmd += " -vcodec theora"
 
         # Check for keyframeInterval
-        if 'keyframeInterval' in options:
-            cmd += ' -g ' + escape_shellarg(options['keyframeInterval'])
-            cmd += ' -keyint_min ' + \
-                escape_shellarg(options['keyframeInterval'])
+        if "keyframeInterval" in options:
+            cmd += " -g " + escape_shellarg(options["keyframeInterval"])
+            cmd += " -keyint_min " + escape_shellarg(options["keyframeInterval"])
 
-        if 'deinterlace' in options:
-            cmd += ' -deinterlace'
+        if "deinterlace" in options:
+            cmd += " -deinterlace"
 
-        if 'framerate' in options:
-            cmd += ' -r ' + escape_shellarg(options['framerate'])
+        if "framerate" in options:
+            cmd += " -r " + escape_shellarg(options["framerate"])
 
         # Output Ogg
         cmd += " -f ogg"
@@ -455,34 +467,34 @@ class WebVideoTranscodeJob(object):
         @param p
         @return string
         """
-        cmd = ''
-        if 'audioQuality' in options:
-            cmd += " -aq " + escape_shellarg(options['audioQuality'])
+        cmd = ""
+        if "audioQuality" in options:
+            cmd += " -aq " + escape_shellarg(options["audioQuality"])
 
-        if 'audioBitrate' in options:
-            cmd += ' -b:a ' + str(int(options['audioBitrate']) * 1000)
+        if "audioBitrate" in options:
+            cmd += " -b:a " + str(int(options["audioBitrate"]) * 1000)
 
-        if 'samplerate' in options:
-            cmd += " -ar " + escape_shellarg(options['samplerate'])
+        if "samplerate" in options:
+            cmd += " -ar " + escape_shellarg(options["samplerate"])
 
-        if 'channels' in options:
-            cmd += " -ac " + escape_shellarg(options['channels'])
+        if "channels" in options:
+            cmd += " -ac " + escape_shellarg(options["channels"])
 
-        if 'audioCodec' in options:
+        if "audioCodec" in options:
             encoders = {
-                'vorbis': 'libvorbis',
-                'opus': 'libopus',
-                'mp3': 'libmp3lame',
+                "vorbis": "libvorbis",
+                "opus": "libopus",
+                "mp3": "libmp3lame",
             }
-            if options['audioCodec'] in encoders:
-                codec = encoders[options['audioCodec']]
+            if options["audioCodec"] in encoders:
+                codec = encoders[options["audioCodec"]]
             else:
-                codec = options['audioCodec']
+                codec = options["audioCodec"]
 
             cmd += " -acodec " + escape_shellarg(codec)
-            if codec == 'aac':
+            if codec == "aac":
                 # the aac encoder is currently "experimental" in libav 9? :P
-                cmd += ' -strict experimental'
+                cmd += " -strict experimental"
         else:
             # if no audio codec set use vorbis :
             cmd += " -acodec libvorbis "
@@ -504,21 +516,36 @@ class WebVideoTranscodeJob(object):
         @param cmd String Command to be run
         @return int, string
         """
-        cmd = 'ulimit -f ' + escape_shellarg(background_size_limit) + ';' + \
-            'ulimit -v ' + escape_shellarg(background_memory_limit) + ';' + \
-            'nice -n ' + escape_shellarg(background_priority) + ' ' + \
-            'timeout ' + escape_shellarg(background_time_limit) + ' ' + \
-            cmd + \
-            ' 2>&1'
+        cmd = (
+            "ulimit -f "
+            + escape_shellarg(background_size_limit)
+            + ";"
+            + "ulimit -v "
+            + escape_shellarg(background_memory_limit)
+            + ";"
+            + "nice -n "
+            + escape_shellarg(background_priority)
+            + " "
+            + "timeout "
+            + escape_shellarg(background_time_limit)
+            + " "
+            + cmd
+            + " 2>&1"
+        )
 
         # Adapted from https://gist.github.com/marazmiki/3015621
         process = subprocess.Popen(
-            cmd, stdin=None, stdout=subprocess.PIPE, stderr=None,
-            universal_newlines=True, shell=True, preexec_fn=os.setsid
+            cmd,
+            stdin=None,
+            stdout=subprocess.PIPE,
+            stderr=None,
+            universal_newlines=True,
+            shell=True,
+            preexec_fn=os.setsid,
         )
 
-        re_duration = re.compile(r'Duration: (\d{2}:\d{2}:\d{2})')
-        re_position = re.compile(r'time=(\d{2}:\d{2}:\d{2})', re.I)
+        re_duration = re.compile(r"Duration: (\d{2}:\d{2}:\d{2})")
+        re_position = re.compile(r"time=(\d{2}:\d{2}:\d{2})", re.I)
 
         duration = None
         position = None
@@ -542,9 +569,9 @@ class WebVideoTranscodeJob(object):
                         if position_match:
                             position = time_to_seconds(position_match.group(1))
                             if duration and position:
-                                newpercentage = min(int(
-                                    math.floor(100 * position / duration)
-                                ), 100)
+                                newpercentage = min(
+                                    int(math.floor(100 * position / duration)), 100
+                                )
 
                     if newpercentage != percentage:
                         percentage = newpercentage
@@ -557,4 +584,4 @@ class WebVideoTranscodeJob(object):
             time.sleep(2)
 
         process.stdout.close()
-        return process.returncode, ''
+        return process.returncode, ""
