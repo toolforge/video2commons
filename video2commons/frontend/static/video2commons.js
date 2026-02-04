@@ -365,6 +365,7 @@
 							"filedesc",
 							"filename",
 							"videos",
+							"queue",
 						])
 						.then(() => {
 							newTaskData.initialFilenameValidated = true;
@@ -1317,6 +1318,7 @@
 										filename: video.filename,
 										filedesc: filedesc,
 										format: video.format,
+										queue: video.queue,
 									};
 								});
 							} else {
@@ -1335,6 +1337,7 @@
 									filename: newTaskData.filename,
 									filedesc: filedesc,
 									format: newTaskData.format,
+									queue: newTaskData.queue,
 								});
 							}
 

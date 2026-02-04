@@ -25,6 +25,7 @@ import re
 import celery
 from celery.contrib.abortable import AbortableTask
 from celery.exceptions import Ignore
+from kombu import Queue
 from redis import Redis
 import pywikibot
 
@@ -49,6 +50,10 @@ app.conf.result_expires = 30 * 24 * 3600  # 1 month
 
 app.conf.accept_content = ["json"]
 app.conf.worker_prefetch_multiplier = 1
+app.conf.task_queues = [
+    Queue("celery"),
+    Queue("heavy"),
+]
 
 redisconnection = Redis(host=redis_host, db=3, password=redis_pw)
 

@@ -20,6 +20,7 @@
 """video2commons web API."""
 
 import json
+import os
 import traceback
 import re
 
@@ -45,6 +46,9 @@ from video2commons.frontend.urlextract import (
     do_validate_filename,
     do_validate_filedesc,
     sanitize,
+    predict_task_type_ffprobe,
+    DEFAULT_QUEUE,
+    HEAVY_QUEUE,
 )
 from video2commons.frontend.upload import upload as _upload, status as _uploadstatus
 from video2commons.shared import stats
@@ -55,6 +59,16 @@ YOUTUBE_REGEX = (
     r"(youtube|youtu|youtube-nocookie)\.(com|be)/"
     r"(watch\?.*?(?=v=)v=|embed/|v/|.+\?v=)?([^&=%\?]{11})"
 )
+
+FILEKEY_REGEX = re.compile(
+    r"^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+)
+
+UPLOADS_DIR = os.path.join(
+    os.path.dirname(os.path.realpath(__file__)), "static/uploads"
+)
+
+VALID_QUEUES = {DEFAULT_QUEUE, HEAVY_QUEUE}
 
 api = Blueprint("api", __name__)
 
@@ -426,6 +440,22 @@ def run_task():
     downloadkey, convertkey = get_backend_keys(request.form["format"])
     username = session["username"]
     oauth = (session["access_token_key"], session["access_token_secret"])
+    queue = request.form.get("queue")
+
+    # If no queue is specified, such is the case with manually uploaded files
+    # due to yt-dlp not being used and extracturl not being called, determine
+    # which queue to process the file on based on file metadata such as bitrate
+    # and resolution. We do this to avoid OOM errors with heavy files.
+    if not queue:
+        if url.startswith("uploads:"):
+            filekey = url.split(":", 1)[1]
+            if not FILEKEY_REGEX.match(filekey):
+                return jsonify(error="Invalid file key format"), 400
+
+            filepath = os.path.join(UPLOADS_DIR, filekey)
+            queue = predict_task_type_ffprobe(filepath)
+        else:
+            queue = DEFAULT_QUEUE
 
     taskid = run_task_internal(
         filename,
@@ -440,17 +470,23 @@ def run_task():
             username,
             oauth,
         ),
+        queue,
     )
 
     return jsonify(id=taskid, step="success")
 
 
-def run_task_internal(filename, params):
+def run_task_internal(filename, params, queue):
     """Internal run task function to accept whatever params given."""
     banned = check_banned()
     assert not banned, "You are banned from using this tool! Reason: " + banned
 
-    res = worker.main.delay(*params)
+    # Validate queue to prevent tasks being sent to non-existent queues.
+    # Unfortunately Celery tries to be helpful and creates queues on demand.
+    if queue not in VALID_QUEUES:
+        queue = DEFAULT_QUEUE
+
+    res = worker.main.apply_async(args=params, queue=queue)
     taskid = res.id
 
     expire = 14 * 24 * 3600  # 2 weeks
@@ -491,7 +527,9 @@ def restart_task():
     params = redisconnection.get("params:" + id)
     assert params, "Could not extract the task parameters."
 
-    newid = run_task_internal(filename, json.loads(params))
+    # Always restart failed tasks on the heavy queue as a failsafe in case the
+    # task failed earlier due to being misprioritized.
+    newid = run_task_internal(filename, json.loads(params), HEAVY_QUEUE)
     redisconnection.set("restarted:" + id, newid)
 
     redis_publish("update", {"taskid": id, "data": _status(id)})
