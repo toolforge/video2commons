@@ -58,6 +58,9 @@ fi
 EOF
 )
 
+worker_count=$(echo "$encoder_hosts" | wc -l)
+success_count=0
+
 while read -r encoder_host; do
     echo "Applying puppet manifest to '$encoder_host' and restarting v2c service..."
 
@@ -67,7 +70,12 @@ while read -r encoder_host; do
         echo "Failed to apply puppet manifest to '$encoder_host'" >&2
     else
         echo "Puppet manifest applied to '$encoder_host'"
+        success_count=$((success_count + 1))
     fi
 done <<< "$encoder_hosts"
 
-echo "Done"
+echo "Done. Updated ($success_count/$worker_count) workers"
+
+if [ "$success_count" -ne "$worker_count" ]; then
+    exit 1
+fi
