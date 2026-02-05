@@ -26,6 +26,7 @@
 	"transcoding": "Transcoding-Format",
 	"filedescription": "Beschreiwungssäit vum Fichier",
 	"filename": "Numm vum Fichier",
+	"datecategory-error-future-year": "D'Joer däerf net an der Zukunft leien.",
 	"languagecategory": "Sprooch",
 	"video": "Video",
 	"audio": "Audio",
