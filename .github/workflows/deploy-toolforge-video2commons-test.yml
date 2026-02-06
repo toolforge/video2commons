@@ -1,27 +1,25 @@
-name: Toolforge Deployment
+name: Deploy Test Frontend (Toolforge)
 
 on:
   workflow_dispatch:
 
-  # Uncomment to allow the workflow to run automatically when changes are
-  # merged into master (only for files that affect this deployment).
-  #
-  # push:
-  #   branches: [master]
-  #   paths:
-  #     - 'Gulpfile.mjs'
-  #     - 'package-lock.json'
-  #     - 'package.json'
-  #     - 'utils/deploy-toolforge.sh'
-  #     - 'video2commons-socketio/**'
-  #     - 'video2commons/config.py'
-  #     - 'video2commons/exceptions.py'
-  #     - 'video2commons/frontend/**'
-  #     - 'video2commons/shared/**'
+  push:
+    branches: [master]
+    paths:
+      - 'Gulpfile.mjs'
+      - 'package-lock.json'
+      - 'package.json'
+      - 'pyproject.toml'
+      - 'utils/deploy-toolforge-frontend.sh'
+      - 'uv.lock'
+      - 'video2commons/config.py'
+      - 'video2commons/exceptions.py'
+      - 'video2commons/frontend/**'
+      - 'video2commons/shared/**'
 
 jobs:
-  deploy-toolforge:
-    name: Deploy to Toolforge
+  deploy-toolforge-video2commons-test:
+    name: Deploy Test Frontend (Toolforge)
     runs-on: ubuntu-latest
 
     steps:
@@ -62,6 +60,7 @@ jobs:
           mkdir -p ~/.ssh/sockets
 
       - name: Deploy
-        run: ./utils/deploy-toolforge.sh
+        run: ./utils/deploy-toolforge-frontend.sh
         env:
+          V2C_SERVICE_NAME: video2commons-test
           V2C_USERNAME: ${{ secrets.V2C_USERNAME }}
