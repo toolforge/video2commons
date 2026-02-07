@@ -20,6 +20,7 @@ on:
 jobs:
   deploy-toolforge-video2commons-test:
     name: Deploy Test Frontend (Toolforge)
+    environment: WMCS
     runs-on: ubuntu-latest
 
     steps:
