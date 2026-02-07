@@ -52,3 +52,5 @@ service.manifest
 uwsgi.log
 uwsgi.log.*
 www/js/
+video2commons/frontend/static/*.min.js
+video2commons/frontend/templates/*.min.html

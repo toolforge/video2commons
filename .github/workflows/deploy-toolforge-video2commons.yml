@@ -1,0 +1,69 @@
+name: Deploy Frontend (Toolforge)
+
+on:
+  workflow_dispatch:
+
+  # Uncomment to allow the workflow to run automatically when changes are
+  # merged into master (only for files that affect this deployment).
+  #
+  # push:
+  #   branches: [master]
+  #   paths:
+  #     - 'Gulpfile.mjs'
+  #     - 'package-lock.json'
+  #     - 'package.json'
+  #     - 'pyproject.toml'
+  #     - 'utils/deploy-toolforge-frontend.sh'
+  #     - 'uv.lock'
+  #     - 'video2commons/config.py'
+  #     - 'video2commons/exceptions.py'
+  #     - 'video2commons/frontend/**'
+  #     - 'video2commons/shared/**'
+
+jobs:
+  deploy-toolforge-video2commons:
+    name: Deploy Frontend (Toolforge)
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version-file: '.nvmrc'
+          cache: 'npm'
+
+      - name: Remove broken symlinks
+        run: |
+          rm -f video2commons/frontend/static/ssu
+          rm -f video2commons/frontend/static/uploads
+
+      - name: Build
+        run: |
+          npm ci
+          npx gulp build
+
+      - name: Setup SSH
+        run: |
+          mkdir -p ~/.ssh
+          echo '${{ secrets.SSH_PRIVATE_KEY }}' > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+          cat >> ~/.ssh/config << 'EOF'
+          Host *
+              IdentityFile ~/.ssh/id_ed25519
+              IdentitiesOnly yes
+              StrictHostKeyChecking no
+              ControlMaster auto
+              ControlPath ~/.ssh/sockets/%r@%h-%p
+              ControlPersist 60
+          EOF
+          chmod 600 ~/.ssh/config
+          mkdir -p ~/.ssh/sockets
+
+      - name: Deploy
+        run: ./utils/deploy-toolforge-frontend.sh
+        env:
+          V2C_SERVICE_NAME: video2commons
+          V2C_USERNAME: ${{ secrets.V2C_USERNAME }}
