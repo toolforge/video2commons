@@ -9,6 +9,7 @@ on:
   # push:
   #   branches: [master]
   #   paths:
+  #     - '.github/workflows/deploy-cloudvps-encoders.yml'
   #     - 'puppet/**'
   #     - 'pyproject.toml'
   #     - 'utils/deploy-cloudvps-encoders.sh'

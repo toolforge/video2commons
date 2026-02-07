@@ -9,6 +9,7 @@ on:
   # push:
   #   branches: [master]
   #   paths:
+  #     - '.github/workflows/deploy-toolforge-video2commons-socketio.yml'
   #     - 'package-lock.json'
   #     - 'package.json'
   #     - 'utils/deploy-toolforge-socketio.sh'
