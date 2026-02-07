@@ -17,6 +17,7 @@ on:
 jobs:
   deploy-toolforge-video2commons-socketio:
     name: Deploy Socket.IO (Toolforge)
+    environment: WMCS
     runs-on: ubuntu-latest
 
     steps:

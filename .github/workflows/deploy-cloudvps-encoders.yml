@@ -21,6 +21,7 @@ on:
 jobs:
   deploy-cloudvps-encoders:
     name: Deploy Encoders (CloudVPS)
+    environment: WMCS
     runs-on: ubuntu-latest
 
     steps:
