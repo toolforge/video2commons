@@ -9,6 +9,7 @@ on:
   # push:
   #   branches: [master]
   #   paths:
+  #     - '.github/workflows/deploy-toolforge-video2commons.yml'
   #     - 'Gulpfile.mjs'
   #     - 'package-lock.json'
   #     - 'package.json'
