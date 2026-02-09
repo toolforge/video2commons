@@ -53,10 +53,7 @@ if [ $? -ne 0 ]; then
 fi
 
 # Copy the minified files to destination with correct ownership, then cleanup.
-ssh "$V2C_USERNAME@$bastion_host" "become $V2C_SERVICE_NAME bash -c '
-    cp $tmp_dir/*.min.js $remote_repo_path/video2commons/frontend/static/
-    cp $tmp_dir/*.min.html $remote_repo_path/video2commons/frontend/templates/
-' && rm -rf $tmp_dir"
+ssh "$V2C_USERNAME@$bastion_host" "become $V2C_SERVICE_NAME bash -c 'cp $tmp_dir/*.min.js $remote_repo_path/video2commons/frontend/static/ && cp $tmp_dir/*.min.html $remote_repo_path/video2commons/frontend/templates/' && rm -rf $tmp_dir"
 
 if [ $? -ne 0 ]; then
     echo "Failed to move minified files to destination" >&2
