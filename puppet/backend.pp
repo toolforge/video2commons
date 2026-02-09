@@ -1,7 +1,7 @@
 $consumer_key = 'REDACTED'
 $consumer_secret = 'REDACTED'
 $redis_pw = 'REDACTED'
-$redis_host = 'video-redis-buster.video.eqiad1.wikimedia.cloud'
+$redis_host = 'video-redis-bookworm.video.eqiad1.wikimedia.cloud'
 $http_host = 'v2c.wmflabs.org'
 
 # Configure encoding05 and encoding06 to use 1 worker and listen to the heavy
