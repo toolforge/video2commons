@@ -37,12 +37,12 @@ from .transcode import WebVideoTranscode
 from .globals import (
     background_priority,
     background_time_limit,
-    background_memory_limit,
     background_size_limit,
     ffmpeg_threads,
     ffmpeg_location,
     escape_shellarg,
     time_to_seconds,
+    av1_max_threads_4k,
 )
 
 from video2commons.exceptions import TaskAbort
@@ -321,7 +321,18 @@ class WebVideoTranscodeJob(object):
         @param p
         @return string
         """
-        cmd = " -threads " + str(self.ffmpeg_get_thread_count())
+        threads = self.ffmpeg_get_thread_count()
+
+        # Workaround: Limit the number of threads for 4k (and higher) video for
+        # AV1 transcoding due to limited memory on the workers.
+        if self.source_info and self.source_info.video:
+            width = self.source_info.video.video_width
+            height = self.source_info.video.video_height
+
+            if width >= 3840 or height >= 2160:
+                threads = min(threads, av1_max_threads_4k)
+
+        cmd = " -threads " + str(threads)
 
         # libsvtav1-specific constant quality
         if "crf" in options:
@@ -335,7 +346,7 @@ class WebVideoTranscodeJob(object):
         cmd += " -vcodec libsvtav1"
 
         # libsvtav1 ignores the -threads option, so we have to set it manually.
-        cmd += " -svtav1-params lp=" + str(self.ffmpeg_get_thread_count())
+        cmd += " -svtav1-params lp=" + str(threads)
 
         if p == 1:
             cmd += " -preset 12"  # Make first pass faster
@@ -519,9 +530,6 @@ class WebVideoTranscodeJob(object):
         cmd = (
             "ulimit -f "
             + escape_shellarg(background_size_limit)
-            + ";"
-            + "ulimit -v "
-            + escape_shellarg(background_memory_limit)
             + ";"
             + "nice -n "
             + escape_shellarg(background_priority)
