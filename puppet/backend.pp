@@ -270,6 +270,8 @@ service { 'v2ccelery':
     ensure  => running,
     enable  => true,
     require => Package['ffmpeg'],
+    start   => '/usr/bin/systemctl --no-block start v2ccelery.service',
+    stop    => '/usr/bin/systemctl --no-block stop v2ccelery.service',
     restart => '/usr/bin/systemctl --no-block restart v2ccelery.service',
 }
 
