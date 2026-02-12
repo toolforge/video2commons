@@ -24,8 +24,8 @@ from celery.utils.log import get_logger
 import yt_dlp
 from yt_dlp.utils import std_headers, DownloadError
 
-from video2commons.config import tooldir, youtube_user, youtube_pass
 from video2commons.exceptions import TaskError
+from video2commons.shared.yt_dlp import add_youtube_params
 
 
 def download(
@@ -78,13 +78,7 @@ def download(
         std_headers["User-Agent"] = ""
         # https://github.com/yt-dlp/yt-dlp/wiki/Extractors#exporting-youtube-cookies
         # https://github.com/yt-dlp/yt-dlp/wiki/FAQ#how-do-i-pass-cookies-to-yt-dlp
-        params.update(
-            {
-                "cookiefile": tooldir + "/../cookies.txt",
-                "username": youtube_user,
-                "password": youtube_pass,
-            }
-        )
+        params = add_youtube_params(params)
 
     last_percentage = [Ellipsis]
 
