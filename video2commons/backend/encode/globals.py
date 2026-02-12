@@ -27,19 +27,16 @@ background_priority = 19
 # The total amout of time a transcoding shell command can take:
 background_time_limit = 3600 * 24 * 2  # 2 days
 
-# Maximum amount of virtual memory available to transcoding processes in KB
-#
-# At least 12GB VIRT is needed for libsvtav1 encoding to prevent segfaults.
-# 1080p videos of any significant length and 4k video will result in VIRT
-# allocations larger than this, so some padding is needed. libsvtav1 with lots
-# of threads is very aggressive with virtual memory allocation and only uses
-# ~25-30% of what it actually allocates per worker (max ~8GB).
-background_memory_limit = 32 * 1024 * 1024  # 32GB
-
-# Maximum file size transcoding processes can create, in KB
+# Maximum file size transcoding processes can create, in KB.
 background_size_limit = 10 * 1024 * 1024  # 10GB
-# Number of threads to use in avconv for transcoding
+
+# Number of hardware threads available to ffmpeg for transcoding.
 ffmpeg_threads = __import__("multiprocessing").cpu_count()
+
+# The maximum number of threads to use for 4k (and higher) AV1 transcoding.
+# This is required due to limited memory on the workers.
+av1_max_threads_4k = 4
+
 # Location of the avconv/ffmpeg binary (used to encode WebM and for thumbnails)
 ffmpeg_location = "/mnt/nfs/labstore-secondary-project/gentoo-prefix/usr/bin/ffmpeg"
 ffprobe_location = "/usr/bin/ffprobe"
