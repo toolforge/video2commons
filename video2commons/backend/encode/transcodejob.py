@@ -33,6 +33,7 @@ import math
 import time
 import subprocess
 import signal
+
 from .transcode import WebVideoTranscode
 from .globals import (
     background_priority,
@@ -44,6 +45,7 @@ from .globals import (
     time_to_seconds,
     av1_max_threads_4k,
 )
+from .helpers import get_video
 
 from video2commons.exceptions import TaskAbort
 
@@ -325,11 +327,9 @@ class WebVideoTranscodeJob(object):
 
         # Workaround: Limit the number of threads for 4k (and higher) video for
         # AV1 transcoding due to limited memory on the workers.
-        if self.source_info and self.source_info.video:
-            width = self.source_info.video.video_width
-            height = self.source_info.video.video_height
-
-            if width >= 3840 or height >= 2160:
+        video = get_video(self.source_info)
+        if video:
+            if video.video_width >= 3840 or video.video_height >= 2160:
                 threads = min(threads, av1_max_threads_4k)
 
         cmd = " -threads " + str(threads)
