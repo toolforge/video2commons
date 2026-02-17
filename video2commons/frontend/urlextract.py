@@ -304,9 +304,12 @@ def _license(url, ie_key, title, info):
             return "{{YouTube CC-BY%s}}" % uploader_param
         return "{{YouTube CC-BY 4.0%s}}" % uploader_param
     elif ie_key == "Flickr":
+        # https://blog.flickr.net/en/2025/06/18/creative-commons-4-0-has-arrived-on-flickr/
+        version = "2.0" if _date(url, ie_key, title, info) <= "2025-06-18" else "4.0"
+
         return {
-            "Attribution": "{{cc-by-2.0%s}}" % uploader_param,
-            "Attribution-ShareAlike": "{{cc-by-sa-2.0%s}}" % uploader_param,
+            "Attribution": "{{cc-by-%s%s}}" % (version, uploader_param),
+            "Attribution-ShareAlike": "{{cc-by-sa-%s%s}}" % (version, uploader_param),
             "No known copyright restrictions": "{{Flickr-no known copyright restrictions}}",
             "United States government work": "{{PD-USGov}}",
             "Public Domain Dedication (CC0)": "{{cc-zero}}",
