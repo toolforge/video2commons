@@ -1,6 +1,9 @@
 {
   "name": "video2commons-socketio",
   "private": true,
+  "engines": {
+    "node": "22.x"
+  },
   "scripts": {
     "start": "npm install && node server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -16,6 +19,7 @@
     "gulp-uglify": ">2.1.2"
   },
   "dependencies": {
+    "deno": "^2.6.8",
     "express": "^4.21.1",
     "redis": "^4.6.12",
     "request": "^2.88.2",

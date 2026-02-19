@@ -1,0 +1,16 @@
+PythonVideoConverter
+celery[redis]
+chardet
+emoji
+flask
+gunicorn
+guess_language-spirit
+langcodes
+language_data>=1.4.0,<2
+yt-dlp
+
+#pywikibot
+mwoauth
+mwoauth>=0.2.4,!=0.3.1
+mwparserfromhell>=0.5.2
+https://github.com/wikimedia/pywikibot-core/zipball/master#egg=pywikibot
