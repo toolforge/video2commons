@@ -16,93 +16,49 @@
 #
 
 """
-Upload a file.
+Upload a file to Wikimedia Commons.
 
-Wrapper around pywikibot when the file can be uploaded automatically.
-If not, NeedServerSideUpload with url of file is thrown
+The upload function in this module acts as a wrapper around pywikibot's upload
+method. It adds additional validation and retry handling for uploads.
 """
 
 import time
 import os
-import shutil
 import pywikibot
-import hashlib
 
-from video2commons.exceptions import NeedServerSideUpload, TaskError
+from video2commons.exceptions import TaskError
 
 MAX_RETRIES = 5
+
+# Wikimedia Commons has a maximum file size of 5 GiB for chunked uploads.
+UPLOAD_LIMIT_BYTES = 5 * 1024 * 1024 * 1024
+
+# Unchunked are limited to 100 MiB.
+UNCHUNKED_LIMIT_BYTES = 100 * 1024 * 1024
+
+# Limit chunk size to 16 MiB for chunked uploads exceeding 100 MiB.
+CHUNK_SIZE = 16 * 1024 * 1024
 
 
 def upload(
     filename,
     wikifilename,
     sourceurl,
-    http_host,
     filedesc,
     username,
-    statuscallback=None,
-    errorcallback=None,
-):
-    """Upload a file from filename to wikifilename."""
-    statuscallback = statuscallback or (lambda text, percent: None)
-    errorcallback = errorcallback or (lambda text: None)
-
-    size = os.path.getsize(filename)
-
-    if size < 1000000000:
-        return upload_pwb(
-            filename,
-            wikifilename,
-            sourceurl,
-            filedesc,
-            username,
-            size,
-            statuscallback,
-            errorcallback,
-        )
-    elif size < (5 << 30):
-        try:
-            return upload_pwb(
-                filename,
-                wikifilename,
-                sourceurl,
-                filedesc,
-                username,
-                size,
-                statuscallback,
-                errorcallback,
-            )
-        except pywikibot.exceptions.APIError as e:
-            if "stash" in e.code or e.code == "backend-fail-internal":
-                upload_ss(
-                    filename,
-                    wikifilename,
-                    http_host,
-                    filedesc,
-                    statuscallback,
-                    errorcallback,
-                )
-            else:
-                raise
-    else:
-        errorcallback(
-            "Sorry, but files larger than 5GB can not be uploaded even "
-            + "with server-side uploading. This task may need manual "
-            + " intervention."
-        )
-
-
-def upload_pwb(
-    filename,
-    wikifilename,
-    sourceurl,
-    filedesc,
-    username,
-    size,
     statuscallback,
     errorcallback,
 ):
-    """Upload with pywikibot."""
+    """Upload files to Commons using pywikibot."""
+    size = os.path.getsize(filename)
+
+    if size >= UPLOAD_LIMIT_BYTES:
+        errorcallback(
+            "Sorry, but files larger than 5GiB cannot be uploaded. "
+            "Manual uploads with SSU are no longer supported by Commons and "
+            "cannot be used to circumvent this limit."
+        )
+
     # ENSURE PYWIKIBOT OAUTH PROPERLY CONFIGURED!
     site = pywikibot.Site("commons", "commons", user=username)
     page = pywikibot.FilePage(site, wikifilename)
@@ -111,7 +67,7 @@ def upload_pwb(
         errorcallback("File already exists. Please choose another name.")
 
     comment = "Imported media from " + sourceurl
-    chunked = (16 * (1 << 20)) if size >= 100000000 else 0
+    chunk_size = CHUNK_SIZE if size >= UNCHUNKED_LIMIT_BYTES else 0
     remaining_tries = MAX_RETRIES
 
     while True:
@@ -133,8 +89,8 @@ def upload_pwb(
                 source_filename=filename,
                 comment=comment,
                 text=filedesc,
-                chunk_size=chunked,
-                asynchronous=bool(chunked),
+                chunk_size=chunk_size,
+                asynchronous=bool(chunk_size),
                 ignore_warnings=["exists-normalized"],
             ):
                 errorcallback("Upload failed!")
@@ -158,68 +114,6 @@ def upload_pwb(
 
     statuscallback("Upload success!", 100)
     return page.title(with_ns=False), page.full_url()
-
-
-def upload_ss(
-    filename, wikifilename, http_host, filedesc, statuscallback, errorcallback
-):
-    """Prepare for server-side upload."""
-    # Get hash
-    md5 = hashlib.md5()
-    with open(filename, "rb") as f:
-        while True:
-            data = f.read(65536)
-            if not data:
-                break
-            md5.update(data)
-
-    # file name check
-    wikifilename = wikifilename.replace("/", "-").replace(" ", "_")
-    wikifilename = wikifilename.replace("\r\n", "_")
-    wikifilename = wikifilename.replace("\r", "_").replace("\n", "_")
-
-    newfilename = "/srv/v2c/ssu/" + wikifilename
-    remaining_tries = MAX_RETRIES
-
-    while True:
-        try:
-            if remaining_tries == MAX_RETRIES:
-                statuscallback("Preparing for server-side upload...", -1)
-            elif remaining_tries > 1:
-                statuscallback(
-                    f"Retrying server-side upload preparation... ({remaining_tries} tries remaining)",
-                    -1,
-                )
-            elif remaining_tries == 1:
-                statuscallback(
-                    f"Retrying server-side upload preparation... ({remaining_tries} try remaining)",
-                    -1,
-                )
-
-            if remaining_tries != MAX_RETRIES:
-                exponential_backoff(remaining_tries)
-
-            shutil.move(filename, newfilename)
-
-            break  # The file was moved to the SSU share successfully.
-        except BlockingIOError:
-            # A BlockingIOError will be raised whenever the NFS share that SSU
-            # files are kept on is overloaded.
-            remaining_tries -= 1
-            if remaining_tries == 0:
-                # No more retries, raise the error.
-                errorcallback("Upload failed: NFS share is likely overloaded")
-
-    with open(newfilename + ".txt", "w") as filedescfile:
-        filedesc = filedesc.replace(
-            "[[Category:Uploaded with video2commons]]",
-            "[[Category:Uploaded with video2commons/Server-side uploads]]",
-        )
-        filedescfile.write(filedesc)
-
-    fileurl = "https://" + http_host + "/" + wikifilename
-
-    raise NeedServerSideUpload(fileurl, md5.hexdigest())
 
 
 def exponential_backoff(tries, max_tries=MAX_RETRIES, delay=20):

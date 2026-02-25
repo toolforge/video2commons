@@ -23,15 +23,12 @@
 				? `<div><span id="pending">...</span> ${i18n.pending}</div>`
 				: `<div>${i18n.pending} <span id="pending">...</span></div>`,
 			addTask: `<input class="btn btn-primary btn-md" type="button" accesskey="n" value="${nunjucks.lib.escape(i18n.addTask)}">`,
-			requestServerSide: `<a class="btn btn-primary btn-success btn-md flip pull-right disabled" id="ssubtn">${nunjucks.lib.escape(i18n.createServerSide)}</a>`,
 			progressbar:
 				'<div class="progress"><div class="progress-bar" role="progressbar"></div></div>',
 			prevbutton: `<span class="glyphicon glyphicon-chevron-${rtl ? "right" : "left"}"></span> ${nunjucks.lib.escape(i18n.back)}`,
 			nextbutton: `${nunjucks.lib.escape(i18n.next)} <span class="glyphicon glyphicon-chevron-${rtl ? "left" : "right"}"></span>`,
 			confirmbutton: nunjucks.lib.escape(i18n.confirm),
 		},
-		ssuTemplate =
-			"Please upload these file(s) to Wikimedia Commons:\n\n**URLs**\n\n{{{ urls }}}\n\n//Description files are available too: append `.txt` to the URLs.//\n\n**Checksums**\n\n| **File** | **MD5** |\n{{{ checksums }}}\n\nThank you!",
 		csrfToken = "",
 		nunjucksEnv = new nunjucks.Environment()
 			.addGlobal("config", config)
@@ -71,7 +68,7 @@
 				return new nunjucks.runtime.SafeString(processed);
 			});
 
-	var $addTaskDialog, newTaskData, newTaskDataQS, SSUs, username;
+	var $addTaskDialog, newTaskData, newTaskDataQS, username;
 
 	/**
 	 * Validate date category names.
@@ -552,8 +549,6 @@
 		init: () => {
 			$("#content").html(htmlContent.loading);
 
-			SSUs = {};
-
 			video2commons.loadCsrf(video2commons.checkStatus);
 
 			$(window).on("beforeunload", (e) => {
@@ -666,9 +661,6 @@
 			addButton.click(() => {
 				video2commons.addTask();
 			});
-
-			const ssuButton = $(htmlContent.requestServerSide);
-			$("#content").append(ssuButton.hide());
 		},
 
 		alterTaskTableBoilerplate: (cb) => {
@@ -680,15 +672,6 @@
 				window.innerHeight + window.scrollY >= document.body.offsetHeight;
 
 			cb();
-
-			if (!$.isEmptyObject(SSUs)) {
-				$("#ssubtn")
-					.removeClass("disabled")
-					.show()
-					.attr("href", video2commons.makeSSULink(SSUs));
-			} else {
-				$("#ssubtn").addClass("disabled").hide();
-			}
 
 			if (isatbottom) {
 				window.scrollTo(0, document.body.scrollHeight);
@@ -777,11 +760,6 @@
 					val.url.replace("%3A", ":"), // Ugly HACK for v2c issue #92
 					val.text,
 				);
-			} else if (val.status === "needssu") {
-				setStatusText(
-					nunjucksEnv.getFilter("process_link")(i18n.errorTooLarge).toString(),
-					video2commons.makeSSULink([val]),
-				);
 			} else if (val.status === "fail") {
 				setStatusText(val.text, val.url, val.url);
 				if (val.restartable) {
@@ -804,12 +782,6 @@
 					$row.find(`#${id}-progress`),
 					val.progress,
 				);
-			}
-
-			if (val.status === "needssu") {
-				SSUs[val.id] = val;
-			} else {
-				delete SSUs[val.id];
 			}
 		},
 
@@ -854,37 +826,12 @@
 					);
 					break;
 				}
-				case "needssu":
-					video2commons.appendButtons(
-						[video2commons.eventButton(id, "remove")],
-						$row,
-						["success", "danger"],
-						id,
-					);
-					break;
 				case "abort":
 					video2commons.appendButtons([], $row, ["success", "danger"], id);
 					break;
 			}
 
 			$row.attr("status", status);
-		},
-
-		makeSSULink: (vals) => {
-			var urls = $.map(vals, (val /* , key */) => `* ${val.url}`).join("\n"),
-				checksums = $.map(
-					vals,
-					(val /* , key */) => `| ${val.filename} | ${val.hashsum} |`,
-				).join("\n");
-			return `https://phabricator.wikimedia.org/maniphest/task/edit/form/106/?${$.param(
-				{
-					title: `Server side upload for ${username}`,
-					projects: "video2commons,server-side-upload-request",
-					description: ssuTemplate
-						.replace("{{{ urls }}}", urls)
-						.replace("{{{ checksums }}}", checksums),
-				},
-			)}`;
 		},
 
 		setProgressBar: ($item, progress) => {
