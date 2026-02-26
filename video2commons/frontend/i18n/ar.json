@@ -2,6 +2,7 @@
 	"@metadata": {
 		"authors": [
 			"Aboulouei1",
+			"Bachounda",
 			"DRIHEM",
 			"FShbib",
 			"Meno25",
@@ -40,6 +41,8 @@
 	"transcoding": "تنسيق الترميز",
 	"filedescription": "صفحة وصف الملف",
 	"filename": "اسم الملف",
+	"datecategory": "فئات التاريخ",
+	"languagecategory": "اللغة",
 	"video": "فيديو",
 	"audio": "صوت",
 	"subtitles": "عناوين فرعية",
