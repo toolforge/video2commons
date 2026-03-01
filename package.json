@@ -8,7 +8,7 @@
   "devDependencies": {
     "@biomejs/biome": "2.3.13",
     "esm": "^3.2.25",
-    "gulp": "^5.0.0",
+    "gulp": "^5.0.1",
     "gulp-concat": ">=2.6.1",
     "gulp-htmlmin": ">3.0.0",
     "gulp-nunjucks": ">3.1.1",
