@@ -19,5 +19,6 @@
 	"video": "video",
 	"audio": "audio*",
 	"uploading": "Karganta...",
-	"note": "Notoː"
+	"note": "Notoː",
+	"noteslicensing": "Nur sendez kontenajo {{#a}}#fl|kun libera autoroyuro{{/a}} od en {{#a}}#pd|publika domeno{{/a}}. Tale nomizita {{#a}}#fu|''Fair use''{{/a}} ne permisesas en Wikimedia Commons."
 }
