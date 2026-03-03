@@ -203,15 +203,6 @@ def _status(id):
                             "text": res.result["filename"],
                         }
                     )
-                elif res.result["type"] == "ssu":
-                    task.update(
-                        {
-                            "status": "needssu",
-                            "filename": res.result["url"].rsplit("/", 1)[-1],
-                            "url": res.result["url"],
-                            "hashsum": res.result["hashsum"],
-                        }
-                    )
         elif state == "FAILURE":
             e = res.result
             if e is False:

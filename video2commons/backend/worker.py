@@ -29,7 +29,7 @@ from kombu import Queue
 from redis import Redis
 import pywikibot
 
-from video2commons.exceptions import TaskError, TaskAbort, NeedServerSideUpload
+from video2commons.exceptions import TaskError, TaskAbort
 from video2commons.backend import download
 from video2commons.backend import categories
 from video2commons.backend import encode
@@ -40,7 +40,6 @@ from video2commons.config import (
     redis_host,
     consumer_key,
     consumer_secret,
-    http_host,
 )
 from video2commons.shared.stats import update_task_stats
 
@@ -202,7 +201,6 @@ def main(
             file,
             filename,
             url,
-            http_host,
             filedesc,
             username,
             statuscallback,
@@ -238,11 +236,6 @@ def main(
             except Exception as e:
                 statuscallback(type(e).__name__ + ": " + str(e), None)
                 print(e)
-
-    except NeedServerSideUpload as e:
-        # json serializer cannot properly serialize an exception
-        # without losing data, so we change the exception into a dict.
-        return {"type": "ssu", "hashsum": e.hashsum, "url": e.url}
     except pywikibot.exceptions.Error:
         exc_info = sys.exc_info()
         raise TaskError(

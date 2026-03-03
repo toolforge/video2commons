@@ -33,17 +33,6 @@ class TaskError(Exception):
         return (self.__class__, (self.desc,))
 
 
-class NeedServerSideUpload(TaskError):
-    """A server server-side is needed."""
-
-    # So no one should handle it
-    def __init__(self, url, hashsum=None):
-        """Initialize."""
-        super().__init__(url)
-        self.url = url
-        self.hashsum = hashsum
-
-
 class TaskAbort(TaskError):
     """The task has been aborted."""
 
