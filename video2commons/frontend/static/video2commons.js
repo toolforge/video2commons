@@ -9,6 +9,7 @@
 			abortbutton: `<button type="button" class="btn btn-danger btn-xs flip pull-right"><span class="glyphicon glyphicon-remove"></span> ${nunjucks.lib.escape(i18n.abort)}</button>`,
 			removebutton: `<button type="button" class="btn btn-danger btn-xs flip pull-right remove-btn"><span class="glyphicon glyphicon-trash"></span> ${nunjucks.lib.escape(i18n.remove)}</button>`,
 			restartbutton: `<button type="button" class="btn btn-xs flip pull-right restart-btn"><span class="glyphicon glyphicon-repeat"></span> ${nunjucks.lib.escape(i18n.restart)}</button>`,
+			detailsbutton: `<button type="button" class="btn btn-xs flip pull-right details-btn"><span class="glyphicon glyphicon-info-sign"></span> ${nunjucks.lib.escape(i18n.details)}</button>`,
 			loading: `<center>${loaderImage}&nbsp;&nbsp;${nunjucks.lib.escape(i18n.loading)}</center>`,
 			errorDisconnect: `<div class="alert alert-danger">${nunjucks.lib.escape(i18n.errorDisconnect)}</div>`,
 			yourTasks: `<h4>${nunjucks.lib.escape(i18n.yourTasks)}</h4><table id="tasktable" class="table"><colgroup><col style="width: 20%;"/><col style="width: 10%;"/><col style="width: 40%;"/><col style="width: 30%;"/></colgroup><tbody></tbody></table>`,
@@ -33,12 +34,14 @@
 		nunjucksEnv = new nunjucks.Environment()
 			.addGlobal("config", config)
 			.addGlobal("_", (key) => i18n[key])
-			.addFilter("process_link", (text) => {
+			.addFilter("process_link", (text, urls) => {
 				var regex = /\{\{#a\}\}(.*?)\{\{\/a\}\}/g,
 					last = 0,
 					processed = "",
+					urlIndex = 0,
 					execResult,
 					a = (inner) => {
+						// Handle section links (not in urls).
 						if (inner[0] === "#") {
 							var splitloc = inner.indexOf("|");
 							if (splitloc < 0) {
@@ -52,7 +55,12 @@
 								}
 							}
 						}
-						return `<a>${nunjucks.lib.escape(inner)}</a>`;
+
+						const href = urls?.[urlIndex] ?? null;
+						urlIndex++;
+
+						const hrefAttr = href ? ` href="${nunjucks.lib.escape(href)}"` : "";
+						return `<a${hrefAttr}>${nunjucks.lib.escape(inner)}</a>`;
 					};
 
 				while ((execResult = regex.exec(text)) !== null) {
@@ -68,7 +76,7 @@
 				return new nunjucks.runtime.SafeString(processed);
 			});
 
-	var $addTaskDialog, newTaskData, newTaskDataQS, username;
+	var $detailsModal, $addTaskDialog, newTaskData, newTaskDataQS, username;
 
 	/**
 	 * Validate date category names.
@@ -761,7 +769,15 @@
 					val.text,
 				);
 			} else if (val.status === "fail") {
-				setStatusText(val.text, val.url, val.url);
+				if (val.i18n_key) {
+					const html = nunjucksEnv
+						.getFilter("process_link")(i18n[val.i18n_key], val.i18n_urls)
+						.toString();
+					$row.find(`#${id}-statustext`).html(html);
+				} else {
+					setStatusText(val.text, val.url, val.url);
+				}
+
 				if (val.restartable) {
 					$row
 						.find(`#${id}-restartbutton`)
@@ -772,6 +788,20 @@
 						});
 				} else {
 					$row.find(`#${id}-restartbutton`).off().hide();
+				}
+
+				if (val.i18n_key) {
+					$row
+						.find(`#${id}-detailsbutton`)
+						.show()
+						.off()
+						.click(function () {
+							video2commons.openDetailsModal(val.text, {
+								reportable: val.reportable,
+							});
+						});
+				} else {
+					$row.find(`#${id}-detailsbutton`).off().hide();
 				}
 			} else {
 				setStatusText(val.text);
@@ -815,11 +845,16 @@
 					);
 					break;
 				case "fail": {
-					var $removebutton = video2commons.eventButton(id, "remove");
-					var $restartbutton = video2commons.eventButton(id, "restart").hide();
+					const $removebutton = video2commons.eventButton(id, "remove");
+					const $restartbutton = video2commons
+						.eventButton(id, "restart")
+						.hide();
+					const $detailsbutton = $(htmlContent.detailsbutton)
+						.attr("id", `${id}-detailsbutton`)
+						.hide();
 
 					video2commons.appendButtons(
-						[$removebutton, $restartbutton],
+						[$removebutton, $restartbutton, $detailsbutton],
 						$row,
 						["success", "danger"],
 						id,
@@ -858,7 +893,7 @@
 
 		getTaskIDFromDOMID: (id) => {
 			var result =
-				/^(?:task-)?(.+?)(?:-(?:title|statustext|progress|abortbutton|removebutton|restartbutton))?$/.exec(
+				/^(?:task-)?(.+?)(?:-(?:title|statustext|progress|abortbutton|removebutton|restartbutton|detailsbutton))?$/.exec(
 					id,
 				);
 			return result[1];
@@ -914,6 +949,53 @@
 			}
 
 			$row.append($buttons).removeClass(type[0]).addClass(type[1]);
+		},
+
+		/**
+		 * Setup the details modal if it hasn't been setup yet.
+		 */
+		setupDetailsModal: () => {
+			$detailsModal = $("<div>").html(nunjucksEnv.render("detailsModal.html"));
+			$detailsModal.addClass("modal fade").attr({
+				id: "detailsModal",
+				role: "dialog",
+			});
+			$("body").append($detailsModal);
+
+			$detailsModal.on("shown.bs.modal", () => {
+				const $reportButton = $detailsModal.find("#detailsModal-report");
+				const $closeButton = $detailsModal.find("#detailsModal-close");
+
+				if ($reportButton.hasClass("hidden")) {
+					$closeButton.focus();
+				} else {
+					$reportButton.focus();
+				}
+			});
+		},
+
+		/**
+		 * Opens the details modal with the given error message.
+		 *
+		 * @param {string} error The error message to show.
+		 * @param {Object} options
+		 * @param {boolean} [options.reportable] Whether to show the report button.
+		 */
+		openDetailsModal: (error, { reportable } = {}) => {
+			if (!$detailsModal) {
+				video2commons.setupDetailsModal();
+			}
+
+			$detailsModal.find("#detailsModal-error").text(error);
+
+			const $reportButton = $detailsModal.find("#detailsModal-report");
+			if (reportable) {
+				$reportButton.removeClass("hidden");
+			} else {
+				$reportButton.addClass("hidden");
+			}
+
+			$detailsModal.modal();
 		},
 
 		// Functions related to adding new tasks
