@@ -148,7 +148,7 @@
         <ul class="nav navbar-nav navbar-{% if lang() is rtl %}left{% else %}right{% endif %}">
           <li><a href="https://commons.wikimedia.org/w/index.php?title=Special:MyLanguage/Commons:Video2commons&amp;uselang={{ lang() }}"><span class="glyphicon glyphicon-book"></span> {{ _('help') }}</a></li>
 {% if loggedin %}
-          <li><a href="{{ url_for('logout') }}"><span class="glyphicon glyphicon-log-out"></span> {{ _('logout') }}</a></li>
+          <li><a href="{{ url_for('logout') }}"><span class="glyphicon glyphicon-log-out"></span> {{ _('logout') }} <bdi>({{ username }})</bdi></a></li>
 {% endif %}
         </ul>
     </div>
