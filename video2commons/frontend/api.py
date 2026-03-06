@@ -32,6 +32,7 @@ from video2commons.config import session_key
 
 from video2commons.backend import worker
 
+from video2commons.frontend.errors import normalize_error
 from video2commons.frontend.shared import (
     redisconnection,
     check_banned,
@@ -205,21 +206,22 @@ def _status(id):
                     )
         elif state == "FAILURE":
             e = res.result
-            if e is False:
-                task.update(
-                    {"status": "fail", "text": res.traceback, "restartable": True}
-                )
-            else:
-                task.update(
-                    {
-                        "status": "fail",
-                        "text": format_exception(e),
-                        "restartable": (
-                            (not redisconnection.exists("restarted:" + id))
-                            and redisconnection.exists("params:" + id)
-                        ),
-                    }
-                )
+            text = format_exception(e) if e else res.traceback
+            normalized_error = (normalize_error(text) or {}) if text else {}
+
+            task.update(
+                {
+                    "status": "fail",
+                    "text": text,
+                    "i18n_key": normalized_error.get("i18n_key"),
+                    "i18n_urls": normalized_error.get("urls"),
+                    "reportable": normalized_error.get("reportable", False),
+                    "restartable": (
+                        not redisconnection.exists("restarted:" + id)
+                        and redisconnection.exists("params:" + id)
+                    ),
+                }
+            )
         elif state == "RETRY":
             task.update(
                 {

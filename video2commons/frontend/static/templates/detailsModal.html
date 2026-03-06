@@ -1,0 +1,36 @@
+<div class="modal-dialog modal-lg">
+  <div class="modal-content">
+    <div class="modal-header">
+      <button type="button" class="close" data-dismiss="modal">&times;</button>
+      <h4>
+        <span class="glyphicon glyphicon-info-sign"></span>
+        <span>{{ _('details') }}</span>
+      </h4>
+    </div>
+
+    <div class="modal-body">
+      <p>{{ _('detailsDescription') }}</p>
+      <pre><code id="detailsModal-error"></code></pre>
+    </div>
+
+    <div class="modal-footer">
+      <a
+        id="detailsModal-report"
+        href="https://github.com/toolforge/video2commons/issues/new/choose"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="btn btn-primary flip pull-right"
+      >
+        {{ _('report') }}
+      </a>
+      <button
+        id="detailsModal-close"
+        type="button"
+        class="btn flip pull-right"
+        data-dismiss="modal"
+      >
+        {{ _('close') }}
+      </button>
+    </div>
+  </div>
+</div>
