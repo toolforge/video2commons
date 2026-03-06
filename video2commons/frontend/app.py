@@ -101,6 +101,7 @@ def all_exception_handler(e):
             html_message=message,
             stacktrace=stacktrace,
             loggedin=loggedin,
+            username=session.get("username"),
         ), 500
     except:
         return message, 500
@@ -142,7 +143,7 @@ def main():
         app.session_interface.abandon_session(app, session)
         return render_template("main.min.html", loggedin=False)
 
-    return render_template("main.min.html", loggedin=True)
+    return render_template("main.min.html", loggedin=True, username=session["username"])
 
 
 def dologin():
@@ -242,6 +243,7 @@ def logincallback():
             message="You must be an autoconfirmed Commons user "
             "with at least 50 edits to use this tool.",
             loggedin=True,
+            username=identify["username"],
         )
 
     session["access_token_key"], session["access_token_secret"] = (
