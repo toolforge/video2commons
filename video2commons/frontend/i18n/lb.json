@@ -12,6 +12,7 @@
 	"abort": "Ofbriechen",
 	"remove": "Ewechhuelen",
 	"restart": "Neistarten",
+	"details": "Detailer",
 	"next": "Nächst",
 	"loading": "Lueden...",
 	"confirm": "Confirméieren",
@@ -20,8 +21,10 @@
 	"yourTasks": "Är Aufgaben:",
 	"taskDone": "Är Aufgab ass fäerdeg. Dir fannt Ären eropgeluedene Fichier op {{#a}}{{/a}}.",
 	"cancel": "Ofbriechen",
+	"close": "Zoumaachen",
 	"back": "Zeréck",
 	"keep": "Halen",
+	"report": "Op GitHub mellen",
 	"filetarget": "Zilfichiersnumm",
 	"transcoding": "Transcoding-Format",
 	"filedescription": "Beschreiwungssäit vum Fichier",
@@ -41,5 +44,7 @@
 	"confirmmsg": "Confirméiert d'Aufgab oder klickt op 'Zréck' fir d'Parameteren z'änneren. Mam Klick op 'Confirméieren' gëtt d'Aufgab gestart an exekutéiert. Aus technesche Grënn kann eng Aufgab net méi ofgebrach ginn, wa se bis gestart gouf.",
 	"actions": "Aktiounen",
 	"videos": "Videoen",
-	"noVideos": "Keng Videoe fonnt"
+	"noVideos": "Keng Videoe fonnt",
+	"youtube-bot-error": "De Video ka wéinst der Bot-Detektioun vu YouTube net erofgeluede ginn. Probéiert wgl. an 1 bis 3 Stonnen nach eng Kéier.",
+	"youtube-private-error": "De Video kann net vu YouTube erofgeluede ginn, well en als privat markéiert ass."
 }
