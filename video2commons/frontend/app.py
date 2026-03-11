@@ -22,12 +22,15 @@
 import json
 import logging
 import traceback
+
+from datetime import timedelta
 from urllib.parse import urlparse, urljoin
+
+import requests
 
 from flask import Flask, request, Response, session, render_template, redirect, url_for
 from mwoauth import AccessToken, ConsumerToken, RequestToken, Handshaker
 from requests_oauthlib import OAuth1
-import requests
 
 from video2commons.config import (
     consumer_key,
@@ -59,6 +62,7 @@ app.logger.setLevel(logging.INFO)
 app.session_cookie_name = "v2c-session"
 app.session_interface = RedisSessionInterface(redisconnection)
 
+app.permanent_session_lifetime = timedelta(days=1)
 app.config["SEND_FILE_MAX_AGE_DEFAULT"] = 3600
 
 config_p = {
@@ -195,6 +199,7 @@ def querylanguage(auth):
 def loginredirect():
     """Initialize OAuth login."""
     app.session_interface.abandon_session(app, session)
+    session.permanent = True
 
     redirecturl, request_token = handshaker.initiate()
     session["request_token_key"], session["request_token_secret"] = (
