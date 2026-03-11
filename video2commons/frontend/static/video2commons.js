@@ -1,5 +1,45 @@
 /* globals nunjucks: false, io: false, Qs: false */
 (($) => {
+	const processLink = (text, urls) => {
+		var regex = /\{\{#a\}\}(.*?)\{\{\/a\}\}/g,
+			last = 0,
+			processed = "",
+			urlIndex = 0,
+			execResult,
+			a = (inner) => {
+				// Handle section links (not in urls).
+				if (inner[0] === "#") {
+					var splitloc = inner.indexOf("|");
+					if (splitloc < 0) {
+						// XSS prevention: Nasty attribute escaping -- allow alphanumerics and hyphens only here
+						if (/^[a-z0-9-]+$/i.test(inner.slice(1))) {
+							return `<a id="${inner.slice(1)}"></a>`;
+						}
+					} else {
+						if (/^[a-z0-9-]+$/i.test(inner.substring(1, splitloc))) {
+							return `<a id="${inner.substring(1, splitloc)}">${nunjucks.lib.escape(inner.slice(splitloc + 1))}</a>`;
+						}
+					}
+				}
+
+				const href = urls?.[urlIndex] ?? null;
+				urlIndex++;
+
+				const hrefAttr = href ? ` href="${nunjucks.lib.escape(href)}"` : "";
+				return `<a${hrefAttr} target="_blank" rel="noopener noreferrer">${nunjucks.lib.escape(inner)}</a>`;
+			};
+
+		while ((execResult = regex.exec(text)) !== null) {
+			processed += nunjucks.lib.escape(text.substring(last, execResult.index));
+			processed += a(execResult[1]);
+			last = regex.lastIndex;
+		}
+
+		processed += nunjucks.lib.escape(text.slice(last));
+
+		return new nunjucks.runtime.SafeString(processed);
+	};
+
 	var config = window.config,
 		i18n = window.i18n,
 		loaderImage =
@@ -33,48 +73,14 @@
 		csrfToken = "",
 		nunjucksEnv = new nunjucks.Environment()
 			.addGlobal("config", config)
-			.addGlobal("_", (key) => i18n[key])
-			.addFilter("process_link", (text, urls) => {
-				var regex = /\{\{#a\}\}(.*?)\{\{\/a\}\}/g,
-					last = 0,
-					processed = "",
-					urlIndex = 0,
-					execResult,
-					a = (inner) => {
-						// Handle section links (not in urls).
-						if (inner[0] === "#") {
-							var splitloc = inner.indexOf("|");
-							if (splitloc < 0) {
-								// XSS prevention: Nasty attribute escaping -- allow alphanumerics and hyphens only here
-								if (/^[a-z0-9-]+$/i.test(inner.slice(1))) {
-									return `<a id="${inner.slice(1)}"></a>`;
-								}
-							} else {
-								if (/^[a-z0-9-]+$/i.test(inner.substring(1, splitloc))) {
-									return `<a id="${inner.substring(1, splitloc)}">${nunjucks.lib.escape(inner.slice(splitloc + 1))}</a>`;
-								}
-							}
-						}
-
-						const href = urls?.[urlIndex] ?? null;
-						urlIndex++;
-
-						const hrefAttr = href ? ` href="${nunjucks.lib.escape(href)}"` : "";
-						return `<a${hrefAttr}>${nunjucks.lib.escape(inner)}</a>`;
-					};
-
-				while ((execResult = regex.exec(text)) !== null) {
-					processed += nunjucks.lib.escape(
-						text.substring(last, execResult.index),
-					);
-					processed += a(execResult[1]);
-					last = regex.lastIndex;
+			.addGlobal("_", (key, args) => {
+				let message = i18n[key];
+				if (args?.urls != null && args.urls.length > 0) {
+					message = processLink(i18n[key], args.urls);
 				}
-
-				processed += nunjucks.lib.escape(text.slice(last));
-
-				return new nunjucks.runtime.SafeString(processed);
-			});
+				return message;
+			})
+			.addFilter("process_link", processLink);
 
 	var $detailsModal, $addTaskDialog, newTaskData, newTaskDataQS, username;
 
@@ -249,6 +255,30 @@
 		return [`Audio files of ${yearStr}`];
 	}
 
+	/**
+	 * Apply computed values to the task that aren't set by the server.
+	 *
+	 * @param {object} task The task to apply defaults to.
+	 */
+	function applyTaskDefaults(task) {
+		if (task.type === "playlist") {
+			task.selectedVideos = [];
+
+			task.videos.forEach((video) => {
+				video.format = task.format;
+				video.dateCategory = getDateCategoryDefault(video);
+
+				// Automatically select videos that have licenses
+				// that allow use by video2commons.
+				if (video.license != null) {
+					task.selectedVideos.push(video);
+				}
+			});
+		} else {
+			task.dateCategory = getDateCategoryDefault(task);
+		}
+	}
+
 	const form = {
 		/**
 		 * Get the data from the source form in the new task dialog.
@@ -331,6 +361,7 @@
 			}
 
 			if (url === newTaskData.url && newTaskData.initialFilenameValidated) {
+				applyTaskDefaults(newTaskData);
 				return $.when();
 			}
 
@@ -366,6 +397,7 @@
 							"title",
 							"url",
 							"date",
+							"license",
 							"extractor",
 							"filedesc",
 							"filename",
@@ -376,16 +408,7 @@
 							newTaskData.initialFilenameValidated = true;
 						});
 				})
-				.then(() => {
-					if (newTaskData.type === "playlist") {
-						newTaskData.videos.forEach((video) => {
-							video.format = newTaskData.format;
-							video.dateCategory = getDateCategoryDefault(video);
-						});
-					} else {
-						newTaskData.dateCategory = getDateCategoryDefault(newTaskData);
-					}
-				});
+				.then(() => applyTaskDefaults(newTaskData));
 		},
 
 		/**
@@ -511,6 +534,9 @@
 				}
 
 				newTaskData.selectedVideos = selectedVideos;
+				newTaskData.allowUnlicensed = $addTaskDialog
+					.find("#allow-unlicensed")
+					.is(":checked");
 				newTaskData.nextStep = "confirm";
 			});
 		},
@@ -952,6 +978,43 @@
 		},
 
 		/**
+		 * Return a collection of inputs in a playlist row.
+		 *
+		 * @param {HTMLTableRowElement} row The row to get the inputs from.
+		 * @return {jQuery} The inputs in the row.
+		 */
+		getPlaylistRowInputs: (row) => {
+			return $(row).find("input, button");
+		},
+
+		/**
+		 * Disable a row in the playlist table.
+		 *
+		 * @param {HTMLTableRowElement} row The row to disable.
+		 */
+		disablePlaylistRow: (row) => {
+			const $row = $(row);
+			const $inputs = video2commons.getPlaylistRowInputs($row);
+
+			$row.find(".video-select").prop("checked", false);
+			$row.addClass("disabled");
+			$inputs.prop("disabled", true);
+		},
+
+		/**
+		 * Enable a row in the playlist table.
+		 *
+		 * @param {HTMLTableRowElement} row The row to enable.
+		 */
+		enablePlaylistRow: (row) => {
+			const $row = $(row);
+			const $inputs = video2commons.getPlaylistRowInputs($row);
+
+			$row.removeClass("disabled");
+			$inputs.prop("disabled", false);
+		},
+
+		/**
 		 * Setup the details modal if it hasn't been setup yet.
 		 */
 		setupDetailsModal: () => {
@@ -1062,6 +1125,7 @@
 				filedesc: "",
 				dateCategory: "",
 				languageCategory: "",
+				license: null,
 				uploadedFile: {},
 				initialUrlValidated: false,
 				initialFilenameValidated: false,
@@ -1070,6 +1134,7 @@
 				history: [],
 				videos: [],
 				selectedVideos: [],
+				allowUnlicensed: false,
 				editingVideoIndex: null,
 			};
 			$.extend(newTaskData, taskdata);
@@ -1132,24 +1197,95 @@
 							nunjucksEnv.render("playlistForm.html", { task: newTaskData }),
 						);
 
-					$addTaskDialog.find(".video-select").each((i, el) => {
+					const $selectAll = $addTaskDialog.find("#select-all");
+					const $playlistRows = $addTaskDialog.find("#playlist-table tbody tr");
+
+					// Restore the allow-unlicensed checkbox state.
+					const $allowUnlicensed = $addTaskDialog.find("#allow-unlicensed");
+					$allowUnlicensed.prop("checked", newTaskData.allowUnlicensed);
+					$addTaskDialog
+						.find("#license-warning")
+						.toggleClass("hidden", !newTaskData.allowUnlicensed);
+
+					// Perform initial selection and disabling of rows when the
+					// playlist template is first rendered.
+					$playlistRows.each((i, row) => {
+						const $row = $(row);
 						const video = newTaskData.videos[i];
+
+						// Preselect rows for videos in selectedVideos.
 						if (newTaskData.selectedVideos.indexOf(video) >= 0) {
-							$(el).prop("checked", true);
+							$row.find(".video-select").prop("checked", true);
 						}
+
+						// Disable all rows corresponding to videos that don't
+						// have a license attached to them, unless the user has
+						// opted in to allowing unlicensed content.
+						if (video.license == null && !newTaskData.allowUnlicensed) {
+							video2commons.disablePlaylistRow(row);
+						} else {
+							video2commons.enablePlaylistRow(row);
+						}
+
+						$row.data("license", video.license);
 					});
 
+					// Initially check the select all checkbox if all rows are
+					// selected from the get-go.
 					const allChecked =
 						$addTaskDialog.find(".video-select:checked").length ===
 						$addTaskDialog.find(".video-select").length;
-					$addTaskDialog.find("#select-all").prop("checked", allChecked);
+					$selectAll.prop("checked", allChecked);
+
+					// Disable the select all checkbox if there are any rows
+					// that have no license attached to them during the initial
+					// render of the template.
+					const $unlicensedRows = $playlistRows.filter(
+						(_, row) => $(row).data("license") == null,
+					);
+					$selectAll.prop(
+						"disabled",
+						$unlicensedRows.length > 0 && !newTaskData.allowUnlicensed,
+					);
+
+					$selectAll.off().change(function () {
+						const $videoSelect = $addTaskDialog.find(".video-select");
+						const isChecked = $(this).is(":checked");
+						$videoSelect.prop("checked", isChecked);
+					});
 
 					$addTaskDialog
-						.find("#select-all")
+						.find("#allow-unlicensed")
 						.off()
 						.change(function () {
-							const isChecked = $(this).is(":checked");
-							$addTaskDialog.find(".video-select").prop("checked", isChecked);
+							const allowUnlicensedContent = $(this).is(":checked");
+
+							// Show the license warning if checked.
+							$addTaskDialog
+								.find("#license-warning")
+								.toggleClass("hidden", !allowUnlicensedContent);
+
+							// Enable all rows if checked, and disable all rows if
+							// unchecked. Update the "select all" checkbox state as
+							// well since disabled rows affect it.
+							if (allowUnlicensedContent) {
+								$playlistRows.each((_, row) =>
+									video2commons.enablePlaylistRow(row),
+								);
+								$selectAll.prop("disabled", false);
+							} else {
+								const $unlicensedRows = $playlistRows.filter(
+									(_, row) => $(row).data("license") == null,
+								);
+
+								if ($unlicensedRows.length > 0) {
+									$selectAll.prop("disabled", true);
+									$selectAll.prop("checked", false);
+									$unlicensedRows.each((_, row) =>
+										video2commons.disablePlaylistRow(row),
+									);
+								}
+							}
 						});
 
 					$addTaskDialog
@@ -1169,12 +1305,16 @@
 							const videoIndex = $(this).data("video-index");
 
 							newTaskData.selectedVideos = form.getPlaylistData();
+							newTaskData.allowUnlicensed = $addTaskDialog
+								.find("#allow-unlicensed")
+								.is(":checked");
 							newTaskData.editingVideoIndex = videoIndex;
 							newTaskData.history.push(newTaskData.step);
 							newTaskData.step = "target";
 							video2commons.setupAddTaskDialog();
 							video2commons.reactivatePrevNextButtons();
 						});
+
 					break;
 				}
 				case "target": {
