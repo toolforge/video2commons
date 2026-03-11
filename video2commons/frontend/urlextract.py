@@ -20,6 +20,7 @@
 """video2commons url extracter."""
 
 from collections import OrderedDict
+from typing import Optional
 from video2commons.backend.encode.transcode import WebVideoTranscode
 
 import json
@@ -175,10 +176,18 @@ def do_extract_url(url):
         "cachedir": "/tmp/",
         "noplaylist": False,
     }
+
     if ".youtube.com/" in url:
         # https://github.com/yt-dlp/yt-dlp/wiki/Extractors#exporting-youtube-cookies
         # https://github.com/yt-dlp/yt-dlp/wiki/FAQ#how-do-i-pass-cookies-to-yt-dlp
         params = add_youtube_params(params)
+
+        # Workaround: Ignore errors for YouTube playlists as yt-dlp will fail
+        # if any of the videos in the playlist are marked as private or are
+        # otherwise unavailable. We'd rather skip over those than fail.
+        if "/playlist" in url or re.search(r"[?&]list=", url):
+            params["ignoreerrors"] = True
+
     with yt_dlp.YoutubeDL(params) as dl:
         info = dl.extract_info(url, download=False)
 
@@ -186,6 +195,9 @@ def do_extract_url(url):
     if info and "entries" in info:
         videos = []
         for entry in info["entries"]:
+            if entry is None:
+                continue  # Skip over videos that are unavailable.
+
             video_info = _extract_info(entry)
             videos.append(video_info)
 
@@ -214,7 +226,7 @@ def _extract_info(info):
 
     filedesc = FILEDESC_TEMPLATE % {
         "desc": _desc(url, ie_key, title, info),
-        "date": _date(url, ie_key, title, info),
+        "date": _date(info),
         "source": _source(url, ie_key, title, info),
         "uploader": _uploader(url, ie_key, title, info),
         "license": _license(url, ie_key, title, info),
@@ -225,12 +237,13 @@ def _extract_info(info):
         "extractor": ie_key,
         "filedesc": filedesc.strip(),
         "filename": sanitize(title),
-        "date": _date(url, ie_key, title, info),
+        "date": _date(info),
+        "license": _normalize_license(ie_key, info),
         "queue": predict_task_type(info),
     }
 
 
-def _date(url, ie_key, title, info):
+def _date(info):
     date = (info.get("upload_date") or "").strip()
     if re.match(r"^[0-9]{8}$", date):
         date = "%s-%s-%s" % (date[0:4], date[4:6], date[6:8])
@@ -300,12 +313,12 @@ def _license(url, ie_key, title, info):
         and info.get("license")
         == "Creative Commons Attribution license (reuse allowed)"
     ):
-        if _date(url, ie_key, title, info) <= "2025-08-01":
+        if _date(info) <= "2025-08-01":
             return "{{YouTube CC-BY%s}}" % uploader_param
         return "{{YouTube CC-BY 4.0%s}}" % uploader_param
     elif ie_key == "Flickr":
         # https://blog.flickr.net/en/2025/06/18/creative-commons-4-0-has-arrived-on-flickr/
-        version = "2.0" if _date(url, ie_key, title, info) <= "2025-06-18" else "4.0"
+        version = "2.0" if _date(info) <= "2025-06-18" else "4.0"
 
         return {
             "Attribution": "{{cc-by-%s%s}}" % (version, uploader_param),
@@ -330,6 +343,46 @@ def _license(url, ie_key, title, info):
         }.get(info.get("license"), default)
 
     return default
+
+
+def _normalize_license(ie_key, info) -> Optional[str]:
+    """Normalize license names to be more consistent across sources."""
+    license_name = str(info.get("license") or "").strip()
+    if not license_name:
+        return None
+
+    # Attempt to normalize the license name across common sources by checking
+    # against ie_key and other identifiers.
+    if (
+        ie_key == "Youtube"
+        and license_name == "Creative Commons Attribution license (reuse allowed)"
+    ):
+        return "CC-BY 3.0" if _date(info) <= "2025-08-01" else "CC-BY 4.0"
+    elif ie_key == "Flickr":
+        # https://blog.flickr.net/en/2025/06/18/creative-commons-4-0-has-arrived-on-flickr/
+        version = "2.0" if _date(info) <= "2025-06-18" else "4.0"
+
+        return {
+            "Attribution": "CC-BY-%s" % version,
+            "Attribution-ShareAlike": "CC-BY-SA-%s" % version,
+            "United States government work": "PD-USGov",
+            "Public Domain Dedication (CC0)": "CC-Zero",
+        }.get(license_name, license_name)
+    elif ie_key == "Vimeo":
+        return {
+            "by": "CC-BY-3.0",
+            "by-sa": "CC-BY-SA-3.0",
+            "cc0": "CC-Zero",
+        }.get(license_name, license_name)
+    elif ie_key == "PeerTube":
+        return {
+            "Attribution": "CC-BY-4.0",
+            "Attribution - Share Alike": "CC-BY-SA-4.0",
+            "Public Domain Dedication": "CC-Zero",
+        }.get(license_name, license_name)
+
+    # Fallback to the original license name if we can't normalize it.
+    return license_name
 
 
 def escape_wikitext(wikitext):
