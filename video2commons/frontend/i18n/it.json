@@ -3,6 +3,7 @@
 		"authors": [
 			"Beta16",
 			"Macofe",
+			"Neonsn0w",
 			"Ontsed",
 			"Selven"
 		]
@@ -33,6 +34,7 @@
 	"keep": "Mantenere",
 	"filetarget": "Nome del file di destinazione",
 	"transcoding": "Formato transcodifica",
+	"license": "Licenza",
 	"filedescription": "Pagina di descrizione del file",
 	"filename": "Nome del file",
 	"languagecategory": "Lingua",
@@ -51,5 +53,7 @@
 	"notessubtitles": "Se ‘Importa sottotitoli’ è spuntata, i sottotitoli, eccetto quelli generati automaticamente, verranno importati.",
 	"noteslicensing": "Carica solamente contenuto con {{#a}}#fl|licenza libera{{/a}} oppure di {{#a}}#pd|pubblico dominio{{/a}}. Il {{#a}}#fu|“fair use”{{/a/} non è consentito su Wikimedia Commons.",
 	"extensionmsg": "L’estensione file impostata sopra verrà usata solo nel caso in cui il video sia in un formato non libero, cosa che richiederà la sua transcodifica. I video in formato libero manterranno la loro estensione.",
-	"confirmmsg": "Confermare l’attività oppure cliccare ‘Indietro’ per modificare i parametri. Cliccando ‘Conferma’, l’attività verrà consegnata ed eseguita. A causa di limitazioni tecniche, un’attività non può essere facilmente annullata una volta che è stata consegnata."
+	"confirmmsg": "Confermare l’attività oppure cliccare ‘Indietro’ per modificare i parametri. Cliccando ‘Conferma’, l’attività verrà consegnata ed eseguita. A causa di limitazioni tecniche, un’attività non può essere facilmente annullata una volta che è stata consegnata.",
+	"license-unspecified": "Non specificato",
+	"allow-unlicensed": "Consenti il caricamento di contenuti con una licenza non specificata"
 }
