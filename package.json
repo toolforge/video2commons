@@ -8,7 +8,7 @@
     "format": "biome format --write"
   },
   "devDependencies": {
-    "@biomejs/biome": "^2.4.8",
+    "@biomejs/biome": "^2.4.10",
     "esm": "^3.2.25",
     "gulp": "^5.0.1",
     "gulp-concat": "^2.6.1",
