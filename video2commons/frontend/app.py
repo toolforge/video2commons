@@ -247,8 +247,7 @@ def logincallback():
     if not ((is_autoconfirmed and (is_contributor or is_maintainer)) or is_confirmed):
         return render_template(
             "error.min.html",
-            message=("You must be an autoconfirmed Commons user with at least 50 edits to use this tool. "
-                "You do not meet the requirements. To use this tool, please "
+            message = ("You do not meet the requirements. To use this tool, please "
                 '<a href="https://commons.wikimedia.org/wiki/Commons:Requests_for_rights#Confirmed">'
                 "apply to be a confirmed user</a>, clearly explaining why you need to use video2commons."
             ),
