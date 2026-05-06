@@ -548,7 +548,7 @@ def do_validate_filename(filename):
     for rule in sanitationRules:
         reobj = rule["pattern"].search(filename)
         assert not reobj or reobj.group(0) == " ", (
-            "Your filename contains an illegal part: %r" % reobj.group(0)
+            "Your filename contains a disallowed part: %r" % reobj.group(0)
         )
 
     # We check against the normalized version of the filename since the prefix
