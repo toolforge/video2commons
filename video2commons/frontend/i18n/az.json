@@ -2,7 +2,8 @@
 	"@metadata": {
 		"authors": [
 			"Nemoralis",
-			"Şeyx Şamil"
+			"Şeyx Şamil",
+			"Əkrəm"
 		]
 	},
 	"loginOnCommons": "Vikianbar ilə daxil ol",
@@ -15,7 +16,7 @@
 	"abort": "İmtina",
 	"remove": "Sil",
 	"restart": "Yenidən başlat",
-	"details": "Detallar",
+	"details": "Ətraflı",
 	"next": "Növbəti",
 	"loading": "Yüklənir…",
 	"confirm": "Təsdiq et",
@@ -57,6 +58,9 @@
 	"importsubtitles": "Subtitrləri idxal et",
 	"uploadFile": "və ya fayl yüklə...",
 	"uploading": "Yüklənir...",
+	"uploadRetry": "Yükləmə xətası (yenidən sınanır, $2 cəhddən №$1): $3",
+	"uploadOffline": "Hal-hazırda internetə qoşulmamısınız. Yükləmə prosesi siz yenidən qoşulandan sonra davam edəcək.",
+	"uploadFailed": "Yükləmə uğursuz oldu: $1",
 	"note": "Qeyd:",
 	"importantnote": "Vacib qeyd:",
 	"youtubewarning": "YouTube yükləmələri bot yoxlanışı səbəbindən uğursuz ola bilər. Bu, adətən YouTube-un sürət limitləri aşıldıqda baş verir. Əgər bu baş verərsə, təkrar cəhd etməzdən əvvəl 1-2 saat gözləyin.",

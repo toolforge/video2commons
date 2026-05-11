@@ -40,8 +40,8 @@
 	"importantnote": "Nota importante:",
 	"notesplaylists": "Le listas de reproduction non essera processate correctemente. Alcun sitos (como Youku e Comedy Central) utilisa videos multiparte, interpretate como listas de reproduction, e tamben non essera processate correctemente.",
 	"notesuncheck": "Si le file multimedial non include tracias video o audio, per favor dismarca le quadratos correspondente; alteremente le conversion pote faller, mesmo si le formato es libere.",
-	"notessubtitles": "Si 'Importar subtitulos' es marcate, subtitulos essera importate, excepte illos generate automaticamente.",
+	"notessubtitles": "Si ‘{{int:importsubtitles}}’ es marcate, subtitulos essera importate, excepte illos generate automaticamente.",
 	"noteslicensing": "Incarga solmente contento {{#a}}#fl|sub licentia libere{{/a}} o del {{#a}}#pd|dominio public{{/a}}. Le {{#a}}#fu|fair use{{/a}} non es permittite sur Wikimedia Commons.",
 	"extensionmsg": "Le extension de file definite hic supra es usate si e solmente si le video es in un formato non libere, necessitante un transcodification. Le videos in formatos libere retenera lor extensiones.",
-	"confirmmsg": "Per favor confirma le carga o clicca sur 'Retro' pro cambiar le parametros. Post un clic sur 'Confirmar', le carga essera submittite e executate. A causa de restrictiones technic, un carga non pote facilemente esser interrumpite un vice que es submittite."
+	"confirmmsg": "Per favor confirma le carga o clicca sur ‘{{int:back}}’ pro cambiar le parametros. Post un clic sur ‘{{int:confirm}}’, le carga essera submittite e executate. A causa de restrictiones technic, un carga non pote facilemente esser interrumpite un vice que es submittite."
 }
