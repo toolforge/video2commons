@@ -88,6 +88,13 @@ KNOWN_ERRORS = [
         "i18n_key": "segfault-error",
         "reportable": True,
     },
+    {
+        # This error happens when the ulimit restriction prevents a file larger
+        # than the Commons 5 GiB upload limit from being written to disk.
+        "pattern": r"Exitcode: 153$",
+        "i18n_key": "output-too-large-error",
+        "urls": ["https://commons.wikimedia.org/wiki/Commons:Maximum_file_size"],
+    },
 ]
 
 
