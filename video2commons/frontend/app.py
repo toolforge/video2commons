@@ -241,13 +241,20 @@ def logincallback():
     is_maintainer = is_sudoer(identify["username"])
     is_autoconfirmed = "autoconfirmed" in identify["rights"]
 
-    # Only allow autoconfirmed users either with at least 50 edits or
-    # maintainer status to use this tool.
-    if not (is_autoconfirmed and (is_contributor or is_maintainer)):
+    # In Commons 'confirmed' is a group that inherits from 'autoconfirmed', so
+    # as a result it doesn't have its own distinct right.
+    is_confirmed = "confirmed" in identify["groups"]
+
+    # Only allow autoconfirmed users with at least 50 edits, manually confirmed
+    # users, or users with maintainer status to use this tool.
+    if not ((is_autoconfirmed and (is_contributor or is_maintainer)) or is_confirmed):
         return render_template(
             "error.min.html",
-            message="You must be an autoconfirmed Commons user "
-            "with at least 50 edits to use this tool.",
+            html_message=(
+                "You do not meet the requirements. To use this tool, please "
+                '<a href="https://commons.wikimedia.org/wiki/Commons:Requests_for_rights#Confirmed">'
+                "apply to be a confirmed user</a>, clearly explaining why you need to use video2commons."
+            ),
             loggedin=True,
             username=identify["username"],
         )
