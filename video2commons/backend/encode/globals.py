@@ -27,8 +27,12 @@ background_priority = 19
 # The total amout of time a transcoding shell command can take:
 background_time_limit = 3600 * 24 * 2  # 2 days
 
-# Maximum file size transcoding processes can create, in KB.
-background_size_limit = 10 * 1024 * 1024  # 10GB
+# Maximum file size transcoding processes can create, passed to `ulimit -f`.
+#
+# /bin/sh on the workers is dash, which uses 512-byte blocks (per POSIX).
+# Matches the Commons 5 GiB upload limit. Anything larger would fail to upload
+# anyway, so there's no point in allowing anything higher than that.
+background_size_limit = 10 * 1024 * 1024
 
 # Number of hardware threads available to ffmpeg for transcoding.
 ffmpeg_threads = __import__("multiprocessing").cpu_count()
