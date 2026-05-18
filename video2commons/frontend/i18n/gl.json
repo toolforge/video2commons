@@ -84,6 +84,7 @@
 	"title-forbidden-error": "Non se permite ese título de ficheiro. Sube o ficheiro con outro título. Comproba a {{#a}}política de nomes de ficheiro{{/a}} para obter máis información.",
 	"unsupported-format-error": "Non se puido codificar o ficheiro. Isto pode deberse a un formato non admitido ou a algunha configuración non compatible. Informa do problema para que poidamos investigalo.",
 	"video-not-found-error": "Non se atopou o ficheiro no enderezo URL proporcionado. Crea unha tarefa nova con outro enderezo URL.",
+	"output-too-large-error": "O ficheiro de saída é demasiado grande para subirse a Commons. Nestes intres, non se poden subir ficheiros que superen os 5 GiB. Consulta a páxina {{#a}}tamaño máximo dos ficheiros{{/a}} en Commons para obter máis información.",
 	"youtube-bot-error": "O vídeo non se pode descargar debido á detección de bots de YouTube. Inténtao de novo en 1-3 horas.",
 	"youtube-private-error": "O vídeo non se pode descargar de YouTube porque está marcado como privado.",
 	"youtube-ratelimit-error": "O vídeo non se pode descargar debido aos límites de frecuencia de YouTube. Inténtao de novo en 1-3 horas."

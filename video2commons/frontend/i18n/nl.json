@@ -84,6 +84,7 @@
 	"title-forbidden-error": "De bestandsnaam is niet toegestaan. Upload het bestand met een andere titel. Raadpleeg het {{#a}}beleid voor bestandsnamen{{/a}} voor meer informatie.",
 	"unsupported-format-error": "Het bestand kon niet worden gecodeerd. Dit kan worden veroorzaakt door niet-ondersteunde formaten of incompatibele instellingen. Meld dit probleem zodat we het kunnen onderzoeken.",
 	"video-not-found-error": "Het bestand kan niet worden gevonden op de opgegeven URL. Maak een nieuwe taak aan met een andere URL.",
+	"output-too-large-error": "Het uitvoerbestand is te groot om naar Commons te uploaden. Bestanden groter dan 5 GiB kunnen momenteel niet worden geüpload. Zie de pagina over de {{#a}}maximale bestandsgrootte{{/a}} op Commons voor meer informatie.",
 	"youtube-bot-error": "De video kan niet worden gedownload vanwege een botdetectie van YouTube. Probeer het over 1-3 uur opnieuw.",
 	"youtube-private-error": "De video kan niet worden gedownload van YouTube omdat deze als privé is gemarkeerd.",
 	"youtube-ratelimit-error": "De video kan niet worden gedownload van YouTube vanwege een beperking op het aantal downloads per uur. Probeer het over 1-3 uur opnieuw."
