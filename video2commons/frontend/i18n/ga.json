@@ -83,6 +83,7 @@
 	"title-forbidden-error": "Ní cheadaítear teideal an chomhaid. Uaslódáil an comhad le teideal difriúil. Féach ar an {{#a}}polasaí ainmniúcháin comhad{{/a}} le haghaidh tuilleadh eolais.",
 	"unsupported-format-error": "Níorbh fhéidir an comhad a ionchódú. D’fhéadfadh sé seo a bheith mar gheall ar fhormáidí nach dtacaítear leo nó socruithe neamh-chomhoiriúnacha. Tuairiscigh fabht le do thoil ionas gur féidir linn imscrúdú a dhéanamh air.",
 	"video-not-found-error": "Ní féidir an comhad a fháil ag an URL a cuireadh ar fáil. Cruthaigh tasc nua le URL difriúil le do thoil.",
+	"output-too-large-error": "Tá an comhad aschuir rómhór le huaslódáil chuig Commons. Ní féidir comhaid atá níos mó ná 5 GiB a uaslódáil faoi láthair. Féach ar an leathanach {{#a}}maximum file size{{/a}} ar Commons le haghaidh tuilleadh eolais.",
 	"youtube-bot-error": "Ní féidir an físeán a íoslódáil mar gheall ar bhrath bota YouTube. Déan iarracht arís i gceann 1-3 uair an chloig.",
 	"youtube-private-error": "Ní féidir an físeán a íoslódáil ó YouTube mar go bhfuil sé marcáilte mar phríobháideach.",
 	"youtube-ratelimit-error": "Ní féidir an físeán a íoslódáil ó YouTube mar gheall ar theorainn ráta. Déan iarracht arís i gceann 1-3 uair an chloig."
