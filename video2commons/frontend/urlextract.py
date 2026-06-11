@@ -324,6 +324,9 @@ def _uploader(url, ie_key, title, info):
 
 
 def _license(url, ie_key, title, info):
+    """
+    License template for Commons file description.
+    """
     uploader = info.get("uploader")
     uploader_param = ""
     if uploader:
@@ -360,8 +363,11 @@ def _license(url, ie_key, title, info):
     elif ie_key == "PeerTube":
         return {
             "Attribution": "{{cc-by-4.0%s}}" % uploader_param,
+            "CC BY 4.0": "{{cc-by-4.0%s}}" % uploader_param,
             "Attribution - Share Alike": "{{cc-by-sa-4.0%s}}" % uploader_param,
+            "CC BY-SA 4.0": "{{cc-by-sa-4.0%s}}" % uploader_param,
             "Public Domain Dedication": "{{cc-zero}}",
+            "CC0 1.0": "{{cc-zero}}",
         }.get(info.get("license"), default)
 
     return default
