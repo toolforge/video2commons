@@ -2,7 +2,8 @@
 	"@metadata": {
 		"authors": [
 			"Kaszeba",
-			"Kirsan"
+			"Kirsan",
+			"Terrus38"
 		]
 	},
 	"loginOnCommons": "Wlogùjë sã na Wikimedia Commons",
@@ -22,7 +23,7 @@
 	"yourTasks": "Twòjé dzejania:",
 	"createServerSide": "Ùôdzë w jednych krokù wladënk ze starnë serwera (zamòdlëwóné)",
 	"taskDone": "Dzejanié je fardich. Nelézesz swój lopk na {{#a}}{{/a}}.",
-	"cancel": "Òprzestóń",
+	"cancel": "Anuluj",
 	"back": "Nazôd",
 	"keep": "Ùtrzëmôj",
 	"filetarget": "Miono docélowégò lopka",
