@@ -32,12 +32,10 @@ from video2commons.config import session_key
 
 from video2commons.backend import worker
 
-from video2commons.frontend.errors import normalize_error
 from video2commons.frontend.shared import (
     redisconnection,
     check_banned,
     generate_csrf_token,
-    redis_publish,
 )
 from video2commons.frontend.urlextract import (
     do_extract_url,
@@ -52,6 +50,7 @@ from video2commons.frontend.urlextract import (
 )
 from video2commons.frontend.upload import upload as _upload, status as _uploadstatus
 from video2commons.shared import stats
+from video2commons.shared.tasks import publish_notification, get_task_status
 
 # Adapted from: https://stackoverflow.com/a/19161373
 YOUTUBE_REGEX = (
@@ -140,7 +139,7 @@ def status():
     key, ids = get_tasks()
     values = []
     for id in ids:
-        values.append(_status(id))
+        values.append(get_task_status(redisconnection, id))
 
     values = [_f for _f in values if _f]
     rooms = [t["id"] for t in values] + [key]
@@ -152,99 +151,7 @@ def status():
 @api.route("/status-single")
 def status_single():
     """Get the status of one task."""
-    return jsonify(value=_status(request.args["task"]))
-
-
-def _status(id):
-    title = get_title_from_task(id)
-    if not title:
-        # task has been forgotten -- results should have been expired
-        return None
-
-    res = worker.main.AsyncResult(id)
-    task = {"id": id, "title": title, "hostname": get_hostname_from_task(id)}
-
-    try:
-        state = res.state
-    except:
-        task.update(
-            {
-                "status": "fail",
-                "text": "The status of the task could not be retrieved.",
-                "traceback": traceback.format_exc(),
-            }
-        )
-    else:
-        if state == "PENDING":
-            task.update(
-                {
-                    "status": "progress",
-                    "text": "Your task is pending...",
-                    "progress": -1,
-                }
-            )
-        elif state == "PROGRESS":
-            task.update(
-                {
-                    "status": "progress",
-                    "text": res.result["text"],
-                    "progress": res.result["percent"],
-                }
-            )
-        elif state == "SUCCESS":
-            if isinstance(res.result, (list, tuple)):
-                filename, wikifileurl = res.result
-                task.update({"status": "done", "url": wikifileurl, "text": filename})
-            elif isinstance(res.result, dict):
-                if res.result["type"] == "done":
-                    task.update(
-                        {
-                            "status": "done",
-                            "url": res.result["url"],
-                            "text": res.result["filename"],
-                        }
-                    )
-        elif state == "FAILURE":
-            e = res.result
-            text = format_exception(e) if e else res.traceback
-            normalized_error = (normalize_error(text) or {}) if text else {}
-
-            task.update(
-                {
-                    "status": "fail",
-                    "text": text,
-                    "i18n_key": normalized_error.get("i18n_key"),
-                    "i18n_urls": normalized_error.get("urls"),
-                    "reportable": normalized_error.get("reportable", False),
-                    "restartable": (
-                        not redisconnection.exists("restarted:" + id)
-                        and redisconnection.exists("params:" + id)
-                    ),
-                }
-            )
-        elif state == "RETRY":
-            task.update(
-                {
-                    "status": "progress",
-                    "text": "Your task is being rescheduled...",
-                    "progress": -1,
-                }
-            )
-        elif state == "ABORTED":
-            task.update({"status": "abort", "text": "Your task is being aborted..."})
-        else:
-            task.update(
-                {
-                    "status": "fail",
-                    "text": (
-                        "This task is in an unknown state. Please file an issue "
-                        "in GitHub: <a></a>"
-                    ),
-                    "url": "https://github.com/toolforge/video2commons/issues",
-                }
-            )
-
-    return task
+    return jsonify(value=get_task_status(redisconnection, request.args["task"]))
 
 
 def is_sudoer(username):
@@ -269,23 +176,6 @@ def get_stats():
     stats = redisconnection.get("stats")
 
     return json.loads(stats) if stats else None
-
-
-def get_title_from_task(id):
-    """Get task title from task ID."""
-    return redisconnection.get("titles:" + id)
-
-
-def get_hostname_from_task(id):
-    """Get the hostname of the worker processing a task from task ID."""
-    hostname = redisconnection.get("tasklock:" + id)
-
-    # Old tasks don't have a hostname as the value in tasklock and store the
-    # literal 'T' instead. Reinterpret these values as null.
-    if hostname == "T":
-        hostname = None
-
-    return hostname
 
 
 @api.route("/extracturl", methods=["POST"])
@@ -500,8 +390,14 @@ def run_task_internal(filename, params, queue):
     except Exception:
         pass  # We don't want to fail the API call if we can't update stats.
 
-    redis_publish("add", {"taskid": taskid, "user": session["username"]})
-    redis_publish("update", {"taskid": taskid, "data": _status(taskid)})
+    publish_notification(
+        redisconnection, "add", {"taskid": taskid, "user": session["username"]}
+    )
+    publish_notification(
+        redisconnection,
+        "update",
+        {"taskid": taskid, "data": get_task_status(redisconnection, taskid)},
+    )
 
     return taskid
 
@@ -528,7 +424,11 @@ def restart_task():
     newid = run_task_internal(filename, json.loads(params), HEAVY_QUEUE)
     redisconnection.set("restarted:" + id, newid)
 
-    redis_publish("update", {"taskid": id, "data": _status(id)})
+    publish_notification(
+        redisconnection,
+        "update",
+        {"taskid": id, "data": get_task_status(redisconnection, id)},
+    )
 
     return jsonify(restart="success", id=id, taskid=newid)
 
@@ -548,7 +448,7 @@ def remove_task():
     redisconnection.delete("params:" + id)
     redisconnection.delete("restarted:" + id)
 
-    redis_publish("remove", {"taskid": id})
+    publish_notification(redisconnection, "remove", {"taskid": id})
 
     return jsonify(remove="success", id=id)
 
@@ -564,7 +464,11 @@ def abort_task():
         )
     worker.main.AsyncResult(id).abort()
 
-    redis_publish("update", {"taskid": id, "data": _status(id)})
+    publish_notification(
+        redisconnection,
+        "update",
+        {"taskid": id, "data": get_task_status(redisconnection, id)},
+    )
 
     return jsonify(remove="success", id=id)
 
