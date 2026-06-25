@@ -53,7 +53,7 @@ def get_task_status(conn, task_id):
 
     try:
         state = res.state
-    except:
+    except Exception:
         task.update(
             {
                 "status": "fail",
