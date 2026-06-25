@@ -11,7 +11,7 @@
   },
   "devDependencies": {
     "@biomejs/biome": "^2.4.16",
-    "esbuild": "^0.28.0",
+    "esbuild": "^0.28.1",
     "esm": "^3.2.25",
     "gulp": "^5.0.1",
     "gulp-concat": "^2.6.1",
