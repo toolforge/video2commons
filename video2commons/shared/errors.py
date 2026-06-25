@@ -105,3 +105,13 @@ def normalize_error(message: str) -> dict | None:
             return entry.copy()
 
     return None
+
+
+def format_exception(e):
+    """Format an exception to text."""
+    desc = str(e)[:7000]
+
+    if isinstance(e, AssertionError):
+        return desc
+    else:
+        return f"An exception occurred: {type(e).__name__}: {desc}"

@@ -46,6 +46,7 @@ from video2commons.config import (
     consumer_secret,
 )
 from video2commons.shared.stats import update_task_stats
+from video2commons.shared.tasks import get_task_status, publish_notification
 
 logging.basicConfig(level=logging.INFO)
 
@@ -92,7 +93,31 @@ def get_worker_concurrency():
         return int(match.group(1))
 
 
-@app.task(bind=True, track_started=False, base=AbortableTask)
+class EncodingTask(AbortableTask):
+    """Custom task class that notifies users of task success and failure."""
+
+    def on_success(self, retval, task_id, args, kwargs):
+        task_id = self.request.id
+
+        publish_notification(
+            redisconnection,
+            "update",
+            {"taskid": task_id, "data": get_task_status(redisconnection, task_id)},
+        )
+        return super().on_success(retval, task_id, args, kwargs)
+
+    def on_failure(self, exc, task_id, args, kwargs, einfo):
+        task_id = self.request.id
+
+        publish_notification(
+            redisconnection,
+            "update",
+            {"taskid": task_id, "data": get_task_status(redisconnection, task_id)},
+        )
+        return super().on_failure(exc, task_id, args, kwargs, einfo)
+
+
+@app.task(bind=True, track_started=False, base=EncodingTask)
 def main(
     self,
     url,
@@ -106,6 +131,8 @@ def main(
     oauth,
 ):
     """Main worker code."""
+    task_id = self.request.id
+
     # Get a lock to prevent double-running with same task ID
     lockkey = "tasklock:" + self.request.id
     if redisconnection.exists(lockkey):
@@ -148,6 +175,12 @@ def main(
         print("%d: %s" % (s.percent, s.text))
 
         self.update_state(state="PROGRESS", meta={"text": s.text, "percent": s.percent})
+
+        publish_notification(
+            redisconnection,
+            "update",
+            {"taskid": task_id, "data": get_task_status(redisconnection, task_id)},
+        )
 
     def errorcallback(text):
         raise TaskError(text)
