@@ -20,7 +20,7 @@
     "gulp-rename": "^2.1.0",
     "gulp-uglify": "^3.0.2",
     "msw": "^2.14.6",
-    "vitest": "^4.1.8"
+    "vitest": "^4.1.9"
   },
   "dependencies": {
     "express": "^5.2.1",
