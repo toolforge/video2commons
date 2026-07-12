@@ -11,6 +11,8 @@ const port = parseInt(process.env.PORT, 10);
 const app = express();
 const server = http.createServer(app);
 const io = new Server(server, {
+	pingInterval: 8000,
+	pingTimeout: 10000,
 	cors: {
 		origin: `https:${config.webfrontend_uri}`,
 		methods: ["GET", "POST"],
