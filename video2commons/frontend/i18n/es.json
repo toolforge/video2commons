@@ -4,6 +4,7 @@
 			"Avengium",
 			"Fitoschido",
 			"Macofe",
+			"SaraiSan-WMF",
 			"Wilfredor"
 		]
 	},
@@ -31,6 +32,7 @@
 	"transcoding": "Formato de transcodificación",
 	"filedescription": "Página de descripción del archivo",
 	"filename": "Nombre de archivo",
+	"languagecategory": "Idioma",
 	"video": "video",
 	"audio": "audio",
 	"subtitles": "subtítulos",
