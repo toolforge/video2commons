@@ -54,7 +54,7 @@ from .helpers import get_video
 from video2commons.exceptions import TaskAbort
 
 STALE_TIMEOUT_SECS = 2 * 60 * 60  # 2 hours
-KILL_TIMEOUT_SECS = 2 * 60        # 2 minutes
+KILL_TIMEOUT_SECS = 2 * 60  # 2 minutes
 
 
 class WebVideoTranscodeJob(object):
@@ -550,7 +550,7 @@ class WebVideoTranscodeJob(object):
 
         def enqueue_output(stdout, queue):
             """Process output on another thread as readline can hang."""
-            for line in iter(stdout.readline, ''):
+            for line in iter(stdout.readline, ""):
                 queue.put(line)
 
             stdout.close()
@@ -567,9 +567,7 @@ class WebVideoTranscodeJob(object):
         )
         lineQueue = queue.Queue()
         thread = threading.Thread(
-            target=enqueue_output,
-            args=(process.stdout, lineQueue),
-            daemon=True
+            target=enqueue_output, args=(process.stdout, lineQueue), daemon=True
         )
         thread.start()
 
