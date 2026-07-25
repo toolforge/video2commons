@@ -95,6 +95,10 @@ KNOWN_ERRORS = [
         "i18n_key": "output-too-large-error",
         "urls": ["https://commons.wikimedia.org/wiki/Commons:Maximum_file_size"],
     },
+    {
+        "pattern": r"TaskError: task_stopped_responding",
+        "i18n_key": "task-stopped-responding",
+    },
 ]
 
 
