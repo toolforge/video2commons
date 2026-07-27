@@ -33,6 +33,10 @@ import math
 import time
 import subprocess
 import signal
+import queue
+import threading
+
+from datetime import datetime, timedelta
 
 from .transcode import WebVideoTranscode
 from .globals import (
@@ -48,6 +52,9 @@ from .globals import (
 from .helpers import get_video
 
 from video2commons.exceptions import TaskAbort
+
+STALE_TIMEOUT_SECS = 2 * 60 * 60  # 2 hours
+KILL_TIMEOUT_SECS = 2 * 60  # 2 minutes
 
 
 class WebVideoTranscodeJob(object):
@@ -541,6 +548,13 @@ class WebVideoTranscodeJob(object):
             + " 2>&1"
         )
 
+        def enqueue_output(stdout, queue):
+            """Process output on another thread as readline can hang."""
+            for line in iter(stdout.readline, ""):
+                queue.put(line)
+
+            stdout.close()
+
         # Adapted from https://gist.github.com/marazmiki/3015621
         process = subprocess.Popen(
             cmd,
@@ -551,19 +565,27 @@ class WebVideoTranscodeJob(object):
             shell=True,
             preexec_fn=os.setsid,
         )
+        lineQueue = queue.Queue()
+        thread = threading.Thread(
+            target=enqueue_output, args=(process.stdout, lineQueue), daemon=True
+        )
+        thread.start()
 
         re_duration = re.compile(r"Duration: (\d{2}:\d{2}:\d{2})")
         re_position = re.compile(r"time=(\d{2}:\d{2}:\d{2})", re.I)
 
         duration = None
         position = None
+        last_change = datetime.now()
         newpercentage = percentage = -1
 
         while process.poll() is None:
-            # for line in process.stdout.readlines():
-            # http://bugs.python.org/issue3907
             while True:
-                line = process.stdout.readline()
+                try:
+                    line = lineQueue.get(timeout=1)
+                except queue.Empty:
+                    break
+
                 if not line:
                     break
 
@@ -582,14 +604,47 @@ class WebVideoTranscodeJob(object):
                                 )
 
                     if newpercentage != percentage:
+                        last_change = datetime.now()
                         percentage = newpercentage
                         try:
                             self.statuscallback(None, percentage)
                         except TaskAbort:
-                            os.killpg(os.getpgid(process.pid), signal.SIGTERM)
+                            self.kill_process(process)
                             raise
+
+            if datetime.now() - last_change >= timedelta(seconds=STALE_TIMEOUT_SECS):
+                self.kill_process(process)
+                self.errorcallback("task_stopped_responding")
 
             time.sleep(2)
 
         process.stdout.close()
         return process.returncode, ""
+
+    def kill_process(self, process, timeout=KILL_TIMEOUT_SECS):
+        """Attempt to gracefully kill a process within the given timeout.
+
+        SIGTERM is not respected if the process is hung, and a SIGKILL signal
+        is needed to prevent the worker from being stuck indefinitely.
+        """
+        pgid = None
+        counter = 0
+
+        try:
+            pgid = os.getpgid(process.pid)
+            os.killpg(pgid, signal.SIGTERM)
+        except ProcessLookupError:
+            return  # The process already ended, so we're good.
+
+        while counter < timeout:
+            if process.poll() is not None:
+                return  # The SIGTERM worked, no SIGKILL was needed.
+
+            counter += 1
+            time.sleep(1)
+
+        if pgid is not None:
+            try:
+                os.killpg(pgid, signal.SIGKILL)
+            except ProcessLookupError:
+                return
