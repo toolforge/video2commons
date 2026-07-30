@@ -87,6 +87,7 @@
 	"unsupported-format-error": "Súbor sa nepodarilo zakódovať. Môže to byť spôsobené nepodporovanými formátmi alebo nekompatibilnými nastaveniami. Nahláste, prosím, chybu, aby sme to mohli preskúmať.",
 	"video-not-found-error": "Súbor sa na zadanej URL nedá nájsť. Vytvorte, prosím, novú úlohu s inou URL.",
 	"output-too-large-error": "Výstupný súbor je príliš veľký na nahranie do Commons. Súbory väčšie než 5 GiB momentálne nemožno nahrať. Viac informácií nájdete na stránke {{#a}}maximálna veľkosť súboru{{/a}} na Commons.",
+	"task-stopped-responding": "Proces konverzie trvá dlhšie, ako sa očakávalo, a prestal reagovať. Skúste to znova.",
 	"youtube-bot-error": "Video nemožno stiahnuť pre detekciu botov YouTube. Skúste to, prosím, znova o 1 – 3 hodiny.",
 	"youtube-private-error": "Video nemožno stiahnuť z YouTube, pretože je označené ako súkromné.",
 	"youtube-ratelimit-error": "Video nemožno stiahnuť z YouTube pre obmedzenie frekvencie požiadaviek. Skúste to, prosím, znova o 1 – 3 hodiny."
