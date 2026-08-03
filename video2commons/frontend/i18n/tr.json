@@ -93,6 +93,7 @@
 	"unsupported-format-error": "Dosya kodlanamadı. Bunun nedeni desteklenmeyen formatlar veya uyumsuz ayarlar olabilir. Lütfen bir hata bildirin, böylece sorunu araştırabiliriz.",
 	"video-not-found-error": "Belirtilen URL'de dosya bulunamadı. Lütfen farklı bir URL kullanarak yeni bir görev oluşturun.",
 	"output-too-large-error": "Çıktı dosyası Commons'a yüklenemeyecek kadar büyük. Şu anda 5 GB'den büyük dosyalar yüklenemiyor. Daha fazla bilgi için Commons'taki {{#a}}maksimum dosya boyutu{{/a}} sayfasına bakın.",
+	"task-stopped-responding": "Dönüştürme işlemi beklenenden uzun sürüyor ve yanıt vermeyi durdurdu. Lütfen tekrar deneyin.",
 	"youtube-bot-error": "YouTube'un bot algılama sistemi nedeniyle video indirilemiyor. Lütfen 1-3 saat sonra tekrar deneyin.",
 	"youtube-private-error": "Video, özel olarak işaretlendiği için YouTube'dan indirilemiyor.",
 	"youtube-ratelimit-error": "YouTube'daki indirme hızı sınırlaması nedeniyle video indirilemiyor. Lütfen 1-3 saat sonra tekrar deneyin."
