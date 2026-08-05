@@ -1,0 +1,23 @@
+- command: python utils/cleanuptasks.py
+  filelog: 'yes'
+  filelog-stderr: /data/project/video2commons/cleanup.err
+  filelog-stdout: /data/project/video2commons/cleanup.out
+  image: python3.9
+  name: cleanup
+  schedule: 23 7 * * *
+
+- command: bash cleanuploads.sh
+  filelog: 'yes'
+  filelog-stderr: /data/project/video2commons/cleanuploads.err
+  filelog-stdout: /data/project/video2commons/cleanuploads.out
+  image: bullseye
+  name: cleanuploads
+  schedule: 28 7 * * *
+
+- command: bash utils/update-yt-dlp-toolforge.sh
+  filelog: 'yes'
+  filelog-stderr: /data/project/video2commons/update-yt-dlp.err
+  filelog-stdout: /data/project/video2commons/update-yt-dlp.out
+  image: python3.11
+  name: update-yt-dlp
+  schedule: 33 7 * * *

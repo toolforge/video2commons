@@ -344,3 +344,10 @@ cron::job { 'v2cstats':
     minute  => '0',
     require => Service['v2ccelery'],
 }
+cron::job { 'v2cytdlp':
+    command => '/bin/bash /srv/v2c/utils/update-yt-dlp-encoder.sh',
+    user    => 'root',
+    minute  => '32',
+    hour    => '6',
+    require => Service['v2ccelery'],
+}
