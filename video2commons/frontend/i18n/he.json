@@ -45,6 +45,8 @@
 	"datecategory-audio-placeholder": "למשל „Audio files of $1”",
 	"datecategory-error-future-year": "אסור שהשנה תהיה בעתיד.",
 	"datecategory-error-invalid-date": "התאריך חייב להיות תאריך אמיתי בעבר.",
+	"datecategory-video-error-format": "תבנית התאריך חייבת להיות „סרטוני שנת YYYY” או „סרטונים שצולמו ב־YYYY-MM-DD”.",
+	"datecategory-video-placeholder": "למשל: „סרטונים של $1”, „סרטונים שצולמו ב־$2” ועוד.",
 	"languagecategory": "שפה",
 	"video": "וידאו",
 	"audio": "שמע",
@@ -78,6 +80,7 @@
 	"out-of-memory-error": "לשרת נגמר הזיכרון תוך כדי עיבוד הקובץ. נא לנסות שוב ואם הבעיה נמשכת, נא לדווח על תקלה.",
 	"segfault-error": "אירעה שגיאה פנימית בעת עיבוד הקובץ. נא לנסות שוב ואם התקלה נמשכת, נא לדווח על תקלה.",
 	"video-not-found-error": "אי אפשר למצוא את הקובץ בכתובת שצוינה. נא ליצור משימה חדשה עם כתובת אחרת.",
+	"task-stopped-responding": "תהליך העיבוד אורך מעבר לצפוי והוא הפסיק להגיב. נא לנסות שוב.",
 	"youtube-bot-error": "אי אפשר להוריד את הסרטון עקב זיהוי הבוטים של YouTube. נא לנסות שוב בעוד שעה עד 3 שעות.",
 	"youtube-private-error": "אי אפשר להוריד את הסרטון מ־YouTube כיוון שהוא מסומן כפרטי.",
 	"youtube-ratelimit-error": "אי אפשר להוריד את הסרטון מ־YouTube עקב הגבלת קצב. נא לנסות שוב בעוד 1‏-3 שעות."
