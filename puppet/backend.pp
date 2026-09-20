@@ -175,7 +175,19 @@ User=tools.video2commons
 Group=tools.video2commons
 EnvironmentFile=-/etc/default/v2ccelery
 WorkingDirectory=/srv/v2c
-Restart=on-failure
+# When the OOM killer hits a process of the unit (typically an AV1 ffmpeg), do
+# not tear down the whole service (the default OOMPolicy=stop does): the task
+# simply fails and the worker keeps running. Without this, the unit used to get
+# stuck in "deactivating" and stopped consuming tasks.
+OOMPolicy=continue
+# Keep memory pressure inside this unit so that the OOM killer picks one of its
+# processes (the ffmpeg encode) instead of something unrelated on the instance.
+MemoryMax=90%
+# The main process exits with status 0 when it gets killed, so on-failure would
+# never bring the service back.
+Restart=always
+RestartSec=30
+# Warm shutdown: wait as long as needed for running tasks to finish.
 TimeoutStopSec=infinity
 ExecStart=/bin/sh -c \'${CELERY_BIN} multi start $CELERYD_NODES \
     -A $CELERY_APP --logfile=${CELERYD_LOG_FILE} \
@@ -185,6 +197,10 @@ ExecStop=/bin/sh -c \'${CELERY_BIN} multi stopwait $CELERYD_NODES \
 ExecReload=/bin/sh -c \'${CELERY_BIN} multi restart $CELERYD_NODES \
     -A $CELERY_APP --pidfile=${CELERYD_PID_FILE} --logfile=${CELERYD_LOG_FILE} \
     --loglevel="${CELERYD_LOG_LEVEL}" $CELERYD_OPTS\'
+# ffmpeg is started in its own session, so it survives when the worker dies (e.g.
+# OOM-killed) and, because TimeoutStopSec is infinite, systemd would wait for it
+# forever in "deactivating (final-sigterm)". Make sure no orphan remains.
+ExecStopPost=-/usr/bin/pkill -KILL -u tools.video2commons -x ffmpeg
 
 [Install]
 WantedBy=multi-user.target
@@ -332,9 +348,10 @@ cron::job { 'v2ccleanup':
     minute  => '48',
     require => Service['v2ccelery'],
 }
+# Runs as root as it needs to (re)start and kill the systemd unit.
 cron::job { 'v2chealthcheck':
-    command => '/bin/sh /srv/v2c/utils/healthcheck.sh',
-    user    => 'tools.video2commons',
+    command => '/bin/bash /srv/v2c/utils/healthcheck.sh',
+    user    => 'root',
     minute  => '*/5',
     require => Service['v2ccelery'],
 }
