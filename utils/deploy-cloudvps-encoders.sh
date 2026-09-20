@@ -48,13 +48,29 @@ apply_script=$(cat <<EOF
 echo -n "$patched_manifest" | base64 -d > /tmp/backend.pp
 
 sudo puppet apply /tmp/backend.pp --debug
+puppet_status=\$?
+rm -f /tmp/backend.pp
 
-if [ \$? -ne 0 ]; then
-    rm /tmp/backend.pp
+if [ \$puppet_status -ne 0 ]; then
     exit 1
-else
-    rm /tmp/backend.pp
 fi
+
+# Puppet only queues the (re)start of the service (systemctl --no-block), so a
+# successful run doesn't mean the worker is up. Wait for it to be healthy. A
+# worker that is still draining running tasks before restarting is accepted.
+sleep 5
+for attempt in \$(seq 1 24); do
+    sudo /bin/bash /srv/v2c/utils/healthcheck.sh --check
+    case \$? in
+        0 | 10) exit 0 ;;
+        11) sudo systemctl kill --kill-whom=all --signal=SIGKILL v2ccelery.service ;;
+    esac
+    sleep 5
+done
+
+echo "v2ccelery.service did not become healthy" >&2
+sudo systemctl status v2ccelery.service --no-pager -l >&2
+exit 1
 EOF
 )
 
