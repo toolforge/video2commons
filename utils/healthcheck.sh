@@ -6,7 +6,8 @@
 #
 # Without arguments (cron, as root) the service is repaired when needed:
 #   - stopped or failed              -> restarted
-#   - started but not answering ping -> restarted (warm: running tasks finish)
+#   - started but not answering ping on UNRESPONSIVE_RUNS consecutive runs
+#     -> restarted (warm: running tasks finish)
 #   - stuck in "deactivating" after its main process is gone (e.g. orphaned
 #     ffmpeg processes after an OOM kill) -> everything is killed with SIGKILL,
 #     systemd then restarts the service
@@ -31,6 +32,12 @@ CELERY_APP=${CELERY_APP:-video2commons.backend.worker}
 EXPECTED_NODES=${CELERYD_NODES:-1}
 STUCK_STOP_SECS=${STUCK_STOP_SECS:-900}
 PING_ATTEMPTS=3
+# A worker is only restarted after this many consecutive failed runs (about 8
+# hours with a run every 5 minutes), so that a healthy worker is never restarted
+# because of failed pings.
+UNRESPONSIVE_RUNS=100
+FAILURES_FILE=/run/v2c-healthcheck.failures
+PYTHON=$(dirname "$CELERY_BIN")/python3
 
 MODE=repair
 if [ "${1:-}" = "--check" ]; then
@@ -49,13 +56,44 @@ show() {
     systemctl show "$SERVICE" --property="$1" --value
 }
 
-# Number of celery nodes of this host that answer to a ping.
+# Number of celery nodes of this host found in the JSON reply of `inspect ping`
+# given on stdin. Python from the venv is used to avoid depending on jq.
+count_nodes() {
+    "$PYTHON" -c '
+import json, re, sys
+
+names = set()
+
+
+def collect(obj):
+    if isinstance(obj, dict):
+        names.update(obj)
+    elif isinstance(obj, list):
+        for item in obj:
+            collect(item)
+
+
+try:
+    collect(json.load(sys.stdin))
+except ValueError:
+    pass
+pattern = r"celery[0-9]+@" + re.escape(sys.argv[1])
+print(sum(1 for name in names if re.fullmatch(pattern, name)))
+' "$HOST" 2>/dev/null
+}
+
+# Number of celery nodes of this host that answer to a ping. The output of a
+# failed ping is logged to be able to find out why.
 responding_nodes() {
-    local out
-    out=$(cd /srv/v2c && runuser -u "$SERVICE_USER" -- "$CELERY_BIN" \
-        -A "$CELERY_APP" inspect ping -t 10 -j 2>/dev/null) || return 1
-    printf '%s' "$out" | jq --arg host "$HOST" \
-        '[keys[] | select(test("^celery[0-9]+@" + $host + "$"))] | length' 2>/dev/null
+    local out err_file nodes
+    err_file=$(mktemp)
+    out=$(cd /srv/v2c && runuser -u "$SERVICE_USER" -- "$CELERY_BIN"         -A "$CELERY_APP" inspect ping -t 10 -j 2>"$err_file")
+    nodes=$(printf '%s' "$out" | count_nodes)
+    if [ "${nodes:-0}" -lt "$EXPECTED_NODES" ]; then
+        log "ping failed: $nodes/$EXPECTED_NODES node(s) of $HOST answered;"             "stdout: $(printf '%s' "$out" | tail -c 300)"             "stderr: $(tail -n 3 "$err_file" | tail -c 500)" >&2
+    fi
+    rm -f "$err_file"
+    echo "${nodes:-0}"
 }
 
 is_responding() {
@@ -114,6 +152,8 @@ if [ "$MODE" = "check" ]; then
     esac
 fi
 
+[ "$status" != unresponsive ] && rm -f "$FAILURES_FILE"
+
 case "$status" in
     healthy | starting | draining)
         exit 0
@@ -121,6 +161,18 @@ case "$status" in
     stuck)
         log "$SERVICE is stuck while stopping, killing all its processes"
         systemctl kill --kill-whom=all --signal=SIGKILL "$SERVICE"
+        exit 1
+        ;;
+    unresponsive)
+        failures=$(($(cat "$FAILURES_FILE" 2>/dev/null || echo 0) + 1))
+        if [ "$failures" -lt "$UNRESPONSIVE_RUNS" ]; then
+            echo "$failures" > "$FAILURES_FILE"
+            log "$SERVICE is unresponsive ($failures/$UNRESPONSIVE_RUNS), waiting"
+            exit 1
+        fi
+        rm -f "$FAILURES_FILE"
+        log "$SERVICE is unresponsive ($failures/$UNRESPONSIVE_RUNS), restarting"
+        systemctl --no-block restart "$SERVICE"
         exit 1
         ;;
     *)

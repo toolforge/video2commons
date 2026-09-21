@@ -20,7 +20,7 @@ finish on a restart, so an orphan would otherwise block it in `deactivating`
 forever.
 
 `utils/healthcheck.sh` runs every 5 minutes as root and restarts the service if
-it is down or does not answer to `celery inspect ping`, and force kills a unit
+it is down or has not answered to `celery inspect ping` for 100 consecutive runs (about 8 hours), and force kills a unit
 stuck while stopping. `utils/deploy-cloudvps-encoders.sh` runs it with `--check`
 after `puppet apply`, since Puppet only queues the restart (`--no-block`), and
 fails the deployment if the worker does not become healthy.
