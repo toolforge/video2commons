@@ -59,8 +59,11 @@ YOUTUBE_REGEX = (
     r"(watch\?.*?(?=v=)v=|embed/|v/|.+\?v=)?([^&=%\?]{11})"
 )
 
+# A uuid1, optionally followed by the original file's extension. Must accept
+# what video2commons.frontend.upload.new_filekey generates.
 FILEKEY_REGEX = re.compile(
-    r"^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+    r"^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}"
+    r"(\.[a-z0-9]{1,4})?$"
 )
 
 UPLOADS_DIR = os.path.join(
