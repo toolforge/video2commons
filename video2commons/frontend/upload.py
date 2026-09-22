@@ -26,7 +26,10 @@ import shutil
 from flask import request, jsonify
 
 RE_CONTENT_RANGE = re.compile(r"^bytes (\d+)-(\d+)/(\d+)$")
-RE_ALLOWED_FILEKEYS = re.compile(r"^[a-zA-Z0-9-]+$")
+# A filekey is a uuid1, optionally followed by the original file's extension
+# (see new_filekey below).
+RE_ALLOWED_FILEKEYS = re.compile(r"^[a-zA-Z0-9-]+(\.[a-z0-9]{1,4})?$")
+RE_EXTENSION = re.compile(r"^[a-z0-9]{1,4}$")
 
 
 class WrongOffset(Exception):
@@ -41,6 +44,26 @@ def getpath(digest):
     )
 
 
+def new_filekey(filename):
+    """Generate a filekey for a new upload, keeping the original extension.
+
+    video2commons.backend.download picks the download size limit to use based
+    on the extension found in the (rewritten) "uploads:" URL. Without this,
+    directly uploaded files always fall back to the smallest limit since the
+    filekey used to carry no extension at all, regardless of the actual file
+    type, causing large-but-legitimate mp4/mov uploads to be rejected outright
+    before any conversion is attempted.
+    """
+    ext = os.path.splitext(filename or "")[1][1:].lower()
+    if not RE_EXTENSION.match(ext):
+        ext = ""
+
+    filekey = str(uuid.uuid1())
+    if ext:
+        filekey += "." + ext
+    return filekey
+
+
 def stat(permpath):
     return os.path.getsize(permpath)
 
@@ -50,8 +73,8 @@ def upload():
     f = request.files["file"]
     assert f, "Where's my file?"
 
-    filekey = request.form.get("filekey") or str(uuid.uuid1())
-    assert RE_ALLOWED_FILEKEYS.match("filekey"), "Unacceptable file key"
+    filekey = request.form.get("filekey") or new_filekey(f.filename)
+    assert RE_ALLOWED_FILEKEYS.match(filekey), "Unacceptable file key"
 
     permpath = getpath(filekey)
 
