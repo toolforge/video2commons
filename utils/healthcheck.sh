@@ -32,10 +32,10 @@ CELERY_APP=${CELERY_APP:-video2commons.backend.worker}
 EXPECTED_NODES=${CELERYD_NODES:-1}
 STUCK_STOP_SECS=${STUCK_STOP_SECS:-900}
 PING_ATTEMPTS=3
-# A worker is only restarted after this many consecutive failed runs (about 8
-# hours with a run every 5 minutes), so that a healthy worker is never restarted
-# because of failed pings.
-UNRESPONSIVE_RUNS=100
+# A worker is only restarted after this many consecutive failed runs (about 24
+# hours with a run every 5 minutes), so that a healthy worker encoding a very
+# large file is never restarted because of failed pings.
+UNRESPONSIVE_RUNS=288
 FAILURES_FILE=/run/v2c-healthcheck.failures
 PYTHON=$(dirname "$CELERY_BIN")/python3
 
