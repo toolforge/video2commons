@@ -85,6 +85,7 @@
 	"unsupported-format-error": "無法編碼檔案。這可能是由於格式不支援或是設定不相容造成的。請回報錯誤以便我們進行調查。",
 	"video-not-found-error": "提供的 URL 無法找到該檔案。請使用不同的 URL 建立一個新任務。",
 	"output-too-large-error": "輸出檔案過大，無法上傳到維基共享資源。目前無法上傳大於 5 GiB 的檔案。請參閱維基共享資源上的{{#a}}最大檔案大小{{/a}}頁面來了解更多資訊。",
+	"task-stopped-responding": "轉換過程費時過久，已停止回應。請稍後再試。",
 	"youtube-bot-error": "由於 YouTube 偵測到機器人行為，影片無法下載。請稍後 1 至 3 小時候再重試。",
 	"youtube-private-error": "該影片無法從 YouTube 下載，因為被設定成私有影片。",
 	"youtube-ratelimit-error": "由於速率限制，檔案現在無法從 YouTube 下載。請稍後 1 至 3 小時後再試一次。"
