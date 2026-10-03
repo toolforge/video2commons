@@ -26,6 +26,6 @@
     "express": "^5.2.1",
     "redis": "^5.11.0",
     "request": "^2.88.2",
-    "socket.io": "^4.8.3"
+    "socket.io": "^4.8.4"
   }
 }
