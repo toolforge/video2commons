@@ -287,7 +287,7 @@ def upload_subtitles(
             langname = langdesc["language"]
             del langdesc["language"]
             if langdesc:
-                langname += " (%s)" % ", ".join(list(langdesc.values()))
+                langname += " ({})".format(", ".join(list(langdesc.values())))
 
             statuscallback("Loading subtitles in " + langname, int(percent))
             subtitletext = ""
@@ -304,7 +304,7 @@ def upload_subtitles(
             if format.lower() != "subrip":
                 target = filename + ".srt"
                 cmd = [ffmpeg_location, "-i", filename, "-f", "srt", target]
-                statuscallback("Running cmd: %s" % cmd, None)
+                statuscallback(f"Running cmd: {cmd}", None)
                 subprocess.check_call(cmd, stderr=None)
                 filename = target
 

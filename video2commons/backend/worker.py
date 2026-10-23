@@ -173,7 +173,7 @@ def main(
             s.text = text
         if percent is not None:
             s.percent = percent
-        print("%d: %s" % (s.percent, s.text))
+        print(f"{int(s.percent)}: {s.text}")
 
         self.update_state(state="PROGRESS", meta={"text": s.text, "percent": s.percent})
 
@@ -293,9 +293,7 @@ def main(
     except pywikibot.exceptions.Error:
         exc_info = sys.exc_info()
         raise TaskError(
-            ("pywikibot.Error: %s: %s" % (exc_info[0].__name__, exc_info[1])).encode(
-                "utf-8"
-            )
+            (f"pywikibot.Error: {exc_info[0].__name__}: {exc_info[1]}").encode("utf-8")
         ).with_traceback(exc_info[2])
     else:
         statuscallback("Done!", 100)

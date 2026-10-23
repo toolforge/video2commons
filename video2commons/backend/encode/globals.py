@@ -58,16 +58,16 @@ def format_size(num, suffix="B"):
     # Source: StackOverflow
     for unit in ["", "K", "M", "G", "T", "P", "E", "Z"]:
         if abs(num) < 1024.0:
-            return "%3.1f%s%s" % (num, unit, suffix)
+            return f"{num:3.1f}{unit}{suffix}"
         num /= 1024.0
-    return "%.1f%s%s" % (num, "Y", suffix)
+    return "{:.1f}{}{}".format(num, "Y", suffix)
 
 
 def format_time(s):
     """Format the time from number of seconds."""
     m, s = divmod(s, 60)
     h, m = divmod(m, 60)
-    return "%d:%02d:%02d" % (h, m, s)
+    return f"{int(h)}:{int(m):02d}:{int(s):02d}"
 
 
 def time_to_seconds(time):
