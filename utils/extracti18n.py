@@ -46,8 +46,8 @@ data = {
     "rtl": [],
     "alllangs": [],
 }
-rFallback = re.compile(r"fallback = '(.*?)'", re.I)
-rIsRtl = re.compile(r"rtl = true", re.I)
+rFallback = re.compile(r"fallback = '(.*?)'", re.IGNORECASE)
+rIsRtl = re.compile(r"rtl = true", re.IGNORECASE)
 for file in os.listdir(msgDir):
     filePath = msgDir + "/" + file
     if file in [".", ".."] or not os.path.isfile(filePath):

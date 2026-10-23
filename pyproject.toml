@@ -10,7 +10,7 @@ dev = ["ruff>=0.17.1"]
 # Ruff 0.16 enables far more rules by default (413 instead of 59). Keep the
 # rule set used so far; new rules can be adopted one by one.
 select = ["E4", "E7", "E9", "F"]
-extend-select = ["UP004", "UP008", "UP024", "UP034", "PIE790", "RET501"]
+extend-select = ["UP004", "UP008", "UP024", "UP034", "PIE790", "RET501", "FURB167"]
 ignore = ["E722"]
 
 [tool.ruff.format]

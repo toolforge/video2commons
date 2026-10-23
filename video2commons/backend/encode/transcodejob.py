@@ -572,7 +572,7 @@ class WebVideoTranscodeJob:
         thread.start()
 
         re_duration = re.compile(r"Duration: (\d{2}:\d{2}:\d{2})")
-        re_position = re.compile(r"time=(\d{2}:\d{2}:\d{2})", re.I)
+        re_position = re.compile(r"time=(\d{2}:\d{2}:\d{2})", re.IGNORECASE)
 
         duration = None
         position = None
