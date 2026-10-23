@@ -330,7 +330,6 @@ def upload_subtitles(
             statuscallback(
                 f"{type(e).__name__}: {e} \n\n{traceback.format_exc()}", None
             )
-            pass
 
 
 def parse_utf8(bytestring):
