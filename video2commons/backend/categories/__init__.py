@@ -38,6 +38,7 @@ def has_video_track(source: str) -> bool:
         ],
         capture_output=True,
         text=True,
+        check=False,
     )
 
     if result.returncode == 0:
@@ -66,6 +67,7 @@ def has_audio_track(source: str) -> bool:
         ],
         capture_output=True,
         text=True,
+        check=False,
     )
 
     if result.returncode == 0:

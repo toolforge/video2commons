@@ -63,6 +63,7 @@ def get_container_subtitle_languages(filepath):
         ],
         capture_output=True,
         text=True,
+        check=False,
     )
 
     if result.returncode != 0:
@@ -126,6 +127,7 @@ def upload_container_subtitles(
         ],
         capture_output=True,
         text=True,
+        check=False,
     )
 
     if result.returncode != 0:
@@ -196,6 +198,7 @@ def upload_container_subtitles(
             ],
             capture_output=True,
             text=True,
+            check=False,
         )
 
         percent += 50.0 / len(streams)

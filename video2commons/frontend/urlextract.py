@@ -126,6 +126,7 @@ def predict_task_type_ffprobe(filepath):
         ],
         capture_output=True,
         text=True,
+        check=False,
     )
 
     if result.returncode != 0:
