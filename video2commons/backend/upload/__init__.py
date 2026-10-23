@@ -95,8 +95,9 @@ def upload(
         upload_warnings = []
 
         # Filter warnings using a custom callback instead of a list so we can
-        # collect a list of UploadErrors corresponding to fatal warnings.
-        def ignore_warnings(warnings):
+        # collect a list of UploadErrors corresponding to fatal warnings. The
+        # list is bound as a default argument to be the one of this attempt.
+        def ignore_warnings(warnings, upload_warnings=upload_warnings):
             upload_warnings.extend(
                 w for w in warnings if w.code not in IGNORED_WARNINGS
             )
