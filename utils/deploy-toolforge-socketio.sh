@@ -30,8 +30,10 @@ if [ $? -ne 0 ]; then
     exit 1
 fi
 
-# Restart the webservice so any JavaScript changes are applied.
-ssh "$V2C_USERNAME@$bastion_host" "become $V2C_SERVICE_NAME toolforge webservice --backend=kubernetes node18 restart"
+# Restart the webservice so any JavaScript changes are applied. The node20
+# image only runs video2commons-socketio/start.sh, which starts the server
+# with the Node.js version installed with nvm in the tool's home.
+ssh "$V2C_USERNAME@$bastion_host" "become $V2C_SERVICE_NAME toolforge webservice --backend=kubernetes node20 restart"
 
 # Cleanup the SSH control socket that we use to keep the connection alive
 # across multiple ssh command executions.

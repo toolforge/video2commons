@@ -2,7 +2,7 @@
   "name": "video2commons-socketio",
   "private": true,
   "scripts": {
-    "start": "npm install && node server.js",
+    "start": "bash ~/video2commons-socketio/start.sh",
     "build": "gulp build",
     "watch": "gulp",
     "test": "vitest run",
