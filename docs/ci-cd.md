@@ -405,28 +405,31 @@ and `npm ci`) and `tail ~/node.log` (server).
 ### Python on Toolforge
 
 The frontend runs on Toolforge's Python image: to change its Python version,
-the venv must be rebuilt in the new image, for `video2commons` and for
-`video2commons-test`. As the tool (`become video2commons`):
+its venv must be rebuilt in the new image, for `video2commons` and for
+`video2commons-test`. Do it **before** deploying, since the deployment
+restarts the webservice with the new image. As the tool
+(`become video2commons`), build the new venv next to the current one, from a
+shell in the new image, while the webservice keeps running:
 
 ```bash
-toolforge webservice stop
-mv ~/www/python/venv ~/www/python/venv-old
 toolforge webservice python3.13 shell
 ```
 
 In that shell:
 
 ```bash
-python3 -m venv ~/www/python/venv
-~/www/python/venv/bin/pip install -U pip
-~/www/python/venv/bin/pip install -r ~/video2commons/frontend/requirements.txt -r ~/video2commons/backend/requirements.txt
+python3 -m venv ~/www/python/venv-new
+~/www/python/venv-new/bin/pip install -U pip
+~/www/python/venv-new/bin/pip install -r ~/video2commons/frontend/requirements.txt -r ~/video2commons/backend/requirements.txt
 exit
 ```
 
-Then start the webservice with the new image, and reload the jobs, whose
-image must match the venv:
+Then swap the venvs and restart with the new image (a restart keeps the old
+image), and reload the jobs, whose image must match the venv:
 
 ```bash
+toolforge webservice stop
+mv ~/www/python/venv ~/www/python/venv-old && mv ~/www/python/venv-new ~/www/python/venv
 toolforge webservice python3.13 start
 toolforge jobs load ~/jobs.yaml
 ```
