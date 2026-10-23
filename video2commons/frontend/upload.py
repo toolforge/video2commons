@@ -108,7 +108,7 @@ def handle_chunked(f, permpath, content_range):
         content_range = RE_CONTENT_RANGE.match(content_range)
         assert content_range, "Invalid content range!"
 
-        cr1, cr2, cr3 = [int(content_range.group(i)) for i in range(1, 4)]
+        cr1, _, cr3 = [int(content_range.group(i)) for i in range(1, 4)]
 
         if os.path.isfile(permpath):
             size = stat(permpath)

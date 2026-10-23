@@ -296,7 +296,7 @@ class WebVideoTranscodeJob:
         self.output("Running cmd: " + cmd + "\n")
 
         # Right before we output remove the old file
-        retval, shellOutput = self.run_shell_exec(cmd, track=p != 1)
+        retval, _ = self.run_shell_exec(cmd, track=p != 1)
 
         if int(retval) != 0:
             return cmd + "\nExitcode: " + str(retval)
