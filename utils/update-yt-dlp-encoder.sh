@@ -7,7 +7,9 @@
 
 set -e
 
-VENV_PIP=/srv/v2c/venv/bin/pip3
+# Provides CELERY_BIN, in the venv of the workers.
+. /etc/default/v2ccelery
+VENV_PIP="$(dirname "$CELERY_BIN")/pip3"
 
 installed_version() {
     "$VENV_PIP" show yt-dlp | sed -n 's/^Version: //p'

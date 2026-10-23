@@ -4,6 +4,20 @@ $redis_pw = 'REDACTED'
 $redis_host = 'video-redis-bookworm.video.eqiad1.wikimedia.cloud'
 $http_host = 'v2c.wmflabs.org'
 
+# Python of the workers. Debian bookworm only ships 3.11, so this version is
+# installed with uv (python-build-standalone) in /opt/python. Each version gets
+# its own venv: after a change, the workers still finishing their tasks on the
+# previous version keep their venv until they restart.
+$python_version = '3.13.17'
+$venv = "/srv/v2c/venv-${python_version}"
+$uv_environment = [
+    'HOME=/root',
+    'UV_CACHE_DIR=/var/cache/uv',
+    'UV_PYTHON_INSTALL_BIN=0',
+    'UV_PYTHON_INSTALL_DIR=/opt/python',
+    'UV_PYTHON_PREFERENCE=only-managed',
+]
+
 # Configure encoding05 and encoding06 to use 1 worker and listen to the heavy
 # queue so that resource intensive tasks don't bring down workers.
 if $facts['hostname'] in ['encoding05', 'encoding06'] {
@@ -83,12 +97,27 @@ exec { 'git-clone-v2c':
     notify  => Service['v2ccelery'],
 }
 
+exec { 'install-uv':
+    command  => '/usr/bin/python3 -m venv /opt/uv && /opt/uv/bin/pip install uv',
+    creates  => '/opt/uv/bin/uv',
+    provider => 'shell',
+    require  => Package['python3-full'],
+}
+
+exec { 'install-python':
+    command     => "/opt/uv/bin/uv python install ${python_version}",
+    unless      => "/opt/uv/bin/uv python find ${python_version}",
+    environment => $uv_environment,
+    require     => Exec['install-uv'],
+}
+
 exec { 'create-venv':
-    command => '/usr/bin/python3 -m venv /srv/v2c/venv',
-    creates => '/srv/v2c/venv',
-    require => [
+    command     => "/opt/uv/bin/uv venv --seed --python ${python_version} ${venv}",
+    creates     => $venv,
+    environment => $uv_environment,
+    require     => [
         Exec['git-clone-v2c'],
-        Package['python3-full'],
+        Exec['install-python'],
     ],
 }
 
@@ -151,8 +180,9 @@ exec { 'git-pull-v2c':
 }
 
 exec { 'pip-install-requirements':
-    command => '/srv/v2c/venv/bin/pip3 install -Ur /srv/v2c/video2commons/backend/requirements.txt',
+    command => "${venv}/bin/pip3 install -Ur /srv/v2c/video2commons/backend/requirements.txt",
     require => [
+        Exec['create-venv'],
         Exec['git-pull-v2c'],
         Package['python3-dev'],
         Package['python3-pip'],
@@ -241,7 +271,7 @@ file { '/etc/systemd/system/cron.service.d/override.conf':
 $celeryd_config = "# THIS FILE IS MANAGED BY MANUAL PUPPET
 CELERYD_NODES=1
 CELERYD_OPTS=\"--concurrency=${celeryd_concurrency} -Q ${celeryd_queues}\"
-CELERY_BIN=\"/srv/v2c/venv/bin/celery\"
+CELERY_BIN=\"${venv}/bin/celery\"
 CELERY_APP=\"video2commons.backend.worker\"
 CELERYD_MULTI=\"multi\"
 CELERYD_LOG_LEVEL=\"INFO\"
@@ -356,7 +386,7 @@ cron::job { 'v2chealthcheck':
     require => Service['v2ccelery'],
 }
 cron::job { 'v2cstats':
-    command => '/srv/v2c/venv/bin/python3 /srv/v2c/utils/stats.py',
+    command => "${venv}/bin/python3 /srv/v2c/utils/stats.py",
     user    => 'tools.video2commons',
     minute  => '0',
     require => Service['v2ccelery'],

@@ -106,7 +106,7 @@ tests/                  JavaScript tests (Vitest)
 
 ## Development
 
-You need Node.js (LTS) and [uv](https://docs.astral.sh/uv/) with Python 3.11.
+You need Node.js (LTS) and [uv](https://docs.astral.sh/uv/) with Python 3.13.
 
 ```bash
 npm ci              # install the JavaScript tooling

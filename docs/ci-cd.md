@@ -65,7 +65,7 @@ flowchart LR
     check["📦 <b>check</b><br/>Debian bookworm · Node 24<br/><code>npx gulp build</code>"]
     tests["🧪 <b>tests</b><br/>Node 24<br/><code>npm test</code> (Vitest)"]
     biome["🎨 <b>biome</b><br/>JS lint + format<br/><code>biome ci .</code>"]
-    ruff["🐍 <b>ruff</b><br/>Python 3.11 via uv<br/><code>ruff check</code> + <code>ruff format --check</code>"]
+    ruff["🐍 <b>ruff</b><br/>Python 3.13.17 via uv<br/><code>ruff check</code> + <code>ruff format --check</code>"]
 
     check & tests & biome & ruff --> ok(["✅ Ready to merge"])
 
@@ -117,7 +117,8 @@ bastion (`login.toolforge.org`).
 ### Web frontend (Toolforge)
 
 The frontend lives in `/data/project/video2commons` (or `video2commons-test`),
-a git checkout run by Toolforge's `python3.11` webservice (uWSGI).
+a git checkout run by Toolforge's `python3.13` webservice (uWSGI), with its
+venv in `~/www/python/venv`.
 [`utils/deploy-toolforge-frontend.sh`](../utils/deploy-toolforge-frontend.sh):
 
 ```mermaid
@@ -138,7 +139,7 @@ sequenceDiagram
     B->>T: become video2commons · git pull
     GH->>B: scp the minified files to /tmp
     B->>T: become video2commons · copy them into static/ and templates/
-    B->>T: toolforge webservice python3.11 restart
+    B->>T: toolforge webservice python3.13 restart
     end
 ```
 
@@ -238,7 +239,7 @@ flowchart LR
     subgraph code ["📦 Code in /srv/v2c"]
         direction TB
         c1["git clone<br/>then git pull"]
-        c2["Python venv<br/>pip install -U"]
+        c2["Python 3.13.17 (uv)<br/>venv · pip install -U"]
         c3["config.json<br/>from the secrets"]
     end
     subgraph sys ["🧱 System"]
@@ -276,6 +277,12 @@ Things to know:
   [`requirements.txt`](../video2commons/backend/requirements.txt) on every
   run, and they are not pinned: Pywikibot even comes from its `master`
   branch. A deployment can therefore change more than the merged commits.
+- **Python is not Debian's.** Debian bookworm only ships Python 3.11, so
+  Puppet installs the version set by `$python_version` with
+  [uv](https://docs.astral.sh/uv/) in `/opt/python`, and creates a venv per
+  version (`/srv/v2c/venv-<version>`). After a version change, the workers
+  still finishing their tasks keep the previous venv until they restart; it
+  can then be deleted by hand.
 - **Heavy encoders** (`encoding05`, `encoding06`) get a different
   configuration from the same manifest: one task at a time, `heavy` and
   `celery` queues. The others run two tasks at a time on the `celery` queue.
@@ -394,6 +401,40 @@ toolforge webservice --backend=kubernetes node20 start
 
 To check the result: `kubectl get pods`, `kubectl logs <pod>` (start script
 and `npm ci`) and `tail ~/node.log` (server).
+
+### Python on Toolforge
+
+The frontend runs on Toolforge's Python image: to change its Python version,
+its venv must be rebuilt in the new image, for `video2commons` and for
+`video2commons-test`. Do it **before** deploying, since the deployment
+restarts the webservice with the new image. As the tool
+(`become video2commons`), build the new venv next to the current one, from a
+shell in the new image, while the webservice keeps running:
+
+```bash
+toolforge webservice python3.13 shell
+```
+
+In that shell:
+
+```bash
+python3 -m venv ~/www/python/venv-new
+~/www/python/venv-new/bin/pip install -U pip
+~/www/python/venv-new/bin/pip install -r ~/video2commons/frontend/requirements.txt -r ~/video2commons/backend/requirements.txt
+exit
+```
+
+Then swap the venvs and restart with the new image (a restart keeps the old
+image), and reload the jobs, whose image must match the venv:
+
+```bash
+toolforge webservice stop
+mv ~/www/python/venv ~/www/python/venv-old && mv ~/www/python/venv-new ~/www/python/venv
+toolforge webservice python3.13 start
+toolforge jobs load ~/jobs.yaml
+```
+
+Once everything works, `~/www/python/venv-old` can be deleted.
 
 ### On an encoder
 
