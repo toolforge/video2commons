@@ -151,10 +151,33 @@ date by a [scheduled job](#automatic-maintenance).
 
 [`utils/deploy-toolforge-socketio.sh`](../utils/deploy-toolforge-socketio.sh)
 does a `git pull` in `/data/project/video2commons-socketio`, then restarts the
-`node18` Kubernetes webservice. Its entry point,
-[`www/js/server.js`](../www/js/server.js), starts
-[`video2commons-socketio/index.js`](../video2commons-socketio/index.js) and
-writes its logs to `~/node.log`.
+`node20` Kubernetes webservice.
+
+Toolforge's newest Node.js image (`node20`) is too old, so the server doesn't
+run on it: following [Toolforge's advice](https://wikitech.wikimedia.org/wiki/Help:Toolforge/Node.js#Using_other_versions_of_node),
+it runs on a recent Node.js installed with [nvm](https://github.com/nvm-sh/nvm)
+in the tool's home. On each start of the webservice:
+
+```mermaid
+%%{init: {"flowchart": {"curve": "basis", "nodeSpacing": 25}}}%%
+flowchart LR
+    img(["📦 node20 image<br/><code>npm start</code><br/>in ~/www/js"]) --> sh["🐚 <b>start.sh</b><br/>Node.js from ~/.nvm<br/>(installed if missing)"]
+    sh --> ci["📥 <code>npm ci --omit=dev</code><br/>exact locked versions"]
+    ci --> srv(["⚡ <b>www/js/server.js</b><br/>logs in ~/node.log"])
+
+    classDef a fill:#f1ebfe,stroke:#8b5cf6,stroke-width:2px,color:#3b0764
+    classDef b fill:#e8f1fd,stroke:#3b82f6,stroke-width:2px,color:#1e3a8a
+    classDef c fill:#e7f8ee,stroke:#16a34a,stroke-width:2px,color:#14532d
+    class img a
+    class sh,ci b
+    class srv c
+```
+
+The Node.js version is set by `NODE_VERSION` in
+[`video2commons-socketio/start.sh`](../video2commons-socketio/start.sh): to
+upgrade, change it and deploy, the new version is installed on the next
+start. nvm itself must be installed once in the tool's home (see the
+[runbook](#socketio-and-nodejs)).
 
 ### Encoders (Cloud VPS)
 
@@ -343,6 +366,34 @@ flowchart LR
 
 There is no dedicated rollback: deployments always take `master`.
 **Revert** the faulty commit on `master`, then run the deployment again.
+
+### Socket.IO and Node.js
+
+As the tool (`become video2commons-socketio`). Install nvm once, from its
+latest release:
+
+```bash
+git clone https://github.com/nvm-sh/nvm.git ~/.nvm
+cd ~/.nvm && git checkout "$(git describe --abbrev=0 --tags --match 'v[0-9]*' "$(git rev-list --tags --max-count=1)")"
+```
+
+Install the Node.js version of `start.sh` ahead of time, so the next start
+doesn't have to download it:
+
+```bash
+. ~/.nvm/nvm.sh && nvm install 26.12.1
+```
+
+Switching the webservice to another image (here from `node18` to `node20`)
+needs a stop and a start, a restart keeps the old image:
+
+```bash
+toolforge webservice stop
+toolforge webservice --backend=kubernetes node20 start
+```
+
+To check the result: `kubectl get pods`, `kubectl logs <pod>` (start script
+and `npm ci`) and `tail ~/node.log` (server).
 
 ### On an encoder
 
