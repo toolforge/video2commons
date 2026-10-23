@@ -31,7 +31,7 @@ redisconnection = Redis(host=redis_host, db=3, password=redis_pw, decode_respons
 
 def check_banned():
     """Check for banned cases."""
-    return None
+    return
 
 
 def generate_csrf_token():
