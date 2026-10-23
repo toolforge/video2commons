@@ -103,8 +103,9 @@ class WebVideoTranscodeJob:
         @return File
         """
         if not hasattr(self, "file"):
-            self.file = open(self.source, "r")
-            self.file.close()
+            # Opening the file checks that it exists.
+            with open(self.source) as self.file:
+                pass
 
         return self.file
 
@@ -115,8 +116,9 @@ class WebVideoTranscodeJob:
         @return string
         """
         if not hasattr(self, "targetEncodeFile"):
-            self.targetEncodeFile = open(self.target, "w")
-            self.targetEncodeFile.close()
+            # Create the target file, or empty it.
+            with open(self.target, "w") as self.targetEncodeFile:
+                pass
 
         return self.targetEncodeFile.name
 
