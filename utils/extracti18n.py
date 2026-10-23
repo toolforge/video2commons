@@ -29,10 +29,8 @@ import json
 
 if not len(sys.argv) > 1 or "/messages" not in sys.argv[1]:
     print(
-        (
-            "usage: python " + sys.argv[0] + " <dir>\n\n"
-            "  <dir>  The path to mediawiki/languages/messages\n"
-        )
+        "usage: python " + sys.argv[0] + " <dir>\n\n"
+        "  <dir>  The path to mediawiki/languages/messages\n"
     )
     sys.exit(1)
 
