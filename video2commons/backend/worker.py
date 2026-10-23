@@ -50,6 +50,7 @@ from video2commons.shared.stats import update_task_stats
 from video2commons.shared.tasks import get_task_status, publish_notification
 
 logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 # Reject all cookies from MediaWiki API responses.
 #
@@ -144,7 +145,8 @@ def main(
     try:
         update_task_stats(redisconnection, self.request.id, remove=False)
     except Exception:
-        pass  # We don't want to fail the task if we can't update stats.
+        # We don't want to fail the task if we can't update stats.
+        logger.exception("Could not update the stats of task %s", self.request.id)
 
     # Check for 10G of disk space, refuse to run if it is unavailable
     st = os.statvfs("/srv")
@@ -310,4 +312,5 @@ def main(
         try:
             update_task_stats(redisconnection, self.request.id, remove=True)
         except Exception:
-            pass  # We don't want to fail the task if we can't update stats.
+            # We don't want to fail the task if we can't update stats.
+            logger.exception("Could not update the stats of task %s", self.request.id)

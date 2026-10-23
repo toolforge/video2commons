@@ -388,7 +388,8 @@ def run_task_internal(filename, params, queue):
     try:
         stats.increment_queue_counter(redisconnection)
     except Exception:
-        pass  # We don't want to fail the API call if we can't update stats.
+        # We don't want to fail the API call if we can't update stats.
+        current_app.logger.exception("Could not update the queue stats")
 
     publish_notification(
         redisconnection, "add", {"taskid": taskid, "user": session["username"]}

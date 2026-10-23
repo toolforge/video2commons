@@ -1,7 +1,10 @@
 """Utility functions for getting statistics about the worker pool."""
 
 import json
+import logging
 import time
+
+logger = logging.getLogger(__name__)
 
 LOCK_KEY = "stats_lock"
 
@@ -134,7 +137,8 @@ def release_write_lock(conn):
     try:
         conn.delete(LOCK_KEY)
     except Exception:
-        pass
+        # The lock expires by itself after a few seconds anyway.
+        logger.exception("Could not release the stats lock")
 
 
 def get_worker_stats(conn):
