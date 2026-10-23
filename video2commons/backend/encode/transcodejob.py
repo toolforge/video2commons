@@ -57,7 +57,7 @@ STALE_TIMEOUT_SECS = 2 * 60 * 60  # 2 hours
 KILL_TIMEOUT_SECS = 2 * 60  # 2 minutes
 
 
-class WebVideoTranscodeJob(object):
+class WebVideoTranscodeJob:
     """Job class."""
 
     def __init__(
