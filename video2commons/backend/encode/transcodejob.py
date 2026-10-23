@@ -64,7 +64,7 @@ class WebVideoTranscodeJob:
         source,
         target,
         key,
-        preserve={},
+        preserve=None,
         statuscallback=None,
         errorcallback=None,
         source_info=None,
@@ -75,7 +75,7 @@ class WebVideoTranscodeJob:
         self.target = os.path.abspath(target)
         self.key = key
         self.preserve = {"video": False, "audio": False}
-        self.preserve.update(preserve)
+        self.preserve.update(preserve or {})
         self.statuscallback = statuscallback or (lambda text, percent: None)
         self.errorcallback = errorcallback or (lambda text: None)
         self.removeDuplicates = True
