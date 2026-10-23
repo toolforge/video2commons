@@ -334,9 +334,8 @@ class WebVideoTranscodeJob:
         # Workaround: Limit the number of threads for 4k (and higher) video for
         # AV1 transcoding due to limited memory on the workers.
         video = get_video(self.source_info)
-        if video:
-            if video.video_width >= 3840 or video.video_height >= 2160:
-                threads = min(threads, av1_max_threads_4k)
+        if video and (video.video_width >= 3840 or video.video_height >= 2160):
+            threads = min(threads, av1_max_threads_4k)
 
         cmd = " -threads " + str(threads)
 

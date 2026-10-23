@@ -41,10 +41,13 @@ def main():
 
     # Don't update stats if they've been updated recently by another job.
     existing_stats = get_worker_stats(app_conn)
-    if existing_stats and "last_updated_by_job" in existing_stats:
-        if int(time.time()) - existing_stats["last_updated_by_job"] < STALE_SECS:
-            print("Stats have been updated recently, skipping update.")
-            return
+    if (
+        existing_stats
+        and "last_updated_by_job" in existing_stats
+        and int(time.time()) - existing_stats["last_updated_by_job"] < STALE_SECS
+    ):
+        print("Stats have been updated recently, skipping update.")
+        return
 
     inspector = celery_app.control.inspect(timeout=5.0)
     stats = collect_worker_stats(queue_conn, inspector)

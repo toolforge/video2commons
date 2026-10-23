@@ -169,6 +169,7 @@ def download(
 def url_blacklisted(url):
     """Define download url blacklist."""
     parseresult = urlparse(url)
-    if parseresult.scheme in ["http", "https"]:
-        if parseresult.netloc.endswith(".googlevideo.com"):
-            raise TaskError("Your downloading URL has been blacklisted.")
+    if parseresult.scheme in ["http", "https"] and parseresult.netloc.endswith(
+        ".googlevideo.com"
+    ):
+        raise TaskError("Your downloading URL has been blacklisted.")
