@@ -13,7 +13,7 @@ try:
         tooldir = _os.path.expandvars("$TOOL_DATA_DIR/video2commons")
     with open(tooldir + "/../config.json", "r") as _f:
         _data = _json.load(_f)
-except IOError as _e:
+except OSError as _e:
     __import__("logging").exception(_e)
     _data = {}
 
