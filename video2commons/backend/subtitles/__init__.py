@@ -90,7 +90,7 @@ def get_subtitle_languages(subtitles):
     """Returns subtitle languages identified by yt-dlp."""
     languages = set()
 
-    for langcode, _ in subtitles.items():
+    for langcode in subtitles:
         try:
             langcode = str(langcodes.get(langcode))
         except LanguageTagError:
