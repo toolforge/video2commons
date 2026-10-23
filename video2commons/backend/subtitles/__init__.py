@@ -241,7 +241,7 @@ def upload_container_subtitles(
 
                 try:
                     text = text.decode(encoding)
-                except Exception:
+                except (LookupError, ValueError):  # Unknown or wrong encoding.
                     statuscallback(
                         f"Skipping subtitles with invalid encoding: {langcode}", None
                     )
@@ -259,7 +259,7 @@ def upload_container_subtitles(
             statuscallback(f"Finished uploading {langname} subtitles", int(percent))
         except TaskAbort:
             raise
-        except Exception as e:
+        except Exception as e:  # noqa: BLE001 - reported, the next subtitle goes on
             percent += 50.0 / len(subtitles)
             statuscallback(
                 f"{type(e).__name__}: {e}\n\n{traceback.format_exc()}", int(percent)
@@ -331,7 +331,7 @@ def upload_subtitles(
             statuscallback("Finished processing subtitles in " + langname, int(percent))
         except TaskAbort:
             raise
-        except Exception as e:
+        except Exception as e:  # noqa: BLE001 - reported, the next subtitle goes on
             statuscallback(
                 f"{type(e).__name__}: {e} \n\n{traceback.format_exc()}", None
             )

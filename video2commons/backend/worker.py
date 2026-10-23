@@ -272,7 +272,7 @@ def main(
                 )
             except TaskAbort:
                 raise
-            except Exception as e:
+            except Exception as e:  # noqa: BLE001 - subtitles must not fail the upload
                 statuscallback(type(e).__name__ + ": " + str(e), None)
                 print(e)
         elif subtitles_requested:
@@ -289,7 +289,7 @@ def main(
                 )
             except TaskAbort:
                 raise
-            except Exception as e:
+            except Exception as e:  # noqa: BLE001 - subtitles must not fail the upload
                 statuscallback(type(e).__name__ + ": " + str(e), None)
                 print(e)
     except pywikibot.exceptions.Error:

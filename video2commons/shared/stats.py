@@ -125,6 +125,7 @@ def acquire_write_lock(conn):
             if lock_acquired:
                 return True
         except Exception:
+            logger.exception("Could not acquire the stats lock")
             return False
 
         time.sleep(0.1)

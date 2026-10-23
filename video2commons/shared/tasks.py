@@ -53,7 +53,7 @@ def get_task_status(conn, task_id):
 
     try:
         state = res.state
-    except Exception:
+    except Exception:  # noqa: BLE001 - shown to the user with the traceback
         task.update(
             {
                 "status": "fail",
