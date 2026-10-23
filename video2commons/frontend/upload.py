@@ -34,7 +34,7 @@ RE_EXTENSION = re.compile(r"^[a-z0-9]{1,4}$")
 
 class WrongOffset(Exception):
     def __init__(self, offset):
-        super(WrongOffset, self).__init__(str(offset))
+        super().__init__(str(offset))
         self.offset = offset
 
 
