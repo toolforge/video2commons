@@ -20,7 +20,6 @@
 """video2commons url extracter."""
 
 from collections import OrderedDict
-from typing import Optional
 from video2commons.backend.encode.transcode import WebVideoTranscode
 
 import json
@@ -373,7 +372,7 @@ def _license(url, ie_key, title, info):
     return default
 
 
-def _normalize_license(ie_key, info) -> Optional[str]:
+def _normalize_license(ie_key, info) -> str | None:
     """Normalize license names to be more consistent across sources."""
     license_name = str(info.get("license") or "").strip()
     if not license_name:
