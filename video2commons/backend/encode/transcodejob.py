@@ -599,7 +599,7 @@ class WebVideoTranscodeJob:
                             position = time_to_seconds(position_match.group(1))
                             if duration and position:
                                 newpercentage = min(
-                                    int(math.floor(100 * position / duration)), 100
+                                    math.floor(100 * position / duration), 100
                                 )
 
                     if newpercentage != percentage:
