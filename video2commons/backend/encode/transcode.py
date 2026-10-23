@@ -22,6 +22,8 @@ WebVideoTranscode provides settings.
 WebVideoTranscode/WebVideoTranscode.php under GPLv2
 """
 
+from typing import ClassVar
+
 
 class WebVideoTranscode:
     """
@@ -35,7 +37,7 @@ class WebVideoTranscode:
     http://firefogg.org/dev/index.html
     """
 
-    settings = {
+    settings: ClassVar[dict[str, dict]] = {
         "ogv": {
             "videoQuality": 7,
             "audioQuality": 6,
