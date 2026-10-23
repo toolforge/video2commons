@@ -1,7 +1,7 @@
 import json
 import requests
 
-from datetime import datetime, timedelta, timezone
+from datetime import datetime, timedelta, UTC
 from flask import current_app
 from typing import Any
 from video2commons.frontend.shared import redisconnection
@@ -22,9 +22,7 @@ class WcqsSession:
         """Queries the Wikimedia Commons Query Service."""
         retry_after_ts = self._check_retry()
         if retry_after_ts:
-            retry_after = int(
-                (retry_after_ts - datetime.now(timezone.utc)).total_seconds()
-            )
+            retry_after = int((retry_after_ts - datetime.now(UTC)).total_seconds())
             raise RuntimeError(f"Too many requests, try again in {retry_after} seconds")
 
         # Make the SPARQL request using the provided query.
@@ -69,19 +67,19 @@ class WcqsSession:
 
         if retry_after:
             retry_after_ts = datetime.fromisoformat(retry_after)
-            if retry_after_ts > datetime.now(timezone.utc):
+            if retry_after_ts > datetime.now(UTC):
                 return retry_after_ts
 
         return None
 
     def _set_retry(self, retry_after: int):
         """Updates retry-after value in Redis."""
-        retry_after_ts = datetime.now(timezone.utc) + timedelta(seconds=retry_after)
+        retry_after_ts = datetime.now(UTC) + timedelta(seconds=retry_after)
 
         redisconnection.setex(
             "wcqs:retry-after",
             retry_after,
-            retry_after_ts.replace(tzinfo=timezone.utc).isoformat(),
+            retry_after_ts.replace(tzinfo=UTC).isoformat(),
         )
 
     def _get_cookies(self) -> list[dict[str, Any]]:
