@@ -563,7 +563,7 @@ class WebVideoTranscodeJob:
             stderr=None,
             universal_newlines=True,
             shell=True,
-            preexec_fn=os.setsid,
+            start_new_session=True,
         )
         lineQueue = queue.Queue()
         thread = threading.Thread(
