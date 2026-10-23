@@ -4,7 +4,7 @@ version = "0.1.0"
 requires-python = ">=3.11"
 
 [dependency-groups]
-dev = ["ruff>=0.15.20"]
+dev = ["ruff>=0.17.1"]
 
 [tool.ruff.lint]
 # Ruff 0.16 enables far more rules by default (413 instead of 59). Keep the
