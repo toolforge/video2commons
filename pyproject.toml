@@ -10,8 +10,12 @@ dev = ["ruff>=0.17.1"]
 # Ruff 0.16 enables far more rules by default (413 instead of 59). Keep the
 # rule set used so far; new rules can be adopted one by one.
 select = ["E4", "E7", "E9", "F"]
-extend-select = ["UP004", "UP008", "UP024", "UP034", "PIE790", "RET501", "FURB167", "UP017", "UP006", "UP035", "UP045", "UP032", "I001", "PERF102", "C402", "RUF046", "RUF059", "SIM102", "B006", "RUF012", "B023", "SIM115", "PLW1510", "PLW1509", "UP031", "S110", "BLE001"]
+extend-select = ["UP004", "UP008", "UP024", "UP034", "PIE790", "RET501", "FURB167", "UP017", "UP006", "UP035", "UP045", "UP032", "I001", "PERF102", "C402", "RUF046", "RUF059", "SIM102", "B006", "RUF012", "B023", "SIM115", "PLW1510", "PLW1509", "UP031", "S110", "BLE001", "N999"]
 ignore = ["E722"]
+
+[tool.ruff.lint.per-file-ignores]
+# Pywikibot looks for a file with this exact name.
+"**/user-config.py" = ["N999"]
 
 [tool.ruff.lint.isort]
 combine-as-imports = true
