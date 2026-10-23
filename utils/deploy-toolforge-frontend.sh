@@ -61,7 +61,7 @@ if [ $? -ne 0 ]; then
 fi
 
 # Restart the webservice so any Python changes are applied.
-ssh "$V2C_USERNAME@$bastion_host" "become $V2C_SERVICE_NAME toolforge webservice python3.11 restart"
+ssh "$V2C_USERNAME@$bastion_host" "become $V2C_SERVICE_NAME toolforge webservice python3.13 restart"
 
 # Cleanup the SSH control socket that we use to keep the connection alive
 # across multiple ssh command executions.

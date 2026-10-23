@@ -1,8 +1,8 @@
-- command: python utils/cleanuptasks.py
+- command: www/python/venv/bin/python utils/cleanuptasks.py
   filelog: 'yes'
   filelog-stderr: /data/project/video2commons/cleanup.err
   filelog-stdout: /data/project/video2commons/cleanup.out
-  image: python3.9
+  image: python3.13
   name: cleanup
   schedule: 23 7 * * *
 
@@ -18,6 +18,6 @@
   filelog: 'yes'
   filelog-stderr: /data/project/video2commons/update-yt-dlp.err
   filelog-stdout: /data/project/video2commons/update-yt-dlp.out
-  image: python3.11
+  image: python3.13
   name: update-yt-dlp
   schedule: 33 7 * * *

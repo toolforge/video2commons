@@ -6,6 +6,7 @@
 ssu
 throttle.ctrl
 venv
+venv-*
 .bash_history
 .bash_profile
 .cache
