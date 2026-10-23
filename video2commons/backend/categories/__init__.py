@@ -16,7 +16,7 @@
 import json
 import subprocess
 
-from typing import Iterable
+from collections.abc import Iterable
 
 from ..encode.globals import ffprobe_location
 
