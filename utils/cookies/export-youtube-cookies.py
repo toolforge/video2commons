@@ -7,7 +7,6 @@ import tempfile
 
 from patchright.sync_api import Cookie, Playwright, sync_playwright
 
-
 LOGIN_URL = (
     "https://accounts.google.com/ServiceLogin"
     "?service=youtube&passive=true"

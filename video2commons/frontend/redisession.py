@@ -9,9 +9,10 @@
 import json
 from datetime import timedelta
 from uuid import uuid4
-from redis import Redis
+
 from flask import url_for
 from flask.sessions import SessionInterface, SessionMixin
+from redis import Redis
 
 
 class RedisSession(dict, SessionMixin):

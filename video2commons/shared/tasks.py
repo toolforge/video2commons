@@ -16,7 +16,7 @@
 import json
 import traceback
 
-from video2commons.shared.errors import normalize_error, format_exception
+from video2commons.shared.errors import format_exception, normalize_error
 
 
 def get_task_hostname(conn, task_id):

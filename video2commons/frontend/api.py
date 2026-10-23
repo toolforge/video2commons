@@ -21,36 +21,33 @@
 
 import json
 import os
-import traceback
 import re
-
+import traceback
 from uuid import uuid4
 
-from flask import Blueprint, request, session, jsonify, current_app
-
-from video2commons.config import session_key
+from flask import Blueprint, current_app, jsonify, request, session
 
 from video2commons.backend import worker
-
+from video2commons.config import session_key
 from video2commons.frontend.shared import (
-    redisconnection,
     check_banned,
     generate_csrf_token,
+    redisconnection,
 )
+from video2commons.frontend.upload import status as _uploadstatus, upload as _upload
 from video2commons.frontend.urlextract import (
+    DEFAULT_QUEUE,
+    HEAVY_QUEUE,
     do_extract_url,
+    do_validate_filedesc,
+    do_validate_filename,
     do_validate_filename_unique,
     do_validate_youtube_id,
     make_dummy_desc,
-    do_validate_filename,
-    do_validate_filedesc,
     sanitize,
-    DEFAULT_QUEUE,
-    HEAVY_QUEUE,
 )
-from video2commons.frontend.upload import upload as _upload, status as _uploadstatus
 from video2commons.shared import stats
-from video2commons.shared.tasks import publish_notification, get_task_status
+from video2commons.shared.tasks import get_task_status, publish_notification
 
 # Adapted from: https://stackoverflow.com/a/19161373
 YOUTUBE_REGEX = (

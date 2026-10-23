@@ -20,10 +20,10 @@
 
 import os
 import re
-import uuid
 import shutil
+import uuid
 
-from flask import request, jsonify
+from flask import jsonify, request
 
 RE_CONTENT_RANGE = re.compile(r"^bytes (\d+)-(\d+)/(\d+)$")
 # A filekey is a uuid1, optionally followed by the original file's extension

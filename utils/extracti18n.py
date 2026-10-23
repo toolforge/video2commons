@@ -22,10 +22,10 @@
 
 """Extract language data from MediaWiki core."""
 
-import os
-import sys
-import re
 import json
+import os
+import re
+import sys
 
 if not len(sys.argv) > 1 or "/messages" not in sys.argv[1]:
     print(

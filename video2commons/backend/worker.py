@@ -19,32 +19,33 @@
 
 import logging
 import os
-import sys
-import shutil
 import re
+import shutil
+import sys
+from http.cookiejar import DefaultCookiePolicy
 
 import celery
 import pywikibot
-
 from celery.contrib.abortable import AbortableTask
 from celery.exceptions import Ignore
-from http.cookiejar import DefaultCookiePolicy
 from kombu import Queue
 from pywikibot.comms.http import session
 from redis import Redis
 
-from video2commons.exceptions import TaskError, TaskAbort
-from video2commons.backend import download
-from video2commons.backend import categories
-from video2commons.backend import encode
-from video2commons.backend import upload
-from video2commons.backend import subtitles as subtitleuploader
+from video2commons.backend import (
+    categories,
+    download,
+    encode,
+    subtitles as subtitleuploader,
+    upload,
+)
 from video2commons.config import (
-    redis_pw,
-    redis_host,
     consumer_key,
     consumer_secret,
+    redis_host,
+    redis_pw,
 )
+from video2commons.exceptions import TaskAbort, TaskError
 from video2commons.shared.stats import update_task_stats
 from video2commons.shared.tasks import get_task_status, publish_notification
 

@@ -22,33 +22,30 @@
 import json
 import logging
 import traceback
-
 from datetime import timedelta
-from urllib.parse import urlparse, urljoin
+from urllib.parse import urljoin, urlparse
 
 import requests
-
-from flask import Flask, request, Response, session, render_template, redirect, url_for
-from mwoauth import AccessToken, ConsumerToken, RequestToken, Handshaker
+from flask import Flask, Response, redirect, render_template, request, session, url_for
+from mwoauth import AccessToken, ConsumerToken, Handshaker, RequestToken
 from requests_oauthlib import OAuth1
 
 from video2commons.config import (
+    api_url,
     consumer_key,
     consumer_secret,
-    api_url,
-    webfrontend_uri,
     socketio_uri,
+    webfrontend_uri,
 )
-
-from video2commons.frontend.redisession import RedisSessionInterface
-from video2commons.frontend.shared import redisconnection, check_banned
 from video2commons.frontend.api import api, is_sudoer
 from video2commons.frontend.i18n import (
-    i18nblueprint,
-    translate as _,
     getlanguage,
+    i18nblueprint,
     is_rtl,
+    translate as _,
 )
+from video2commons.frontend.redisession import RedisSessionInterface
+from video2commons.frontend.shared import check_banned, redisconnection
 
 ISSUE_URL = "https://github.com/toolforge/video2commons/issues"
 

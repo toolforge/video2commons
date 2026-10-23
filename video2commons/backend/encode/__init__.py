@@ -19,13 +19,13 @@
 
 import os
 
+# https://github.com/senko/python-video-converter
+from converter import Converter
+
 from .globals import ffmpeg_location, ffprobe_location
 from .helpers import get_video
 from .transcode import WebVideoTranscode
 from .transcodejob import WebVideoTranscodeJob
-
-# https://github.com/senko/python-video-converter
-from converter import Converter
 
 
 def encode(source, origkey, statuscallback=None, errorcallback=None, concurrency=None):

@@ -17,19 +17,21 @@
 
 """Convert and upload subtitles."""
 
-import os
-import traceback
-import subprocess
 import json
-import pywikibot
-import langcodes
-from converter import Converter
-import chardet
+import os
+import subprocess
+import traceback
 
-from ..encode.globals import ffmpeg_location, ffprobe_location
-from video2commons.exceptions import TaskAbort
+import chardet
+import langcodes
+import pywikibot
+from converter import Converter
 from langcodes import Language
 from langcodes.tag_parser import LanguageTagError
+
+from video2commons.exceptions import TaskAbort
+
+from ..encode.globals import ffmpeg_location, ffprobe_location
 
 
 def upload(site, filename, text, langcode, langname):

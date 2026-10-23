@@ -19,10 +19,11 @@
 
 """video2commons web i18n module."""
 
-import os
 import json
+import os
 
-from flask import Blueprint, Response, request, session, g
+from flask import Blueprint, Response, g, request, session
+
 from video2commons.frontend.shared import redisconnection
 
 i18nblueprint = Blueprint("i18n", __name__)

@@ -14,15 +14,13 @@
 """Helpers for distributed rate limiting of yt-dlp requests."""
 
 import logging
-
 from contextlib import contextmanager
 from urllib.parse import urlparse
 
 import yt_dlp
-
 from redis import Redis
-from redis.lock import Lock
 from redis.exceptions import LockError, LockNotOwnedError
+from redis.lock import Lock
 
 logger = logging.getLogger(__name__)
 

@@ -22,15 +22,15 @@ The upload function in this module acts as a wrapper around pywikibot's upload
 method. It adds additional validation and retry handling for uploads.
 """
 
-import time
 import os
-import pywikibot
+import time
 
+import pywikibot
 from pywikibot.exceptions import (
+    APIError,
     FatalServerError,
     ServerError,
     TimeoutError,
-    APIError,
 )
 
 from video2commons.exceptions import TaskError

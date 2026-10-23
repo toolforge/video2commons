@@ -11,7 +11,7 @@ sys.path.insert(0, "/srv/v2c")
 from redis import Redis
 
 from video2commons.backend.worker import app as celery_app
-from video2commons.config import redis_pw, redis_host
+from video2commons.config import redis_host, redis_pw
 from video2commons.shared.stats import (
     acquire_write_lock,
     collect_worker_stats,

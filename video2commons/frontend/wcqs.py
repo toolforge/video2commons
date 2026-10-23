@@ -1,9 +1,10 @@
 import json
-import requests
-
-from datetime import datetime, timedelta, UTC
-from flask import current_app
+from datetime import UTC, datetime, timedelta
 from typing import Any
+
+import requests
+from flask import current_app
+
 from video2commons.frontend.shared import redisconnection
 
 

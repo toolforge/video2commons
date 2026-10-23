@@ -4,8 +4,8 @@
 
 """v2c config loading from json."""
 
-import os as _os
 import json as _json
+import os as _os
 
 try:
     tooldir = _os.path.dirname(_os.path.realpath(__file__))

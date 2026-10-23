@@ -21,7 +21,7 @@ import os
 from urllib.parse import urlparse
 
 from celery.utils.log import get_logger
-from yt_dlp.utils import std_headers, DownloadError
+from yt_dlp.utils import DownloadError, std_headers
 
 from video2commons.exceptions import TaskError
 from video2commons.shared.ratelimiting import YoutubeDLRateLimited

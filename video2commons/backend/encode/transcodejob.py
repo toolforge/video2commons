@@ -27,31 +27,30 @@ Support two modes
 WebVideoTranscode/WebVideoTranscodeJob.php under GPLv2
 """
 
-import os
-import re
 import math
-import time
-import subprocess
-import signal
+import os
 import queue
+import re
+import signal
+import subprocess
 import threading
-
+import time
 from datetime import datetime, timedelta
 
-from .transcode import WebVideoTranscode
+from video2commons.exceptions import TaskAbort
+
 from .globals import (
-    background_priority,
-    background_time_limit,
-    background_size_limit,
-    ffmpeg_threads,
-    ffmpeg_location,
-    escape_shellarg,
-    time_to_seconds,
     av1_max_threads_4k,
+    background_priority,
+    background_size_limit,
+    background_time_limit,
+    escape_shellarg,
+    ffmpeg_location,
+    ffmpeg_threads,
+    time_to_seconds,
 )
 from .helpers import get_video
-
-from video2commons.exceptions import TaskAbort
+from .transcode import WebVideoTranscode
 
 STALE_TIMEOUT_SECS = 2 * 60 * 60  # 2 hours
 KILL_TIMEOUT_SECS = 2 * 60  # 2 minutes

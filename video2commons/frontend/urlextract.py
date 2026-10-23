@@ -19,21 +19,21 @@
 
 """video2commons url extracter."""
 
-from collections import OrderedDict
-from video2commons.backend.encode.transcode import WebVideoTranscode
-
 import json
 import re
 import subprocess
+from collections import OrderedDict
+
 import emoji
 import guess_language
 import pywikibot
 import yt_dlp
 
+from video2commons.backend.encode.transcode import WebVideoTranscode
+from video2commons.frontend.shared import redisconnection
+from video2commons.frontend.wcqs import WcqsSession
 from video2commons.shared.ratelimiting import YoutubeDLRateLimited
 from video2commons.shared.yt_dlp import add_youtube_params
-from video2commons.frontend.wcqs import WcqsSession
-from video2commons.frontend.shared import redisconnection
 
 SITE = pywikibot.Site()
 
