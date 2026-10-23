@@ -1,4 +1,3 @@
-#! /usr/bin/python
 # -*- coding: UTF-8 -*-
 #
 # This program is free software: you can redistribute it and/or modify
@@ -19,36 +18,38 @@
 
 import logging
 import os
-import sys
-import shutil
 import re
+import shutil
+import sys
+from http.cookiejar import DefaultCookiePolicy
 
 import celery
 import pywikibot
-
 from celery.contrib.abortable import AbortableTask
 from celery.exceptions import Ignore
-from http.cookiejar import DefaultCookiePolicy
 from kombu import Queue
 from pywikibot.comms.http import session
 from redis import Redis
 
-from video2commons.exceptions import TaskError, TaskAbort
-from video2commons.backend import download
-from video2commons.backend import categories
-from video2commons.backend import encode
-from video2commons.backend import upload
-from video2commons.backend import subtitles as subtitleuploader
+from video2commons.backend import (
+    categories,
+    download,
+    encode,
+    subtitles as subtitleuploader,
+    upload,
+)
 from video2commons.config import (
-    redis_pw,
-    redis_host,
     consumer_key,
     consumer_secret,
+    redis_host,
+    redis_pw,
 )
+from video2commons.exceptions import TaskAbort, TaskError
 from video2commons.shared.stats import update_task_stats
 from video2commons.shared.tasks import get_task_status, publish_notification
 
 logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 # Reject all cookies from MediaWiki API responses.
 #
@@ -143,7 +144,8 @@ def main(
     try:
         update_task_stats(redisconnection, self.request.id, remove=False)
     except Exception:
-        pass  # We don't want to fail the task if we can't update stats.
+        # We don't want to fail the task if we can't update stats.
+        logger.exception("Could not update the stats of task %s", self.request.id)
 
     # Check for 10G of disk space, refuse to run if it is unavailable
     st = os.statvfs("/srv")
@@ -172,7 +174,7 @@ def main(
             s.text = text
         if percent is not None:
             s.percent = percent
-        print("%d: %s" % (s.percent, s.text))
+        print(f"{int(s.percent)}: {s.text}")
 
         self.update_state(state="PROGRESS", meta={"text": s.text, "percent": s.percent})
 
@@ -269,7 +271,7 @@ def main(
                 )
             except TaskAbort:
                 raise
-            except Exception as e:
+            except Exception as e:  # noqa: BLE001 - subtitles must not fail the upload
                 statuscallback(type(e).__name__ + ": " + str(e), None)
                 print(e)
         elif subtitles_requested:
@@ -286,15 +288,13 @@ def main(
                 )
             except TaskAbort:
                 raise
-            except Exception as e:
+            except Exception as e:  # noqa: BLE001 - subtitles must not fail the upload
                 statuscallback(type(e).__name__ + ": " + str(e), None)
                 print(e)
     except pywikibot.exceptions.Error:
         exc_info = sys.exc_info()
         raise TaskError(
-            ("pywikibot.Error: %s: %s" % (exc_info[0].__name__, exc_info[1])).encode(
-                "utf-8"
-            )
+            (f"pywikibot.Error: {exc_info[0].__name__}: {exc_info[1]}").encode()
         ).with_traceback(exc_info[2])
     else:
         statuscallback("Done!", 100)
@@ -311,4 +311,5 @@ def main(
         try:
             update_task_stats(redisconnection, self.request.id, remove=True)
         except Exception:
-            pass  # We don't want to fail the task if we can't update stats.
+            # We don't want to fail the task if we can't update stats.
+            logger.exception("Could not update the stats of task %s", self.request.id)

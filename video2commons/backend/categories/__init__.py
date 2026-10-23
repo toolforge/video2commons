@@ -15,8 +15,7 @@
 
 import json
 import subprocess
-
-from typing import Iterable, Set
+from collections.abc import Iterable
 
 from ..encode.globals import ffprobe_location
 
@@ -39,6 +38,7 @@ def has_video_track(source: str) -> bool:
         ],
         capture_output=True,
         text=True,
+        check=False,
     )
 
     if result.returncode == 0:
@@ -67,6 +67,7 @@ def has_audio_track(source: str) -> bool:
         ],
         capture_output=True,
         text=True,
+        check=False,
     )
 
     if result.returncode == 0:
@@ -77,7 +78,7 @@ def has_audio_track(source: str) -> bool:
     return False
 
 
-def get_subtitle_categories(source: str, langcodes: Iterable[str]) -> Set[str]:
+def get_subtitle_categories(source: str, langcodes: Iterable[str]) -> set[str]:
     """Map a set of language codes to MediaWiki categories."""
     categories = set()
 
@@ -93,7 +94,7 @@ def get_subtitle_categories(source: str, langcodes: Iterable[str]) -> Set[str]:
     return categories
 
 
-def get_inferable_categories(source: str) -> Set[str]:
+def get_inferable_categories(source: str) -> set[str]:
     """Get categories that can be inferred from the source metadata."""
     categories = set()
 

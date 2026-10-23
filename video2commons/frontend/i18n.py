@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 # -*- coding: UTF-8 -*-
 #
 # Copyright (C) 2015-2016 Zhuyifei1999
@@ -19,10 +18,11 @@
 
 """video2commons web i18n module."""
 
-import os
 import json
+import os
 
-from flask import Blueprint, Response, request, session, g
+from flask import Blueprint, Response, g, request, session
+
 from video2commons.frontend.shared import redisconnection
 
 i18nblueprint = Blueprint("i18n", __name__)

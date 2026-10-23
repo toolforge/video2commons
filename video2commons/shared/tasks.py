@@ -16,7 +16,7 @@
 import json
 import traceback
 
-from video2commons.shared.errors import normalize_error, format_exception
+from video2commons.shared.errors import format_exception, normalize_error
 
 
 def get_task_hostname(conn, task_id):
@@ -53,7 +53,7 @@ def get_task_status(conn, task_id):
 
     try:
         state = res.state
-    except Exception:
+    except Exception:  # noqa: BLE001 - shown to the user with the traceback
         task.update(
             {
                 "status": "fail",

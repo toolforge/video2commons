@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 # -*- coding: UTF-8 -*-
 #
 # Copyright (C) 2015-2016 Zhuyifei1999
@@ -19,22 +18,21 @@
 
 """video2commons url extracter."""
 
-from collections import OrderedDict
-from typing import Optional
-from video2commons.backend.encode.transcode import WebVideoTranscode
-
 import json
 import re
 import subprocess
+from collections import OrderedDict
+
 import emoji
 import guess_language
 import pywikibot
 import yt_dlp
 
+from video2commons.backend.encode.transcode import WebVideoTranscode
+from video2commons.frontend.shared import redisconnection
+from video2commons.frontend.wcqs import WcqsSession
 from video2commons.shared.ratelimiting import YoutubeDLRateLimited
 from video2commons.shared.yt_dlp import add_youtube_params
-from video2commons.frontend.wcqs import WcqsSession
-from video2commons.frontend.shared import redisconnection
 
 SITE = pywikibot.Site()
 
@@ -127,6 +125,7 @@ def predict_task_type_ffprobe(filepath):
         ],
         capture_output=True,
         text=True,
+        check=False,
     )
 
     if result.returncode != 0:
@@ -268,22 +267,22 @@ def _extract_info(info):
 def _date(info):
     date = (info.get("upload_date") or "").strip()
     if re.match(r"^[0-9]{8}$", date):
-        date = "%s-%s-%s" % (date[0:4], date[4:6], date[6:8])
+        date = f"{date[0:4]}-{date[4:6]}-{date[6:8]}"
     return date
 
 
 def _source(url, ie_key, title, info):
     if info["id"]:
         if ie_key == "Youtube":
-            return "{{From YouTube|1=%(id)s|2=%(title)s}}" % {
-                "id": info["id"],
-                "title": escape_wikitext(title),
-            }
+            return "{{{{From YouTube|1={id}|2={title}}}}}".format(
+                id=info["id"],
+                title=escape_wikitext(title),
+            )
         elif ie_key == "Vimeo":
-            return "{{From Vimeo|1=%(id)s|2=%(title)s}}" % {
-                "id": info["id"],
-                "title": escape_wikitext(title),
-            }
+            return "{{{{From Vimeo|1={id}|2={title}}}}}".format(
+                id=info["id"],
+                title=escape_wikitext(title),
+            )
 
     if ie_key == "Generic":
         return url
@@ -295,11 +294,7 @@ def _source(url, ie_key, title, info):
                 if ie.IE_NAME == ie_tmp:
                     ie_key = ie.ie_key()
                     break
-        return "[%(url)s %(title)s - %(extractor)s]" % {
-            "url": url,
-            "title": escape_wikitext(title),
-            "extractor": ie_key,
-        }
+        return f"[{url} {escape_wikitext(title)} - {ie_key}]"
 
 
 def _desc(url, ie_key, title, info):
@@ -319,7 +314,7 @@ def _uploader(url, ie_key, title, info):
         # HACK: YouTube outputs http:// atm (issue #80)
         if ie_key == "Youtube":
             uploader_url = uploader_url.replace("http://", "https://")
-        uploader = "[%s %s]" % (uploader_url, uploader)
+        uploader = f"[{uploader_url} {uploader}]"
     return uploader
 
 
@@ -339,15 +334,15 @@ def _license(url, ie_key, title, info):
         == "Creative Commons Attribution license (reuse allowed)"
     ):
         if _date(info) <= "2025-08-01":
-            return "{{YouTube CC-BY%s}}" % uploader_param
-        return "{{YouTube CC-BY 4.0%s}}" % uploader_param
+            return f"{{{{YouTube CC-BY{uploader_param}}}}}"
+        return f"{{{{YouTube CC-BY 4.0{uploader_param}}}}}"
     elif ie_key == "Flickr":
         # https://blog.flickr.net/en/2025/06/18/creative-commons-4-0-has-arrived-on-flickr/
         version = "2.0" if _date(info) <= "2025-06-18" else "4.0"
 
         return {
-            "Attribution": "{{cc-by-%s%s}}" % (version, uploader_param),
-            "Attribution-ShareAlike": "{{cc-by-sa-%s%s}}" % (version, uploader_param),
+            "Attribution": f"{{{{cc-by-{version}{uploader_param}}}}}",
+            "Attribution-ShareAlike": f"{{{{cc-by-sa-{version}{uploader_param}}}}}",
             "No known copyright restrictions": "{{Flickr-no known copyright restrictions}}",
             "United States government work": "{{PD-USGov}}",
             "Public Domain Dedication (CC0)": "{{cc-zero}}",
@@ -356,16 +351,16 @@ def _license(url, ie_key, title, info):
         }.get(info.get("license"), default)
     elif ie_key == "Vimeo":
         return {
-            "by": "{{cc-by-3.0%s}}" % uploader_param,
-            "by-sa": "{{cc-by-sa-3.0%s}}" % uploader_param,
+            "by": f"{{{{cc-by-3.0{uploader_param}}}}}",
+            "by-sa": f"{{{{cc-by-sa-3.0{uploader_param}}}}}",
             "cc0": "{{cc-zero}}",
         }.get(info.get("license"), default)
     elif ie_key == "PeerTube":
         return {
-            "Attribution": "{{cc-by-4.0%s}}" % uploader_param,
-            "CC BY 4.0": "{{cc-by-4.0%s}}" % uploader_param,
-            "Attribution - Share Alike": "{{cc-by-sa-4.0%s}}" % uploader_param,
-            "CC BY-SA 4.0": "{{cc-by-sa-4.0%s}}" % uploader_param,
+            "Attribution": f"{{{{cc-by-4.0{uploader_param}}}}}",
+            "CC BY 4.0": f"{{{{cc-by-4.0{uploader_param}}}}}",
+            "Attribution - Share Alike": f"{{{{cc-by-sa-4.0{uploader_param}}}}}",
+            "CC BY-SA 4.0": f"{{{{cc-by-sa-4.0{uploader_param}}}}}",
             "Public Domain Dedication": "{{cc-zero}}",
             "CC0 1.0": "{{cc-zero}}",
         }.get(info.get("license"), default)
@@ -373,7 +368,7 @@ def _license(url, ie_key, title, info):
     return default
 
 
-def _normalize_license(ie_key, info) -> Optional[str]:
+def _normalize_license(ie_key, info) -> str | None:
     """Normalize license names to be more consistent across sources."""
     license_name = str(info.get("license") or "").strip()
     if not license_name:
@@ -391,8 +386,8 @@ def _normalize_license(ie_key, info) -> Optional[str]:
         version = "2.0" if _date(info) <= "2025-06-18" else "4.0"
 
         return {
-            "Attribution": "CC-BY-%s" % version,
-            "Attribution-ShareAlike": "CC-BY-SA-%s" % version,
+            "Attribution": f"CC-BY-{version}",
+            "Attribution-ShareAlike": f"CC-BY-SA-{version}",
             "United States government work": "PD-USGov",
             "Public Domain Dedication (CC0)": "CC-Zero",
         }.get(license_name, license_name)
@@ -431,7 +426,7 @@ def escape_wikitext(wikitext):
             ("}", "{{)}}"),
         ]
     )
-    rep = dict((re.escape(k), v) for k, v in rep.items())
+    rep = {re.escape(k): v for k, v in rep.items()}
     pattern = re.compile("|".join(list(rep.keys())))
     return pattern.sub(lambda m: rep[re.escape(m.group(0))], wikitext)
 
@@ -554,7 +549,7 @@ def do_validate_filename(filename):
     for rule in sanitationRules:
         reobj = rule["pattern"].search(filename)
         assert not reobj or reobj.group(0) == " ", (
-            "Your filename contains a disallowed part: %r" % reobj.group(0)
+            f"Your filename contains a disallowed part: {reobj.group(0)!r}"
         )
 
     # We check against the normalized version of the filename since the prefix
@@ -563,8 +558,8 @@ def do_validate_filename(filename):
 
     for prefix in get_filename_prefix_blacklist():
         assert not normalized.startswith(prefix), (
-            "Your filename starts with a disallowed prefix: %r, "
-            "please choose a more descriptive name" % prefix
+            f"Your filename starts with a disallowed prefix: {prefix!r}, "
+            "please choose a more descriptive name"
         )
 
     return filename.replace("_", " ")
@@ -582,8 +577,9 @@ def do_validate_filedesc(filedesc):
         spam = SITE.simple_request(action="spamblacklist", url=externallinks).submit()
 
         assert spam.get("spamblacklist", {}).get("result") != "blacklisted", (
-            "Your file description matches spam blacklist! Matches: %s"
-            % ", ".join(spam.get("spamblacklist", {}).get("matches", []))
+            "Your file description matches spam blacklist! Matches: {}".format(
+                ", ".join(spam.get("spamblacklist", {}).get("matches", []))
+            )
         )
 
     return filedesc

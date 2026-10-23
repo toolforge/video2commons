@@ -1,4 +1,3 @@
-#! /usr/bin/python
 # -*- coding: UTF-8 -*-
 #
 # This program is free software: you can redistribute it and/or modify
@@ -21,7 +20,7 @@ import os
 from urllib.parse import urlparse
 
 from celery.utils.log import get_logger
-from yt_dlp.utils import std_headers, DownloadError
+from yt_dlp.utils import DownloadError, std_headers
 
 from video2commons.exceptions import TaskError
 from video2commons.shared.ratelimiting import YoutubeDLRateLimited
@@ -169,6 +168,7 @@ def download(
 def url_blacklisted(url):
     """Define download url blacklist."""
     parseresult = urlparse(url)
-    if parseresult.scheme in ["http", "https"]:
-        if parseresult.netloc.endswith(".googlevideo.com"):
-            raise TaskError("Your downloading URL has been blacklisted.")
+    if parseresult.scheme in ["http", "https"] and parseresult.netloc.endswith(
+        ".googlevideo.com"
+    ):
+        raise TaskError("Your downloading URL has been blacklisted.")

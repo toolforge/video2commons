@@ -1,4 +1,3 @@
-#! /usr/bin/python
 # -*- coding: UTF-8 -*-
 #
 # This program is free software: you can redistribute it and/or modify
@@ -27,37 +26,36 @@ Support two modes
 WebVideoTranscode/WebVideoTranscodeJob.php under GPLv2
 """
 
-import os
-import re
 import math
-import time
-import subprocess
-import signal
+import os
 import queue
+import re
+import signal
+import subprocess
 import threading
-
+import time
 from datetime import datetime, timedelta
 
-from .transcode import WebVideoTranscode
+from video2commons.exceptions import TaskAbort
+
 from .globals import (
-    background_priority,
-    background_time_limit,
-    background_size_limit,
-    ffmpeg_threads,
-    ffmpeg_location,
-    escape_shellarg,
-    time_to_seconds,
     av1_max_threads_4k,
+    background_priority,
+    background_size_limit,
+    background_time_limit,
+    escape_shellarg,
+    ffmpeg_location,
+    ffmpeg_threads,
+    time_to_seconds,
 )
 from .helpers import get_video
-
-from video2commons.exceptions import TaskAbort
+from .transcode import WebVideoTranscode
 
 STALE_TIMEOUT_SECS = 2 * 60 * 60  # 2 hours
 KILL_TIMEOUT_SECS = 2 * 60  # 2 minutes
 
 
-class WebVideoTranscodeJob(object):
+class WebVideoTranscodeJob:
     """Job class."""
 
     def __init__(
@@ -65,7 +63,7 @@ class WebVideoTranscodeJob(object):
         source,
         target,
         key,
-        preserve={},
+        preserve=None,
         statuscallback=None,
         errorcallback=None,
         source_info=None,
@@ -76,7 +74,7 @@ class WebVideoTranscodeJob(object):
         self.target = os.path.abspath(target)
         self.key = key
         self.preserve = {"video": False, "audio": False}
-        self.preserve.update(preserve)
+        self.preserve.update(preserve or {})
         self.statuscallback = statuscallback or (lambda text, percent: None)
         self.errorcallback = errorcallback or (lambda text: None)
         self.removeDuplicates = True
@@ -104,8 +102,9 @@ class WebVideoTranscodeJob(object):
         @return File
         """
         if not hasattr(self, "file"):
-            self.file = open(self.source, "r")
-            self.file.close()
+            # Opening the file checks that it exists.
+            with open(self.source) as self.file:
+                pass
 
         return self.file
 
@@ -116,8 +115,9 @@ class WebVideoTranscodeJob(object):
         @return string
         """
         if not hasattr(self, "targetEncodeFile"):
-            self.targetEncodeFile = open(self.target, "w")
-            self.targetEncodeFile.close()
+            # Create the target file, or empty it.
+            with open(self.target, "w") as self.targetEncodeFile:
+                pass
 
         return self.targetEncodeFile.name
 
@@ -297,7 +297,7 @@ class WebVideoTranscodeJob(object):
         self.output("Running cmd: " + cmd + "\n")
 
         # Right before we output remove the old file
-        retval, shellOutput = self.run_shell_exec(cmd, track=p != 1)
+        retval, _ = self.run_shell_exec(cmd, track=p != 1)
 
         if int(retval) != 0:
             return cmd + "\nExitcode: " + str(retval)
@@ -335,9 +335,8 @@ class WebVideoTranscodeJob(object):
         # Workaround: Limit the number of threads for 4k (and higher) video for
         # AV1 transcoding due to limited memory on the workers.
         video = get_video(self.source_info)
-        if video:
-            if video.video_width >= 3840 or video.video_height >= 2160:
-                threads = min(threads, av1_max_threads_4k)
+        if video and (video.video_width >= 3840 or video.video_height >= 2160):
+            threads = min(threads, av1_max_threads_4k)
 
         cmd = " -threads " + str(threads)
 
@@ -563,7 +562,7 @@ class WebVideoTranscodeJob(object):
             stderr=None,
             universal_newlines=True,
             shell=True,
-            preexec_fn=os.setsid,
+            start_new_session=True,
         )
         lineQueue = queue.Queue()
         thread = threading.Thread(
@@ -572,7 +571,7 @@ class WebVideoTranscodeJob(object):
         thread.start()
 
         re_duration = re.compile(r"Duration: (\d{2}:\d{2}:\d{2})")
-        re_position = re.compile(r"time=(\d{2}:\d{2}:\d{2})", re.I)
+        re_position = re.compile(r"time=(\d{2}:\d{2}:\d{2})", re.IGNORECASE)
 
         duration = None
         position = None
@@ -600,7 +599,7 @@ class WebVideoTranscodeJob(object):
                             position = time_to_seconds(position_match.group(1))
                             if duration and position:
                                 newpercentage = min(
-                                    int(math.floor(100 * position / duration)), 100
+                                    math.floor(100 * position / duration), 100
                                 )
 
                     if newpercentage != percentage:

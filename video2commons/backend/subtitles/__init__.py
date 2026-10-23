@@ -1,4 +1,3 @@
-#! /usr/bin/python
 # -*- coding: UTF-8 -*-
 #
 # This program is free software: you can redistribute it and/or modify
@@ -17,19 +16,21 @@
 
 """Convert and upload subtitles."""
 
-import os
-import traceback
-import subprocess
 import json
-import pywikibot
-import langcodes
-from converter import Converter
-import chardet
+import os
+import subprocess
+import traceback
 
-from ..encode.globals import ffmpeg_location, ffprobe_location
-from video2commons.exceptions import TaskAbort
+import chardet
+import langcodes
+import pywikibot
+from converter import Converter
 from langcodes import Language
 from langcodes.tag_parser import LanguageTagError
+
+from video2commons.exceptions import TaskAbort
+
+from ..encode.globals import ffmpeg_location, ffprobe_location
 
 
 def upload(site, filename, text, langcode, langname):
@@ -61,6 +62,7 @@ def get_container_subtitle_languages(filepath):
         ],
         capture_output=True,
         text=True,
+        check=False,
     )
 
     if result.returncode != 0:
@@ -88,7 +90,7 @@ def get_subtitle_languages(subtitles):
     """Returns subtitle languages identified by yt-dlp."""
     languages = set()
 
-    for langcode, _ in subtitles.items():
+    for langcode in subtitles:
         try:
             langcode = str(langcodes.get(langcode))
         except LanguageTagError:
@@ -124,6 +126,7 @@ def upload_container_subtitles(
         ],
         capture_output=True,
         text=True,
+        check=False,
     )
 
     if result.returncode != 0:
@@ -194,6 +197,7 @@ def upload_container_subtitles(
             ],
             capture_output=True,
             text=True,
+            check=False,
         )
 
         percent += 50.0 / len(streams)
@@ -236,7 +240,7 @@ def upload_container_subtitles(
 
                 try:
                     text = text.decode(encoding)
-                except Exception:
+                except (LookupError, ValueError):  # Unknown or wrong encoding.
                     statuscallback(
                         f"Skipping subtitles with invalid encoding: {langcode}", None
                     )
@@ -254,7 +258,7 @@ def upload_container_subtitles(
             statuscallback(f"Finished uploading {langname} subtitles", int(percent))
         except TaskAbort:
             raise
-        except Exception as e:
+        except Exception as e:  # noqa: BLE001 - reported, the next subtitle goes on
             percent += 50.0 / len(subtitles)
             statuscallback(
                 f"{type(e).__name__}: {e}\n\n{traceback.format_exc()}", int(percent)
@@ -282,7 +286,7 @@ def upload_subtitles(
             langname = langdesc["language"]
             del langdesc["language"]
             if langdesc:
-                langname += " (%s)" % ", ".join(list(langdesc.values()))
+                langname += " ({})".format(", ".join(list(langdesc.values())))
 
             statuscallback("Loading subtitles in " + langname, int(percent))
             subtitletext = ""
@@ -299,7 +303,7 @@ def upload_subtitles(
             if format.lower() != "subrip":
                 target = filename + ".srt"
                 cmd = [ffmpeg_location, "-i", filename, "-f", "srt", target]
-                statuscallback("Running cmd: %s" % cmd, None)
+                statuscallback(f"Running cmd: {cmd}", None)
                 subprocess.check_call(cmd, stderr=None)
                 filename = target
 
@@ -326,11 +330,10 @@ def upload_subtitles(
             statuscallback("Finished processing subtitles in " + langname, int(percent))
         except TaskAbort:
             raise
-        except Exception as e:
+        except Exception as e:  # noqa: BLE001 - reported, the next subtitle goes on
             statuscallback(
                 f"{type(e).__name__}: {e} \n\n{traceback.format_exc()}", None
             )
-            pass
 
 
 def parse_utf8(bytestring):

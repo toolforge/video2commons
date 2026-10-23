@@ -1,11 +1,10 @@
-#! /usr/bin/python
 # -*- coding: UTF-8 -*-
 #
 
 """v2c config loading from json."""
 
-import os as _os
 import json as _json
+import os as _os
 
 try:
     tooldir = _os.path.dirname(_os.path.realpath(__file__))
@@ -13,7 +12,7 @@ try:
         tooldir = _os.path.expandvars("$TOOL_DATA_DIR/video2commons")
     with open(tooldir + "/../config.json", "r") as _f:
         _data = _json.load(_f)
-except IOError as _e:
+except OSError as _e:
     __import__("logging").exception(_e)
     _data = {}
 

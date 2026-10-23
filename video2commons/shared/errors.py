@@ -15,7 +15,6 @@
 
 import re
 
-
 # KNOWN_ERRORS is a mapping of known and common errors that occur while using
 # video2commons. The goal of this mapping is to make these common errors more
 # human-readable.

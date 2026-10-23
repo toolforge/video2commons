@@ -1,4 +1,3 @@
-#! /usr/bin/python
 # -*- coding: UTF-8 -*-
 #
 # This program is free software: you can redistribute it and/or modify
@@ -22,15 +21,15 @@ The upload function in this module acts as a wrapper around pywikibot's upload
 method. It adds additional validation and retry handling for uploads.
 """
 
-import time
 import os
-import pywikibot
+import time
 
+import pywikibot
 from pywikibot.exceptions import (
+    APIError,
     FatalServerError,
     ServerError,
     TimeoutError,
-    APIError,
 )
 
 from video2commons.exceptions import TaskError
@@ -95,8 +94,9 @@ def upload(
         upload_warnings = []
 
         # Filter warnings using a custom callback instead of a list so we can
-        # collect a list of UploadErrors corresponding to fatal warnings.
-        def ignore_warnings(warnings):
+        # collect a list of UploadErrors corresponding to fatal warnings. The
+        # list is bound as a default argument to be the one of this attempt.
+        def ignore_warnings(warnings, upload_warnings=upload_warnings):
             upload_warnings.extend(
                 w for w in warnings if w.code not in IGNORED_WARNINGS
             )

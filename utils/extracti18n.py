@@ -22,17 +22,15 @@
 
 """Extract language data from MediaWiki core."""
 
-import os
-import sys
-import re
 import json
+import os
+import re
+import sys
 
 if not len(sys.argv) > 1 or "/messages" not in sys.argv[1]:
     print(
-        (
-            "usage: python " + sys.argv[0] + " <dir>\n\n"
-            "  <dir>  The path to mediawiki/languages/messages\n"
-        )
+        "usage: python " + sys.argv[0] + " <dir>\n\n"
+        "  <dir>  The path to mediawiki/languages/messages\n"
     )
     sys.exit(1)
 
@@ -48,8 +46,8 @@ data = {
     "rtl": [],
     "alllangs": [],
 }
-rFallback = re.compile(r"fallback = '(.*?)'", re.I)
-rIsRtl = re.compile(r"rtl = true", re.I)
+rFallback = re.compile(r"fallback = '(.*?)'", re.IGNORECASE)
+rIsRtl = re.compile(r"rtl = true", re.IGNORECASE)
 for file in os.listdir(msgDir):
     filePath = msgDir + "/" + file
     if file in [".", ".."] or not os.path.isfile(filePath):

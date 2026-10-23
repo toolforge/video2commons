@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 # -*- coding: UTF-8 -*-
 #
 # Copyright (C) 2015-2016 Zhuyifei1999
@@ -21,36 +20,33 @@
 
 import json
 import os
-import traceback
 import re
-
+import traceback
 from uuid import uuid4
 
-from flask import Blueprint, request, session, jsonify, current_app
-
-from video2commons.config import session_key
+from flask import Blueprint, current_app, jsonify, request, session
 
 from video2commons.backend import worker
-
+from video2commons.config import session_key
 from video2commons.frontend.shared import (
-    redisconnection,
     check_banned,
     generate_csrf_token,
+    redisconnection,
 )
+from video2commons.frontend.upload import status as _uploadstatus, upload as _upload
 from video2commons.frontend.urlextract import (
+    DEFAULT_QUEUE,
+    HEAVY_QUEUE,
     do_extract_url,
+    do_validate_filedesc,
+    do_validate_filename,
     do_validate_filename_unique,
     do_validate_youtube_id,
     make_dummy_desc,
-    do_validate_filename,
-    do_validate_filedesc,
     sanitize,
-    DEFAULT_QUEUE,
-    HEAVY_QUEUE,
 )
-from video2commons.frontend.upload import upload as _upload, status as _uploadstatus
 from video2commons.shared import stats
-from video2commons.shared.tasks import publish_notification, get_task_status
+from video2commons.shared.tasks import get_task_status, publish_notification
 
 # Adapted from: https://stackoverflow.com/a/19161373
 YOUTUBE_REGEX = (
@@ -260,10 +256,8 @@ def validate_url():
         try:
             youtube_id = yt_match.group(6)
             return jsonify(entity_url=do_validate_youtube_id(youtube_id))
-        except Exception as e:
-            current_app.logger.error(
-                f'Error validating YouTube URL "{url}": {e}\n\n{traceback.format_exc()}'
-            )
+        except Exception:
+            current_app.logger.exception(f'Error validating YouTube URL "{url}"')
 
             # Skip validation if errors are encountered, e.g. SPARQL is down.
             return jsonify(entity_url=None)
@@ -276,13 +270,13 @@ def get_backend_keys(format):
 
     MAXSIZE = 5 << 30
     COMBINED_FMT = (
-        "bestvideo[filesize<{max}]+"
-        "bestaudio[acodec={{acodec}}]/"
-        "bestvideo[filesize<{max}]+"
-        "bestaudio[ext={{aext}}]/"
+        f"bestvideo[filesize<{MAXSIZE}]+"
+        "bestaudio[acodec={acodec}]/"
+        f"bestvideo[filesize<{MAXSIZE}]+"
+        "bestaudio[ext={aext}]/"
         "bestvideo+bestaudio/best"
-    ).format(max=MAXSIZE)
-    VIDEO_FMT = ("bestvideo[filesize<{max}]/bestvideo/best").format(max=MAXSIZE)
+    )
+    VIDEO_FMT = f"bestvideo[filesize<{MAXSIZE}]/bestvideo/best"
     AUDIO_FMT = (
         "bestaudio[acodec={{acodec}}]/bestaudio[ext={{aext}}]/bestaudio/best"
     ).format()
@@ -391,7 +385,8 @@ def run_task_internal(filename, params, queue):
     try:
         stats.increment_queue_counter(redisconnection)
     except Exception:
-        pass  # We don't want to fail the API call if we can't update stats.
+        # We don't want to fail the API call if we can't update stats.
+        current_app.logger.exception("Could not update the queue stats")
 
     publish_notification(
         redisconnection, "add", {"taskid": taskid, "user": session["username"]}

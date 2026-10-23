@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 # -*- coding: UTF-8 -*-
 #
 # Adapted from: http://flask.pocoo.org/snippets/75/ under Public Domain
@@ -9,9 +8,10 @@
 import json
 from datetime import timedelta
 from uuid import uuid4
-from redis import Redis
+
 from flask import url_for
 from flask.sessions import SessionInterface, SessionMixin
+from redis import Redis
 
 
 class RedisSession(dict, SessionMixin):

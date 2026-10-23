@@ -1,4 +1,3 @@
-#! /usr/bin/python
 # -*- coding: UTF-8 -*-
 #
 # This program is free software: you can redistribute it and/or modify
@@ -22,6 +21,8 @@ WebVideoTranscode provides settings.
 WebVideoTranscode/WebVideoTranscode.php under GPLv2
 """
 
+from typing import ClassVar
+
 
 class WebVideoTranscode:
     """
@@ -35,7 +36,7 @@ class WebVideoTranscode:
     http://firefogg.org/dev/index.html
     """
 
-    settings = {
+    settings: ClassVar[dict[str, dict]] = {
         "ogv": {
             "videoQuality": 7,
             "audioQuality": 6,

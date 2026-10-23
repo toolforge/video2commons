@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 # -*- coding: UTF-8 -*-
 #
 # Copyright (C) 2015-2016 Zhuyifei1999
@@ -24,14 +23,14 @@ from uuid import uuid4
 from flask import session
 from redis import Redis
 
-from video2commons.config import redis_pw, redis_host
+from video2commons.config import redis_host, redis_pw
 
 redisconnection = Redis(host=redis_host, db=3, password=redis_pw, decode_responses=True)
 
 
 def check_banned():
     """Check for banned cases."""
-    return None
+    return
 
 
 def generate_csrf_token():

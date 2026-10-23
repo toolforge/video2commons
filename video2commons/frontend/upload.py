@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 # -*- coding: UTF-8 -*-
 #
 # Copyright (C) 2015-2016 Zhuyifei1999
@@ -20,10 +19,10 @@
 
 import os
 import re
-import uuid
 import shutil
+import uuid
 
-from flask import request, jsonify
+from flask import jsonify, request
 
 RE_CONTENT_RANGE = re.compile(r"^bytes (\d+)-(\d+)/(\d+)$")
 # A filekey is a uuid1, optionally followed by the original file's extension
@@ -34,7 +33,7 @@ RE_EXTENSION = re.compile(r"^[a-z0-9]{1,4}$")
 
 class WrongOffset(Exception):
     def __init__(self, offset):
-        super(WrongOffset, self).__init__(str(offset))
+        super().__init__(str(offset))
         self.offset = offset
 
 
@@ -108,7 +107,7 @@ def handle_chunked(f, permpath, content_range):
         content_range = RE_CONTENT_RANGE.match(content_range)
         assert content_range, "Invalid content range!"
 
-        cr1, cr2, cr3 = [int(content_range.group(i)) for i in range(1, 4)]
+        cr1, _, cr3 = [int(content_range.group(i)) for i in range(1, 4)]
 
         if os.path.isfile(permpath):
             size = stat(permpath)

@@ -1,7 +1,10 @@
 """Utility functions for getting statistics about the worker pool."""
 
 import json
+import logging
 import time
+
+logger = logging.getLogger(__name__)
 
 LOCK_KEY = "stats_lock"
 
@@ -12,7 +15,7 @@ def collect_worker_stats(conn, inspector):
     total_capacity = 0
 
     if stats:
-        for _, worker_stats in stats.items():
+        for worker_stats in stats.values():
             pool = worker_stats.get("pool", {})
             max_concurrency = pool.get("max-concurrency", 0)
             total_capacity += max_concurrency
@@ -22,7 +25,7 @@ def collect_worker_stats(conn, inspector):
     task_ids = []
 
     if active_tasks:
-        for _, tasks in active_tasks.items():
+        for tasks in active_tasks.values():
             total_active += len(tasks)
 
             for task in tasks:
@@ -122,6 +125,7 @@ def acquire_write_lock(conn):
             if lock_acquired:
                 return True
         except Exception:
+            logger.exception("Could not acquire the stats lock")
             return False
 
         time.sleep(0.1)
@@ -134,7 +138,8 @@ def release_write_lock(conn):
     try:
         conn.delete(LOCK_KEY)
     except Exception:
-        pass
+        # The lock expires by itself after a few seconds anyway.
+        logger.exception("Could not release the stats lock")
 
 
 def get_worker_stats(conn):
