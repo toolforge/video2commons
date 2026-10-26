@@ -47,9 +47,9 @@ ffprobe_location = "/usr/bin/ffprobe"
 
 def escape_shellarg(*args):
     """Escape shell arguments."""
-    import pipes
+    import shlex
 
-    return " ".join([pipes.quote(str(arg)) for arg in args])
+    return " ".join([shlex.quote(str(arg)) for arg in args])
 
 
 def format_size(num, suffix="B"):
