@@ -422,7 +422,7 @@ describe("ChunkedUploader", () => {
 		expect(requests).toHaveLength(1);
 	});
 
-	it("throws when start() is called twice", () => {
+	it("throws when start() is called twice", async () => {
 		const { handler } = createUploadHandler();
 		server.use(handler);
 
@@ -436,6 +436,9 @@ describe("ChunkedUploader", () => {
 
 		uploader.start();
 		expect(() => uploader.start()).toThrow("Upload already started");
+
+		// Let the upload finish so its request doesn't leak into the next test.
+		await awaitDone(uploader);
 	});
 
 	it("treats a server offset mismatch as fatal", async () => {

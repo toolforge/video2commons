@@ -397,6 +397,10 @@ class ChunkedUploader extends EventTarget {
 	async _upload() {
 		try {
 			while (this._chunkIndex < this._totalChunks) {
+				// A progress listener may have paused or aborted the upload,
+				// don't send a request that would be aborted right away.
+				if (this._uploadState !== "sending") return;
+
 				// Upload the next chunk of the file.
 				//
 				// Throws UploadInterrupted if the upload is paused or aborted
