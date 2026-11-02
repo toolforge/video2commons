@@ -85,3 +85,19 @@ jobs:
 
       - name: Run the Ruff formatter
         run: uv run ruff format --check .
+
+  pytest:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+
+      - name: Setup uv
+        uses: astral-sh/setup-uv@v10.3.3
+        with:
+          python-version: "3.13.17"
+          enable-cache: true
+
+      - name: Run pytest
+        run: uv run pytest --cov --cov-report=term-missing

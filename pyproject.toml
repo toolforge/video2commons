@@ -4,7 +4,22 @@ version = "0.1.0"
 requires-python = ">=3.13"
 
 [dependency-groups]
-dev = ["ruff>=0.17.3"]
+dev = [
+    "pytest>=9.2.0",
+    "pytest-cov>=7.1.0",
+    "ruff>=0.17.3",
+    # Runtime dependencies of the code under test.
+    "wikitextparser>=3.0.0",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests/python"]
+pythonpath = ["."]
+addopts = ["--import-mode=importlib"]
+
+[tool.coverage.run]
+source = ["video2commons"]
+branch = true
 
 [tool.ruff.lint]
 # Ruff's default rules, plus the pycodestyle and pyflakes rules that it no

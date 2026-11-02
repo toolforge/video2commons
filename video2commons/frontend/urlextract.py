@@ -32,6 +32,7 @@ from video2commons.backend.encode.transcode import WebVideoTranscode
 from video2commons.frontend.shared import redisconnection
 from video2commons.frontend.wcqs import WcqsSession
 from video2commons.shared.ratelimiting import YoutubeDLRateLimited
+from video2commons.shared.wikitext import normalize_categories
 from video2commons.shared.yt_dlp import add_youtube_params
 
 SITE = pywikibot.Site()
@@ -577,7 +578,9 @@ def do_validate_filename(filename):
 
 
 def do_validate_filedesc(filedesc):
-    """Validate filename for invalid characters/parts."""
+    """Validate file description and clean up its categories."""
+    filedesc = normalize_categories(filedesc)
+
     parse = SITE.simple_request(
         action="parse", text=filedesc, prop="externallinks"
     ).submit()
