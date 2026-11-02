@@ -4,7 +4,7 @@ version = "0.1.0"
 requires-python = ">=3.13"
 
 [dependency-groups]
-dev = ["ruff>=0.17.1"]
+dev = ["ruff>=0.17.3"]
 
 [tool.ruff.lint]
 # Ruff's default rules, plus the pycodestyle and pyflakes rules that it no
