@@ -488,6 +488,17 @@ sanitationRules = [
     {"pattern": re.compile(r"[|\\]"), "replace": "-"},
     # titleblacklist-custom-double-apostrophe
     {"pattern": re.compile(r"'{2,}"), "replace": '"'},
+    # titleblacklist-custom-double-extension: the extension of the encoded file
+    # is appended to the filename, so it must not already end with one.
+    {
+        "pattern": re.compile(
+            r"(?:[.,](?:a?png|gif|jp[egs]g?|tiff?|xcf|pdf|midi?|kar|svg|djvu?|"
+            r"og[avgx]|flac|opus|spx|wav|web[mp]|mp[ae23g]g?|stl)[ ,]*)+$",
+            re.IGNORECASE,
+        ),
+        "replace": "",
+        "error": "Your filename ends with a file extension: {!r}, please remove it",
+    },
 ]
 
 
@@ -548,9 +559,9 @@ def do_validate_filename(filename):
 
     for rule in sanitationRules:
         reobj = rule["pattern"].search(filename)
-        assert not reobj or reobj.group(0) == " ", (
-            f"Your filename contains a disallowed part: {reobj.group(0)!r}"
-        )
+        assert not reobj or reobj.group(0) == " ", rule.get(
+            "error", "Your filename contains a disallowed part: {!r}"
+        ).format(reobj.group(0))
 
     # We check against the normalized version of the filename since the prefix
     # blacklist performs its validation after title capitalization.
