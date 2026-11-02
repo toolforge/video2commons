@@ -1,5 +1,6 @@
 /* globals nunjucks: false, io: false, Qs: false, bootstrap: false */
 import { ChunkedUploader } from "./ChunkedUploader.js";
+import { LocalAgentTransfer, youtubeVideoUrl } from "./LocalAgent.js";
 
 (($) => {
 	/**
@@ -146,6 +147,8 @@ import { ChunkedUploader } from "./ChunkedUploader.js";
 			.addFilter("process_link", processLink);
 
 	var $detailsModal, $addTaskDialog, newTaskData, newTaskDataQS, uploader;
+	let localAgentTransfer;
+	let localAgentDeferred;
 
 	/**
 	 * Validate date category names.
@@ -432,6 +435,18 @@ import { ChunkedUploader } from "./ChunkedUploader.js";
 			var uploadedFile = newTaskData.uploadedFile[url];
 			if (uploadedFile) {
 				newTaskData.url = url;
+				if (uploadedFile.metadata) {
+					// Keep the edited description when returning to the source step.
+					if (
+						!newTaskData.localAgentLoaded ||
+						newTaskData.localAgentLoaded !== url
+					) {
+						Object.assign(newTaskData, uploadedFile.metadata);
+						newTaskData.localAgentLoaded = url;
+					}
+					applyTaskDefaults(newTaskData);
+					return $.when();
+				}
 				return video2commons.askAPI(
 					"makedesc",
 					{
@@ -1233,6 +1248,8 @@ import { ChunkedUploader } from "./ChunkedUploader.js";
 				// the ChunkedUploader's window listeners are removed.
 				$addTaskDialog.on("hidden.bs.modal", () => {
 					uploader?.abort();
+					localAgentTransfer?.cancel();
+					localAgentDeferred?.resolve();
 				});
 
 				// HACK
@@ -1329,14 +1346,13 @@ import { ChunkedUploader } from "./ChunkedUploader.js";
 								newTaskData.url = $(this).val();
 							}
 
-							const youtubeRegex =
-								/(https?:\/\/)?(www\.)?(youtube|youtu|youtube-nocookie)\.(com|be)\/(watch\?.*?(?=v=)v=|embed\/|v\/|.+\?v=)?([^&=%?]{11})/;
-							if (newTaskData.url.match(youtubeRegex)) {
+							if (youtubeVideoUrl(newTaskData.url)) {
 								$addTaskDialog.find("#youtube-warning").removeClass("d-none");
 							} else {
 								$addTaskDialog.find("#youtube-warning").addClass("d-none");
 							}
 						})
+						.trigger("input")
 						.focus();
 					$addTaskDialog.find("#video").prop("checked", newTaskData.video);
 					$addTaskDialog.find("#audio").prop("checked", newTaskData.audio);
@@ -1345,6 +1361,7 @@ import { ChunkedUploader } from "./ChunkedUploader.js";
 						.prop("checked", newTaskData.subtitles);
 
 					video2commons.initUpload();
+					video2commons.initLocalAgent();
 					break;
 				case "playlist": {
 					$addTaskDialog
@@ -1773,6 +1790,94 @@ import { ChunkedUploader } from "./ChunkedUploader.js";
 			}
 		},
 
+		initLocalAgent: () => {
+			const setBusy = (busy) => {
+				$addTaskDialog.find("#src-url").toggle(!busy);
+				$addTaskDialog.find("#local-agent-start").prop("disabled", busy);
+				$addTaskDialog
+					.find("#video, #audio, #subtitles")
+					.prop("disabled", busy);
+			};
+			const markLocalFile = () => {
+				if (
+					newTaskData.uploadedFile[$addTaskDialog.find("#url").val()]?.metadata
+				) {
+					$addTaskDialog.find("#video, #audio").prop("disabled", true);
+					$addTaskDialog
+						.find("#subtitles")
+						.prop({ checked: false, disabled: true });
+				}
+			};
+			markLocalFile();
+			$addTaskDialog.find("#url").on("input.localAgent", () => {
+				$addTaskDialog
+					.find("#video, #audio, #subtitles")
+					.prop("disabled", false);
+				markLocalFile();
+			});
+			$addTaskDialog.find("#local-agent-start").on("click", () => {
+				const source = form.getSourceData();
+				localAgentDeferred = $.Deferred();
+				video2commons.promiseWorkingOn(localAgentDeferred.promise());
+				setBusy(true);
+				const deferred = localAgentDeferred;
+				localAgentTransfer = new LocalAgentTransfer({
+					csrfToken,
+					pollInterval: 2000,
+					onPair: (code) => {
+						$addTaskDialog.find("#local-agent-pairing").removeClass("d-none");
+						$addTaskDialog
+							.find("#local-agent-code")
+							.val(code)
+							.trigger("focus")
+							.trigger("select");
+					},
+					onUpdate: (status) => {
+						const key = {
+							waiting: "localAgentWaiting",
+							downloading: "localAgentDownloading",
+							uploading: "localAgentUploading",
+							ready: "localAgentReady",
+						}[status.state];
+						$addTaskDialog
+							.find("#local-agent-status")
+							.text(translate(key, { params: [status.percent || 0] }));
+					},
+					onReady: (metadata) => {
+						newTaskData.uploadedFile[metadata.url] = { metadata };
+						newTaskData.initialFilenameValidated = false;
+						$addTaskDialog.find("#url").val(metadata.url);
+						$addTaskDialog.find("#subtitles").prop("checked", false);
+						$addTaskDialog.find("#youtube-warning").addClass("d-none");
+						setBusy(false);
+						markLocalFile();
+						deferred.resolve();
+					},
+					onError: (message) => {
+						setBusy(false);
+						$addTaskDialog.find("#local-agent-pairing").addClass("d-none");
+						deferred.reject(message);
+					},
+				});
+				const transfer = localAgentTransfer;
+				// The duplicate check queries Commons, never YouTube.
+				api
+					.validateUrl(source.url)
+					.done(() => {
+						if (!transfer.controller.signal.aborted) transfer.start(source);
+					})
+					.fail((message) => {
+						if (!transfer.controller.signal.aborted) transfer.onError(message);
+					});
+			});
+			$addTaskDialog.find("#local-agent-cancel").on("click", () => {
+				localAgentTransfer?.cancel();
+				localAgentDeferred?.resolve();
+				setBusy(false);
+				$addTaskDialog.find("#local-agent-pairing").addClass("d-none");
+			});
+		},
+
 		initUpload: () => {
 			let deferred;
 
@@ -1842,7 +1947,7 @@ import { ChunkedUploader } from "./ChunkedUploader.js";
 				uploader.addEventListener("finish", (ev) => {
 					const url = `uploads:${ev.detail.filekey}`;
 					newTaskData.uploadedFile[url] = file;
-					$addTaskDialog.find("#url").val(url);
+					$addTaskDialog.find("#url").val(url).trigger("input");
 					setUploadStatus(null, "");
 					deferred.resolve();
 					resetUploadUI();

@@ -43,6 +43,7 @@ from video2commons.frontend.i18n import (
     is_rtl,
     translate as _,
 )
+from video2commons.frontend.local_agent import local_agent
 from video2commons.frontend.redisession import RedisSessionInterface
 from video2commons.frontend.shared import check_banned, redisconnection
 
@@ -73,6 +74,7 @@ app.jinja_env.globals["lang"] = getlanguage
 app.jinja_env.tests["rtl"] = is_rtl
 
 app.register_blueprint(api, url_prefix="/api")
+app.register_blueprint(local_agent, url_prefix="/api/local-agent")
 app.register_blueprint(i18nblueprint, url_prefix="/i18n")
 
 

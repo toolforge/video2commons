@@ -24,6 +24,18 @@
   </div>
   <div id="youtube-warning" class="alert alert-warning d-none">
     {{ _('youtubewarning') }}
+    <p class="mt-2">{{ _('localAgentExplanation') }}</p>
+    <button type="button" id="local-agent-start" class="btn btn-outline-primary">{{ _('localAgentUse') }}</button>
+    <div id="local-agent-pairing" class="d-none mt-3">
+      <ol>
+        <li>{{ _('localAgentInstall') }} <code>python -m pip install --upgrade requests "yt-dlp[default]"</code></li>
+        <li><a href="api/local-agent/download" download="video2commons-agent.py">{{ _('localAgentDownload') }}</a> {{ _('localAgentRun') }} <code>python video2commons-agent.py</code></li>
+        <li><label for="local-agent-code">{{ _('localAgentPair') }}</label><input id="local-agent-code" class="form-control font-monospace" readonly dir="ltr"></li>
+      </ol>
+      <p>{{ _('localAgentScope') }}</p>
+      <p id="local-agent-status" role="status" aria-live="polite"></p>
+      <button type="button" id="local-agent-cancel" class="btn btn-outline-danger">{{ _('cancel') }}</button>
+    </div>
   </div>
   <div class="alert alert-info">
     {{ _('note') }}

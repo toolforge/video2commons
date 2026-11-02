@@ -106,6 +106,9 @@ tests/                  JavaScript tests (Vitest)
 
 ## Development
 
+For optional YouTube downloads on the user's computer, see the
+[local agent installation and protocol documentation](docs/local-agent.md).
+
 You need Node.js (LTS) and [uv](https://docs.astral.sh/uv/) with Python 3.13.
 
 ```bash
