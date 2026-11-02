@@ -215,8 +215,10 @@ Main API endpoints (all `POST` calls need the CSRF token given by `/api/csrf`):
 
 Output formats map to the encoding profiles of
 [`encode/transcode.py`](../video2commons/backend/encode/transcode.py):
-**WebM AV1/Opus** (default), WebM VP9/Opus, WebM VP8/Vorbis and Ogg
-Theora/Vorbis for video, Ogg Vorbis or Opus for audio only.
+**WebM AV1/Opus** (default) and WebM VP9/Opus for video, Ogg Vorbis or Opus
+for audio only. The VP8 and Theora profiles are no longer offered, but are
+kept so that a source already in one of these formats is copied instead of
+being encoded again, and so that older tasks can still be restarted.
 
 ## Direct file uploads
 

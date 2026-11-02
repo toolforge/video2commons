@@ -202,15 +202,10 @@ def list_formats():
     audio = _boolize(request.form["audio"])
     if video:
         if audio:
-            formats = [
-                "ogv (Theora/Vorbis)",
-                "webm (VP8/Vorbis)",
-                "webm (VP9/Opus)",
-                "webm (AV1/Opus)",
-            ]
+            formats = ["webm (VP9/Opus)", "webm (AV1/Opus)"]
             prefer = "webm (AV1/Opus)"
         else:
-            formats = ["ogv (Theora)", "webm (VP8)", "webm (VP9)", "webm (AV1)"]
+            formats = ["webm (VP9)", "webm (AV1)"]
             prefer = "webm (AV1)"
     else:
         if audio:
@@ -281,22 +276,10 @@ def get_backend_keys(format):
         "bestaudio[acodec={{acodec}}]/bestaudio[ext={{aext}}]/bestaudio/best"
     ).format()
     return {
-        "ogv (Theora)": (VIDEO_FMT.format(vcodec="theora", vext="ogv"), "an.ogv"),
-        "webm (VP8)": (VIDEO_FMT.format(vcodec="vp8", vext="webm"), "an.webm"),
         "webm (VP9)": (VIDEO_FMT.format(vcodec="vp9", vext="webm"), "an.vp9.webm"),
         "webm (AV1)": (VIDEO_FMT.format(vcodec="av1", vext="webm"), "an.av1.webm"),
         "ogg (Vorbis)": (AUDIO_FMT.format(acodec="vorbis", aext="ogg"), "ogg"),
         "opus (Opus)": (AUDIO_FMT.format(acodec="opus", aext="opus"), "opus"),
-        "ogv (Theora/Vorbis)": (
-            COMBINED_FMT.format(
-                vcodec="theora", vext="ogv", acodec="vorbis", aext="ogg"
-            ),
-            "ogv",
-        ),
-        "webm (VP8/Vorbis)": (
-            COMBINED_FMT.format(vcodec="vp8", vext="webm", acodec="vorbis", aext="ogg"),
-            "webm",
-        ),
         "webm (VP9/Opus)": (
             COMBINED_FMT.format(vcodec="vp9", vext="webm", acodec="opus", aext="webm"),
             "vp9.webm",
