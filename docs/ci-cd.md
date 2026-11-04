@@ -65,7 +65,7 @@ flowchart LR
     check["📦 <b>check</b><br/>Debian bookworm · Node 24<br/><code>npx gulp build</code>"]
     tests["🧪 <b>tests</b><br/>Node 24<br/><code>npm test</code> (Vitest)"]
     biome["🎨 <b>biome</b><br/>JS lint + format<br/><code>biome ci .</code>"]
-    ruff["🐍 <b>ruff</b><br/>Python 3.13.17 via uv<br/><code>ruff check</code> + <code>ruff format --check</code>"]
+    ruff["🐍 <b>ruff</b><br/>Python 3.13.18 via uv<br/><code>ruff check</code> + <code>ruff format --check</code>"]
 
     check & tests & biome & ruff --> ok(["✅ Ready to merge"])
 
@@ -239,7 +239,7 @@ flowchart LR
     subgraph code ["📦 Code in /srv/v2c"]
         direction TB
         c1["git clone<br/>then git pull"]
-        c2["Python 3.13.17 (uv)<br/>venv · pip install -U"]
+        c2["Python 3.13.18 (uv)<br/>venv · pip install -U"]
         c3["config.json<br/>from the secrets"]
     end
     subgraph sys ["🧱 System"]
@@ -279,8 +279,9 @@ Things to know:
   branch. A deployment can therefore change more than the merged commits.
 - **Python is not Debian's.** Debian bookworm only ships Python 3.11, so
   Puppet installs the version set by `$python_version` with
-  [uv](https://docs.astral.sh/uv/) in `/opt/python`, and creates a venv per
-  version (`/srv/v2c/venv-<version>`). After a version change, the workers
+  [uv](https://docs.astral.sh/uv/) in `/opt/python` (upgrading uv first, so
+  that it knows the new version), and creates a venv per version
+  (`/srv/v2c/venv-<version>`). After a version change, the workers
   still finishing their tasks keep the previous venv until they restart; it
   can then be deleted by hand.
 - **Heavy encoders** (`encoding05`, `encoding06`) get a different
