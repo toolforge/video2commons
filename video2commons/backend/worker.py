@@ -300,7 +300,12 @@ def main(
         statuscallback("Done!", 100)
         return {"type": "done", "filename": filename, "url": wikifileurl}
     finally:
-        statuscallback("Cleaning up...", -1)
+        # statuscallback() raises TaskAbort again if the task has been aborted,
+        # which must not skip the rest of the cleanup.
+        try:
+            statuscallback("Cleaning up...", -1)
+        except TaskAbort:
+            pass
         pywikibot.stopme()
         pywikibot.config.authenticate.clear()
         pywikibot.config.usernames["commons"].clear()
