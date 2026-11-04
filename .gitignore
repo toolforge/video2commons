@@ -22,6 +22,8 @@ venv-*
 .node_repl_history
 .npm
 .project
+.pytest_cache
+.venv
 .pydevproject
 .python_history
 .selected_editor

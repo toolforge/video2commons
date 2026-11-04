@@ -54,20 +54,21 @@ In short:
 ## Continuous integration
 
 [`.github/workflows/ci.yml`](../.github/workflows/ci.yml) runs on every pull
-request (opened, updated or reopened). Its four jobs run in parallel and must
+request (opened, updated or reopened). Its five jobs run in parallel and must
 all pass:
 
 ```mermaid
 %%{init: {"flowchart": {"curve": "basis", "nodeSpacing": 18}}}%%
 flowchart LR
-    pr(["🔀 Pull request"]) --> check & tests & biome & ruff
+    pr(["🔀 Pull request"]) --> check & tests & biome & ruff & pytest
 
     check["📦 <b>check</b><br/>Debian bookworm · Node 24<br/><code>npx gulp build</code>"]
     tests["🧪 <b>tests</b><br/>Node 24<br/><code>npm test</code> (Vitest)"]
     biome["🎨 <b>biome</b><br/>JS lint + format<br/><code>biome ci .</code>"]
     ruff["🐍 <b>ruff</b><br/>Python 3.13.18 via uv<br/><code>ruff check</code> + <code>ruff format --check</code>"]
+    pytest["🧪 <b>pytest</b><br/>Python 3.13.18 · backend requirements<br/><code>pytest</code>"]
 
-    check & tests & biome & ruff --> ok(["✅ Ready to merge"])
+    check & tests & biome & ruff & pytest --> ok(["✅ Ready to merge"])
 
     classDef start fill:#e8f1fd,stroke:#3b82f6,stroke-width:2px,color:#1e3a8a
     classDef js fill:#fef9c3,stroke:#ca8a04,stroke-width:2px,color:#713f12
@@ -75,7 +76,7 @@ flowchart LR
     classDef ok fill:#e7f8ee,stroke:#16a34a,stroke-width:2px,color:#14532d
     class pr start
     class check,tests,biome js
-    class ruff py
+    class ruff,pytest py
     class ok ok
 ```
 
@@ -85,12 +86,13 @@ flowchart LR
 | **tests** | The JavaScript tests in [`tests/`](../tests), with a mocked backend (MSW). | `npm test` |
 | **biome** | JavaScript linting and formatting ([`biome.json`](../biome.json)). | `npm run lint` (fix: `npm run format`) |
 | **ruff** | Python linting and formatting ([`pyproject.toml`](../pyproject.toml)). | `uv run ruff check . && uv run ruff format --check .` |
+| **pytest** | The Python tests in [`tests/backend/`](../tests/backend), with the backend requirements installed by pip and fakes for Redis, Commons and the encoding stages. | `uv venv --seed && .venv/bin/pip install -r video2commons/backend/requirements.txt && uv run pytest` |
 
 > [!NOTE]
-> CI does **not** cover the Python code's behaviour (there are no Python
-> tests), the Puppet manifest or the shell scripts. Changes to the workers, to
-> Puppet or to the deployment scripts need a careful review and a close watch
-> after deployment.
+> The Python tests only cover the cleanup at the end of a task for now. CI
+> does **not** cover the rest of the Python code's behaviour, the Puppet
+> manifest or the shell scripts. Changes to the workers, to Puppet or to the
+> deployment scripts need a careful review and a close watch after deployment.
 
 ## Deployments
 

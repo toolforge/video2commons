@@ -78,6 +78,9 @@ app.conf.task_queues = [
 
 redisconnection = Redis(host=redis_host, db=3, password=redis_pw)
 
+# Each task downloads and encodes its files in its own subdirectory.
+OUTPUT_DIR = "/srv/v2c/output/"
+
 
 class Stats:
     """Storage for task status."""
@@ -173,7 +176,7 @@ def main(
     # Generate temporary directory for task
     for i in range(10):  # 10 tries
         id = os.urandom(8).hex()
-        outputdir = "/srv/v2c/output/" + id
+        outputdir = OUTPUT_DIR + id
         if not os.path.isdir(outputdir):
             os.makedirs(outputdir)
             break

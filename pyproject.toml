@@ -4,7 +4,13 @@ version = "0.1.0"
 requires-python = ">=3.13"
 
 [dependency-groups]
-dev = ["ruff>=0.17.3"]
+dev = ["pytest>=9.2.0", "ruff>=0.17.3"]
+
+[tool.pytest]
+# The video2commons package isn't installed, it is imported from the
+# repository.
+pythonpath = ["."]
+testpaths = ["tests"]
 
 [tool.ruff.lint]
 # Ruff's default rules, plus the pycodestyle and pyflakes rules that it no
