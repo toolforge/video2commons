@@ -256,6 +256,12 @@ sequenceDiagram
 - The **filekey** keeps the original extension (`<uuid>.mp4`): the encoder
   uses it to choose the download size limit (see [Limits](#limits)).
 - Uploaded files are deleted by a scheduled job on Toolforge.
+- The description of an uploaded file is empty, unless the user adds the
+  `.info.json` file that yt-dlp wrote for it: the browser
+  ([`InfoJson.js`](../video2commons/frontend/static/InfoJson.js)) sends the
+  fields that the description needs to `makedesc`, which makes the same
+  description as for the URL. See
+  [Uploading a video downloaded with yt-dlp](upload-info-json.md).
 
 ## Queues and routing
 

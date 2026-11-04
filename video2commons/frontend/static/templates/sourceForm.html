@@ -1,8 +1,15 @@
+{# Also in video2commons/shared/errors.py. #}
+{% set localDownloadDocUrl = 'https://github.com/toolforge/video2commons/blob/master/docs/upload-info-json.md' %}
 <form role="form">
   <div class="mb-3" id="src-url">
     <label class="form-label" for="url"><i class="bi bi-download"></i> URL</label>
     <input type="text" class="form-control" id="url" placeholder="http://example.com/examplevideo" dir="ltr">
     <span class="btn fileinput-button"><i class="bi bi-folder2-open"></i> {{ _('uploadFile') }}<input id="fileupload" name="file" data-url="api/upload/upload" type="file"></span>
+    <span class="btn fileinput-button"><i class="bi bi-filetype-json"></i> {{ _('uploadInfoJson') }}<input id="infojsonupload" type="file" accept=".json,application/json"></span>
+  </div>
+  <div id="infojson-status" class="alert alert-info d-none" role="status">
+    <span id="infojson-text"></span>
+    <button type="button" class="btn btn-xs" id="infojson-remove"><i class="bi bi-x-lg"></i> {{ _('remove') }}</button>
   </div>
   <div class="mb-3" id="src-uploading" style="display:none">
     <label class="form-label"><i class="bi bi-cloud-upload"></i> {{ _('uploading') }}</label>
@@ -23,7 +30,7 @@
     <label class="form-check-label" for="subtitles">{{ _('importsubtitles') }}</label>
   </div>
   <div id="youtube-warning" class="alert alert-warning d-none">
-    {{ _('youtubewarning') }}
+    {{ _('youtubewarning') }} {{ _('youtubelocaldownload') | process_link([localDownloadDocUrl]) }}
   </div>
   <div class="alert alert-info">
     {{ _('note') }}
@@ -31,6 +38,7 @@
       <li>{{ _('notesplaylists') }}</li>
       <li>{{ _('notesuncheck') }}</li>
       <li>{{ _('notessubtitles') }}</li>
+      <li>{{ _('notesinfojson') | process_link([localDownloadDocUrl]) }}</li>
     </ul>
     <b>{{ _('importantnote') }}</b> {{ _('noteslicensing') | process_link }}
   </div>
