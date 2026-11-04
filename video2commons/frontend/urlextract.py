@@ -61,6 +61,23 @@ FILEDESC_TEMPLATE = """
 
 NAMESPACE_FILE = 6
 
+# The fields of the yt-dlp metadata that the description uses, besides
+# extractor_key and webpage_url. Those with a format are inserted as is in the
+# description; the others are escaped, or only compared with known values.
+RE_INFO_EXTRACTOR_KEY = re.compile(r"[A-Za-z0-9]+")
+RE_INFO_URL = re.compile(r"https?://[^\s\[\]{}|<>\"]+")
+INFO_FIELDS = {
+    "id": re.compile(r"[A-Za-z0-9_.-]+"),
+    "extractor": None,
+    "title": None,
+    "description": None,
+    "uploader": None,
+    "uploader_url": RE_INFO_URL,
+    "upload_date": re.compile(r"[0-9]{8}"),
+    "license": None,
+}
+MAX_INFO_FIELD_LENGTH = 20000
+
 # Upload filenames are limited to 228 bytes (not counting the extension).
 #
 # This number was chosen since the length of the longest output extension we
@@ -175,6 +192,69 @@ def make_dummy_desc(filename):
         "filedesc": filedesc.strip(),
         "filename": sanitize(filename),
     }
+
+
+def make_info_desc(filename, info):
+    """Create the description of an uploaded file from its yt-dlp metadata.
+
+    This is the .info.json file that yt-dlp writes with --write-info-json, for
+    a video that the user downloaded themselves, after clean_info(). The
+    description is the one of the URL, without the server reaching the site.
+    """
+    desc = _extract_info(info)
+
+    return {
+        "extractor": "(uploads)",
+        "filedesc": desc["filedesc"],
+        "filename": desc["filename"] or make_dummy_desc(filename)["filename"],
+    }
+
+
+def clean_info(info):
+    """Keep the valid fields of the yt-dlp metadata of a single video.
+
+    The metadata comes from the user, like the rest of a manual upload, and
+    the user can edit the description anyway. The fields are only checked so
+    that the description is well-formed: a field that has the wrong type or
+    format is left out, as yt-dlp does with the fields that a site doesn't have.
+    """
+    assert isinstance(info, dict), "The metadata file must contain a JSON object"
+    assert info.get("_type") in (None, "video"), (
+        "The metadata file must describe a single video, not a playlist"
+    )
+
+    extractor_key = info.get("extractor_key")
+    assert _is_valid_info_field(extractor_key, RE_INFO_EXTRACTOR_KEY), (
+        "The metadata file has no valid extractor_key: "
+        "is it an .info.json file written by yt-dlp?"
+    )
+    url = info.get("webpage_url")
+    assert _is_valid_info_field(url, RE_INFO_URL), (
+        "The metadata file has no valid webpage_url"
+    )
+
+    cleaned = {
+        "formats": [],
+        "extractor_key": extractor_key,
+        "webpage_url": url,
+    }
+    for field, regex in INFO_FIELDS.items():
+        value = info.get(field)
+        cleaned[field] = value if _is_valid_info_field(value, regex) else ""
+
+    # The source of the description names the site of a sub-extractor (e.g.
+    # "vimeo:album") from this name, but a site doesn't need one.
+    cleaned["extractor"] = cleaned["extractor"] or extractor_key
+
+    return cleaned
+
+
+def _is_valid_info_field(value, regex):
+    return (
+        isinstance(value, str)
+        and len(value) <= MAX_INFO_FIELD_LENGTH
+        and (regex is None or regex.fullmatch(value) is not None)
+    )
 
 
 def do_extract_url(url):

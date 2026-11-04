@@ -99,12 +99,12 @@ jobs:
           python-version: "3.13.18"
           enable-cache: true
 
-      # Installed with pip like on the encoders, since uv doesn't accept the
-      # URL of Pywikibot in this file.
-      - name: Install the backend requirements
+      # Installed with pip like on the encoders and Toolforge, since uv doesn't
+      # accept the URL of Pywikibot in these files.
+      - name: Install the backend and frontend requirements
         run: |
           uv venv --seed
-          .venv/bin/pip install -r video2commons/backend/requirements.txt
+          .venv/bin/pip install -r video2commons/backend/requirements.txt             -r video2commons/frontend/requirements.txt
 
       - name: Run pytest
         run: uv run pytest

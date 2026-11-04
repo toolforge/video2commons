@@ -37,15 +37,18 @@ from video2commons.frontend.upload import status as _uploadstatus, upload as _up
 from video2commons.frontend.urlextract import (
     DEFAULT_QUEUE,
     HEAVY_QUEUE,
+    clean_info,
     do_extract_url,
     do_validate_filedesc,
     do_validate_filename,
     do_validate_filename_unique,
     do_validate_youtube_id,
     make_dummy_desc,
+    make_info_desc,
     sanitize,
 )
 from video2commons.shared import stats
+from video2commons.shared.errors import normalize_error
 from video2commons.shared.tasks import get_task_status, publish_notification
 
 # Adapted from: https://stackoverflow.com/a/19161373
@@ -73,7 +76,7 @@ api = Blueprint("api", __name__)
 
 @api.errorhandler(Exception)
 def all_exception_handler(e):
-    """Handle an exception and return an error JSON responce."""
+    """Handle an exception and return an error JSON response."""
     return error_json(e)
 
 
@@ -107,11 +110,21 @@ def format_exception(e):
 
 
 def error_json(e):
-    """Get a JSON responce on error."""
+    """Get a JSON response on error.
+
+    A known error also has the i18n message that explains it, as in the tasks
+    table, e.g. when YouTube blocks the extraction of a URL.
+    """
     session.rollback()
     if isinstance(e, BaseException):
+        error = format_exception(e)
+        known_error = normalize_error(error) or {}
         return jsonify(
-            step="error", error=format_exception(e), traceback=traceback.format_exc()
+            step="error",
+            error=error,
+            traceback=traceback.format_exc(),
+            i18n_key=known_error.get("i18n_key"),
+            i18n_urls=known_error.get("urls"),
         )
     else:
         return jsonify(step="error", error=e, traceback=None)
@@ -187,10 +200,27 @@ def extract_url():
 
 @api.route("/makedesc", methods=["POST"])
 def make_desc():
-    """Create a (mostly-empty) description."""
-    filename = request.form["filename"]
+    """Create the description of an uploaded file.
 
-    return jsonify(**make_dummy_desc(filename))
+    It is mostly empty, unless the form has the yt-dlp metadata of the file.
+    """
+    filename = request.form["filename"]
+    info = request.form.get("info")
+    if not info:
+        return jsonify(**make_dummy_desc(filename))
+
+    try:
+        info = clean_info(json.loads(info))
+    except ValueError:
+        return error_json("The metadata file is not valid JSON")
+
+    # Like for the URL of a YouTube video, check that it isn't on Commons yet.
+    if info["extractor_key"] == "Youtube" and info["id"]:
+        entity_url = find_youtube_duplicate(info["id"])
+        if entity_url:
+            return error_json(f"This video has already been uploaded: {entity_url}")
+
+    return jsonify(**make_info_desc(filename, info))
 
 
 @api.route("/listformats", methods=["POST"])
@@ -248,16 +278,20 @@ def validate_url():
     # that it doesn't already exist on Commons.
     yt_match = re.match(YOUTUBE_REGEX, url)
     if yt_match:
-        try:
-            youtube_id = yt_match.group(6)
-            return jsonify(entity_url=do_validate_youtube_id(youtube_id))
-        except Exception:
-            current_app.logger.exception(f'Error validating YouTube URL "{url}"')
-
-            # Skip validation if errors are encountered, e.g. SPARQL is down.
-            return jsonify(entity_url=None)
+        return jsonify(entity_url=find_youtube_duplicate(yt_match.group(6)))
 
     return jsonify(entity_url=None)
+
+
+def find_youtube_duplicate(youtube_id):
+    """Get the URL of the file of Commons that has a YouTube ID, if any."""
+    try:
+        return do_validate_youtube_id(youtube_id)
+    except Exception:
+        current_app.logger.exception(f'Error validating YouTube ID "{youtube_id}"')
+
+        # Skip validation if errors are encountered, e.g. SPARQL is down.
+        return None
 
 
 def get_backend_keys(format):

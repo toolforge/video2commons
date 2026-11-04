@@ -15,6 +15,13 @@
 
 import re
 
+# How to download a video on one's computer and upload it with its metadata,
+# for the errors of a site that blocks video2commons. Also linked from the
+# source form (sourceForm.html).
+LOCAL_DOWNLOAD_DOC_URL = (
+    "https://github.com/toolforge/video2commons/blob/master/docs/upload-info-json.md"
+)
+
 # KNOWN_ERRORS is a mapping of known and common errors that occur while using
 # video2commons. The goal of this mapping is to make these common errors more
 # human-readable.
@@ -30,6 +37,7 @@ KNOWN_ERRORS = [
         # YouTube sometimes returns empty files when rate limiting.
         "pattern": r"DownloadError: ERROR: The downloaded file is empty",
         "i18n_key": "generic-ratelimit-error",
+        "urls": [LOCAL_DOWNLOAD_DOC_URL],
     },
     {
         # In the case of YouTube this is a rate limit error, but it might mean
@@ -37,18 +45,22 @@ KNOWN_ERRORS = [
         # assume it's probably a rate limiting error.
         "pattern": r"DownloadError: ERROR: unable to download video data: HTTP Error 403: Forbidden",
         "i18n_key": "generic-ratelimit-error",
+        "urls": [LOCAL_DOWNLOAD_DOC_URL],
     },
     {
         "pattern": r"DownloadError: ERROR: \[youtube\] [a-zA-Z0-9_-]{11}: Video unavailable\. This content isn’t available, try again later\. Your account has been rate-limited by YouTube for up to an hour\.",
         "i18n_key": "youtube-ratelimit-error",
+        "urls": [LOCAL_DOWNLOAD_DOC_URL],
     },
     {
         "pattern": r"DownloadError: ERROR: \[youtube\] [a-zA-Z0-9_-]{11}: Requested format is not available\.",
         "i18n_key": "youtube-ratelimit-error",
+        "urls": [LOCAL_DOWNLOAD_DOC_URL],
     },
     {
         "pattern": r"DownloadError: ERROR: \[youtube\] [a-zA-Z0-9_-]{11}: Sign in to confirm you’re not a bot\.",
         "i18n_key": "youtube-bot-error",
+        "urls": [LOCAL_DOWNLOAD_DOC_URL],
     },
     {
         "pattern": r"DownloadError: ERROR: \[youtube\] [a-zA-Z0-9_-]{11}: Private video",

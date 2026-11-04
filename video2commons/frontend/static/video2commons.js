@@ -1,5 +1,6 @@
 /* globals nunjucks: false, io: false, Qs: false, bootstrap: false */
 import { ChunkedUploader } from "./ChunkedUploader.js";
+import { readInfoJson } from "./InfoJson.js";
 
 (($) => {
 	/**
@@ -432,13 +433,15 @@ import { ChunkedUploader } from "./ChunkedUploader.js";
 			var uploadedFile = newTaskData.uploadedFile[url];
 			if (uploadedFile) {
 				newTaskData.url = url;
-				return video2commons.askAPI(
-					"makedesc",
-					{
-						filename: uploadedFile.name || "",
-					},
-					["extractor", "filedesc", "filename"],
-				);
+				const data = { filename: uploadedFile.name || "" };
+				if (newTaskData.infoJson) {
+					data.info = JSON.stringify(newTaskData.infoJson.info);
+				}
+				return video2commons.askAPI("makedesc", data, [
+					"extractor",
+					"filedesc",
+					"filename",
+				]);
 			}
 
 			// Validate that the video at the URL hasn't already been uploaded
@@ -1283,6 +1286,7 @@ import { ChunkedUploader } from "./ChunkedUploader.js";
 				languageCategory: "",
 				license: null,
 				uploadedFile: {},
+				infoJson: null,
 				initialUrlValidated: false,
 				initialFilenameValidated: false,
 				initialFiledescValidated: false,
@@ -1759,10 +1763,15 @@ import { ChunkedUploader } from "./ChunkedUploader.js";
 								),
 							);
 					}
-					$addTaskDialog
+					const $errorbox = $addTaskDialog
 						.find(".modal-body #dialog-errorbox")
-						.text(`Error: ${error}`)
+						.text("Error: ")
 						.show();
+					if (error instanceof nunjucks.runtime.SafeString) {
+						$errorbox.append(error.toString());
+					} else {
+						$errorbox.append(document.createTextNode(error));
+					}
 				})
 				.always(video2commons.reactivatePrevNextButtons);
 		},
@@ -1871,6 +1880,51 @@ import { ChunkedUploader } from "./ChunkedUploader.js";
 						uploader?.abort();
 					});
 			});
+
+			// The yt-dlp metadata of the uploaded file, which can be added before
+			// or after it. Changing it fills in the description again.
+			const showInfoJson = () => {
+				const { infoJson } = newTaskData;
+				$addTaskDialog
+					.find("#infojson-status")
+					.toggleClass("d-none", !infoJson);
+				$addTaskDialog.find("#infojson-text").text(
+					infoJson
+						? translate("infoJsonLoaded", {
+								params: [infoJson.info.title || infoJson.name],
+							})
+						: "",
+				);
+			};
+
+			const setInfoJson = (infoJson) => {
+				newTaskData.infoJson = infoJson;
+				newTaskData.initialFilenameValidated = false;
+				showInfoJson();
+			};
+
+			showInfoJson();
+
+			$addTaskDialog.find("#infojsonupload").on("change", async (e) => {
+				const file = e.target.files[0];
+				// Choosing the same file again after an error must read it again.
+				e.target.value = "";
+				if (!file) return;
+
+				setUploadStatus(null, "");
+				try {
+					setInfoJson({ name: file.name, info: await readInfoJson(file) });
+				} catch (error) {
+					setUploadStatus(
+						"danger",
+						translate("infoJsonFailed", { params: [error.message] }),
+					);
+				}
+			});
+
+			$addTaskDialog.find("#infojson-remove").on("click", () => {
+				setInfoJson(null);
+			});
 		},
 
 		askAPI: (url, datain, dataout, object = null) => {
@@ -1883,7 +1937,13 @@ import { ChunkedUploader } from "./ChunkedUploader.js";
 				.apiPost(url, datain)
 				.done((data) => {
 					if (data.error) {
-						deferred.reject(data.error);
+						// A known error has a message that explains it, which can
+						// have links (a SafeString).
+						deferred.reject(
+							data.i18n_key
+								? translate(data.i18n_key, { urls: data.i18n_urls })
+								: data.error,
+						);
 						return;
 					}
 					for (var i = 0; i < dataout.length; i++) {

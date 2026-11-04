@@ -66,7 +66,7 @@ flowchart LR
     tests["🧪 <b>tests</b><br/>Node 24<br/><code>npm test</code> (Vitest)"]
     biome["🎨 <b>biome</b><br/>JS lint + format<br/><code>biome ci .</code>"]
     ruff["🐍 <b>ruff</b><br/>Python 3.13.18 via uv<br/><code>ruff check</code> + <code>ruff format --check</code>"]
-    pytest["🧪 <b>pytest</b><br/>Python 3.13.18 · backend requirements<br/><code>pytest</code>"]
+    pytest["🧪 <b>pytest</b><br/>Python 3.13.18 · backend and frontend requirements<br/><code>pytest</code>"]
 
     check & tests & biome & ruff & pytest --> ok(["✅ Ready to merge"])
 
@@ -86,10 +86,11 @@ flowchart LR
 | **tests** | The JavaScript tests in [`tests/`](../tests), with a mocked backend (MSW). | `npm test` |
 | **biome** | JavaScript linting and formatting ([`biome.json`](../biome.json)). | `npm run lint` (fix: `npm run format`) |
 | **ruff** | Python linting and formatting ([`pyproject.toml`](../pyproject.toml)). | `uv run ruff check . && uv run ruff format --check .` |
-| **pytest** | The Python tests in [`tests/backend/`](../tests/backend), with the backend requirements installed by pip and fakes for Redis, Commons and the encoding stages. | `uv venv --seed && .venv/bin/pip install -r video2commons/backend/requirements.txt && uv run pytest` |
+| **pytest** | The Python tests in [`tests/backend/`](../tests/backend) and [`tests/frontend/`](../tests/frontend), with the backend and frontend requirements installed by pip and fakes for Redis, Commons and the encoding stages. | `uv venv --seed && .venv/bin/pip install -r video2commons/backend/requirements.txt -r video2commons/frontend/requirements.txt && uv run pytest` |
 
 > [!NOTE]
-> The Python tests only cover the cleanup at the end of a task for now. CI
+> The Python tests only cover the cleanup at the end of a task and the
+> description made from the yt-dlp metadata of an uploaded file for now. CI
 > does **not** cover the rest of the Python code's behaviour, the Puppet
 > manifest or the shell scripts. Changes to the workers, to Puppet or to the
 > deployment scripts need a careful review and a close watch after deployment.
