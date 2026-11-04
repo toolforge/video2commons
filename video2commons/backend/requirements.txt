@@ -7,4 +7,6 @@ language_data>=1.4.0,<2
 #pywikibot
 mwparserfromhell>=0.5.2
 PythonVideoConverter
+# Imported by PythonVideoConverter, which doesn't declare it.
+six
 https://github.com/wikimedia/pywikibot-core/zipball/master#egg=pywikibot
