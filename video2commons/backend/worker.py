@@ -16,6 +16,7 @@
 
 """video2commons backend worker."""
 
+import contextlib
 import logging
 import os
 import re
@@ -77,6 +78,9 @@ app.conf.task_queues = [
 
 redisconnection = Redis(host=redis_host, db=3, password=redis_pw)
 
+# Each task downloads and encodes its files in its own subdirectory.
+OUTPUT_DIR = "/srv/v2c/output/"
+
 
 class Stats:
     """Storage for task status."""
@@ -92,6 +96,19 @@ def get_worker_concurrency():
     match = re.search(r"--concurrency[=\s]+(\d+)", celeryd_opts)
     if match:
         return int(match.group(1))
+
+
+def run_cleanup_steps(task_id, steps):
+    """Run every cleanup step of a task, even if some of them fail.
+
+    A failing step is logged instead of raised, so that it neither skips the
+    next steps nor replaces the outcome of the task.
+    """
+    for description, step in steps:
+        try:
+            step()
+        except Exception:
+            logger.exception("Could not %s of task %s", description, task_id)
 
 
 class EncodingTask(AbortableTask):
@@ -139,26 +156,27 @@ def main(
     if redisconnection.exists(lockkey):
         raise Ignore
 
-    # Immediately increment the processing count in stats since the cron job
-    # may take a while to update it (it takes a while to poll).
-    try:
-        update_task_stats(redisconnection, self.request.id, remove=False)
-    except Exception:
-        # We don't want to fail the task if we can't update stats.
-        logger.exception("Could not update the stats of task %s", self.request.id)
-
     # Check for 10G of disk space, refuse to run if it is unavailable
     st = os.statvfs("/srv")
     if st.f_frsize * st.f_bavail < 10 << 30:
         self.retry(max_retries=20, countdown=5 * 60)
         assert False  # should never reach here
 
+    # Immediately increment the processing count in stats since the cron job
+    # may take a while to update it (it takes a while to poll). This comes after
+    # the disk space check, as a retried task goes back to the queue.
+    try:
+        update_task_stats(redisconnection, self.request.id, remove=False)
+    except Exception:
+        # We don't want to fail the task if we can't update stats.
+        logger.exception("Could not update the stats of task %s", self.request.id)
+
     redisconnection.setex(lockkey, 7 * 24 * 3600, self.request.hostname)
 
     # Generate temporary directory for task
     for i in range(10):  # 10 tries
         id = os.urandom(8).hex()
-        outputdir = "/srv/v2c/output/" + id
+        outputdir = OUTPUT_DIR + id
         if not os.path.isdir(outputdir):
             os.makedirs(outputdir)
             break
@@ -186,6 +204,12 @@ def main(
 
     def errorcallback(text):
         raise TaskError(text)
+
+    def publish_cleanup_status():
+        # statuscallback() raises TaskAbort again if the task has been aborted,
+        # which is not a cleanup failure: the task already ends with it.
+        with contextlib.suppress(TaskAbort):
+            statuscallback("Cleaning up...", -1)
 
     try:
         statuscallback("Downloading...", -1)
@@ -300,21 +324,18 @@ def main(
         statuscallback("Done!", 100)
         return {"type": "done", "filename": filename, "url": wikifileurl}
     finally:
-        # statuscallback() raises TaskAbort again if the task has been aborted,
-        # which must not skip the rest of the cleanup.
-        try:
-            statuscallback("Cleaning up...", -1)
-        except TaskAbort:
-            pass
-        pywikibot.stopme()
-        pywikibot.config.authenticate.clear()
-        pywikibot.config.usernames["commons"].clear()
-        pywikibot._sites.clear()
-
-        shutil.rmtree(outputdir)
-
-        try:
-            update_task_stats(redisconnection, self.request.id, remove=True)
-        except Exception:
-            # We don't want to fail the task if we can't update stats.
-            logger.exception("Could not update the stats of task %s", self.request.id)
+        run_cleanup_steps(
+            task_id,
+            [
+                ("publish the cleanup status", publish_cleanup_status),
+                ("stop Pywikibot", pywikibot.stopme),
+                ("forget the OAuth tokens", pywikibot.config.authenticate.clear),
+                ("forget the username", pywikibot.config.usernames["commons"].clear),
+                ("forget the cached sites", pywikibot._sites.clear),
+                ("remove the output directory", lambda: shutil.rmtree(outputdir)),
+                (
+                    "update the stats",
+                    lambda: update_task_stats(redisconnection, task_id, remove=True),
+                ),
+            ],
+        )

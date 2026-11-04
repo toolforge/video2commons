@@ -90,7 +90,7 @@ video2commons-socketio/ Socket.IO server pushing task updates to browsers
 puppet/                 Manifest that sets up an encoder instance
 utils/                  Deployment, health check, maintenance and cookie scripts
 www/                    Toolforge webservice entry points (Python and Node.js)
-tests/                  JavaScript tests (Vitest)
+tests/                  JavaScript tests (Vitest), Python tests in tests/backend (pytest)
 ```
 
 ## Documentation
@@ -115,6 +115,8 @@ npm test            # run the JavaScript tests
 npm run lint        # lint and check formatting of the JavaScript (Biome)
 uv run ruff check . # lint the Python code
 uv run ruff format --check .
+uv venv --seed && .venv/bin/pip install -r video2commons/backend/requirements.txt
+uv run pytest       # run the Python tests, with the backend requirements
 ```
 
 The frontend and the workers read their settings (OAuth consumer, Redis…) from

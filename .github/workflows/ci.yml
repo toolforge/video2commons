@@ -85,3 +85,26 @@ jobs:
 
       - name: Run the Ruff formatter
         run: uv run ruff format --check .
+
+  pytest:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+
+      - name: Setup uv
+        uses: astral-sh/setup-uv@v10.3.3
+        with:
+          python-version: "3.13.18"
+          enable-cache: true
+
+      # Installed with pip like on the encoders, since uv doesn't accept the
+      # URL of Pywikibot in this file.
+      - name: Install the backend requirements
+        run: |
+          uv venv --seed
+          .venv/bin/pip install -r video2commons/backend/requirements.txt
+
+      - name: Run pytest
+        run: uv run pytest
