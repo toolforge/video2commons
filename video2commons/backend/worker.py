@@ -153,19 +153,20 @@ def main(
     if redisconnection.exists(lockkey):
         raise Ignore
 
-    # Immediately increment the processing count in stats since the cron job
-    # may take a while to update it (it takes a while to poll).
-    try:
-        update_task_stats(redisconnection, self.request.id, remove=False)
-    except Exception:
-        # We don't want to fail the task if we can't update stats.
-        logger.exception("Could not update the stats of task %s", self.request.id)
-
     # Check for 10G of disk space, refuse to run if it is unavailable
     st = os.statvfs("/srv")
     if st.f_frsize * st.f_bavail < 10 << 30:
         self.retry(max_retries=20, countdown=5 * 60)
         assert False  # should never reach here
+
+    # Immediately increment the processing count in stats since the cron job
+    # may take a while to update it (it takes a while to poll). This comes after
+    # the disk space check, as a retried task goes back to the queue.
+    try:
+        update_task_stats(redisconnection, self.request.id, remove=False)
+    except Exception:
+        # We don't want to fail the task if we can't update stats.
+        logger.exception("Could not update the stats of task %s", self.request.id)
 
     redisconnection.setex(lockkey, 7 * 24 * 3600, self.request.hostname)
 
