@@ -8,7 +8,7 @@ $http_host = 'v2c.wmflabs.org'
 # installed with uv (python-build-standalone) in /opt/python. Each version gets
 # its own venv: after a change, the workers still finishing their tasks on the
 # previous version keep their venv until they restart.
-$python_version = '3.13.17'
+$python_version = '3.13.18'
 $venv = "/srv/v2c/venv-${python_version}"
 $uv_environment = [
     'HOME=/root',
@@ -104,10 +104,13 @@ exec { 'install-uv':
     require  => Package['python3-full'],
 }
 
+# uv is upgraded first, since a uv installed before the release of this Python
+# version doesn't know where to download it.
 exec { 'install-python':
-    command     => "/opt/uv/bin/uv python install ${python_version}",
+    command     => "/opt/uv/bin/pip install -U uv && /opt/uv/bin/uv python install ${python_version}",
     unless      => "/opt/uv/bin/uv python find ${python_version}",
     environment => $uv_environment,
+    provider    => 'shell',
     require     => Exec['install-uv'],
 }
 
