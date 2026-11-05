@@ -151,6 +151,11 @@ def main(
     """Main worker code."""
     task_id = self.request.id
 
+    # The frontend sends the "Import subtitles" checkbox as a form value, so an
+    # unchecked box arrives as the string "false", which is truthy.
+    if isinstance(subtitles, str):
+        subtitles = subtitles.lower() == "true"
+
     # Get a lock to prevent double-running with same task ID
     lockkey = "tasklock:" + self.request.id
     if redisconnection.exists(lockkey):
@@ -232,10 +237,8 @@ def main(
         source = file
 
         # Remember intent with subtitles so categories can be added
-        # appropriately later. These can be strings, so convert to bool.
+        # appropriately later.
         subtitles_requested = subtitles
-        if type(subtitles_requested) is str:
-            subtitles_requested = subtitles_requested.lower() == "true"
 
         subtitles = subtitles and d["subtitles"]
 
