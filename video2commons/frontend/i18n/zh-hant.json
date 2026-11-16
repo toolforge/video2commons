@@ -2,7 +2,8 @@
 	"@metadata": {
 		"authors": [
 			"Kly",
-			"Liuxinyu970226"
+			"Liuxinyu970226",
+			"LowensteinYang"
 		]
 	},
 	"loginOnCommons": "從維基共享資源登入",
@@ -78,7 +79,7 @@
 	"license-unspecified": "未指定",
 	"allow-unlicensed": "允許上傳未指定授權條款的內容",
 	"license-warning": "請確認您擁有上傳此播放清單中所有選定內容的權限後，再進行上傳。如果您不確定維基共享資源允許上傳哪些類型的內容，請查看{{#a}}授權條款方針{{/a}}來了解更多資訊。",
-	"generic-ratelimit-error": "由於速率限制，檔案現在無法下載。請稍後 1 至 3 小時後再試一次。",
+	"generic-ratelimit-error": "由於速率限制，檔案現在無法下載。請稍後1~3小時再試一次。或是使用yt-dlp{{#a}}將其下載到電腦上{{/a}}，並連同其元資料一併上傳至此處。",
 	"out-of-memory-error": "伺服器在處理檔案時記憶體不足，請先重試。如果問題仍然存在，請回報錯誤。",
 	"segfault-error": "處理檔案時遇到內部錯誤，請先重試。若問題仍然存在，請回報錯誤。",
 	"title-forbidden-error": "檔案標題不符合要求，請使用其他標題上傳。更多資訊請查看{{#a}}檔案命名方針{{/a}}。",
@@ -86,7 +87,7 @@
 	"video-not-found-error": "提供的 URL 無法找到該檔案。請使用不同的 URL 建立一個新任務。",
 	"output-too-large-error": "輸出檔案過大，無法上傳到維基共享資源。目前無法上傳大於 5 GiB 的檔案。請參閱維基共享資源上的{{#a}}最大檔案大小{{/a}}頁面來了解更多資訊。",
 	"task-stopped-responding": "轉換過程費時過久，已停止回應。請稍後再試。",
-	"youtube-bot-error": "由於 YouTube 偵測到機器人行為，影片無法下載。請稍後 1 至 3 小時候再重試。",
+	"youtube-bot-error": "由於 YouTube 偵測到機器人行為，影片無法下載。請稍後 1 至 3 小時候再重試。或是使用yt-dlp{{#a}}將其下載到電腦上{{/a}}，並連同其元資料一併上傳至此處。",
 	"youtube-private-error": "該影片無法從 YouTube 下載，因為被設定成私有影片。",
-	"youtube-ratelimit-error": "由於速率限制，檔案現在無法從 YouTube 下載。請稍後 1 至 3 小時後再試一次。"
+	"youtube-ratelimit-error": "由於速率限制，檔案現在無法從YouTube下載。請稍後1~3小時再試一次。或是使用yt-dlp{{#a}}將其下載到電腦上{{/a}}，並連同其元資料一併上傳至此處。"
 }

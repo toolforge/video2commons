@@ -63,6 +63,7 @@
 	"uploadRetry": "Błąd przesyłania (ponowna próba, próba $1 z $2): $3",
 	"uploadOffline": "Jesteś w trybie offline. Przesyłanie zostanie wznowione, gdy ponownie uzyskasz połączenie z Internetem.",
 	"uploadFailed": "Przesyłanie nie powiodło się: $1",
+	"uploadInfoJson": "Dodaj metadane yt-dlp…",
 	"note": "Uwaga:",
 	"importantnote": "Ważna uwaga:",
 	"youtubewarning": "Pobieranie plików z YouTube’a może się nie powieść z powodu wykrycia botów. Zazwyczaj dzieje się tak w przypadku przekroczenia limitów YouTube’a. Jeśli tak się stanie, odczekaj 1–2 godziny, a następnie spróbuj ponownie.",

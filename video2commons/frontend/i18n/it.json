@@ -64,13 +64,13 @@
 	"license-unspecified": "Non specificato",
 	"allow-unlicensed": "Consenti il caricamento di contenuti con una licenza non specificata",
 	"license-warning": "Assicurati di avere il diritto di caricare tutti i contenuti selezionati da questa playlist prima di caricarli. Se non sei sicuro di quali tipi di contenuti siano consentiti su Commons, consulta le {{#a}}politiche di licenza{{/a}} per ulteriori informazioni.",
-	"generic-ratelimit-error": "Impossibile scaricare il file a causa del limite di richieste. Riprova tra 1-3 ore.",
+	"generic-ratelimit-error": "Impossibile scaricare il file a causa del limite di richieste. Riprova tra 1-3 ore. Oppure {{#a}}scaricalo sul tuo computer{{/a}} con yt-dlp e caricalo qui con i relativi metadati.",
 	"out-of-memory-error": "Il server ha esaurito la memoria durante l'elaborazione del file. Riprova e, se il problema persiste, segnalalo.",
 	"segfault-error": "Si è verificato un errore interno durante l'elaborazione del file. Riprova e, se il problema persiste, segnalalo.",
 	"title-forbidden-error": "Il titolo del file non è consentito. Carica il file utilizzando un titolo diverso. Consulta le {{#a}}norme di denominazione dei file{{/a}} per ulteriori informazioni.",
 	"unsupported-format-error": "Impossibile codificare il file. Ciò potrebbe essere dovuto a formati non supportati o impostazioni incompatibili. Si prega di segnalare il problema in modo che possiamo indagare.",
 	"video-not-found-error": "Impossibile trovare il file all'URL fornito. Si prega di creare una nuova attività utilizzando un URL diverso.",
-	"youtube-bot-error": "Impossibile scaricare il video a causa del rilevamento di bot da parte di YouTube. Riprova tra 1-3 ore.",
+	"youtube-bot-error": "Impossibile scaricare il video a causa del rilevamento di bot da parte di YouTube. Riprova tra 1-3 ore. Oppure {{#a}}scaricalo sul tuo computer{{/a}} con yt-dlp e caricalo qui con i relativi metadati.",
 	"youtube-private-error": "Impossible scaricare il video da YouTube perché è contrassegnato come privato.",
-	"youtube-ratelimit-error": "Impossibile scaricare il video da YouTube a causa del limite di richieste. Riprova tra 1-3 ore."
+	"youtube-ratelimit-error": "Impossibile scaricare il video da YouTube a causa del limite di richieste. Riprova tra 1-3 ore. Oppure {{#a}}scaricalo sul tuo computer{{/a}} con yt-dlp e caricalo qui con i relativi metadati."
 }
