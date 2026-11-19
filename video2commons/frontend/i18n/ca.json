@@ -3,6 +3,7 @@
 		"authors": [
 			"Fitoschido",
 			"Mguix",
+			"Qllach",
 			"Toniher"
 		]
 	},
@@ -42,8 +43,8 @@
 	"importantnote": "Nota important:",
 	"notesplaylists": "Les llistes de reproducció no es processaran correctament. Alguns llocs web (com Youku i Comedy Central) utilitzen vídeos dividits en diverses parts, interpretats com una llista de reproducció, i tampoc es processaran correctament.",
 	"notesuncheck": "Si l'arxiu multimèdia no inclou pistes d'àudio o de vídeo, desactiva les caselles corresponents. En cas contrari la conversió pot fallar, encara que el format sigui lliure.",
-	"notessubtitles": "Si es marca 'Importar subtítols', s'importaran els subtítols, a excepció dels autogenerats.",
+	"notessubtitles": "Si es marca '{{int:importsubtitles}}'', s'importaran els subtítols, a excepció dels autogenerats.",
 	"noteslicensing": "Només pengeu contingut {{#a}}#fl|amb llicència lliure{{/a}} o {{#a}}#pd|contingut amb{{/a}} llicència lliure. {{#a}}#fu| L'ús raonable{{/a}} no està permès a Wikimedia Commons.",
 	"extensionmsg": "L'extensió de l'arxiu establert anteriorment s'utilitza si i només si el vídeo està en un format no lliure, que requereix la transcodificació. Els vídeos en formats lliures mantindran les extensions.",
-	"confirmmsg": "Confirmeu la tasca o feu clic a \"Enrere\" per canviar els paràmetres. Fent clic a \"Confirmar\", la tasca serà enviada i executada. A causa de restriccions tècniques, no es pot avortar fàcilment una tasca un cop enviada."
+	"confirmmsg": "Confirmeu la tasca o feu clic a '{{int:back}}' per canviar els paràmetres. Fent clic a '{{int:confirm}}'\", la tasca serà enviada i executada. A causa de restriccions tècniques, no es pot avortar fàcilment una tasca un cop enviada."
 }
