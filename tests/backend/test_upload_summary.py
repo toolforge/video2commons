@@ -47,7 +47,7 @@ def site(monkeypatch):
     return site
 
 
-def upload_video(tmp_path, **kwargs):
+def upload_video(tmp_path, source=SOURCE, **kwargs):
     video = tmp_path / "video.webm"
     video.write_bytes(b"\x1a\x45\xdf\xa3")
 
@@ -57,7 +57,7 @@ def upload_video(tmp_path, **kwargs):
     return upload.upload(
         str(video),
         "Example video.webm",
-        SOURCE,
+        source,
         "== Summary ==",
         "Example",
         lambda text, percent: None,
@@ -79,3 +79,11 @@ def test_takes_the_summary_of_the_tool(site, tmp_path):
     )
 
     assert site.uploads[0]["comment"] == SUMMARY
+
+
+def test_keeps_where_the_media_came_from_after_the_summary_of_the_tool(site, tmp_path):
+    url = "https://www.youtube.com/watch?v=abcdefghijk"
+
+    upload_video(tmp_path, source=url, comment=SUMMARY)
+
+    assert site.uploads[0]["comment"] == f"{SUMMARY} (imported media from {url})"

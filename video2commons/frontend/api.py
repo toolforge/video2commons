@@ -97,7 +97,7 @@ def check_logged_in():
         return error_json("Are you logged in?")
 
 
-@api.after_request
+@api.after_app_request
 def allow_api_origins(response):
     """Let the pages of the sites in api_origins read the answers of the API.
 
@@ -105,7 +105,13 @@ def allow_api_origins(response):
     /connect, in the Authorization header. The answers to a request that
     carries the session cookie stay unreadable to other sites, as before, so
     they still cannot get the CSRF token that every POST needs.
+
+    Registered on the app rather than on the blueprint, so that the answer to
+    a URL of the API that does not exist, or to the wrong method, which never
+    reaches the blueprint, is readable too, instead of an opaque CORS error.
     """
+    if not request.path.startswith("/api/"):
+        return response
     response.vary.add("Origin")
     origin = request.headers.get("Origin")
     if origin in api_origins:
@@ -200,11 +206,22 @@ def is_sudoer(username):
     return username in redisconnection.lrange("sudoers", 0, -1)
 
 
+def acts_as_maintainer():
+    """Whether this request may see and manage the tasks of every user.
+
+    Never through an API token: a page of another site that holds one acts on
+    the user's own tasks only, even when the user is a maintainer.
+    """
+    return (
+        bool(session.get("is_maintainer")) and getattr(session, "token", None) is None
+    )
+
+
 def get_tasks():
     """Get a list of visible tasks for user."""
     # sudoer = able to monitor all tasks
     username = session["username"]
-    if session.get("is_maintainer"):
+    if acts_as_maintainer():
         key = "alltasks"
     else:
         key = "tasks:" + username
@@ -386,32 +403,37 @@ def run_task():
         else:
             queue = DEFAULT_QUEUE
 
-    params = (
-        url,
-        ie_key,
-        subtitles,
+    taskid = run_task_internal(
         filename,
-        filedesc,
-        downloadkey,
-        convertkey,
-        username,
-        oauth,
+        (
+            url,
+            ie_key,
+            subtitles,
+            filename,
+            filedesc,
+            downloadkey,
+            convertkey,
+            username,
+            oauth,
+        ),
+        queue,
+        comment=clean_comment(request.form.get("comment", "")),
     )
-
-    # The edit summary of the upload, for a tool that sends its own files and
-    # names itself in it. Added only when there is one, so that the tasks
-    # without one still run on a worker that predates it.
-    comment = request.form.get("comment", "").strip()[:COMMENT_MAX_LENGTH]
-    if comment:
-        params += (comment,)
-
-    taskid = run_task_internal(filename, params, queue)
 
     return jsonify(id=taskid, step="success")
 
 
-def run_task_internal(filename, params, queue):
-    """Internal run task function to accept whatever params given."""
+def clean_comment(text):
+    """The edit summary a tool gave for its upload, on one line, cut to fit."""
+    return " ".join(text.split())[:COMMENT_MAX_LENGTH]
+
+
+def run_task_internal(filename, params, queue, comment=None):
+    """Internal run task function to accept whatever params given.
+
+    comment is the edit summary of the upload, when the tool that starts the
+    task gives its own.
+    """
     banned = check_banned()
     assert not banned, "You are banned from using this tool! Reason: " + banned
 
@@ -420,10 +442,19 @@ def run_task_internal(filename, params, queue):
     if queue not in VALID_QUEUES:
         queue = DEFAULT_QUEUE
 
-    res = worker.main.apply_async(args=params, queue=queue)
+    expire = 14 * 24 * 3600  # 2 weeks
+    # The ID is chosen here, so that the summary is in Redis before a worker
+    # can pick the task up. It goes beside the parameters rather than among
+    # them: a worker that predates it then runs the task all the same, with
+    # the summary of its own, and the deploys need no order.
+    taskid = str(uuid4())
+    if comment:
+        redisconnection.set("comment:" + taskid, comment)
+        redisconnection.expire("comment:" + taskid, expire)
+
+    res = worker.main.apply_async(args=params, queue=queue, task_id=taskid)
     taskid = res.id
 
-    expire = 14 * 24 * 3600  # 2 weeks
     redisconnection.lpush("alltasks", taskid)
     redisconnection.expire("alltasks", expire)
     redisconnection.lpush("tasks:" + session["username"], taskid)
@@ -458,7 +489,7 @@ def restart_task():
 
     filename = redisconnection.get("titles:" + id)
     assert filename, "Task does not exist"
-    if not session.get("is_maintainer"):
+    if not acts_as_maintainer():
         assert id in redisconnection.lrange("tasks:" + session["username"], 0, -1), (
             "Task must belong to you."
         )
@@ -470,7 +501,12 @@ def restart_task():
 
     # Always restart failed tasks on the heavy queue as a failsafe in case the
     # task failed earlier due to being misprioritized.
-    newid = run_task_internal(filename, json.loads(params), HEAVY_QUEUE)
+    newid = run_task_internal(
+        filename,
+        json.loads(params),
+        HEAVY_QUEUE,
+        comment=redisconnection.get("comment:" + id),
+    )
     redisconnection.set("restarted:" + id, newid)
 
     publish_notification(
@@ -487,7 +523,7 @@ def remove_task():
     """Revove a task from list of tasks."""
     id = request.form["id"]
     username = session["username"]
-    if not session.get("is_maintainer"):
+    if not acts_as_maintainer():
         assert id in redisconnection.lrange("tasks:" + username, 0, -1), (
             "Task must belong to you."
         )
@@ -496,6 +532,7 @@ def remove_task():
     redisconnection.delete("titles:" + id)
     redisconnection.delete("params:" + id)
     redisconnection.delete("restarted:" + id)
+    redisconnection.delete("comment:" + id)
 
     publish_notification(redisconnection, "remove", {"taskid": id})
 
@@ -507,7 +544,7 @@ def abort_task():
     """Abort a task."""
     id = request.form["id"]
     username = session["username"]
-    if not session.get("is_maintainer"):
+    if not acts_as_maintainer():
         assert id in redisconnection.lrange("tasks:" + username, 0, -1), (
             "Task must belong to you."
         )

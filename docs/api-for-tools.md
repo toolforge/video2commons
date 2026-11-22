@@ -9,7 +9,10 @@ token for the user's session.
 
 Only the pages of the sites in `api_origins` can do this (see
 [Configuration](architecture.md#configuration)). By default, that is
-`https://commons.wikimedia.org`.
+`https://commons.wikimedia.org`. The popup names the site, and nothing more
+precise: every script that runs on the pages of a site in `api_origins` can
+open it, and can read the message that carries the token, so list only the
+sites whose scripts you trust.
 
 ## Getting a token
 
@@ -44,9 +47,14 @@ Only the pages of the sites in `api_origins` can do this (see
    });
    ```
 
-The token opens the user's session of video2commons. It lasts as long as the
-session, a day that starts again each time it is used, and logging out of
-video2commons ends it.
+The token opens the user's session of video2commons. It lasts a day, which
+starts again each time the token is used. Logging out of video2commons, or
+logging in to it again, ends it: the tool then asks for a new one. Each
+*Allow* gives a new token.
+
+A token lets the tool do what the user can do with their own tasks on
+video2commons: upload files, start tasks, and restart, abort or remove them.
+It never gives the powers of a maintainer over the tasks of other users.
 
 ## Calling the API
 
@@ -58,34 +66,60 @@ const headers = { Authorization: `Bearer ${token}` };
 const { csrf } = await (await fetch(`${V2C}/api/csrf`, { headers })).json();
 ```
 
-Then, for a video on the user's computer:
+An error comes back as an answer of status 200 with an `error` field, e.g.
+`{"step": "error", "error": "Are you logged in?"}`, so check every answer for
+it.
 
-1. Send it to `/api/upload/upload` in chunks, as
+## Uploading a file
+
+1. Check the name of the file on Commons first, without its extension: POST
+   it as `filename` to `/api/validatefilename`, then to
+   `/api/validatefilenameunique`. Each answer gives back the `filename`, or an
+   `error`. A name that is taken would otherwise only fail after the whole
+   file has been converted.
+
+2. Send the file to `/api/upload/upload` in chunks, as
    [`ChunkedUploader.js`](../video2commons/frontend/static/ChunkedUploader.js)
-   does (see [Direct file uploads](architecture.md#direct-file-uploads)). Each
-   request is a form with the chunk as `file`, the CSRF token as
-   `_csrf_token` and, from the second chunk on, the `filekey` of the first
-   answer, with a `Content-Range: bytes <first>-<last>/<size>` header. The
-   answer is `Continue` until the last chunk, then `Success`.
+   does (see [Direct file uploads](architecture.md#direct-file-uploads)). That
+   file sends no `Authorization` header, so a tool needs its own copy of the
+   loop:
 
-2. Start the task with `/api/task/run`:
+   - each request is a form with the chunk as `file`, under the name of the
+     original file, e.g. `body.append("file", chunk, file.name)`: its
+     extension decides how big the file may be (12 GiB for a `.mov`, 8 GiB
+     for an `.mp4`, 5 GiB otherwise);
+   - the CSRF token as `_csrf_token`, and, from the second chunk on, the
+     `filekey` of the first answer;
+   - a `Content-Range: bytes <first>-<last>/<size>` header.
+
+   Each answer but the last is `{"result": "Continue", "offset": …,
+   "filekey": …}`: send the next chunk from `offset`, which is also where to
+   start again after an error. The last answer is `"Success"`.
+
+3. Start the task with `/api/task/run`:
 
    | Field | Value |
    |---|---|
    | `url` | `uploads:<filekey>` |
    | `extractor` | empty |
-   | `subtitles` | `false` |
+   | `subtitles` | `false`, as the page of video2commons sends for a file without subtitles |
    | `filename` | the name of the file on Commons, without its extension |
    | `filedesc` | the wikitext of the file page |
    | `format` | one of the formats of `/api/listformats`, e.g. `webm (AV1/Opus)` |
-   | `comment` | optional: the edit summary of the upload, at most 500 characters. Without it, the summary says where the media was imported from. |
+   | `comment` | optional: the edit summary of the upload, on one line, at most 500 characters |
+
+   Without a `comment`, the summary says where the media was imported from.
+   With one, the summary is the `comment` for an uploaded file, and the
+   `comment` followed by "(imported media from …)" for a URL.
 
    The answer gives the `id` of the task, which also appears in the user's
    task list on video2commons.
 
-3. Follow the task with `GET /api/status-single?task=<id>`: its `status` is
-   `progress` while it waits or runs, then `done`, with the `url` of the file
-   on Commons, or `fail`, with the error in `text`.
+4. Follow the task with `GET /api/status-single?task=<id>`. The answer is
+   `{"value": {…}}`, and the `status` of the value is `progress` while the task
+   waits or runs, then `done`, with the `url` of the file on Commons, `fail`,
+   with the error in `text`, or `abort`. The value is `null` once the task is
+   removed, by the user or two weeks later, so stop asking then too.
 
 ## What other sites can't do
 
@@ -93,5 +127,4 @@ The answers to the pages of the sites in `api_origins` carry
 `Access-Control-Allow-Origin`, but not `Access-Control-Allow-Credentials`: the
 answer to a request that sends the cookie of video2commons stays unreadable
 for any other site, as before, so it can't get the CSRF token that a `POST`
-needs. The popup can't be shown in a frame, so a page can't get the user to
-allow it without seeing it.
+needs. The popup can't be shown in a frame of another site.

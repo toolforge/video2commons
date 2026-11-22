@@ -522,10 +522,11 @@ flowchart LR
 |---|---|---|
 | `session:<sid>` | Flask session: OAuth tokens, user name, CSRF token ([`redisession.py`](../video2commons/frontend/redisession.py)) | 1 day |
 | `iosession:<ticket>` | Socket.IO login ticket → session id | 60 s |
-| `apitoken:<token>` | API token of a page of another site → session id ([`redisession.py`](../video2commons/frontend/redisession.py)) | 1 day, renewed with the session |
+| `apitoken:<token>` | API token of a page of another site → session id ([`redisession.py`](../video2commons/frontend/redisession.py)) | 1 day, renewed each time it is used |
 | `tasks:<user>`, `alltasks` | Task ids, per user and global | 2 weeks |
 | `titles:<id>`, `params:<id>` | File name and parameters of a task (used by restarts) | 2 weeks |
 | `restarted:<id>` | Id of the task created by a restart | 2 weeks |
+| `comment:<id>` | Edit summary of the upload, when the tool that started the task gave one | 2 weeks |
 | `tasklock:<id>` | Encoder running the task; prevents running it twice | 7 days |
 | `yt_dlp_lock:<source>:<group>` | Rate-limiting lock for YouTube | 20 min max |
 | `stats` | Queue length and worker activity shown in the UI | — |
@@ -551,7 +552,8 @@ All `POST` API calls need the session's CSRF token.
 The pages of the sites in `api_origins` can use the API too, with an API
 token that the user gives them on `/connect`, sent in the `Authorization`
 header instead of the cookie. The answers to those pages carry
-`Access-Control-Allow-Origin`, without credentials. See
+`Access-Control-Allow-Origin`, without credentials, and a token never
+gives the powers of a maintainer. See
 [Using video2commons from another tool](api-for-tools.md).
 
 ## Rate limiting and YouTube

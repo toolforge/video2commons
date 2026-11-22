@@ -33,11 +33,21 @@
     <p class="lead">
       {{ _('connectQuestion')|replace('$1', origin)|replace('$2', username) }}
     </p>
-    <form method="post" action="{{ url_for('connect') }}">
+    <div class="alert alert-danger" id="connect-no-opener" hidden>
+      {{ _('connectNoOpener') }}
+    </div>
+    <form id="connect-form" method="post" action="{{ url_for('connect') }}">
       <input type="hidden" name="origin" value="{{ origin }}">
       <input type="hidden" name="_csrf_token" value="{{ csrf }}">
       <button class="btn btn-primary" type="submit">{{ _('connectAllow') }}</button>
       <button class="btn" type="button" onclick="window.close()">{{ _('connectCancel') }}</button>
     </form>
+    <script>
+      // Without the window that asked, a token would have nowhere to go.
+      if (!window.opener) {
+        document.getElementById("connect-form").hidden = true;
+        document.getElementById("connect-no-opener").hidden = false;
+      }
+    </script>
   {% endif %}
 {% endblock %}

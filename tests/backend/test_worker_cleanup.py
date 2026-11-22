@@ -46,12 +46,19 @@ class FakeRedis:
 
     def __init__(self):
         self.locked = False
+        # The edit summary that the frontend kept for the task, as Redis
+        # gives it back to the worker: bytes.
+        self.comment = None
 
     def exists(self, key):
         return self.locked
 
     def setex(self, key, ttl, value):
         pass
+
+    def get(self, key):
+        assert key == "comment:" + TASK_ID
+        return self.comment
 
 
 class FailingDict(dict):
@@ -216,7 +223,7 @@ def run(monkeypatch, tmp_path):
     worker.main.pop_request()
 
 
-def start_task(*extra):
+def start_task():
     """Run the task in the current process, as a worker does."""
     return worker.main.run(
         "https://example.org/video",
@@ -228,7 +235,6 @@ def start_task(*extra):
         "av1.webm",
         "Example",
         ("access-token", "access-secret"),
-        *extra,
     )
 
 
@@ -433,14 +439,15 @@ def test_retry_when_disk_is_full(run):
 
 def test_upload_takes_the_summary_of_the_tool(run):
     # A tool that starts the task, e.g. a user script on Commons, names itself
-    # in the edit summary. The parameters of a restarted task keep it.
-    start_task("Batch upload using [[User:Example/tool.js|tool]]")
+    # in the edit summary, which the frontend keeps beside the task.
+    run.redis.comment = b"Batch upload using [[User:Example/tool.js|tool]]"
+
+    start_task()
 
     assert run.comment == "Batch upload using [[User:Example/tool.js|tool]]"
 
 
 def test_upload_without_a_summary_keeps_its_own(run):
-    # The nine parameters of a task started before the summary existed.
     start_task()
 
     assert run.comment is None
