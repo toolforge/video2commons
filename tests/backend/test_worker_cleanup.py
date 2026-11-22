@@ -81,6 +81,8 @@ class TaskRun:
         self.failing_steps = set()
 
         self.outputdir = None
+        # The edit summary the upload was given.
+        self.comment = None
         self.statuses = []
         self.stats = []
         self.stopped = 0
@@ -154,7 +156,8 @@ def run(monkeypatch, tmp_path):
         task_run.stage("encode", status)
         return task_run.results.get("encode", target)
 
-    def upload(file, filename, url, filedesc, username, status, error):
+    def upload(file, filename, url, filedesc, username, status, error, comment=None):
+        task_run.comment = comment
         task_run.stage("upload", status)
         return task_run.results.get("upload", (filename, FILE_URL))
 
@@ -213,7 +216,7 @@ def run(monkeypatch, tmp_path):
     worker.main.pop_request()
 
 
-def start_task():
+def start_task(*extra):
     """Run the task in the current process, as a worker does."""
     return worker.main.run(
         "https://example.org/video",
@@ -225,6 +228,7 @@ def start_task():
         "av1.webm",
         "Example",
         ("access-token", "access-secret"),
+        *extra,
     )
 
 
@@ -425,3 +429,18 @@ def test_retry_when_disk_is_full(run):
     # The task goes back to the queue, so it must not be counted as processing.
     assert run.stats == []
     assert run.stopped == 0
+
+
+def test_upload_takes_the_summary_of_the_tool(run):
+    # A tool that starts the task, e.g. a user script on Commons, names itself
+    # in the edit summary. The parameters of a restarted task keep it.
+    start_task("Batch upload using [[User:Example/tool.js|tool]]")
+
+    assert run.comment == "Batch upload using [[User:Example/tool.js|tool]]"
+
+
+def test_upload_without_a_summary_keeps_its_own(run):
+    # The nine parameters of a task started before the summary existed.
+    start_task()
+
+    assert run.comment is None

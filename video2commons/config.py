@@ -26,3 +26,6 @@ webfrontend_uri = _data.get("webfrontend_uri")
 socketio_uri = _data.get("socketio_uri")
 youtube_user = _data.get("youtube_user")
 youtube_pass = _data.get("youtube_pass")
+# The sites whose pages may use the API with a token from /connect, e.g. a
+# user script on Commons that sends its videos to video2commons.
+api_origins = _data.get("api_origins", ["https://commons.wikimedia.org"])

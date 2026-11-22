@@ -27,7 +27,7 @@ from uuid import uuid4
 from flask import Blueprint, current_app, jsonify, request, session
 
 from video2commons.backend import worker
-from video2commons.config import session_key
+from video2commons.config import api_origins, session_key
 from video2commons.frontend.shared import (
     check_banned,
     generate_csrf_token,
@@ -71,6 +71,9 @@ UPLOADS_DIR = os.path.join(
 
 VALID_QUEUES = {DEFAULT_QUEUE, HEAVY_QUEUE}
 
+# The longest edit summary MediaWiki keeps, in characters.
+COMMENT_MAX_LENGTH = 500
+
 api = Blueprint("api", __name__)
 
 
@@ -83,11 +86,37 @@ def all_exception_handler(e):
 @api.before_request
 def check_logged_in():
     """Error if a user is not logged in."""
+    # The browser asks first whether a page of another site may send its
+    # token, and never sends the token with that question.
+    if request.method == "OPTIONS":
+        return None
     if (
         "username" not in session
         and request.headers.get("X-V2C-Session-Bypass") != session_key
     ):
         return error_json("Are you logged in?")
+
+
+@api.after_request
+def allow_api_origins(response):
+    """Let the pages of the sites in api_origins read the answers of the API.
+
+    Without credentials: such a page authenticates with the token it got from
+    /connect, in the Authorization header. The answers to a request that
+    carries the session cookie stay unreadable to other sites, as before, so
+    they still cannot get the CSRF token that every POST needs.
+    """
+    response.vary.add("Origin")
+    origin = request.headers.get("Origin")
+    if origin in api_origins:
+        response.headers["Access-Control-Allow-Origin"] = origin
+        response.headers["Access-Control-Allow-Methods"] = "GET, POST"
+        # Content-Range is how the chunks of a direct upload say where they go.
+        response.headers["Access-Control-Allow-Headers"] = (
+            "Authorization, Content-Range"
+        )
+        response.headers["Access-Control-Max-Age"] = "3600"
+    return response
 
 
 @api.before_request
@@ -357,21 +386,26 @@ def run_task():
         else:
             queue = DEFAULT_QUEUE
 
-    taskid = run_task_internal(
+    params = (
+        url,
+        ie_key,
+        subtitles,
         filename,
-        (
-            url,
-            ie_key,
-            subtitles,
-            filename,
-            filedesc,
-            downloadkey,
-            convertkey,
-            username,
-            oauth,
-        ),
-        queue,
+        filedesc,
+        downloadkey,
+        convertkey,
+        username,
+        oauth,
     )
+
+    # The edit summary of the upload, for a tool that sends its own files and
+    # names itself in it. Added only when there is one, so that the tasks
+    # without one still run on a worker that predates it.
+    comment = request.form.get("comment", "").strip()[:COMMENT_MAX_LENGTH]
+    if comment:
+        params += (comment,)
+
+    taskid = run_task_internal(filename, params, queue)
 
     return jsonify(id=taskid, step="success")
 

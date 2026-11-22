@@ -98,6 +98,9 @@ tests/                  JavaScript tests (Vitest), Python tests in tests/backend
 - 📥 **[Uploading a video downloaded with yt-dlp](docs/upload-info-json.md)**:
   getting the description, source, author and license of a file downloaded on
   your computer, e.g. when YouTube blocks the server.
+- 🔌 **[Using video2commons from another tool](docs/api-for-tools.md)**: an API
+  token for a page of another site, such as a user script on Commons, to
+  send its videos to video2commons.
 - 🏗️ **[Architecture](docs/architecture.md)**: the components in detail, the
   life of a task, the encoding pipeline, queues, Redis, real-time updates and
   how the encoders are kept alive.

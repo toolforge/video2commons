@@ -147,8 +147,13 @@ def main(
     convertkey,
     username,
     oauth,
+    comment=None,
 ):
-    """Main worker code."""
+    """Main worker code.
+
+    comment is the edit summary of the upload, when the task was started by a
+    tool that gives its own.
+    """
     task_id = self.request.id
 
     # Get a lock to prevent double-running with same task ID
@@ -284,6 +289,7 @@ def main(
             username,
             statuscallback,
             errorcallback,
+            comment=comment,
         )
         if not wikifileurl:
             errorcallback("Upload failed!")
