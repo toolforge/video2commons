@@ -20,6 +20,7 @@
 
 import json
 import logging
+import posixpath
 import traceback
 from datetime import timedelta
 from urllib.parse import urljoin, urlparse
@@ -74,6 +75,20 @@ app.jinja_env.tests["rtl"] = is_rtl
 
 app.register_blueprint(api, url_prefix="/api")
 app.register_blueprint(i18nblueprint, url_prefix="/i18n")
+
+
+@app.after_request
+def add_static_headers(response):
+    if request.endpoint == "static":
+        response.headers["Content-Security-Policy"] = "sandbox"
+        response.headers["X-Content-Type-Options"] = "nosniff"
+
+        requested_path = request.view_args["filename"]
+        served_path = posixpath.normpath(requested_path)
+        if served_path.startswith("uploads/"):
+            response.headers["Content-Disposition"] = "attachment"
+
+    return response
 
 
 @app.errorhandler(Exception)
