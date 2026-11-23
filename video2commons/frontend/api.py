@@ -27,7 +27,7 @@ from uuid import uuid4
 from flask import Blueprint, current_app, jsonify, request, session
 
 from video2commons.backend import worker
-from video2commons.config import api_origins, session_key
+from video2commons.config import api_max_active_tasks, api_origins, session_key
 from video2commons.frontend.shared import (
     check_banned,
     generate_csrf_token,
@@ -423,6 +423,22 @@ def run_task():
     return jsonify(id=taskid, step="success")
 
 
+def count_active_tasks(username):
+    """How many tasks of the user wait or run, up to api_max_active_tasks.
+
+    A task is active while /api/status shows it in progress: pending, running,
+    or rescheduled. The count stops at the limit, which is all it is for.
+    """
+    count = 0
+    for taskid in redisconnection.lrange("tasks:" + username, 0, -1):
+        task = get_task_status(redisconnection, taskid)
+        if task and task.get("status") == "progress":
+            count += 1
+            if count >= api_max_active_tasks:
+                break
+    return count
+
+
 def clean_comment(text):
     """The edit summary a tool gave for its upload, on one line, cut to fit."""
     return " ".join(text.split())[:COMMENT_MAX_LENGTH]
@@ -436,6 +452,16 @@ def run_task_internal(filename, params, queue, comment=None):
     """
     banned = check_banned()
     assert not banned, "You are banned from using this tool! Reason: " + banned
+
+    if getattr(session, "token", None) is not None:
+        # A tool shares the encoders with everyone, so it converts a batch a
+        # few videos at a time. Requests sent at the same moment may each get
+        # through, which makes this a fair share rather than an exact count.
+        assert count_active_tasks(session["username"]) < api_max_active_tasks, (
+            "A tool can start a task only while you have fewer than "
+            f"{api_max_active_tasks} waiting or running. Try again once one of "
+            "them has finished."
+        )
 
     # Validate queue to prevent tasks being sent to non-existent queues.
     # Unfortunately Celery tries to be helpful and creates queues on demand.

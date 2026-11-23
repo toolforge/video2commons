@@ -9,5 +9,6 @@
 "socketio_uri": "//video2commons-socketio.toolforge.org/socket.io",
 "youtube_user": "xxx@gmail.com",
 "youtube_pass": "xxx",
-"api_origins": ["https://commons.wikimedia.org"]
+"api_origins": [],
+"api_max_active_tasks": 3
 }

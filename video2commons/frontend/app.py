@@ -326,7 +326,7 @@ def connect():
                 loggedin=True,
                 username=session["username"],
             ), 400
-        context["token"] = app.session_interface.issue_token(app, session)
+        context["token"] = app.session_interface.issue_token(session)
     else:
         context["csrf"] = generate_csrf_token()
 

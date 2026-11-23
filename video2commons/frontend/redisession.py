@@ -54,6 +54,7 @@ class RedisSessionInterface(SessionInterface):
         prefix="session:",
         token_prefix="apitoken:",
         token_path="/api/",
+        token_lifetime=timedelta(days=1),
     ):
         """Initialize the instance."""
         if redis is None:
@@ -63,6 +64,7 @@ class RedisSessionInterface(SessionInterface):
         self.token_prefix = token_prefix
         # Only the requests to the API may be authenticated with a token.
         self.token_path = token_path
+        self.token_lifetime = token_lifetime
 
     def generate_sid(self):
         """Generate a session ID."""
@@ -74,16 +76,17 @@ class RedisSessionInterface(SessionInterface):
             return app.permanent_session_lifetime
         return timedelta(days=1)
 
-    def issue_token(self, app, session):
+    def issue_token(self, session):
         """Create an API token that opens this session.
 
-        The token lasts as long as the session, and is renewed with it. Logging
-        out deletes the session, and with it what the token opens.
+        The token lasts a day from now however much it is used, so one that
+        leaks stops working by itself. Logging out ends it sooner, since it
+        deletes the session that the token opens.
         """
         token = secrets.token_urlsafe(32)
         self.redis.setex(
             self.token_prefix + token,
-            int(self.get_redis_expiration_time(app, session).total_seconds()),
+            int(self.token_lifetime.total_seconds()),
             session.sid,
         )
         return token
@@ -191,7 +194,9 @@ class RedisSessionInterface(SessionInterface):
             )
         else:
             self.redis.expire(self.prefix + session.sid, redis_exp)
-        self.redis.expire(self.token_prefix + session.token, redis_exp)
+        # The session goes on while a tool uses it, as it does on the page of
+        # video2commons, but the token is not renewed with it: it ends when
+        # issue_token said, and the tool asks the user for a new one.
 
     def abandon_session(self, app, session):
         """Delete the session from redis, empty it, and reinit."""

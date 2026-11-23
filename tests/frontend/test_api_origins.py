@@ -5,14 +5,20 @@ video2commons: it opens /connect in a popup, the user allows it, and the page
 gets a token that it sends in the Authorization header. The API lets the pages
 of the sites in api_origins read its answers, and takes the edit summary of the
 tool for the uploads it starts.
+
+No site may do so until the maintainers list it, a token lasts a day however
+much it is used, and a tool starts a task only while the user has fewer than
+api_max_active_tasks waiting or running.
 """
 
 import importlib
+import importlib.util
 import io
 import json
 import pathlib
 import re
 from urllib.parse import parse_qs, urlparse
+from uuid import uuid4
 
 import flask
 import jinja2
@@ -43,6 +49,31 @@ TASK = {
 def login_check(monkeypatch):
     """The login check of the API, which is off when session_key is not set."""
     monkeypatch.setattr(api, "session_key", "internal")
+
+
+@pytest.fixture(autouse=True)
+def commons_listed(monkeypatch):
+    """Commons in api_origins, as the maintainers would list it: none is by default."""
+    listed = frozenset({COMMONS})
+    monkeypatch.setattr(api, "api_origins", listed)
+    monkeypatch.setattr(app_module, "api_origins", listed)
+
+
+def config_read_from(monkeypatch, data):
+    """video2commons.config as a server reads it, from a config.json of data."""
+    real_open = open
+
+    def open_config(path, *args, **kwargs):
+        if str(path).endswith("config.json"):
+            return io.StringIO(json.dumps(data))
+        return real_open(path, *args, **kwargs)
+
+    spec = importlib.util.spec_from_file_location("config_read", config.__file__)
+    module = importlib.util.module_from_spec(spec)
+    with monkeypatch.context() as patch:
+        patch.setattr("builtins.open", open_config)
+        spec.loader.exec_module(module)
+    return module
 
 
 class TtlRedis(FakeRedis):
@@ -234,12 +265,12 @@ class TestToken:
 class TestTokenLifetime:
     DAY = 24 * 3600
 
-    def test_lasts_as_long_as_the_session(self, client, pages, redis):
+    def test_lasts_a_day(self, client, pages, redis):
         token = allow(client, pages)
 
         assert redis.ttl["apitoken:" + token] == self.DAY
 
-    def test_is_renewed_with_the_session_when_it_is_used(self, client, pages, redis):
+    def test_is_not_renewed_when_it_is_used(self, client, pages, redis):
         token = allow(client, pages)
         sid = session_id(redis)
         # A day later, almost.
@@ -247,8 +278,10 @@ class TestTokenLifetime:
 
         app.test_client().get("/api/csrf", headers=from_commons(token))
 
-        assert redis.ttl["apitoken:" + token] == self.DAY
+        # The session goes on, as for the page of video2commons, and the token
+        # still ends when it was going to: one that leaks stops working.
         assert redis.ttl["session:" + sid] == self.DAY
+        assert redis.ttl["apitoken:" + token] == 1
 
     def test_keeps_what_the_session_learns_through_it(self, client, pages, redis):
         token = allow(client, pages)
@@ -383,6 +416,109 @@ def started(client, monkeypatch):
     return calls
 
 
+@pytest.fixture
+def statuses(started, monkeypatch):
+    """Tasks of the user, each with the status that /api/status shows for it.
+
+    Called with a status and how many tasks have it; gives the ID of the last.
+    """
+    known = {}
+
+    def get_task_status(conn, taskid):
+        return {"id": taskid, "status": known[taskid]} if taskid in known else None
+
+    monkeypatch.setattr(api, "get_task_status", get_task_status)
+
+    def add(status, count=1):
+        for _ in range(count):
+            taskid = str(uuid4())
+            known[taskid] = status
+            started.redis.lpush("tasks:Example user", taskid)
+            started.redis.set("titles:" + taskid, TASK["filename"])
+            started.redis.set("params:" + taskid, json.dumps(["param"] * 9))
+        return taskid
+
+    return add
+
+
+def run_with_token(token, endpoint="task/run", **data):
+    """POST to the API as a tool does, with its token, and get the JSON."""
+    response = app.test_client().post(
+        "/api/" + endpoint,
+        data={"_csrf_token": "csrf", **data},
+        headers=from_commons(token),
+    )
+    assert response.status_code == 200
+    return response.get_json()
+
+
+class TestTheLimitOfATool:
+    REACHED = (
+        "A tool can start a task only while you have fewer than 3 waiting or "
+        "running. Try again once one of them has finished."
+    )
+
+    def test_stops_a_fourth_task(self, client, pages, redis, started, statuses):
+        token = allow(client, pages)
+        statuses("progress", 3)
+
+        assert run_with_token(token, **TASK)["error"] == self.REACHED
+        assert started == []
+
+    def test_counts_only_the_tasks_that_wait_or_run(
+        self, client, pages, redis, started, statuses
+    ):
+        token = allow(client, pages)
+        statuses("progress", 2)
+        for status in ("done", "fail", "abort"):
+            statuses(status, 3)
+
+        assert run_with_token(token, **TASK)["step"] == "success"
+        assert len(started) == 1
+
+    def test_counts_a_restart(self, client, pages, redis, started, statuses):
+        token = allow(client, pages)
+        failed = statuses("fail")
+        statuses("progress", 3)
+
+        assert run_with_token(token, "task/restart", id=failed)["error"] == (
+            self.REACHED
+        )
+        assert started == []
+
+    def test_is_in_the_config(
+        self, client, pages, redis, started, statuses, monkeypatch
+    ):
+        monkeypatch.setattr(api, "api_max_active_tasks", 1)
+        token = allow(client, pages)
+        statuses("progress")
+
+        answer = run_with_token(token, **TASK)
+
+        assert "fewer than 1 waiting or running" in answer["error"]
+        assert started == []
+
+    def test_does_not_hold_the_page_of_video2commons(self, api_post, started, statuses):
+        statuses("progress", 3)
+
+        assert api_post("task/run", **TASK)["step"] == "success"
+        assert len(started) == 1
+
+
+class TestMaxActiveTasks:
+    @pytest.mark.parametrize(
+        ("value", "limit"),
+        [(None, 3), (5, 5), (1, 1), (0, 3), (-2, 3), ("5", 3), (True, 3), (2.5, 3)],
+    )
+    def test_is_a_whole_number_of_at_least_one(self, value, limit):
+        assert config.parse_api_max_active_tasks(value) == limit
+
+    def test_is_three_until_the_maintainers_set_it(self, monkeypatch):
+        assert config_read_from(monkeypatch, {}).api_max_active_tasks == 3
+        set_to_five = config_read_from(monkeypatch, {"api_max_active_tasks": 5})
+        assert set_to_five.api_max_active_tasks == 5
+
+
 class TestSummary:
     def test_is_kept_beside_the_task_before_it_is_queued(self, api_post, started):
         answer = api_post("task/run", comment=f"  {SUMMARY} ", **TASK)
@@ -493,6 +629,25 @@ class TestOrigins:
 
         assert "https://commons.wiki" not in origins
         assert None not in origins
+
+    def test_are_none_until_the_maintainers_list_them(self, monkeypatch):
+        assert config_read_from(monkeypatch, {}).api_origins == frozenset()
+        listed = config_read_from(monkeypatch, {"api_origins": [COMMONS]})
+        assert listed.api_origins == frozenset({COMMONS})
+
+    def test_none_listed_connect_nothing(self, client, pages, redis, monkeypatch):
+        monkeypatch.setattr(api, "api_origins", frozenset())
+        monkeypatch.setattr(app_module, "api_origins", frozenset())
+
+        asked = client.get("/connect", query_string={"origin": COMMONS})
+        allowed = client.post(
+            "/connect", data={"origin": COMMONS, "_csrf_token": "csrf"}
+        )
+        answer = client.get("/api/csrf", headers=from_commons())
+
+        assert asked.status_code == allowed.status_code == 400
+        assert tokens(redis) == {}
+        assert "Access-Control-Allow-Origin" not in answer.headers
 
 
 class TestCorsOfEveryApiUrl:

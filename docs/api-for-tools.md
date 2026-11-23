@@ -8,11 +8,13 @@ user allows it once, in a popup of video2commons, and the tool gets an API
 token for the user's session.
 
 Only the pages of the sites in `api_origins` can do this (see
-[Configuration](architecture.md#configuration)). By default, that is
-`https://commons.wikimedia.org`. The popup names the site, and nothing more
-precise: every script that runs on the pages of a site in `api_origins` can
-open it, and can read the message that carries the token, so list only the
-sites whose scripts you trust.
+[Configuration](architecture.md#configuration)). The list is empty by
+default, so the API for tools is off until the maintainers list a site, e.g.
+`"api_origins": ["https://commons.wikimedia.org"]`, and emptying it turns it
+off again. The popup names the site, and nothing more precise: every script
+that runs on the pages of a site in `api_origins` can open it, and can read
+the message that carries the token, so list only the sites whose scripts you
+trust.
 
 ## Getting a token
 
@@ -47,10 +49,11 @@ sites whose scripts you trust.
    });
    ```
 
-The token opens the user's session of video2commons. It lasts a day, which
-starts again each time the token is used. Logging out of video2commons, or
-logging in to it again, ends it: the tool then asks for a new one. Each
-*Allow* gives a new token.
+The token opens the user's session of video2commons for a day from when it
+was given, however much it is used, so a token that leaks stops working by
+itself. Logging out of video2commons, or logging in to it again, ends it
+sooner. The API then answers as it does to a user who is not logged in, and
+the tool asks for a new token. Each *Allow* gives a new token.
 
 A token lets the tool do what the user can do with their own tasks on
 video2commons: upload files, start tasks, and restart, abort or remove them.
@@ -120,6 +123,19 @@ it.
    waits or runs, then `done`, with the `url` of the file on Commons, `fail`,
    with the error in `text`, or `abort`. The value is `null` once the task is
    removed, by the user or two weeks later, so stop asking then too.
+
+## Sharing the encoders
+
+The encoders are shared by everyone who uses video2commons. A tool can start
+a task only while the user has fewer than `api_max_active_tasks` tasks
+waiting or running, 3 unless the configuration says otherwise. Past that,
+`/api/task/run` and `/api/task/restart` answer with an `error`, and the page
+of video2commons itself is not held to the limit.
+
+So send the videos of a batch a few at a time: start the next task once one
+is `done`, `fail` or `abort`, and upload each file only when its task is
+about to start, so that the files waiting their turn stay on the user's
+computer.
 
 ## What other sites can't do
 
