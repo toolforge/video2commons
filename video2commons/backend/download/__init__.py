@@ -24,6 +24,7 @@ from yt_dlp.utils import DownloadError, std_headers
 
 from video2commons.exceptions import TaskError
 from video2commons.shared.ratelimiting import YoutubeDLRateLimited
+from video2commons.shared.validation import is_valid_filekey
 from video2commons.shared.yt_dlp import add_youtube_params
 
 DEFAULT_DOWNLOAD_MAXSIZE = 5 * (1 << 30)
@@ -44,6 +45,10 @@ def download(
     """Download a video from url to outputdir."""
 
     if url.startswith("uploads:"):
+        filekey = url.split(":", 1)[1]
+        if not is_valid_filekey(filekey):
+            raise TaskError("Invalid file key format")
+
         # FIXME; this should be a configuration variable
         url = url.replace(
             "uploads:", "https://video2commons.toolforge.org/static/uploads/", 1
