@@ -17,7 +17,7 @@ installed_version() {
 
 before=$(installed_version)
 
-"$VENV_PIP" install -U 'yt-dlp[default]'
+"$VENV_PIP" install -U 'yt-dlp[default,curl-cffi]'
 
 after=$(installed_version)
 
