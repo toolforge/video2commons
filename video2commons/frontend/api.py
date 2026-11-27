@@ -50,19 +50,13 @@ from video2commons.frontend.urlextract import (
 from video2commons.shared import stats
 from video2commons.shared.errors import normalize_error
 from video2commons.shared.tasks import get_task_status, publish_notification
+from video2commons.shared.validation import is_valid_filekey
 
 # Adapted from: https://stackoverflow.com/a/19161373
 YOUTUBE_REGEX = (
     r"(https?://)?(www\.)?"
     r"(youtube|youtu|youtube-nocookie)\.(com|be)/"
     r"(watch\?.*?(?=v=)v=|embed/|v/|.+\?v=)?([^&=%\?]{11})"
-)
-
-# A uuid1, optionally followed by the original file's extension. Must accept
-# what video2commons.frontend.upload.new_filekey generates.
-FILEKEY_REGEX = re.compile(
-    r"^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}"
-    r"(\.[a-z0-9]{1,4})?$"
 )
 
 UPLOADS_DIR = os.path.join(
@@ -338,16 +332,18 @@ def run_task():
     oauth = (session["access_token_key"], session["access_token_secret"])
     queue = request.form.get("queue")
 
+    if url.startswith("uploads:"):
+        filekey = url.split(":", 1)[1].lower()
+        if not is_valid_filekey(filekey):
+            return jsonify(error="Invalid file key format"), 400
+        url = f"uploads:{filekey}"
+
     # If no queue is specified, such is the case with manually uploaded files
     # due to yt-dlp not being used and extracturl not being called, determine
     # which queue to process the file on based on file metadata such as bitrate
     # and resolution. We do this to avoid OOM errors with heavy files.
     if not queue:
         if url.startswith("uploads:"):
-            filekey = url.split(":", 1)[1]
-            if not FILEKEY_REGEX.match(filekey):
-                return jsonify(error="Invalid file key format"), 400
-
             # Hotfix: Temporarily default to DEFAULT_QUEUE until the ffprobe
             # issue is properly fixed.
             queue = DEFAULT_QUEUE

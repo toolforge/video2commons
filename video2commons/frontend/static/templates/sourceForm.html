@@ -4,7 +4,7 @@
   <div class="mb-3" id="src-url">
     <label class="form-label" for="url"><i class="bi bi-download"></i> URL</label>
     <input type="text" class="form-control" id="url" placeholder="http://example.com/examplevideo" dir="ltr">
-    <span class="btn fileinput-button"><i class="bi bi-folder2-open"></i> {{ _('uploadFile') }}<input id="fileupload" name="file" data-url="api/upload/upload" type="file"></span>
+    <span class="btn fileinput-button"><i class="bi bi-folder2-open"></i> {{ _('uploadFile') }}<input id="fileupload" name="file" data-url="api/upload/upload" type="file" accept="video/*,audio/*"></span>
     <span class="btn fileinput-button"><i class="bi bi-filetype-json"></i> {{ _('uploadInfoJson') }}<input id="infojsonupload" type="file" accept=".json,application/json"></span>
   </div>
   <div id="infojson-status" class="alert alert-info d-none" role="status">

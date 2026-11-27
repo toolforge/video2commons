@@ -235,7 +235,7 @@ sequenceDiagram
     participant E as ⚙️ Encoder
 
     B->>W: chunk 1 (4 MB) + Content-Range
-    W->>W: new filekey = uuid + original extension
+    W->>W: new filekey = uuid + original extension (if known)
     W->>D: write <filekey>
     W-->>B: Continue · filekey · offset
     loop each next chunk
@@ -253,8 +253,9 @@ sequenceDiagram
 - [`ChunkedUploader.js`](../video2commons/frontend/static/ChunkedUploader.js)
   sends 4 MB chunks one after the other, retries failed chunks up to 5 times,
   pauses when the browser goes offline and resumes when it comes back.
-- The **filekey** keeps the original extension (`<uuid>.mp4`): the encoder
-  uses it to choose the download size limit (see [Limits](#limits)).
+- The **filekey** keeps the original extension if it is a known one
+  (`<uuid>.mp4`): the encoder uses it to choose the download size limit (see
+  [Limits](#limits)).
 - Uploaded files are deleted by a scheduled job on Toolforge.
 - The description of an uploaded file is empty, unless the user adds the
   `.info.json` file that yt-dlp wrote for it: the browser
