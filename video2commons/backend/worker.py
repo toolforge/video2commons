@@ -135,6 +135,19 @@ class EncodingTask(AbortableTask):
         return super().on_failure(exc, task_id, args, kwargs, einfo)
 
 
+def task_comment(task_id):
+    """Get the edit summary that the tool which started a task gave, if any.
+
+    The frontend keeps it in Redis beside the parameters of the task, not among
+    them (see run_task_internal), so that a worker that predates it still runs
+    the task.
+    """
+    comment = redisconnection.get("comment:" + task_id)
+    if isinstance(comment, bytes):
+        comment = comment.decode("utf-8")
+    return comment or None
+
+
 @app.task(bind=True, track_started=False, base=EncodingTask)
 def main(
     self,
@@ -284,6 +297,7 @@ def main(
             username,
             statuscallback,
             errorcallback,
+            comment=task_comment(task_id),
         )
         if not wikifileurl:
             errorcallback("Upload failed!")

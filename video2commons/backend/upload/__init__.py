@@ -56,8 +56,13 @@ def upload(
     username,
     statuscallback,
     errorcallback,
+    comment=None,
 ):
-    """Upload files to Commons using pywikibot."""
+    """Upload files to Commons using pywikibot.
+
+    comment is the edit summary that the tool which started the task gave, if
+    any. The summary says where the media was imported from, after it.
+    """
     size = os.path.getsize(filename)
 
     if size >= UPLOAD_LIMIT_BYTES:
@@ -74,7 +79,12 @@ def upload(
     if page.exists():
         errorcallback("File already exists. Please choose another name.")
 
-    comment = "Imported media from " + sourceurl
+    if not comment:
+        comment = "Imported media from " + sourceurl
+    elif not sourceurl.startswith("uploads:"):
+        # A tool's summary must not hide where the media came from. The key of
+        # a direct upload says nothing of it, so it is left out.
+        comment += " (imported media from " + sourceurl + ")"
     chunk_size = CHUNK_SIZE if size >= UNCHUNKED_LIMIT_BYTES else 0
     remaining_tries = MAX_RETRIES
 

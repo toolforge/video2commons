@@ -35,7 +35,7 @@ for userkey in redisconnection.keys("tasks:*") + ["alltasks"]:
             redisconnection.lrem(userkey, 0, taskid)
             print(f"delete {taskid} from {userkey}")
 
-for pattern in ["params:*", "restarted:*"]:  # 'tasklock:*'
+for pattern in ["params:*", "restarted:*", "comment:*"]:  # 'tasklock:*'
     for key in redisconnection.keys(pattern):
         taskid = key.split(":")[1]
         if not redisconnection.exists("titles:" + taskid):

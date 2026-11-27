@@ -26,11 +26,21 @@ from datetime import timedelta
 from urllib.parse import urljoin, urlparse
 
 import requests
-from flask import Flask, Response, redirect, render_template, request, session, url_for
+from flask import (
+    Flask,
+    Response,
+    make_response,
+    redirect,
+    render_template,
+    request,
+    session,
+    url_for,
+)
 from mwoauth import AccessToken, ConsumerToken, Handshaker, RequestToken
 from requests_oauthlib import OAuth1
 
 from video2commons.config import (
+    api_origins,
     api_url,
     consumer_key,
     consumer_secret,
@@ -45,7 +55,11 @@ from video2commons.frontend.i18n import (
     translate as _,
 )
 from video2commons.frontend.redisession import RedisSessionInterface
-from video2commons.frontend.shared import check_banned, redisconnection
+from video2commons.frontend.shared import (
+    check_banned,
+    generate_csrf_token,
+    redisconnection,
+)
 
 ISSUE_URL = "https://github.com/toolforge/video2commons/issues"
 
@@ -287,3 +301,54 @@ def logout():
     session.clear()
 
     return redirect(url_for("main"))
+
+
+@app.route("/connect", methods=["GET", "POST"])
+def connect():
+    """Give a page of another site an API token, once the user allows it.
+
+    The page, e.g. a user script on Commons, opens this one in a popup with its
+    origin, which must be in api_origins. After the user logs in and allows it,
+    the token goes to the page that opened the popup, through postMessage
+    addressed to that origin only, and the page sends it in the Authorization
+    header of its calls to the API.
+    """
+    origin = request.values.get("origin", "")
+    if origin not in api_origins:
+        return render_template(
+            "error.min.html",
+            message=f"This site cannot connect to video2commons: {origin}",
+            loggedin=False,
+        ), 400
+
+    try:
+        dologin()
+    except Exception:  # noqa: BLE001 - whatever fails, the user logs in again
+        # SECURITY: If we cannot login, the session is invalid.
+        app.session_interface.abandon_session(app, session)
+        return redirect(
+            url_for("loginredirect", returnto=url_for("connect", origin=origin))
+        )
+
+    context = {"origin": origin, "username": session["username"], "loggedin": True}
+    if request.method == "POST":
+        # The allow button of this page, and nothing posted from elsewhere.
+        csrf = session.get("_csrf_token")
+        if not csrf or request.form.get("_csrf_token") != csrf:
+            return render_template(
+                "error.min.html",
+                message="Invalid CSRF token. Try reloading this page.",
+                loggedin=True,
+                username=session["username"],
+            ), 400
+        context["token"] = app.session_interface.issue_token(session)
+    else:
+        context["csrf"] = generate_csrf_token()
+
+    response = make_response(render_template("connect.min.html", **context))
+    # The page holds the token, or the button that makes one: it must never be
+    # shown in a frame of another site, nor kept in a cache.
+    response.headers["X-Frame-Options"] = "DENY"
+    response.headers["Content-Security-Policy"] = "frame-ancestors 'none'"
+    response.headers["Cache-Control"] = "no-store"
+    return response

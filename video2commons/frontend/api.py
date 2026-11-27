@@ -27,7 +27,7 @@ from uuid import uuid4
 from flask import Blueprint, current_app, jsonify, request, session
 
 from video2commons.backend import worker
-from video2commons.config import session_key
+from video2commons.config import api_max_active_tasks, api_origins, session_key
 from video2commons.frontend.shared import (
     check_banned,
     generate_csrf_token,
@@ -71,6 +71,9 @@ UPLOADS_DIR = os.path.join(
 
 VALID_QUEUES = {DEFAULT_QUEUE, HEAVY_QUEUE}
 
+# The longest edit summary MediaWiki keeps, in characters.
+COMMENT_MAX_LENGTH = 500
+
 api = Blueprint("api", __name__)
 
 
@@ -83,11 +86,43 @@ def all_exception_handler(e):
 @api.before_request
 def check_logged_in():
     """Error if a user is not logged in."""
+    # The browser asks first whether a page of another site may send its
+    # token, and never sends the token with that question.
+    if request.method == "OPTIONS":
+        return None
     if (
         "username" not in session
         and request.headers.get("X-V2C-Session-Bypass") != session_key
     ):
         return error_json("Are you logged in?")
+
+
+@api.after_app_request
+def allow_api_origins(response):
+    """Let the pages of the sites in api_origins read the answers of the API.
+
+    Without credentials: such a page authenticates with the token it got from
+    /connect, in the Authorization header. The answers to a request that
+    carries the session cookie stay unreadable to other sites, as before, so
+    they still cannot get the CSRF token that every POST needs.
+
+    Registered on the app rather than on the blueprint, so that the answer to
+    a URL of the API that does not exist, or to the wrong method, which never
+    reaches the blueprint, is readable too, instead of an opaque CORS error.
+    """
+    if not request.path.startswith("/api/"):
+        return response
+    response.vary.add("Origin")
+    origin = request.headers.get("Origin")
+    if origin in api_origins:
+        response.headers["Access-Control-Allow-Origin"] = origin
+        response.headers["Access-Control-Allow-Methods"] = "GET, POST"
+        # Content-Range is how the chunks of a direct upload say where they go.
+        response.headers["Access-Control-Allow-Headers"] = (
+            "Authorization, Content-Range"
+        )
+        response.headers["Access-Control-Max-Age"] = "3600"
+    return response
 
 
 @api.before_request
@@ -171,11 +206,22 @@ def is_sudoer(username):
     return username in redisconnection.lrange("sudoers", 0, -1)
 
 
+def acts_as_maintainer():
+    """Whether this request may see and manage the tasks of every user.
+
+    Never through an API token: a page of another site that holds one acts on
+    the user's own tasks only, even when the user is a maintainer.
+    """
+    return (
+        bool(session.get("is_maintainer")) and getattr(session, "token", None) is None
+    )
+
+
 def get_tasks():
     """Get a list of visible tasks for user."""
     # sudoer = able to monitor all tasks
     username = session["username"]
-    if session.get("is_maintainer"):
+    if acts_as_maintainer():
         key = "alltasks"
     else:
         key = "tasks:" + username
@@ -371,25 +417,70 @@ def run_task():
             oauth,
         ),
         queue,
+        comment=clean_comment(request.form.get("comment", "")),
     )
 
     return jsonify(id=taskid, step="success")
 
 
-def run_task_internal(filename, params, queue):
-    """Internal run task function to accept whatever params given."""
+def count_active_tasks(username):
+    """How many tasks of the user wait or run, up to api_max_active_tasks.
+
+    A task is active while /api/status shows it in progress: pending, running,
+    or rescheduled. The count stops at the limit, which is all it is for.
+    """
+    count = 0
+    for taskid in redisconnection.lrange("tasks:" + username, 0, -1):
+        task = get_task_status(redisconnection, taskid)
+        if task and task.get("status") == "progress":
+            count += 1
+            if count >= api_max_active_tasks:
+                break
+    return count
+
+
+def clean_comment(text):
+    """The edit summary a tool gave for its upload, on one line, cut to fit."""
+    return " ".join(text.split())[:COMMENT_MAX_LENGTH]
+
+
+def run_task_internal(filename, params, queue, comment=None):
+    """Internal run task function to accept whatever params given.
+
+    comment is the edit summary of the upload, when the tool that starts the
+    task gives its own.
+    """
     banned = check_banned()
     assert not banned, "You are banned from using this tool! Reason: " + banned
+
+    if getattr(session, "token", None) is not None:
+        # A tool shares the encoders with everyone, so it converts a batch a
+        # few videos at a time. Requests sent at the same moment may each get
+        # through, which makes this a fair share rather than an exact count.
+        assert count_active_tasks(session["username"]) < api_max_active_tasks, (
+            "A tool can start a task only while you have fewer than "
+            f"{api_max_active_tasks} waiting or running. Try again once one of "
+            "them has finished."
+        )
 
     # Validate queue to prevent tasks being sent to non-existent queues.
     # Unfortunately Celery tries to be helpful and creates queues on demand.
     if queue not in VALID_QUEUES:
         queue = DEFAULT_QUEUE
 
-    res = worker.main.apply_async(args=params, queue=queue)
+    expire = 14 * 24 * 3600  # 2 weeks
+    # The ID is chosen here, so that the summary is in Redis before a worker
+    # can pick the task up. It goes beside the parameters rather than among
+    # them: a worker that predates it then runs the task all the same, with
+    # the summary of its own, and the deploys need no order.
+    taskid = str(uuid4())
+    if comment:
+        redisconnection.set("comment:" + taskid, comment)
+        redisconnection.expire("comment:" + taskid, expire)
+
+    res = worker.main.apply_async(args=params, queue=queue, task_id=taskid)
     taskid = res.id
 
-    expire = 14 * 24 * 3600  # 2 weeks
     redisconnection.lpush("alltasks", taskid)
     redisconnection.expire("alltasks", expire)
     redisconnection.lpush("tasks:" + session["username"], taskid)
@@ -424,7 +515,7 @@ def restart_task():
 
     filename = redisconnection.get("titles:" + id)
     assert filename, "Task does not exist"
-    if not session.get("is_maintainer"):
+    if not acts_as_maintainer():
         assert id in redisconnection.lrange("tasks:" + session["username"], 0, -1), (
             "Task must belong to you."
         )
@@ -436,7 +527,12 @@ def restart_task():
 
     # Always restart failed tasks on the heavy queue as a failsafe in case the
     # task failed earlier due to being misprioritized.
-    newid = run_task_internal(filename, json.loads(params), HEAVY_QUEUE)
+    newid = run_task_internal(
+        filename,
+        json.loads(params),
+        HEAVY_QUEUE,
+        comment=redisconnection.get("comment:" + id),
+    )
     redisconnection.set("restarted:" + id, newid)
 
     publish_notification(
@@ -453,7 +549,7 @@ def remove_task():
     """Revove a task from list of tasks."""
     id = request.form["id"]
     username = session["username"]
-    if not session.get("is_maintainer"):
+    if not acts_as_maintainer():
         assert id in redisconnection.lrange("tasks:" + username, 0, -1), (
             "Task must belong to you."
         )
@@ -462,6 +558,7 @@ def remove_task():
     redisconnection.delete("titles:" + id)
     redisconnection.delete("params:" + id)
     redisconnection.delete("restarted:" + id)
+    redisconnection.delete("comment:" + id)
 
     publish_notification(redisconnection, "remove", {"taskid": id})
 
@@ -473,7 +570,7 @@ def abort_task():
     """Abort a task."""
     id = request.form["id"]
     username = session["username"]
-    if not session.get("is_maintainer"):
+    if not acts_as_maintainer():
         assert id in redisconnection.lrange("tasks:" + username, 0, -1), (
             "Task must belong to you."
         )
